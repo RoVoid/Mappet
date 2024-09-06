@@ -6,65 +6,48 @@ import mchorse.mappet.api.scripts.user.data.ScriptVector;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import net.minecraft.util.math.RayTraceResult;
 
-public class ScriptRayTrace implements IScriptRayTrace
-{
-    private RayTraceResult result;
+public class ScriptRayTrace implements IScriptRayTrace {
+    private final RayTraceResult result;
     private IScriptEntity entity;
 
-    public ScriptRayTrace(RayTraceResult result)
-    {
+    public ScriptRayTrace(RayTraceResult result) {
         this.result = result;
     }
 
     @Override
-    public RayTraceResult getMinecraftRayTraceResult()
-    {
+    public RayTraceResult getMinecraftRayTraceResult() {
         return this.result;
     }
 
     @Override
-    public boolean isMissed()
-    {
+    public boolean isMissed() {
         return this.result.typeOfHit == RayTraceResult.Type.MISS;
     }
 
     @Override
-    public boolean isBlock()
-    {
+    public boolean isBlock() {
         return this.result.typeOfHit == RayTraceResult.Type.BLOCK;
     }
 
     @Override
-    public boolean isEntity()
-    {
+    public boolean isEntity() {
         return this.result.typeOfHit == RayTraceResult.Type.ENTITY;
     }
 
     @Override
-    public IScriptEntity getEntity()
-    {
-        if (this.result.entityHit == null)
-        {
-            return null;
-        }
-
-        if (this.entity == null)
-        {
-            this.entity = ScriptEntity.create(this.result.entityHit);
-        }
-
+    public IScriptEntity getEntity() {
+        if (this.result.entityHit == null) return null;
+        if (this.entity == null) this.entity = ScriptEntity.create(this.result.entityHit);
         return this.entity;
     }
 
     @Override
-    public ScriptVector getBlock()
-    {
+    public ScriptVector getBlock() {
         return new ScriptVector(this.result.getBlockPos());
     }
 
     @Override
-    public ScriptVector getHitPosition()
-    {
+    public ScriptVector getHitPosition() {
         return new ScriptVector(this.result.hitVec);
     }
 }

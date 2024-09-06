@@ -28,7 +28,7 @@ public class States implements INBTSerializable<NBTTagCompound>
     public static final String DIALOGUE_PREFIX = "dialogue.";
     public static final String FACTIONS_PREFIX = "factions.";
 
-    public Map<String, Object> values = new HashMap<String, Object>();
+    public Map<String, Object> values = new HashMap<>();
 
     private File file;
 
@@ -68,6 +68,14 @@ public class States implements INBTSerializable<NBTTagCompound>
         this.post(id, previous, value);
     }
 
+    public void setBoolean(String id, boolean value)
+    {
+        Object previous = this.values.get(id);
+
+        this.values.put(id, value);
+        this.post(id, previous, value);
+    }
+
     public void setString(String id, String value)
     {
         Object previous = this.values.get(id);
@@ -88,6 +96,18 @@ public class States implements INBTSerializable<NBTTagCompound>
         Object object = this.values.get(id);
 
         return object instanceof Number;
+    }
+
+    public boolean getBoolean(String id)
+    {
+        Object object = this.values.get(id);
+
+        return object instanceof Boolean && (Boolean) object;
+    }
+
+    public boolean isBoolean(String id)
+    {
+        return this.values.get(id) instanceof Boolean;
     }
 
     public String getString(String id)

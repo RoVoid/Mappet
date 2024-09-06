@@ -26,7 +26,7 @@ public class GuiTextEditor extends GuiMultiTextElement<HighlightedTextLine>
     private int placements;
     private boolean lines = true;
 
-    private List<TextLineNumber> numbers = new ArrayList<TextLineNumber>(40);
+    private final List<TextLineNumber> numbers = new ArrayList<>(40);
     private int lineNumber = 0;
 
     public GuiTextEditor(Minecraft mc, Consumer<String> callback)
@@ -350,7 +350,6 @@ public class GuiTextEditor extends GuiMultiTextElement<HighlightedTextLine>
 
         /* Draw  */
         HighlightedTextLine textLine = this.text.get(i);
-
         if (textLine.segments == null)
         {
             textLine.setSegments(this.highlighter.parse(this.font, this.text, textLine.text, i));

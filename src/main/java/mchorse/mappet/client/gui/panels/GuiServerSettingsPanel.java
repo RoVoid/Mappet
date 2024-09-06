@@ -100,7 +100,7 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
         this.globalTriggersLayout = new GuiElement(mc);
         this.globalTriggersLayout.flex().relative(this).wh(0.5F, 0.5F);
 
-        this.triggers = new GuiLabelListElement<String>(mc, (l) -> this.fillTrigger(l.get(0), false));
+        this.triggers = new GuiLabelListElement<>(mc, (l) -> this.fillTrigger(l.get(0), false));
         this.triggers.background().flex().relative(this).x(0.5F, 10).y(35).w(0.5F, -20).h(246);
 
         this.trigger = new GuiTriggerElement(mc).onClose(this::updateCurrentTrigger);

@@ -5,8 +5,8 @@ import java.util.List;
 
 public class Docs
 {
-    public List<DocClass> classes = new ArrayList<DocClass>();
-    public List<DocPackage> packages = new ArrayList<DocPackage>();
+    public List<DocClass> classes = new ArrayList<>();
+    public List<DocPackage> packages = new ArrayList<>();
     public String source = "Mappet";
 
     public DocClass getClass(String name)

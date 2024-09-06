@@ -281,6 +281,10 @@ mappet.gui.settings.triggers.server_tick=Server: ticking
 mappet.gui.settings.triggers.descriptions.server_tick=This gets triggered when server ticks (i.e. §720§r times a second).\n\nProTip: use frequency option of triggers to limit how many times does a script or event gets triggered. 
 mappet.gui.settings.triggers.variables.server_tick=§7N/A§r
 
+mappet.gui.settings.triggers.player_tick=Player: ticking
+mappet.gui.settings.triggers.descriptions.player_tick=This gets triggered when player ticks (i.e. §720§r times a second).\n\nProTip: use frequency option of triggers to limit how many times does a script or event gets triggered.
+mappet.gui.settings.triggers.variables.player_tick=§7N/A§r
+
 mappet.gui.settings.triggers.player_chat=Player: chat message
 mappet.gui.settings.triggers.descriptions.player_chat=This gets triggered when a player types a message into the chat and sends it.\n\nCommands (messages starting with §7/§r) don't get triggered by this event. If you wish to implement commands, use a different prefix like §7!§r.
 mappet.gui.settings.triggers.variables.player_chat=§6message§r, the message (string) that was sent by the player.

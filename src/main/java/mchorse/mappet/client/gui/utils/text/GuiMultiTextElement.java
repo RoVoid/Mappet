@@ -85,7 +85,7 @@ public class GuiMultiTextElement <T extends TextLine> extends GuiElement impleme
 
     public static List<String> splitNewlineString(String string)
     {
-        List<String> splits = new ArrayList<String>();
+        List<String> splits = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
 
         for (int i = 0, c = string.length(); i < c; i++)
@@ -599,6 +599,10 @@ public class GuiMultiTextElement <T extends TextLine> extends GuiElement impleme
 
         undo.ready().post(text, this.cursor, this.selection);
         this.undo.pushUndo(undo);
+    }
+
+    public UndoManager<GuiMultiTextElement> getUndo() {
+        return undo;
     }
 
     public String deleteCharacter()

@@ -1,9 +1,9 @@
 buildscript {
     repositories {
-        maven { url = 'https://maven.minecraftforge.net/' }
-        mavenCentral()
         jcenter()
+        mavenCentral()
         gradlePluginPortal()
+        maven { url = 'https://maven.minecraftforge.net/' }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:5.1.73'
@@ -15,11 +15,6 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-var dev = "dev"
-
-if (project.hasProperty("dev")) {
-    version += "-" + dev
-}
 
 group = "mchorse.mappet"
 archivesBaseName = "mappet"
@@ -27,97 +22,54 @@ sourceCompatibility = targetCompatibility = "1.8"
 compileJava.options.encoding = 'UTF-8'
 
 minecraft {
-
     mappings channel: 'snapshot', version: '20171003-1.12'
-
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-
     accessTransformer = file('src/main/resources/META-INF/mappet_at.cfg')
 
-    // Default run configurations.
-    // These can be tweaked, removed, or duplicated as needed.
     runs {
         client {
-            workingDirectory project.file('run')
-
+            workingDirectory project.file("run")
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
             property 'forge.logging.console.level', 'debug'
-
-            jvmArgs("-Xmx1G")
+            args '--username', 'Robot132_134'
         }
-
         server {
+            workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
             property 'forge.logging.console.level', 'debug'
-
-            jvmArgs("-Xmx1G")
         }
     }
 }
 
 
 dependencies {
-    // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
-    // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
-    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2860'
+
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     compileOnly files("run/libs/blockbuster-${blockbuster}-${mcversion}-dev.jar")
     compileOnly files("run/libs/metamorph-${metamorph}-${mcversion}-dev.jar")
     compileOnly files("run/libs/mclib-${mclib}-${mcversion}-dev.jar")
     compileOnly files("run/libs/aperture-${aperture}-${mcversion}-dev.jar")
+    compileOnly files("run/libs/nashorn.jar")
     implementation("org.reflections:reflections:0.10.2")
     implementation("net.minecraftforge:mergetool:0.2.3.3") { force = true }
-
-    // You may put jars on which you depend on in ./libs or you may define them like so..
-    // compile "some.group:artifact:version:classifier"
-    // compile "some.group:artifact:version"
-
-    // Real examples
-    // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    // compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    // provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // These dependencies get remapped to your current MCP mappings
-    // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // For more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
 }
 
-// Example for how to get properties into the manifest for reading by the runtime...
-jar {
-
-}
-
-// Example configuration to allow publishing using the maven-publish task
-// This is the preferred method to reobfuscate your jar file
 jar.finalizedBy('shadowJar')
 jar.finalizedBy('reobfJar')
-// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
-//publish.dependsOn('reobfJar')
 
 
-// BY DYAMO BOLSHOY UMNI MALCHEG
 import org.apache.tools.ant.filters.ReplaceTokens
 
-task processSource(type: Sync) {
+tasks.register('processSource', Sync) {
     outputs.upToDateWhen { false }
 
     from sourceSets.main.java
-    filter(ReplaceTokens, tokens: [
-            MAPPET     : version,
-            MCLIB      : mclib,
-            METAMORPH  : metamorph,
-            BLOCKBUSTER: blockbuster,
-            APERTURE   : aperture,
-    ])
+    filter(ReplaceTokens, tokens: [MAPPET     : version,
+                                   MCLIB      : mclib,
+                                   METAMORPH  : metamorph,
+                                   BLOCKBUSTER: blockbuster,
+                                   APERTURE   : aperture,])
     into "$buildDir/src"
 }
 
@@ -133,29 +85,32 @@ shadowJar {
     }
     archiveClassifier.set("")
 
-    var dependenciesToRelocate = [
-            "org.reflections",
-            "org.slf4j",
-            "javassist"
-    ]
+    def dependenciesToRelocate = ["org.reflections",
+                                  "org.slf4j",
+                                  "javassist"]
 
     for (dependency in dependenciesToRelocate) {
         relocate dependency, "mchorse.mappet.libs." + dependency
     }
 }
 
-task prepareAssets(type: Copy) {
+tasks.register('prepareAssets', Copy) {
     group = 'build'
+
+    def exportCountFile = file("$rootDir/exportCount.txt")
+    def exportCount = 0
+
+    if (exportCountFile.exists()) exportCount = exportCountFile.text.toInteger()
+    project.version += "-${exportCount}"
 
     inputs.property 'version', project.version
     inputs.property "mcversion", mcversion
 
-    project.version += "-" + mcversion
+    exportCount++
+    exportCountFile.text = exportCount.toString()
 
-    from (sourceSets.main.resources.srcDirs) {
+    from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-
-        // Replace version
         expand(project.properties)
     }
     from(sourceSets.main.resources.srcDirs) {
@@ -165,19 +120,20 @@ task prepareAssets(type: Copy) {
     into project.file('build/classes/java/main')
 }
 
+
 classes.dependsOn(prepareAssets)
 
-tasks.withType(Jar).all { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
+tasks.withType(Jar).configureEach { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
 
 /* Dev build */
-task deobfJar(type: Jar) {
+tasks.register('deobfJar', Jar) {
     from sourceSets.main.output
-    classifier = 'dev'
+    archiveClassifier.set('dev')
 }
 
-task sourcesJar(type: Jar) {
+tasks.register('sourcesJar', Jar) {
     from sourceSets.main.allJava
-    classifier = 'sources'
+    archiveClassifier.set('sources')
 }
 
 artifacts {
@@ -185,36 +141,13 @@ artifacts {
     archives sourcesJar
 }
 
-task scriptingJavadocs(type: Javadoc) {
-    source = sourceSets.main.allJava
-
-    include "mchorse/mappet/api/ui/components/**"
-    include "mchorse/mappet/client/gui/utils/graphics/Graphic**"
-    include "mchorse/mappet/api/scripts/user/**"
-}
-
-task scriptingJavadocsJson(type: Exec) {
-    // Writing gradle tasks is PAIN, if you'll ever would need to run this, clone and build:
-    // https://github.com/mchorse/jsonDoclet
-    //
-    // Rename it to jsonDoclet.jar, and place it in the run/ folder
-    executable "javadoc"
-    args "-doclet", "mchorse.utils.doclets.JsonDoclet", "-docletpath", "./run/jsonDoclet.jar", "-sourcepath", "./src/main/java/", "-subpackages", "mchorse.mappet.api.scripts.user:mchorse.mappet.api.ui.components:mchorse.mappet.client.gui.utils.graphics"
-
-    doLast {
-        file("src/main/resources/assets/mappet/docs.json").setText(file("docs.json").text)
-    }
-}
-
-tasks.processResources.dependsOn(scriptingJavadocsJson)
-
 /* Comparing keys */
-task compareLangFiles {
+tasks.register('compareLangFiles') {
     doLast {
         def help = file("src/main/resources/assets/${project.archivesBaseName}/lang/")
         def parse = { File file ->
             def map = new HashMap()
-            def splits = file.text.split("\n");
+            def splits = file.text.split("\n")
 
             for (split in splits) {
                 def index = split.indexOf("=")
@@ -285,11 +218,11 @@ task compareLangFiles {
     }
 }
 
-task copyLangStrings {
+tasks.register('copyLangStrings') {
     doLast {
         def parse = { File file ->
             def map = new HashMap()
-            def splits = file.text.split("\n");
+            def splits = file.text.split("\n")
 
             for (split in splits) {
                 def index = split.indexOf("=")
@@ -313,12 +246,11 @@ task copyLangStrings {
                 def splits = en.text.split("\n")
 
                 for (def i = 0; i < splits.length; i++) {
-                    def str = splits[i];
+                    def str = splits[i]
 
                     if (str.contains("=")) {
                         def index = str.indexOf("=")
                         def key = str.substring(0, index)
-                        def value = str.substring(index)
 
                         if (strings.containsKey(key)) {
                             splits[i] = key + "=" + strings.get(key)
@@ -343,3 +275,23 @@ tasks.register('openBuiltJarsDir', Exec) {
     commandLine "cmd", "/c", "explorer ${projectDir}\\build\\libs"
     ignoreExitValue true
 }
+
+tasks.register('scriptingJavadocsJson', Exec) {
+    executable "javadoc"
+    args "-doclet", "mchorse.utils.doclets.JsonDoclet", "-docletpath", "./run/jsonDoclet.jar", "-sourcepath", "./src/main/java/", "-subpackages", "mchorse.mappet.api.scripts.user:mchorse.mappet.api.ui.components:mchorse.mappet.client.gui.utils.graphics"
+
+    doLast {
+        file("src/main/resources/assets/mappet/docs.json").setText(file("docs.json").text)
+    }
+}
+
+//tasks.register('scriptingJavadocsJson', Exec) {
+//    executable "javadoc"
+//    args "-X", "-doclet", "robot.utils.doclets.JsonDoclet", "-docletpath", "./run/jsonDocletByRobot.jar", "-sourcepath", "./src/main/java/"
+//
+//    doLast {
+//        file("src/main/resources/assets/mappet/docs.json").setText(file("docs.json").text)
+//    }
+//}
+
+tasks.processResources.dependsOn(scriptingJavadocsJson)

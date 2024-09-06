@@ -62,7 +62,7 @@ public class HighlightedTextLine extends TextLine
         int i = 0;
         String line = this.wrappedLines.get(i);
 
-        this.wrappedSegments = new ArrayList<List<TextSegment>>();
+        this.wrappedSegments = new ArrayList<>();
 
         for (TextSegment segment : this.segments)
         {

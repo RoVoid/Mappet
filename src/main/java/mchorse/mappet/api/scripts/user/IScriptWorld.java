@@ -78,7 +78,7 @@ public interface IScriptWorld
     public Object getGameRule(String gameRule);
 
     /**
-     * Set a block at XYZ, use {@link IScriptFactory#createBlockState(String, int)}
+     * Set a block at XYZ, use {@link IScriptFactory#createBlock(String, int)}
      * to get the block state.
      *
      * <pre>{@code

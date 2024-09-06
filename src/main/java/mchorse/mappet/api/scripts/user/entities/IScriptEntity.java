@@ -804,6 +804,11 @@ public interface IScriptEntity
     public void damageAs(IScriptEntity entity, float health);
 
     /**
+     * Sets IS_UNBLOCKABLE to TRUE
+     */
+    void damageAs(IScriptEntity attacker, float damage, boolean ignore);
+
+    /**
      * Damage this entity as given player was the source of the attack with its equipment.
      *
      * <pre>{@code

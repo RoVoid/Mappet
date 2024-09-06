@@ -187,4 +187,6 @@ public interface IScriptServer
      * @param args The arguments to pass to the function.
      */
     void executeScript(String scriptName, String function, Object... args);
+
+    List<String> getOppedPlayerNames();
 }

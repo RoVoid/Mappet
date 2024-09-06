@@ -2,7 +2,6 @@ package mchorse.mappet.api.scripts.code;
 
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import mchorse.mappet.Mappet;
-import mchorse.mappet.api.conditions.Checker;
 import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
@@ -26,14 +25,7 @@ import net.minecraft.client.renderer.Vector3d;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagByte;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagDouble;
-import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.*;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
@@ -48,14 +40,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class ScriptFactory implements IScriptFactory
-{
-    private static final Map<String, String> formattingCodes = new HashMap<String, String>();
+public class ScriptFactory implements IScriptFactory {
+    private static final Map<String, String> formattingCodes = new HashMap<>();
 
-    private Random random = new Random();
+    private final Random random = new Random();
 
-    static
-    {
+    static {
         formattingCodes.put("black", "0");
         formattingCodes.put("dark_blue", "1");
         formattingCodes.put("dark_green", "2");
@@ -81,13 +71,11 @@ public class ScriptFactory implements IScriptFactory
     }
 
     @Override
-    public IScriptBlockState createBlockState(String blockId, int meta)
-    {
+    public IScriptBlockState createBlock(String blockId, int meta) {
         ResourceLocation location = new ResourceLocation(blockId);
         Block block = ForgeRegistries.BLOCKS.getValue(location);
 
-        if (block != null)
-        {
+        if (block != null) {
             IBlockState state = block.getStateFromMeta(meta);
 
             return ScriptBlockState.create(state);
@@ -97,24 +85,18 @@ public class ScriptFactory implements IScriptFactory
     }
 
     @Override
-    public IScriptBlockState createBlockState(String blockId)
-    {
-        return createBlockState(blockId, 0);
+    public IScriptBlockState createBlock(String blockId) {
+        return createBlock(blockId, 0);
     }
 
     @Override
-    public INBTCompound createCompound(String nbt)
-    {
+    public INBTCompound createCompound(String nbt) {
         NBTTagCompound tag = new NBTTagCompound();
 
-        if (nbt != null)
-        {
-            try
-            {
+        if (nbt != null) {
+            try {
                 tag = JsonToNBT.getTagFromJson(nbt);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception ignored) {
             }
         }
 
@@ -122,26 +104,20 @@ public class ScriptFactory implements IScriptFactory
     }
 
     @Override
-    public INBTCompound createCompoundFromJS(Object jsObject)
-    {
+    public INBTCompound createCompoundFromJS(Object jsObject) {
         NBTBase base = this.convertToNBT(jsObject);
 
         return base instanceof NBTTagCompound ? new ScriptNBTCompound((NBTTagCompound) base) : null;
     }
 
     @Override
-    public INBTList createList(String nbt)
-    {
+    public INBTList createList(String nbt) {
         NBTTagList list = new NBTTagList();
 
-        if (nbt != null)
-        {
-            try
-            {
+        if (nbt != null) {
+            try {
                 list = (NBTTagList) JsonToNBT.getTagFromJson("{List:" + nbt + "}").getTag("List");
-            }
-            catch (Exception e)
-            {
+            } catch (Exception ignored) {
             }
         }
 
@@ -149,61 +125,43 @@ public class ScriptFactory implements IScriptFactory
     }
 
     @Override
-    public INBTList createListFromJS(Object jsObject)
-    {
+    public INBTList createListFromJS(Object jsObject) {
         NBTBase base = this.convertToNBT(jsObject);
 
         return base instanceof NBTTagList ? new ScriptNBTList((NBTTagList) base) : null;
     }
 
-    private NBTBase convertToNBT(Object object)
-    {
-        if (object instanceof String)
-        {
+    private NBTBase convertToNBT(Object object) {
+        if (object instanceof String) {
             return new NBTTagString((String) object);
-        }
-        else if (object instanceof Double)
-        {
+        } else if (object instanceof Double) {
             return new NBTTagDouble((Double) object);
-        }
-        else if (object instanceof Integer)
-        {
+        } else if (object instanceof Integer) {
             return new NBTTagInt((Integer) object);
-        }
-        else if (object instanceof Boolean)
-        {
+        } else if (object instanceof Boolean) {
             return new NBTTagByte((Boolean) object ? Byte.valueOf("1") : Byte.valueOf("0"));
-        }
-        else if (object instanceof ScriptObjectMirror)
-        {
+        } else if (object instanceof ScriptObjectMirror) {
             ScriptObjectMirror mirror = (ScriptObjectMirror) object;
 
-            if (mirror.isArray())
-            {
+            if (mirror.isArray()) {
                 NBTTagList list = new NBTTagList();
 
-                for (int i = 0, c = mirror.size(); i < c; i++)
-                {
+                for (int i = 0, c = mirror.size(); i < c; i++) {
                     NBTBase base = this.convertToNBT(mirror.getSlot(i));
 
-                    if (base != null)
-                    {
+                    if (base != null) {
                         list.appendTag(base);
                     }
                 }
 
                 return list;
-            }
-            else
-            {
+            } else {
                 NBTTagCompound tag = new NBTTagCompound();
 
-                for (String key : mirror.keySet())
-                {
+                for (String key : mirror.keySet()) {
                     NBTBase base = this.convertToNBT(mirror.get(key));
 
-                    if (base != null)
-                    {
+                    if (base != null) {
                         tag.setTag(key, base);
                     }
                 }
@@ -216,10 +174,8 @@ public class ScriptFactory implements IScriptFactory
     }
 
     @Override
-    public IScriptItemStack createItem(INBTCompound compound)
-    {
-        if (compound != null)
-        {
+    public IScriptItemStack createItem(INBTCompound compound) {
+        if (compound != null) {
             return ScriptItemStack.create(new ItemStack(compound.getNBTTagCompound()));
         }
 
@@ -227,38 +183,32 @@ public class ScriptFactory implements IScriptFactory
     }
 
     @Override
-    public IScriptItemStack createItem(String itemId, int count, int meta)
-    {
+    public IScriptItemStack createItem(String itemId, int count, int meta) {
         Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId));
 
         return ScriptItemStack.create(new ItemStack(item, count, meta));
     }
 
     @Override
-    public IScriptItemStack createBlockItem(String blockId, int count, int meta)
-    {
+    public IScriptItemStack createBlockItem(String blockId, int count, int meta) {
         Block item = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blockId));
 
         return ScriptItemStack.create(new ItemStack(item, count, meta));
     }
 
     @Override
-    public EnumParticleTypes getParticleType(String type)
-    {
+    public EnumParticleTypes getParticleType(String type) {
         return EnumParticleTypes.getByName(type);
     }
 
     @Override
-    public Potion getPotion(String type)
-    {
+    public Potion getPotion(String type) {
         return Potion.getPotionFromResourceLocation(type);
     }
 
     @Override
-    public AbstractMorph createMorph(INBTCompound compound)
-    {
-        if (compound == null)
-        {
+    public AbstractMorph createMorph(INBTCompound compound) {
+        if (compound == null) {
             return null;
         }
 
@@ -266,8 +216,7 @@ public class ScriptFactory implements IScriptFactory
     }
 
     @Override
-    public IMappetUIBuilder createUI(String script, String function)
-    {
+    public IMappetUIBuilder createUI(String script, String function) {
         script = script == null ? "" : script;
         function = function == null ? "" : function;
 
@@ -275,64 +224,36 @@ public class ScriptFactory implements IScriptFactory
     }
 
     @Override
-    public Object get(String key)
-    {
+    public Object get(String key) {
         return Mappet.scripts.objects.get(key);
     }
 
     @Override
-    public void set(String key, Object object)
-    {
+    public void set(String key, Object object) {
         Mappet.scripts.objects.put(key, object);
     }
 
     @Override
-    public String dump(Object object, boolean simple)
-    {
-        if (object instanceof ScriptObjectMirror)
-        {
-            return object.toString();
-        }
+    public String dump(Object object, boolean simple) {
+        if (object instanceof ScriptObjectMirror) return object.toString();
 
         Class<?> clazz = object.getClass();
         StringBuilder output = new StringBuilder(simple ? clazz.getSimpleName() : clazz.getTypeName());
-
         output.append(" {\n");
-
-        for (Field field : clazz.getDeclaredFields())
-        {
-            if (Modifier.isStatic(field.getModifiers()))
-            {
-                continue;
-            }
-
+        for (Field field : clazz.getDeclaredFields()) {
+            if (Modifier.isStatic(field.getModifiers())) continue;
             output.append("    ");
-
-            if (!simple)
-            {
-                output.append(this.getModifier(field.getModifiers()));
-            }
-
+            if (!simple) output.append(this.getModifier(field.getModifiers()));
             output.append(field.getName());
-
-            if (!simple)
-            {
-                output.append(" (");
-                output.append(simple ? field.getType().getSimpleName() : field.getType().getTypeName());
-                output.append(")");
-            }
+            if (!simple) output.append(" (").append(field.getType().getTypeName()).append(")");
 
             String value = "";
-
-            try
-            {
+            try {
                 field.setAccessible(true);
                 Object o = field.get(object);
 
                 value = o == null ? "null" : o.toString();
-            }
-            catch (Exception e)
-            {
+            } catch (Exception ignored) {
             }
 
             output.append(": ").append(value).append("\n");
@@ -340,17 +261,14 @@ public class ScriptFactory implements IScriptFactory
 
         output.append("\n");
 
-        for (Method method : clazz.getDeclaredMethods())
-        {
-            if (Modifier.isStatic(method.getModifiers()))
-            {
+        for (Method method : clazz.getDeclaredMethods()) {
+            if (Modifier.isStatic(method.getModifiers())) {
                 continue;
             }
 
             output.append("    ");
 
-            if (!simple)
-            {
+            if (!simple) {
                 output.append(this.getModifier(method.getModifiers()));
             }
 
@@ -360,14 +278,12 @@ public class ScriptFactory implements IScriptFactory
 
             int size = method.getParameterCount();
 
-            for (int i = 0; i < size; i++)
-            {
+            for (int i = 0; i < size; i++) {
                 Class<?> arg = method.getParameterTypes()[i];
 
                 output.append(simple ? arg.getSimpleName() : arg.getTypeName());
 
-                if (i < size - 1)
-                {
+                if (i < size - 1) {
                     output.append(", ");
                 }
             }
@@ -380,20 +296,14 @@ public class ScriptFactory implements IScriptFactory
         return output.toString();
     }
 
-    private String getModifier(int m)
-    {
+    private String getModifier(int m) {
         String modifier = Modifier.isFinal(m) ? "final " : "";
 
-        if (Modifier.isPublic(m))
-        {
+        if (Modifier.isPublic(m)) {
             modifier += "public ";
-        }
-        else if (Modifier.isProtected(m))
-        {
+        } else if (Modifier.isProtected(m)) {
             modifier += "protected ";
-        }
-        else if (Modifier.isPrivate(m))
-        {
+        } else if (Modifier.isPrivate(m)) {
             modifier += "private ";
         }
 
@@ -401,80 +311,56 @@ public class ScriptFactory implements IScriptFactory
     }
 
     @Override
-    public double random(double max)
-    {
+    public double random(double max) {
         return Math.random() * max;
     }
 
     @Override
-    public double random(double min, double max)
-    {
+    public double random(double min, double max) {
         return min + Math.random() * (max - min);
     }
 
     @Override
-    public double random(double min, double max, long seed)
-    {
+    public double random(double min, double max, long seed) {
         this.random.setSeed(seed);
-
         return min + this.random.nextDouble() * (max - min);
     }
 
     @Override
-    public String style(String... styles)
-    {
+    public String style(String... styles) {
         StringBuilder builder = new StringBuilder();
-
-        for (String style : styles)
-        {
+        for (String style : styles) {
             String code = formattingCodes.get(style);
-
-            if (code != null)
-            {
-                builder.append('\u00A7');
-                builder.append(code);
-            }
+            if (code != null) builder.append('§').append(code);
         }
-
         return builder.toString();
     }
 
     @Override
-    public boolean isPointInBounds(Object point, Object bound1, Object bound2)
-    {
-        if (point instanceof Vector2d)
-        {
+    public boolean isPointInBounds(Object point, Object bound1, Object bound2) {
+        if (point instanceof Vector2d) {
             return this.isPointInBounds2D((Vector2d) point, (Vector2d) bound1, (Vector2d) bound2);
-        }
-        else if (point instanceof Vector3d)
-        {
+        } else if (point instanceof Vector3d) {
             return this.isPointInBounds3D((Vector3d) point, (Vector3d) bound1, (Vector3d) bound2);
-        }
-        else if (point instanceof Vector4d)
-        {
+        } else if (point instanceof Vector4d) {
             return this.isPointInBounds4D((Vector4d) point, (Vector4d) bound1, (Vector4d) bound2);
-        }
-        else
-        {
+        } else {
             throw new IllegalArgumentException("Invalid vector type: " + point.getClass().getName());
         }
     }
 
-    private boolean isPointInBounds2D(Vector2d point, Vector2d bound1, Vector2d bound2)
-    {
+    private boolean isPointInBounds2D(Vector2d point, Vector2d bound1, Vector2d bound2) {
         return point.x >= Math.min(bound1.x, bound2.x) && point.x <= Math.max(bound1.x, bound2.x)
                 && point.y >= Math.min(bound1.y, bound2.y) && point.y <= Math.max(bound1.y, bound2.y);
     }
 
-    private boolean isPointInBounds3D(Vector3d point, Vector3d bound1, Vector3d bound2)
-    {
+    private boolean isPointInBounds3D(Vector3d point, Vector3d bound1, Vector3d bound2) {
         return point.x >= Math.min(bound1.x, bound2.x) && point.x <= Math.max(bound1.x, bound2.x)
                 && point.y >= Math.min(bound1.y, bound2.y) && point.y <= Math.max(bound1.y, bound2.y)
                 && point.z >= Math.min(bound1.z, bound2.z) && point.z <= Math.max(bound1.z, bound2.z);
     }
 
-    private boolean isPointInBounds4D(Vector4d point, Vector4d bound1, Vector4d bound2)
-    {
+    private boolean isPointInBounds4D(Vector4d point, Vector4d bound1, Vector4d bound2) {
         return point.x >= Math.min(bound1.x, bound2.x) && point.x <= Math.max(bound1.x, bound2.x)
                 && point.y >= Math.min(bound1.y, bound2.y) && point.y <= Math.max(bound1.y, bound2.y)
                 && point.z >= Math.min(bound1.z, bound2.z) && point.z <= Math.max(bound1.z, bound2.z)
@@ -482,38 +368,50 @@ public class ScriptFactory implements IScriptFactory
     }
 
     @Override
-    public INBTCompound toNBT(Object object)
-    {
-        if (object instanceof INBTCompound)
-        {
+    public INBTCompound toNBT(Object object) {
+        if (object instanceof INBTCompound) {
             return (INBTCompound) object;
         }
 
-        if (object instanceof NBTTagCompound)
-        {
+        if (object instanceof NBTTagCompound) {
             return new ScriptNBTCompound((NBTTagCompound) object);
         }
 
-        if (object instanceof AbstractMorph)
-        {
+        if (object instanceof AbstractMorph) {
             return new ScriptNBTCompound(((AbstractMorph) object).toNBT());
         }
 
         return null;
     }
 
-    public MappetLogger getLogger()
-    {
+    public MappetLogger getLogger() {
         return Mappet.logger;
     }
 
-    public IScriptEntity getMappetEntity(Entity minecraftEntity)
-    {
+    public IScriptEntity getMappetEntity(Entity minecraftEntity) {
         return ScriptEntity.create(minecraftEntity);
     }
 
     @Override
     public String format(String format, Object... args) {
         return String.format(format, args);
+    }
+
+    @Override
+    public String encrypt(String text, String secretKey) {
+        StringBuilder encryptedStr = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            encryptedStr.append((char) (text.charAt(i) ^ secretKey.charAt(i % secretKey.length())));
+        }
+        return encryptedStr.toString();
+    }
+
+    @Override
+    public String decrypt(String text, String secretKey) {
+        StringBuilder decryptedStr = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            decryptedStr.append((char) (text.charAt(i) ^ secretKey.charAt(i % secretKey.length())));
+        }
+        return decryptedStr.toString();
     }
 }

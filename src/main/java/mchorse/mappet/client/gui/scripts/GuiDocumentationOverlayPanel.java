@@ -1,14 +1,7 @@
 package mchorse.mappet.client.gui.scripts;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.client.gui.scripts.utils.documentation.DocClass;
-import mchorse.mappet.client.gui.scripts.utils.documentation.DocDelegate;
-import mchorse.mappet.client.gui.scripts.utils.documentation.DocEntry;
-import mchorse.mappet.client.gui.scripts.utils.documentation.DocList;
-import mchorse.mappet.client.gui.scripts.utils.documentation.DocMethod;
-import mchorse.mappet.client.gui.scripts.utils.documentation.DocMerger;
-import mchorse.mappet.client.gui.scripts.utils.documentation.DocPackage;
-import mchorse.mappet.client.gui.scripts.utils.documentation.Docs;
+import mchorse.mappet.client.gui.scripts.utils.documentation.*;
 import mchorse.mappet.client.gui.utils.overlays.GuiOverlayPanel;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
@@ -18,6 +11,7 @@ import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.launchwrapper.Launch;
 
@@ -30,8 +24,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class GuiDocumentationOverlayPanel extends GuiOverlayPanel
-{
+public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
     public static Docs docs;
     private static DocEntry top;
     private static DocEntry entry;
@@ -39,15 +32,13 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel
     public GuiDocEntrySearchList list;
     public GuiScrollElement documentation;
     public GuiIconElement javadocs;
+    public GuiIconElement copy;
 
-    public static List<DocClass> search(String text)
-    {
-        List<DocClass> list = new ArrayList<DocClass>();
+    public static List<DocClass> search(String text) {
+        List<DocClass> list = new ArrayList<>();
 
-        for (DocClass docClass : getDocs().classes)
-        {
-            if (docClass.getMethod(text) != null)
-            {
+        for (DocClass docClass : getDocs().classes) {
+            if (docClass.getMethod(text) != null) {
                 list.add(docClass);
             }
         }
@@ -55,20 +46,17 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel
         return list;
     }
 
-    public static Docs getDocs()
-    {
+    public static Docs getDocs() {
         parseDocs();
 
         return docs;
     }
 
-    private static void parseDocs()
-    {
+    private static void parseDocs() {
         /* Update the docs data only if it's in dev environment */
         final boolean dev = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 
-        if (dev || docs == null)
-        {
+        if (dev || docs == null) {
             docs = DocMerger.getMergedDocs();
             entry = null;
 
@@ -110,20 +98,18 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel
 
             List<DocList> extraDocLists = new ArrayList<>();
 
-            for (DocPackage docPackage : extraPackages)
-            {
+            for (DocPackage docPackage : extraPackages) {
                 String firstPackage = docPackage.name.substring(0, docPackage.name.indexOf("."));
                 DocList extra = new DocList();
                 extra.name = docPackage.name.substring(docPackage.name.lastIndexOf(".") + 1);
                 extra.doc = docPackage.doc;
                 extra.parent = firstPackage.equals("extraScripting") ? scripting : firstPackage.equals("extraUI") ? ui : topPackage;
                 extra.source = docPackage.source;
-                ((DocList)extra.parent).entries.add(extra);
+                ((DocList) extra.parent).entries.add(extra);
                 extraDocLists.add(extra);
             }
 
-            if (useNewStructure)
-            {
+            if (useNewStructure) {
                 entities.name = "/ Entities";
                 entities.doc = docs.getPackage("mchorse.mappet.api.scripts.user.entities").doc;
                 entities.parent = scripting;
@@ -145,34 +131,26 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel
                 scripting.entries.add(blocks);
             }
 
-            for (DocClass docClass : docs.classes)
-            {
+            for (DocClass docClass : docs.classes) {
                 docClass.setup();
-                if (docClass.name.startsWith("extra"))
-                {
+                if (docClass.name.startsWith("extra")) {
                     String packages = docClass.name.substring(docClass.name.indexOf(".") + 1, docClass.name.lastIndexOf("."));
-                    try
-                    {
+                    try {
                         List<DocList> lists = extraDocLists.stream()
                                 .filter(docList -> docList.name.equals(packages))
                                 .collect(Collectors.toList());
 
                         DocList list = lists.get(0);
-                        if (list != null)
-                        {
+                        if (list != null) {
                             list.entries.add(docClass);
                             docClass.parent = list;
                         }
+                    } catch (Exception ignored) {
                     }
-                    catch (Exception e) {}
-                }
-                else if (docClass.name.contains("ui.components") || docClass.name.endsWith(".Graphic"))
-                {
+                } else if (docClass.name.contains("ui.components") || docClass.name.endsWith(".Graphic")) {
                     ui.entries.add(docClass);
                     docClass.parent = ui;
-                }
-                else if (useNewStructure)
-                {
+                } else if (useNewStructure) {
                     List<Callable<Boolean>> functions = new ArrayList<>();
                     boolean added = false;
                     functions.add(() -> addWithNewStructure(input -> input.name.contains("entities"), docClass, docLists.get("entities")));
@@ -183,21 +161,15 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel
                     /* Place for mixins */
                     functions.add(() -> addWithNewStructure(input -> !input.name.endsWith("Graphic"), docClass, docLists.get("scripting")));
 
-                    for (Callable<Boolean> function : functions)
-                    {
+                    for (Callable<Boolean> function : functions) {
                         if (added) break;
-                        try
-                        {
+                        try {
                             added = function.call();
-                        }
-                        catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             throw new RuntimeException(e);
                         }
                     }
-                }
-                else if (!docClass.name.endsWith("Graphic"))
-                {
+                } else if (!docClass.name.endsWith("Graphic")) {
                     scripting.entries.add(docClass);
                     docClass.parent = scripting;
                 }
@@ -210,11 +182,10 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel
         }
     }
 
-    public static void mixinsHook()
-    {}
+    public static void mixinsHook() {
+    }
 
-    public static boolean addWithNewStructure(Function<DocClass, Boolean> predicate, DocClass docClass, DocList list)
-    {
+    public static boolean addWithNewStructure(Function<DocClass, Boolean> predicate, DocClass docClass, DocList list) {
         if (!predicate.apply(docClass)) return false;
 
         list.entries.add(docClass);
@@ -222,13 +193,11 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel
         return true;
     }
 
-    public GuiDocumentationOverlayPanel(Minecraft mc)
-    {
+    public GuiDocumentationOverlayPanel(Minecraft mc) {
         this(mc, null);
     }
 
-    public GuiDocumentationOverlayPanel(Minecraft mc, DocEntry entry)
-    {
+    public GuiDocumentationOverlayPanel(Minecraft mc, DocEntry entry) {
         super(mc, IKey.lang("mappet.gui.scripts.documentation.title"));
 
         this.list = new GuiDocEntrySearchList(mc, (l) -> this.pick(l.get(0)));
@@ -241,15 +210,20 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel
         this.content.add(this.list, this.documentation);
         this.javadocs = new GuiIconElement(mc, Icons.SERVER, (b) -> this.openJavadocs());
         this.javadocs.tooltip(IKey.lang("mappet.gui.scripts.documentation.javadocs")).flex().wh(16, 16);
+        this.copy = new GuiIconElement(mc, Icons.COPY, (b) -> this.copyMethod());
+        this.copy.tooltip(IKey.lang("mappet.gui.scripts.documentation.copy")).flex().wh(16, 16);
+        this.copy.setVisible(false);
 
         this.icons.flex().row(0).reverse().resize().width(32).height(16);
         this.icons.addAfter(this.close, this.javadocs);
+        this.icons.addAfter(this.javadocs, this.copy);
         this.setupDocs(entry);
     }
 
-    private void pick(DocEntry entryIn)
-    {
+    private void pick(DocEntry entryIn) {
         boolean isMethod = entryIn instanceof DocMethod;
+
+        copy.setVisible(isMethod);
 
         entryIn = entryIn.getEntry();
         List<DocEntry> entries = entryIn.getEntries();
@@ -257,20 +231,17 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel
 
         /* If the list isn't the same or if the current item got double-clicked
          * to enter into the section */
-        if (entry == entryIn || !wasSame)
-        {
+        if (entry == entryIn || !wasSame) {
             this.list.list.clear();
 
-            if (entryIn.parent != null)
-            {
+            if (entryIn.parent != null) {
                 this.list.list.add(new DocDelegate(entryIn.parent));
             }
 
             this.list.list.add(entries);
             this.list.list.sort();
 
-            if (isMethod)
-            {
+            if (isMethod) {
                 this.list.list.setCurrentScroll(entryIn);
             }
         }
@@ -278,10 +249,8 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel
         this.fill(entryIn);
     }
 
-    private void fill(DocEntry entryIn)
-    {
-        if (!(entryIn instanceof DocMethod))
-        {
+    private void fill(DocEntry entryIn) {
+        if (!(entryIn instanceof DocMethod)) {
             entry = entryIn;
         }
 
@@ -292,46 +261,42 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel
         this.resize();
     }
 
-    private void setupDocs(DocEntry in)
-    {
+    private void setupDocs(DocEntry in) {
         parseDocs();
 
-        if (in != null)
-        {
+        if (in != null) {
             entry = in;
-        }
-        else if (entry == null)
-        {
+        } else if (entry == null) {
             entry = top;
         }
 
         this.pick(entry);
     }
 
-    private void openJavadocs()
-    {
+    private void openJavadocs() {
         GuiUtils.openWebLink(I18n.format("mappet.gui.scripts.documentation.javadocs_url"));
     }
 
-    public static class GuiDocEntrySearchList extends GuiSearchListElement<DocEntry>
-    {
+    private void copyMethod() {
+        if (this.list.list.getCurrentFirst() != null) {
+            GuiScreen.setClipboardString(this.list.list.getCurrentFirst().getName().replaceAll("§.", ""));
+        }
+    }
 
-        public GuiDocEntrySearchList(Minecraft mc, Consumer<List<DocEntry>> callback)
-        {
+    public static class GuiDocEntrySearchList extends GuiSearchListElement<DocEntry> {
+
+        public GuiDocEntrySearchList(Minecraft mc, Consumer<List<DocEntry>> callback) {
             super(mc, callback);
         }
 
         @Override
-        protected GuiListElement<DocEntry> createList(Minecraft minecraft, Consumer<List<DocEntry>> consumer)
-        {
+        protected GuiListElement<DocEntry> createList(Minecraft minecraft, Consumer<List<DocEntry>> consumer) {
             return new GuiDocEntryList(minecraft, consumer);
         }
     }
 
-    public static class GuiDocEntryList extends GuiListElement<DocEntry>
-    {
-        public GuiDocEntryList(Minecraft mc, Consumer<List<DocEntry>> callback)
-        {
+    public static class GuiDocEntryList extends GuiListElement<DocEntry> {
+        public GuiDocEntryList(Minecraft mc, Consumer<List<DocEntry>> callback) {
             super(mc, callback);
 
             this.scroll.scrollItemSize = 16;
@@ -339,16 +304,14 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel
         }
 
         @Override
-        protected boolean sortElements()
-        {
+        protected boolean sortElements() {
             this.list.sort((a, b) -> a.getName().compareToIgnoreCase(b.getName()));
 
             return true;
         }
 
         @Override
-        protected String elementToString(DocEntry element)
-        {
+        protected String elementToString(DocEntry element) {
             return element.getName();
         }
     }

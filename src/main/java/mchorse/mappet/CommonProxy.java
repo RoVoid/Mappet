@@ -1,72 +1,20 @@
 package mchorse.mappet;
 
-import mchorse.mappet.api.conditions.blocks.AbstractConditionBlock;
-import mchorse.mappet.api.conditions.blocks.ConditionConditionBlock;
-import mchorse.mappet.api.conditions.blocks.DialogueConditionBlock;
-import mchorse.mappet.api.conditions.blocks.EntityConditionBlock;
-import mchorse.mappet.api.conditions.blocks.ExpressionConditionBlock;
-import mchorse.mappet.api.conditions.blocks.FactionConditionBlock;
-import mchorse.mappet.api.conditions.blocks.ItemConditionBlock;
-import mchorse.mappet.api.conditions.blocks.MorphConditionBlock;
-import mchorse.mappet.api.conditions.blocks.QuestConditionBlock;
-import mchorse.mappet.api.conditions.blocks.StateConditionBlock;
-import mchorse.mappet.api.conditions.blocks.WorldTimeConditionBlock;
-import mchorse.mappet.api.dialogues.nodes.CommentNode;
-import mchorse.mappet.api.dialogues.nodes.CraftingNode;
-import mchorse.mappet.api.dialogues.nodes.QuestChainNode;
-import mchorse.mappet.api.dialogues.nodes.QuestDialogueNode;
-import mchorse.mappet.api.dialogues.nodes.ReactionNode;
-import mchorse.mappet.api.dialogues.nodes.ReplyNode;
-import mchorse.mappet.api.events.nodes.CancelNode;
-import mchorse.mappet.api.events.nodes.CommandNode;
-import mchorse.mappet.api.events.nodes.ConditionNode;
-import mchorse.mappet.api.events.nodes.EventBaseNode;
-import mchorse.mappet.api.events.nodes.SwitchNode;
-import mchorse.mappet.api.events.nodes.TimerNode;
-import mchorse.mappet.api.events.nodes.TriggerNode;
+import mchorse.mappet.api.conditions.blocks.*;
+import mchorse.mappet.api.dialogues.nodes.*;
+import mchorse.mappet.api.events.nodes.*;
 import mchorse.mappet.api.quests.chains.QuestNode;
-import mchorse.mappet.api.triggers.blocks.AbstractTriggerBlock;
-import mchorse.mappet.api.triggers.blocks.CommandTriggerBlock;
-import mchorse.mappet.api.triggers.blocks.DialogueTriggerBlock;
-import mchorse.mappet.api.triggers.blocks.EventTriggerBlock;
-import mchorse.mappet.api.triggers.blocks.ItemTriggerBlock;
-import mchorse.mappet.api.triggers.blocks.MorphTriggerBlock;
-import mchorse.mappet.api.triggers.blocks.ScriptTriggerBlock;
-import mchorse.mappet.api.triggers.blocks.SoundTriggerBlock;
-import mchorse.mappet.api.triggers.blocks.StateTriggerBlock;
-import mchorse.mappet.api.ui.components.UIButtonComponent;
-import mchorse.mappet.api.ui.components.UIClickComponent;
-import mchorse.mappet.api.ui.components.UIComponent;
-import mchorse.mappet.api.ui.components.UIGraphicsComponent;
-import mchorse.mappet.api.ui.components.UIIconButtonComponent;
-import mchorse.mappet.api.ui.components.UILabelComponent;
-import mchorse.mappet.api.ui.components.UILayoutComponent;
-import mchorse.mappet.api.ui.components.UIMorphComponent;
-import mchorse.mappet.api.ui.components.UIStackComponent;
-import mchorse.mappet.api.ui.components.UIStringListComponent;
-import mchorse.mappet.api.ui.components.UITextComponent;
-import mchorse.mappet.api.ui.components.UITextareaComponent;
-import mchorse.mappet.api.ui.components.UITextboxComponent;
-import mchorse.mappet.api.ui.components.UIToggleComponent;
-import mchorse.mappet.api.ui.components.UITrackpadComponent;
+import mchorse.mappet.api.triggers.blocks.*;
+import mchorse.mappet.api.ui.components.*;
 import mchorse.mappet.api.utils.factory.IFactory;
 import mchorse.mappet.api.utils.factory.MapFactory;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.CharacterStorage;
 import mchorse.mappet.capabilities.character.ICharacter;
-import mchorse.mappet.events.RegisterConditionBlockEvent;
-import mchorse.mappet.events.RegisterDialogueNodeEvent;
-import mchorse.mappet.events.RegisterEventNodeEvent;
-import mchorse.mappet.events.RegisterQuestChainNodeEvent;
-import mchorse.mappet.events.RegisterTriggerBlockEvent;
-import mchorse.mappet.events.RegisterUIComponentEvent;
-import mchorse.mappet.events.ScriptedItemEventHandler;
+import mchorse.mappet.client.gui.utils.Beautifier;
+import mchorse.mappet.events.*;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.utils.Colors;
-import mchorse.mappet.utils.MPIcons;
-import mchorse.mappet.utils.MappetNpcSelector;
-import mchorse.mappet.utils.MetamorphHandler;
-import mchorse.mappet.utils.ScriptUtils;
+import mchorse.mappet.utils.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -79,8 +27,7 @@ import java.io.File;
 /**
  * Common proxy
  */
-public class CommonProxy
-{
+public class CommonProxy {
     private static IFactory<EventBaseNode> events;
     private static IFactory<EventBaseNode> dialogues;
     private static IFactory<QuestNode> chains;
@@ -88,33 +35,27 @@ public class CommonProxy
     private static IFactory<AbstractTriggerBlock> triggerBlocks;
     private static IFactory<UIComponent> uiComponents;
 
-    public static IFactory<EventBaseNode> getEvents()
-    {
+    public static IFactory<EventBaseNode> getEvents() {
         return events;
     }
 
-    public static IFactory<EventBaseNode> getDialogues()
-    {
+    public static IFactory<EventBaseNode> getDialogues() {
         return dialogues;
     }
 
-    public static IFactory<QuestNode> getChains()
-    {
+    public static IFactory<QuestNode> getChains() {
         return chains;
     }
 
-    public static IFactory<AbstractConditionBlock> getConditionBlocks()
-    {
+    public static IFactory<AbstractConditionBlock> getConditionBlocks() {
         return conditionBlocks;
     }
 
-    public static IFactory<AbstractTriggerBlock> getTriggerBlocks()
-    {
+    public static IFactory<AbstractTriggerBlock> getTriggerBlocks() {
         return triggerBlocks;
     }
 
-    public static IFactory<UIComponent> getUiComponents()
-    {
+    public static IFactory<UIComponent> getUiComponents() {
         return uiComponents;
     }
 
@@ -127,11 +68,9 @@ public class CommonProxy
     public static EventHandler eventHandler;
     public static ScriptedItemEventHandler scriptedItemEventHandler;
 
-    public void preInit(FMLPreInitializationEvent event)
-    {
+    public void preInit(FMLPreInitializationEvent event) {
         /* Setup config folder path */
         String path = event.getModConfigurationDirectory().getAbsolutePath();
-
         configFolder = new File(path, Mappet.MOD_ID);
         configFolder.mkdir();
 
@@ -145,18 +84,17 @@ public class CommonProxy
         CapabilityManager.INSTANCE.register(ICharacter.class, new CharacterStorage(), Character::new);
     }
 
-    public void init(FMLInitializationEvent event)
-    {
+    public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new MetamorphHandler());
         Mappet.EVENT_BUS.register(eventHandler);
 
         ScriptUtils.initiateScriptEngines();
         MPIcons.register();
+        Beautifier.init();
     }
 
 
-    public void postInit(FMLPostInitializationEvent event)
-    {
+    public void postInit(FMLPostInitializationEvent event) {
         /* Register event nodes */
         MapFactory<EventBaseNode> eventNodes = new MapFactory<EventBaseNode>()
                 .register("command", CommandNode.class, Colors.COMMAND)

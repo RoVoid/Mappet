@@ -279,6 +279,10 @@ mappet.gui.settings.triggers.server_tick=Сервер: при тике
 mappet.gui.settings.triggers.descriptions.server_tick=Этот триггер срабатывает когда происходит серверный тик (т.е. §720§r раз в секунду).\n\nСовет от профи: используйте ползунок "частота" чтобы ограничить количество срабатываний триггера.
 mappet.gui.settings.triggers.variables.server_tick=§7N/A§r
 
+mappet.gui.settings.triggers.player_tick=Игрок: при тике
+mappet.gui.settings.triggers.descriptions.player_tick=Этот триггер срабатывает когда происходит тик игрока (т.е. §720§r раз в секунду).\n\nСовет от профи: используйте ползунок "частота" чтобы ограничить количество срабатываний триггера.
+mappet.gui.settings.triggers.variables.player_tick=§7N/A§r
+
 mappet.gui.settings.triggers.player_chat=Игрок: при сообщении в чате
 mappet.gui.settings.triggers.descriptions.player_chat=Этот триггер срабатывает когда игрок пишет сообщение в чат. \n\nКоманды (сообщения начинающиеся с §7/§r) не вызывают этот триггер. Если вы хотите реализовать команды, используйте другой префикс, например §7!§r.
 mappet.gui.settings.triggers.variables.player_chat=§6message§r, сообщение, отправленное игроком.

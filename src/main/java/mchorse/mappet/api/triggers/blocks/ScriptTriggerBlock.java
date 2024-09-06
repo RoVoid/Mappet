@@ -74,7 +74,7 @@ public class ScriptTriggerBlock extends DataTriggerBlock
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                Mappet.logger.error(this.string + " - " + e.getMessage());
             }
         }
     }

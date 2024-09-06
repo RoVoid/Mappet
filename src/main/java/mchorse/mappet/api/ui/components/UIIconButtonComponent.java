@@ -3,6 +3,7 @@ package mchorse.mappet.api.ui.components;
 import mchorse.mappet.api.scripts.user.mappet.IMappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
+import mchorse.mappet.client.gui.utils.GuiExtendedIconElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.utils.Icon;
@@ -60,12 +61,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *    }
  * }</pre>
  */
-public class UIIconButtonComponent extends UIComponent
-{
+public class UIIconButtonComponent extends UIComponent {
     public String icon = "";
+    private Integer color = 0xffffffff;
+    private float rotate = 0;
 
-    public UIIconButtonComponent()
-    {}
+    public UIIconButtonComponent() {
+    }
 
     /**
      * Change icon component's icon.
@@ -108,47 +110,64 @@ public class UIIconButtonComponent extends UIComponent
      *
      * @param icon The icon's ID.
      */
-    public UIIconButtonComponent icon(String icon)
-    {
+    public UIIconButtonComponent icon(String icon) {
         this.change("Icon");
-
         this.icon = icon;
+        return this;
+    }
 
+    public UIIconButtonComponent color(int color) {
+        this.change("Color");
+        this.color = color;
+        return this;
+    }
+
+    /**
+     * @param angle between 0 and 360
+     */
+    public UIIconButtonComponent rotate(float angle) {
+        this.change("Rotate");
+        this.rotate = angle;
         return this;
     }
 
     @Override
     @DiscardMethod
     @SideOnly(Side.CLIENT)
-    protected boolean isDataReserved()
-    {
+    protected boolean isDataReserved() {
         return true;
     }
 
     @Override
-    @DiscardMethod
-    @SideOnly(Side.CLIENT)
-    protected void applyProperty(UIContext context, String key, GuiElement element)
-    {
-        super.applyProperty(context, key, element);
-
-        GuiIconElement button = (GuiIconElement) element;
-
-        if (key.equals("Icon"))
-        {
-            button.both(this.getIcon());
+    protected GuiElement apply(GuiElement element, UIContext context) {
+        if (element instanceof GuiExtendedIconElement) {
+            GuiExtendedIconElement button = ((GuiExtendedIconElement) element);
+            button.iconColor(color);
+            button.rotate(rotate);
         }
+        return super.apply(element, context);
     }
 
     @Override
     @DiscardMethod
     @SideOnly(Side.CLIENT)
-    public GuiElement create(Minecraft mc, UIContext context)
-    {
-        GuiIconElement button = new GuiIconElement(mc, this.getIcon(), (b) ->
+    protected void applyProperty(UIContext context, String key, GuiElement element) {
+        super.applyProperty(context, key, element);
+
+        GuiExtendedIconElement button = (GuiExtendedIconElement) element;
+
+        if (key.equals("Icon")) button.both(this.getIcon());
+        if (key.equals("Color")) button.iconColor(this.getColor());
+        if (key.equals("Rotate")) button.rotate(this.getRotate());
+    }
+
+    @Override
+    @DiscardMethod
+    @SideOnly(Side.CLIENT)
+    public GuiElement create(Minecraft mc, UIContext context) {
+        GuiIconElement button = new GuiExtendedIconElement(mc, getIcon(), getColor(), getRotate(), (b) ->
         {
-            if (!this.id.isEmpty())
-            {
+            if (!this.id.isEmpty()) {
                 this.populateData(context.data);
                 context.dirty(this.id, this.updateDelay);
             }
@@ -159,48 +178,45 @@ public class UIIconButtonComponent extends UIComponent
 
     @DiscardMethod
     @SideOnly(Side.CLIENT)
-    private Icon getIcon()
-    {
+    private Icon getIcon() {
         Icon icon = IconRegistry.icons.get(this.icon);
+        return icon == null ? Icons.NONE : icon;
+    }
 
-        if (icon == null)
-        {
-            icon = Icons.NONE;
-        }
+    @DiscardMethod
+    @SideOnly(Side.CLIENT)
+    private int getColor() {
+        return color;
+    }
 
-        return icon;
+    @DiscardMethod
+    @SideOnly(Side.CLIENT)
+    private float getRotate() {
+        return rotate;
     }
 
     @Override
     @DiscardMethod
-    public void populateData(NBTTagCompound tag)
-    {
+    public void populateData(NBTTagCompound tag) {
         super.populateData(tag);
-
-        if (!this.id.isEmpty())
-        {
-            tag.setInteger(this.id, tag.getInteger(this.id) + 1);
-        }
+        if (!this.id.isEmpty()) tag.setInteger(this.id, tag.getInteger(this.id) + 1);
     }
 
     @Override
     @DiscardMethod
-    public void serializeNBT(NBTTagCompound tag)
-    {
+    public void serializeNBT(NBTTagCompound tag) {
         super.serializeNBT(tag);
-
         tag.setString("Icon", this.icon);
+        tag.setInteger("Color", this.color);
+        tag.setFloat("Rotate", this.rotate);
     }
 
     @Override
     @DiscardMethod
-    public void deserializeNBT(NBTTagCompound tag)
-    {
+    public void deserializeNBT(NBTTagCompound tag) {
         super.deserializeNBT(tag);
-
-        if (tag.hasKey("Icon"))
-        {
-            this.icon = tag.getString("Icon");
-        }
+        if (tag.hasKey("Icon")) this.icon = tag.getString("Icon");
+        if (tag.hasKey("Color")) this.color = tag.getInteger("Color");
+        if (tag.hasKey("Rotate")) this.rotate = tag.getFloat("Rotate");
     }
 }

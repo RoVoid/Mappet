@@ -44,26 +44,26 @@ public interface IScriptFactory
      * the {@link IScriptWorld}.
      *
      * <pre>{@code
-     *    var fence = mappet.createBlockState("minecraft:fence", 0);
+     *    var fence = mappet.createBlock("minecraft:fence", 0);
      *
      *    // minecraft:fence 0
      *    c.send(fence.getBlockId() + " " + fence.getMeta());
      * }</pre>
      */
-    public IScriptBlockState createBlockState(String blockId, int meta);
+    IScriptBlockState createBlock(String blockId, int meta);
 
 
     /**
      * Create a block state that can with the default meta value.
      *
      * <pre>{@code
-     * var fence = mappet.createBlockState("minecraft:fence");
+     * var fence = mappet.createBlock("minecraft:fence");
      *
      * // minecraft:fence 0
      * c.send(fence.getBlockId() + " " + fence.getMeta());
      * }</pre>
      */
-    IScriptBlockState createBlockState(String blockId);
+    IScriptBlockState createBlock(String blockId);
 
     /**
      * Create an empty NBT compound.
@@ -80,7 +80,7 @@ public interface IScriptFactory
      *    c.send(item.serialize());
      * }</pre>
      */
-    public default INBTCompound createCompound()
+    default INBTCompound createCompound()
     {
         return this.createCompound(null);
     }
@@ -97,7 +97,7 @@ public interface IScriptFactory
      *    c.send(item.serialize());
      * }</pre>
      */
-    public INBTCompound createCompound(String nbt);
+    INBTCompound createCompound(String nbt);
 
     /**
      * Turn a JS object into an NBT compound.
@@ -127,7 +127,7 @@ public interface IScriptFactory
      *    c.send(item.serialize());
      * }</pre>
      */
-    public INBTCompound createCompoundFromJS(Object jsObject);
+    INBTCompound createCompoundFromJS(Object jsObject);
 
     /**
      * Create an empty NBT list.
@@ -146,7 +146,7 @@ public interface IScriptFactory
      *    c.send(list.stringify());
      * }</pre>
      */
-    public default INBTList createList()
+    default INBTList createList()
     {
         return this.createList(null);
     }
@@ -162,7 +162,7 @@ public interface IScriptFactory
      *    c.send(list.stringify());
      * }</pre>
      */
-    public INBTList createList(String nbt);
+    INBTList createList(String nbt);
 
     /**
      * Turn a JS object into an NBT compound.
@@ -177,7 +177,7 @@ public interface IScriptFactory
      *    c.send(list.stringify());
      * }</pre>
      */
-    public INBTList createListFromJS(Object jsObject);
+    INBTList createListFromJS(Object jsObject);
 
     /**
      * Create an item stack out of string NBT.
@@ -192,7 +192,7 @@ public interface IScriptFactory
      * @return an item stack from the string NBT data, or an empty item stack
      * if the data doesn't have a valid reference to an existing item
      */
-    public default IScriptItemStack createItemNBT(String nbt)
+    default IScriptItemStack createItemNBT(String nbt)
     {
         return this.createItem(this.createCompound(nbt));
     }
@@ -211,7 +211,7 @@ public interface IScriptFactory
      * @return an item stack from the NBT data, or an empty item stack if the
      * data doesn't have a valid reference to an existing item
      */
-    public IScriptItemStack createItem(INBTCompound compound);
+    IScriptItemStack createItem(INBTCompound compound);
 
     /**
      * Create an item stack with item ID.
@@ -226,7 +226,7 @@ public interface IScriptFactory
      * @return an item stack with an item specified by ID, or an empty item
      * stack if the block doesn't exist
      */
-    public default IScriptItemStack createItem(String itemId)
+    default IScriptItemStack createItem(String itemId)
     {
         return this.createItem(itemId, 1);
     }
@@ -244,7 +244,7 @@ public interface IScriptFactory
      * @return an item stack with an item specified by ID, or an empty item
      * stack if the block doesn't exist
      */
-    public default IScriptItemStack createItem(String itemId, int count)
+    default IScriptItemStack createItem(String itemId, int count)
     {
         return this.createItem(itemId, count, 0);
     }
@@ -262,7 +262,7 @@ public interface IScriptFactory
      * @return an item stack with an item specified by ID, or an empty item
      * stack if the block doesn't exist
      */
-    public IScriptItemStack createItem(String itemId, int count, int meta);
+    IScriptItemStack createItem(String itemId, int count, int meta);
 
     /**
      * Create an item stack with block ID.
@@ -277,7 +277,7 @@ public interface IScriptFactory
      * @return an item stack with an item specified by ID, or an empty item
      * stack if the block doesn't exist
      */
-    public default IScriptItemStack createBlockItem(String blockId)
+    default IScriptItemStack createBlockItem(String blockId)
     {
         return this.createItem(blockId, 1);
     }
@@ -295,7 +295,7 @@ public interface IScriptFactory
      * @return an item stack with an item specified by ID, or an empty item
      * stack if the block doesn't exist
      */
-    public default IScriptItemStack createBlockItem(String blockId, int count)
+    default IScriptItemStack createBlockItem(String blockId, int count)
     {
         return this.createItem(blockId, count, 0);
     }
@@ -313,7 +313,7 @@ public interface IScriptFactory
      * @return an item stack with block specified by ID, or an empty item
      * stack if the block doesn't exist
      */
-    public IScriptItemStack createBlockItem(String blockId, int count, int meta);
+    IScriptItemStack createBlockItem(String blockId, int count, int meta);
 
     /**
      * Get Minecraft particle type by its name.
@@ -329,7 +329,7 @@ public interface IScriptFactory
      *    c.getWorld().spawnParticles(explode, true, pos.x, pos.y + 1, pos.z, 50, 0.5, 0.5, 0.5, 0.1);
      * }</pre>
      */
-    public EnumParticleTypes getParticleType(String type);
+    EnumParticleTypes getParticleType(String type);
 
     /**
      * Get Minecraft potion effect by its name.
@@ -344,7 +344,7 @@ public interface IScriptFactory
      *    c.getSubject().applyPotion(slowness, 200, 1, false);
      * }</pre>
      */
-    public Potion getPotion(String type);
+    Potion getPotion(String type);
 
     /**
      * Create a morph out of string NBT.
@@ -356,7 +356,7 @@ public interface IScriptFactory
      *    c.getSubject().setMorph(morph);
      * }</pre>
      */
-    public default AbstractMorph createMorph(String nbt)
+    default AbstractMorph createMorph(String nbt)
     {
         return this.createMorph(this.createCompound(nbt));
     }
@@ -375,7 +375,7 @@ public interface IScriptFactory
      *    c.getSubject().setMorph(morph);
      * }</pre>
      */
-    public AbstractMorph createMorph(INBTCompound compound);
+    AbstractMorph createMorph(INBTCompound compound);
 
     /**
      * Create a UI. You can send it to the player by using
@@ -393,7 +393,7 @@ public interface IScriptFactory
      *    }
      * }</pre>
      */
-    public default IMappetUIBuilder createUI()
+    default IMappetUIBuilder createUI()
     {
         return this.createUI("", "");
     }
@@ -431,7 +431,7 @@ public interface IScriptFactory
      * @param event Script event (whose script ID will be used for UI's user input handler).
      * @param function Given script's function that will be used as UI's user input handler.
      */
-    public default IMappetUIBuilder createUI(IScriptEvent event, String function)
+    default IMappetUIBuilder createUI(IScriptEvent event, String function)
     {
         return this.createUI(event.getScript(), function);
     }
@@ -476,7 +476,7 @@ public interface IScriptFactory
      * @param script The script which will be used as UI's user input handler.
      * @param function Given script's function that will be used as UI's user input handler.
      */
-    public IMappetUIBuilder createUI(String script, String function);
+    IMappetUIBuilder createUI(String script, String function);
 
     /**
      * Get a global arbitrary object.
@@ -491,7 +491,7 @@ public interface IScriptFactory
      *    }
      * }</pre>
      */
-    public Object get(String key);
+    Object get(String key);
 
     /**
      * Set a global arbitrary object during server's existence (other scripts
@@ -507,7 +507,7 @@ public interface IScriptFactory
      *    }
      * }</pre>
      */
-    public void set(String key, Object object);
+    void set(String key, Object object);
 
     /**
      * Dump the simple representation of given non-JS object into the string (to see
@@ -519,7 +519,7 @@ public interface IScriptFactory
      *    c.send(mappet.dump(morph));
      * }</pre>
      */
-    public default String dump(Object object)
+    default String dump(Object object)
     {
         return this.dump(object, true);
     }
@@ -537,7 +537,7 @@ public interface IScriptFactory
      * @param simple Whether you want to see simple or full information about
      * the object.
      */
-    public String dump(Object object, boolean simple);
+    String dump(Object object, boolean simple);
 
     /**
      * Generate a random number between 0 and the given max value (but not
@@ -551,7 +551,7 @@ public interface IScriptFactory
      *
      * @param max Maximum value.
      */
-    public double random(double max);
+    double random(double max);
 
     /**
      * Generate a random number between the given min value and the given max value
@@ -566,7 +566,7 @@ public interface IScriptFactory
      * @param min Minimum value.
      * @param max Maximum value.
      */
-    public double random(double min, double max);
+    double random(double min, double max);
 
     /**
      * Generate a random number between the given min value and the given max value
@@ -581,7 +581,7 @@ public interface IScriptFactory
      * @param min Minimum value.
      * @param max Maximum value.
      */
-    public double random(double min, double max, long seed);
+    double random(double min, double max, long seed);
 
     /**
      * Return Minecraft's formatting code.
@@ -601,12 +601,12 @@ public interface IScriptFactory
      *
      * @param codes An enumeration of formatting codes.
      */
-    public String style(String... codes);
+    String style(String... codes);
 
     /**
      * Return a mappet logger instance.
      */
-    public IMappetLogger getLogger();
+    IMappetLogger getLogger();
 
     /**
      * Return a mappet entity/player/npc by given minecraft entity.
@@ -621,14 +621,14 @@ public interface IScriptFactory
      * }
      * }</pre>
      */
-    public IScriptEntity getMappetEntity(Entity minecraftEntity);
+    IScriptEntity getMappetEntity(Entity minecraftEntity);
 
     /* Vector math */
 
     /**
      * Create a ScriptVector.
      */
-    public default ScriptVector vector(double x, double y, double z)
+    default ScriptVector vector(double x, double y, double z)
     {
         return new ScriptVector(x, y, z);
     }
@@ -636,7 +636,7 @@ public interface IScriptFactory
     /**
      * Create an empty (0, 0) 2D vector.
      */
-    public default Vector2d vector2()
+    default Vector2d vector2()
     {
         return new Vector2d();
     }
@@ -654,7 +654,7 @@ public interface IScriptFactory
      *    c.send("Dot product of a and b is: " + a.dot(b));
      * }</pre>
      */
-    public default Vector2d vector2(double x, double y)
+    default Vector2d vector2(double x, double y)
     {
         return new Vector2d(x, y);
     }
@@ -676,7 +676,7 @@ public interface IScriptFactory
      *    c.send("Distance between a and b is: " + d.length());
      * }</pre>
      */
-    public default Vector2d vector2(Vector2d v)
+    default Vector2d vector2(Vector2d v)
     {
         return new Vector2d(v);
     }
@@ -684,7 +684,7 @@ public interface IScriptFactory
     /**
      * Create an empty (0, 0, 0) 3D vector.
      */
-    public default Vector3d vector3()
+    default Vector3d vector3()
     {
         return new Vector3d();
     }
@@ -703,7 +703,7 @@ public interface IScriptFactory
      *    c.send("Dot product of entity's look vector and positive Z is: " + a.dot(b));
      * }</pre>
      */
-    public default Vector3d vector3(double x, double y, double z)
+    default Vector3d vector3(double x, double y, double z)
     {
         return new Vector3d(x, y, z);
     }
@@ -723,7 +723,7 @@ public interface IScriptFactory
      *    c.send("Distance between you and point (10, 4, 50) is: " + d.length());
      * }</pre>
      */
-    public default Vector3d vector3(Vector3d v)
+    default Vector3d vector3(Vector3d v)
     {
         return new Vector3d(v);
     }
@@ -731,7 +731,7 @@ public interface IScriptFactory
     /**
      * Create a 4D vector.
      */
-    public default Vector4d vector4()
+    default Vector4d vector4()
     {
         return new Vector4d();
     }
@@ -739,7 +739,7 @@ public interface IScriptFactory
     /**
      * Create a 4D vector.
      */
-    public default Vector4d vector4(double x, double y, double z, double w)
+    default Vector4d vector4(double x, double y, double z, double w)
     {
         return new Vector4d(x, y, z, w);
     }
@@ -747,7 +747,7 @@ public interface IScriptFactory
     /**
      * Copy a 4D vector.
      */
-    public default Vector4d vector4(Vector4d v)
+    default Vector4d vector4(Vector4d v)
     {
         return new Vector4d(v);
     }
@@ -765,7 +765,7 @@ public interface IScriptFactory
      *    c.send("Final point is: " + v);
      * }</pre>
      */
-    public default Matrix3d matrix3()
+    default Matrix3d matrix3()
     {
         Matrix3d m = new Matrix3d();
 
@@ -777,7 +777,7 @@ public interface IScriptFactory
     /**
      * Copy a 3x3 matrix.
      */
-    public default Matrix3d matrix3(Matrix3d m)
+    default Matrix3d matrix3(Matrix3d m)
     {
         return new Matrix3d(m);
     }
@@ -800,7 +800,7 @@ public interface IScriptFactory
      *    c.send("Final point is: " + v.x + ", " + v.y + ", " + v.z);
      * }</pre>
      */
-    public default Matrix4d matrix4()
+    default Matrix4d matrix4()
     {
         Matrix4d m = new Matrix4d();
 
@@ -812,7 +812,7 @@ public interface IScriptFactory
     /**
      * Copy a 4x4 matrix.
      */
-    public default Matrix4d matrix4(Matrix4d m)
+    default Matrix4d matrix4(Matrix4d m)
     {
         return new Matrix4d(m);
     }
@@ -832,7 +832,7 @@ public interface IScriptFactory
      * }
      * }</pre>
      */
-    public default ScriptBox box(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
+    default ScriptBox box(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
     {
         return new ScriptBox(minX, minY, minZ, maxX, maxY, maxZ);
     }
@@ -856,7 +856,7 @@ public interface IScriptFactory
      * @return true if the point is inside the bounding volume, false otherwise.
      * @throws IllegalArgumentException if the input vectors have different dimensions.
      */
-    public boolean isPointInBounds(Object point, Object bound1, Object bound2);
+    boolean isPointInBounds(Object point, Object bound1, Object bound2);
 
     /**
      * Converts an object to an INBTCompound representation.
@@ -864,7 +864,7 @@ public interface IScriptFactory
      * @param object The object to convert to an INBTCompound.
      * @return The INBTCompound representation of the object or null if the object is not of the expected types.
      */
-    public INBTCompound toNBT(Object object);
+    INBTCompound toNBT(Object object);
 
     /**
      * Formates strings (placeholders).
@@ -888,4 +888,12 @@ public interface IScriptFactory
      * @return formatted string
      */
     String format(String format, Object... args);
+
+    /**
+     * Encrypt text
+     *
+     * @return Encrypted text by secretKey
+     */
+    String encrypt(String text, String secretKey);
+    String decrypt(String text, String secretKey);
 }

@@ -828,48 +828,40 @@ public abstract class UIComponent implements INBTSerializable<NBTTagCompound>
     @SideOnly(Side.CLIENT)
     protected void applyProperty(UIContext context, String key, GuiElement element)
     {
-        if (key.equals("Tooltip"))
-        {
-            this.applyTooltip(element);
-        }
-        else if (key.equals("Visible"))
-        {
-            element.setVisible(this.visible);
-        }
-        else if (key.equals("Enabled"))
-        {
-            element.setEnabled(this.enabled);
-        }
-        else if (key.equals("Margin"))
-        {
-            element.marginTop(this.marginTop);
-            element.marginBottom(this.marginBottom);
-            element.marginLeft(this.marginLeft);
-            element.marginRight(this.marginRight);
-        }
-        else if (key.equals("X"))
-        {
-            this.x.apply(element.flex().x, context);
-        }
-        else if (key.equals("Y"))
-        {
-            this.y.apply(element.flex().y, context);
-        }
-        else if (key.equals("W"))
-        {
-            this.w.apply(element.flex().w, context);
-        }
-        else if (key.equals("H"))
-        {
-            this.h.apply(element.flex().h, context);
-        }
-        else if (key.equals("Keybinds"))
-        {
-            this.applyKeybinds(element, context);
-        }
-        else if (key.equals("Context"))
-        {
-            this.applyContext(element, context);
+        switch (key) {
+            case "Tooltip":
+                this.applyTooltip(element);
+                break;
+            case "Visible":
+                element.setVisible(this.visible);
+                break;
+            case "Enabled":
+                element.setEnabled(this.enabled);
+                break;
+            case "Margin":
+                element.marginTop(this.marginTop);
+                element.marginBottom(this.marginBottom);
+                element.marginLeft(this.marginLeft);
+                element.marginRight(this.marginRight);
+                break;
+            case "X":
+                this.x.apply(element.flex().x, context);
+                break;
+            case "Y":
+                this.y.apply(element.flex().y, context);
+                break;
+            case "W":
+                this.w.apply(element.flex().w, context);
+                break;
+            case "H":
+                this.h.apply(element.flex().h, context);
+                break;
+            case "Keybinds":
+                this.applyKeybinds(element, context);
+                break;
+            case "Context":
+                this.applyContext(element, context);
+                break;
         }
     }
 

@@ -6,18 +6,21 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
+import javax.annotation.Nonnull;
 import javax.script.ScriptException;
 
 public class CommandScriptEval extends CommandScriptBase
 {
     @Override
+    @Nonnull
     public String getName()
     {
         return "eval";
     }
 
     @Override
-    public String getUsage(ICommandSender sender)
+    @Nonnull
+    public String getUsage(@Nonnull ICommandSender sender)
     {
         return "mappet.commands.mp.script.eval";
     }

@@ -21,9 +21,9 @@ public class ServerSettings implements INBTSerializable<NBTTagCompound>
 {
     private File file;
 
-    private Map<String, String> keyToAlias = new HashMap<String, String>();
+    private final Map<String, String> keyToAlias = new HashMap<String, String>();
 
-    public final Map<String, Trigger> registered = new LinkedHashMap<String, Trigger>();
+    public final Map<String, Trigger> registered = new LinkedHashMap<>();
 
     public final Map<String, Trigger> registeredForgeTriggers = new LinkedHashMap<String, Trigger>();
 
@@ -48,6 +48,7 @@ public class ServerSettings implements INBTSerializable<NBTTagCompound>
     public final Trigger serverTick;
 
     /* Player triggers */
+    public final Trigger playerTick;
     public final Trigger playerChat;
 
     public final Trigger playerLogIn;
@@ -122,6 +123,7 @@ public class ServerSettings implements INBTSerializable<NBTTagCompound>
         this.serverLoad = this.register("server_load", new Trigger());
         this.serverTick = this.register("server_tick", new Trigger());
 
+        this.playerTick = this.register("player_tick", new Trigger());
         this.playerChat = this.register("player_chat", "chat", new Trigger());
         this.playerLogIn = this.register("player_login", new Trigger());
         this.playerLogOut = this.register("player_logout", new Trigger());

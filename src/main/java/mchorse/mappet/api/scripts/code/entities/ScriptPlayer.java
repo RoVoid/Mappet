@@ -20,7 +20,9 @@ import mchorse.mappet.api.ui.UI;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
+import mchorse.mappet.entities.utils.WalkSpeedManager;
 import mchorse.mappet.network.Dispatcher;
+import mchorse.mappet.network.common.scripts.PacketClipboard;
 import mchorse.mappet.network.common.scripts.PacketEntityRotations;
 import mchorse.mappet.network.common.scripts.PacketSound;
 import mchorse.mappet.network.common.ui.PacketCloseUI;
@@ -34,11 +36,8 @@ import mchorse.metamorph.capabilities.morphing.Morphing;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SPacketAnimation;
-import net.minecraft.network.play.server.SPacketCustomPayload;
-import net.minecraft.network.play.server.SPacketEntityVelocity;
-import net.minecraft.network.play.server.SPacketHeldItemChange;
-import net.minecraft.network.play.server.SPacketTitle;
+import net.minecraft.network.play.server.*;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -50,73 +49,67 @@ import net.minecraftforge.fml.common.Optional;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScriptPlayer
-{
+public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScriptPlayer {
     private IMappetQuests quests;
 
     private IScriptInventory inventory;
 
     private IScriptInventory enderChest;
 
-    public ScriptPlayer(EntityPlayerMP entity)
-    {
+    public ScriptPlayer(EntityPlayerMP entity) {
         super(entity);
     }
 
     @Override
-    public EntityPlayerMP getMinecraftPlayer()
-    {
+    public EntityPlayerMP getMinecraftPlayer() {
         return this.entity;
     }
 
     @Override
-    public void setMotion(double x, double y, double z)
-    {
+    public void setMotion(double x, double y, double z) {
         super.setMotion(x, y, z);
 
         this.entity.connection.sendPacket(new SPacketEntityVelocity(this.entity.getEntityId(), x, y, z));
     }
 
     @Override
-    public void setRotations(float pitch, float yaw, float yawHead)
-    {
+    public void setRotations(float pitch, float yaw, float yawHead) {
         super.setRotations(pitch, yaw, yawHead);
 
         Dispatcher.sendTo(new PacketEntityRotations(this.entity.getEntityId(), yaw, yawHead, pitch), this.entity);
     }
 
     @Override
-    public void swingArm(int arm)
-    {
+    public void swingArm(int arm) {
         super.swingArm(arm);
 
         this.entity.connection.sendPacket(new SPacketAnimation(this.entity, arm == 1 ? 3 : 0));
     }
 
     /* Player's methods */
+    @Override
+    public boolean isOperator() {
+        MinecraftServer server = this.entity.getServer();
+        return server != null && server.getPlayerList().canSendCommands(this.entity.getGameProfile());
+    }
 
     @Override
-    public int getGameMode()
-    {
+    public int getGameMode() {
         return this.entity.interactionManager.getGameType().getID();
     }
 
     @Override
-    public void setGameMode(int gameMode)
-    {
+    public void setGameMode(int gameMode) {
         GameType type = GameType.getByID(gameMode);
 
-        if (type.getID() >= 0)
-        {
+        if (type.getID() >= 0) {
             this.entity.setGameType(type);
         }
     }
 
     @Override
-    public IScriptInventory getInventory()
-    {
-        if (this.inventory == null)
-        {
+    public IScriptInventory getInventory() {
+        if (this.inventory == null) {
             this.inventory = new ScriptInventory(this.entity.inventory);
         }
 
@@ -124,10 +117,8 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     }
 
     @Override
-    public IScriptInventory getEnderChest()
-    {
-        if (this.enderChest == null)
-        {
+    public IScriptInventory getEnderChest() {
+        if (this.enderChest == null) {
             this.enderChest = new ScriptInventory(this.entity.getInventoryEnderChest());
         }
 
@@ -135,128 +126,103 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     }
 
     @Override
-    public void executeCommand(String command)
-    {
+    public void executeCommand(String command) {
+        if (this.entity.world.getMinecraftServer() == null) return;
         this.entity.world.getMinecraftServer().getCommandManager().executeCommand(this.entity, command);
     }
 
     @Override
-    public void setSpawnPoint(double x, double y, double z)
-    {
+    public void setSpawnPoint(double x, double y, double z) {
         this.entity.setSpawnPoint(new BlockPos(x, y, z), true);
     }
 
     @Override
-    public ScriptVector getSpawnPoint()
-    {
+    public ScriptVector getSpawnPoint() {
         BlockPos pos = this.entity.getBedLocation(this.entity.dimension);
-
-        if (pos == null)
-        {
-            pos = this.entity.world.getSpawnPoint();
-        }
 
         return new ScriptVector(pos.getX(), pos.getY(), pos.getZ());
     }
 
     @Override
-    public boolean isFlying()
-    {
+    public boolean isFlying() {
         return this.entity.capabilities.isFlying;
     }
 
     @Override
-    public float getWalkSpeed()
-    {
-        return this.entity.capabilities.getWalkSpeed();
-    }
-
-    @Override
-    public void setFlyingEnabled(boolean enabled)
-    {
+    public void setFlyingEnabled(boolean enabled) {
         this.entity.capabilities.allowFlying = enabled;
         this.entity.sendPlayerAbilities();
     }
 
     @Override
-    public float getFlySpeed()
-    {
+    public float getFlySpeed() {
         return this.entity.capabilities.getFlySpeed();
     }
 
     @Override
-    public void setFlySpeed(float speed)
-    {
+    public void setFlySpeed(float speed) {
         this.entity.capabilities.setFlySpeed(speed);
         this.entity.sendPlayerAbilities();
     }
 
     @Override
-    public void resetFlySpeed()
-    {
+    public void resetFlySpeed() {
         this.setFlySpeed(0.05F);
     }
 
     @Override
-    public void setWalkSpeed(float speed)
-    {
-        this.entity.capabilities.setPlayerWalkSpeed(speed);
-        this.entity.sendPlayerAbilities();
+    public float getWalkSpeed() {
+        return WalkSpeedManager.getWalkSpeed(entity);
     }
 
     @Override
-    public void resetWalkSpeed()
-    {
-        this.setWalkSpeed(0.1F);
+    public void setWalkSpeed(float speed) {
+        WalkSpeedManager.setWalkSpeed(entity, speed);
     }
 
     @Override
-    public float getCooldown(IScriptItemStack item)
-    {
+    public void resetWalkSpeed() {
+        WalkSpeedManager.resetWalkSpeed(entity);
+    }
+
+    @Override
+    public float getCooldown(IScriptItemStack item) {
         return this.entity.getCooldownTracker().getCooldown(item.getMinecraftItemStack().getItem(), 0);
     }
 
     @Override
-    public float getCooldown(int inventorySlot)
-    {
+    public float getCooldown(int inventorySlot) {
         return this.getCooldown(this.getInventory().getStack(inventorySlot));
     }
 
     @Override
-    public void setCooldown(IScriptItemStack item, int ticks)
-    {
+    public void setCooldown(IScriptItemStack item, int ticks) {
         this.entity.getCooldownTracker().setCooldown(item.getMinecraftItemStack().getItem(), ticks);
     }
 
     @Override
-    public void setCooldown(int inventorySlot, int ticks)
-    {
+    public void setCooldown(int inventorySlot, int ticks) {
         this.setCooldown(this.getInventory().getStack(inventorySlot), ticks);
     }
 
     @Override
-    public void resetCooldown(IScriptItemStack item)
-    {
+    public void resetCooldown(IScriptItemStack item) {
         this.entity.getCooldownTracker().removeCooldown(item.getMinecraftItemStack().getItem());
     }
 
     @Override
-    public void resetCooldown(int inventorySlot)
-    {
+    public void resetCooldown(int inventorySlot) {
         this.resetCooldown(this.getInventory().getStack(inventorySlot));
     }
 
     @Override
-    public int getHotbarIndex()
-    {
+    public int getHotbarIndex() {
         return this.entity.inventory.currentItem;
     }
 
     @Override
-    public void setHotbarIndex(int slot)
-    {
-        if (slot < 0 || slot >= 9)
-        {
+    public void setHotbarIndex(int slot) {
+        if (slot < 0 || slot >= 9) {
             return;
         }
 
@@ -266,135 +232,120 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     }
 
     @Override
-    public void send(String message)
-    {
-        this.entity.sendMessage(new TextComponentString(message));
+    public void send(String message) {
+        this.entity.sendMessage(new TextComponentString(message == null ? "null" : message));
     }
 
     @Override
-    public void sendRaw(INBT message)
-    {
+    public void sendRaw(INBT message) {
         ITextComponent component = ITextComponent.Serializer.fromJsonLenient(message.stringify());
 
-        if (component != null)
-        {
+        if (component != null) {
             this.entity.sendMessage(component);
         }
     }
 
     @Override
-    public String getSkin()
-    {
+    public String getSkin() {
         return "minecraft:skins/" + StringUtils.stripControlCodes(this.getName().toLowerCase());
     }
 
     @Override
-    public void sendTitleDurations(int fadeIn, int idle, int fadeOut)
-    {
+    public void sendTitleDurations(int fadeIn, int idle, int fadeOut) {
         SPacketTitle packet = new SPacketTitle(fadeIn, idle, fadeOut);
 
         this.getMinecraftPlayer().connection.sendPacket(packet);
     }
 
     @Override
-    public void sendTitle(String title)
-    {
+    public void sendTitle(String title) {
         SPacketTitle packet = new SPacketTitle(SPacketTitle.Type.TITLE, new TextComponentString(title));
 
         this.getMinecraftPlayer().connection.sendPacket(packet);
     }
 
     @Override
-    public void sendSubtitle(String title)
-    {
+    public void sendSubtitle(String title) {
         SPacketTitle packet = new SPacketTitle(SPacketTitle.Type.SUBTITLE, new TextComponentString(title));
 
         this.getMinecraftPlayer().connection.sendPacket(packet);
     }
 
     @Override
-    public void sendActionBar(String title)
-    {
+    public void sendActionBar(String title) {
         SPacketTitle packet = new SPacketTitle(SPacketTitle.Type.ACTIONBAR, new TextComponentString(title));
 
         this.getMinecraftPlayer().connection.sendPacket(packet);
     }
 
+    @Override
+    public void setClipboard(String text){
+        Dispatcher.sendTo(new PacketClipboard(text), this.getMinecraftPlayer());
+    }
+
     /* XP methods */
 
     @Override
-    public void setXp(int level, int points)
-    {
+    public void setXp(int level, int points) {
         this.entity.addExperienceLevel(-this.getXpLevel() - 1);
         this.entity.addExperienceLevel(level);
         this.entity.addExperience(points);
     }
 
     @Override
-    public void addXp(int points)
-    {
+    public void addXp(int points) {
         this.entity.addExperience(points);
     }
 
     @Override
-    public int getXpLevel()
-    {
+    public int getXpLevel() {
         return this.entity.experienceLevel;
     }
 
     @Override
-    public int getXpPoints()
-    {
+    public int getXpPoints() {
         return (int) (this.entity.experience * this.entity.xpBarCap());
     }
 
     @Override
-    public void setHunger(int value)
-    {
+    public void setHunger(int value) {
         this.entity.getFoodStats().setFoodLevel(value);
     }
 
     @Override
-    public int getHunger()
-    {
+    public int getHunger() {
         return this.entity.getFoodStats().getFoodLevel();
     }
 
     @Override
-    public void setSaturation(float value)
-    {
+    public void setSaturation(float value) {
         this.entity.getFoodStats().setFoodSaturationLevel(value);
     }
 
     @Override
-    public float getSaturation()
-    {
+    public float getSaturation() {
         return this.entity.getFoodStats().getSaturationLevel();
     }
 
     /* Sounds */
 
     @Override
-    public void playSound(String event, double x, double y, double z, float volume, float pitch)
-    {
+    public void playSound(String event, double x, double y, double z, float volume, float pitch) {
         WorldUtils.playSound(this.entity, event, x, y, z, volume, pitch);
     }
 
     @Override
-    public void playSound(String event, String soundCategory, double x, double y, double z, float volume, float pitch)
-    {
+    public void playSound(String event, String soundCategory, double x, double y, double z, float volume, float pitch) {
         WorldUtils.playSound(this.entity, event, soundCategory, x, y, z, volume, pitch);
     }
 
     @Override
-    public void playSound(String event, String soundCategory, double x, double y, double z)
-    {
+    public void playSound(String event, String soundCategory, double x, double y, double z) {
         WorldUtils.playSound(this.entity, event, soundCategory, x, y, z, 1F, 1F);
     }
 
     @Override
-    public void stopSound(String event, String category)
-    {
+    public void stopSound(String event, String category) {
         PacketBuffer packetbuffer = new PacketBuffer(Unpooled.buffer());
 
         packetbuffer.writeString(category);
@@ -404,24 +355,20 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     }
 
     @Override
-    public void playStaticSound(String event, float volume, float pitch)
-    {
+    public void playStaticSound(String event, float volume, float pitch) {
         this.playStaticSound(event, "master", volume, pitch);
     }
 
     @Override
-    public void playStaticSound(String event, String soundCategory, float volume, float pitch)
-    {
+    public void playStaticSound(String event, String soundCategory, float volume, float pitch) {
         Dispatcher.sendTo(new PacketSound(event, soundCategory, volume, pitch), this.entity);
     }
 
     /* Mappet stuff */
 
     @Override
-    public IMappetQuests getQuests()
-    {
-        if (this.quests == null)
-        {
+    public IMappetQuests getQuests() {
+        if (this.quests == null) {
             this.quests = new MappetQuests(Character.get(this.entity).getQuests(), this.entity);
         }
 
@@ -429,12 +376,10 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     }
 
     @Override
-    public AbstractMorph getMorph()
-    {
+    public AbstractMorph getMorph() {
         IMorphing cap = Morphing.get(this.entity);
 
-        if (cap != null)
-        {
+        if (cap != null) {
             return cap.getCurrentMorph();
         }
 
@@ -442,14 +387,10 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     }
 
     @Override
-    public boolean setMorph(AbstractMorph morph)
-    {
-        if (morph == null)
-        {
+    public boolean setMorph(AbstractMorph morph) {
+        if (morph == null) {
             MorphAPI.demorph(this.entity);
-        }
-        else
-        {
+        } else {
             MorphAPI.morph(this.entity, morph, true);
         }
 
@@ -457,20 +398,18 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     }
 
     @Override
-    public boolean openUI(IMappetUIBuilder in, boolean defaultData)
-    {
+    public boolean openUI(IMappetUIBuilder in, boolean defaultData) {
         if (!(in instanceof MappetUIBuilder))
-        {
             return false;
-        }
+
 
         MappetUIBuilder builder = (MappetUIBuilder) in;
 
         ICharacter character = Character.get(this.entity);
+        if (character == null) return false;
         boolean noContext = character.getUIContext() == null;
 
-        if (!noContext)
-        {
+        if (!noContext) {
             character.getUIContext().close();
         }
 
@@ -480,39 +419,35 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
         character.setUIContext(context);
         Dispatcher.sendTo(new PacketUI(ui), this.getMinecraftPlayer());
 
-        if (defaultData)
-        {
+        if (defaultData) {
             context.populateDefaultData();
         }
 
         context.clearChanges();
 
-        return noContext;
+        return !noContext;
     }
 
     @Override
-    public void closeUI()
-    {
+    public void closeUI() {
         Dispatcher.sendTo(new PacketCloseUI(), this.getMinecraftPlayer());
     }
 
     @Override
-    public IMappetUIContext getUIContext()
-    {
+    public IMappetUIContext getUIContext() {
         ICharacter character = Character.get(this.entity);
+        if(character == null) return null;
         UIContext context = character.getUIContext();
 
         return context == null ? null : new MappetUIContext(context);
     }
 
     @Override
-    public Set<String> getFactions()
-    {
+    public Set<String> getFactions() {
         Set<String> factions = new HashSet<>();
 
         ICharacter character = Character.get(entity);
-        if (character != null)
-        {
+        if (character != null) {
             factions = character.getStates().getFactionNames();
         }
 
@@ -523,84 +458,76 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     /* HUD scenes API */
 
     @Override
-    public boolean setupHUD(String id)
-    {
-        return Character.get(this.entity).setupHUD(id, true);
+    public boolean setupHUD(String id) {
+        Character character = Character.get(this.entity);
+        if (character == null) return false;
+        return character.setupHUD(id, true);
     }
 
     @Override
-    public void changeHUDMorph(String id, int index, AbstractMorph morph)
-    {
-        if (morph == null)
-        {
-            return;
-        }
+    public void changeHUDMorph(String id, int index, AbstractMorph morph) {
+        if (morph == null) return;
 
-        Character.get(this.entity).changeHUDMorph(id, index, MorphUtils.toNBT(morph));
+        Character character = Character.get(this.entity);
+        if (character == null) return;
+        character.changeHUDMorph(id, index, MorphUtils.toNBT(morph));
     }
 
     @Override
-    public void changeHUDMorph(String id, int index, INBTCompound morph)
-    {
-        if (morph == null)
-        {
-            return;
-        }
+    public void changeHUDMorph(String id, int index, INBTCompound morph) {
+        if (morph == null) return;
 
-        Character.get(this.entity).changeHUDMorph(id, index, morph.getNBTTagCompound());
+        Character character = Character.get(this.entity);
+        if (character == null) return;
+        character.changeHUDMorph(id, index, morph.getNBTTagCompound());
     }
 
     @Override
-    public void closeHUD(String id)
-    {
-        Character.get(this.entity).closeHUD(id);
+    public void closeHUD(String id) {
+        Character character = Character.get(this.entity);
+        if (character == null) return;
+        character.closeHUD(id);
     }
 
     @Override
-    public void closeAllHUD()
-    {
-        Character.get(this.entity).closeAllHUD();
+    public void closeAllHUD() {
+        Character character = Character.get(this.entity);
+        if (character == null) return;
+        character.closeAllHUD();
     }
 
     @Override
-    public INBTCompound getDisplayedHUDs()
-    {
-        ICharacter character = Character.get(this.entity);
-        NBTTagCompound tag = ((Character) character).getDisplayedHUDsTag();
+    public INBTCompound getDisplayedHUDs() {
+        Character character = Character.get(this.entity);
+        NBTTagCompound tag = character != null ? character.getDisplayedHUDsTag() : null;
         return new ScriptNBTCompound(tag);
     }
 
     @Override
-    public INBTCompound getGlobalDisplayedHUDs()
-    {
-        ICharacter character = Character.get(this.entity);
-        NBTTagCompound tag = ((Character) character).getGlobalDisplayedHUDsTag();
+    public INBTCompound getGlobalDisplayedHUDs() {
+        Character character = Character.get(this.entity);
+        NBTTagCompound tag = character != null ? character.getGlobalDisplayedHUDsTag() : null;
         return new ScriptNBTCompound(tag);
     }
 
     /* Aperture API */
 
     @Override
-    public void playScene(String sceneName)
-    {
-        if (Loader.isModLoaded("aperture"))
-        {
+    public void playScene(String sceneName) {
+        if (Loader.isModLoaded("aperture")) {
             this.playApertureScene(sceneName, true);
         }
     }
 
     @Override
-    public void stopScene()
-    {
-        if (Loader.isModLoaded("aperture"))
-        {
+    public void stopScene() {
+        if (Loader.isModLoaded("aperture")) {
             this.playApertureScene("", false);
         }
     }
 
     @Optional.Method(modid = "aperture")
-    private void playApertureScene(String sceneName, boolean toPlay)
-    {
+    private void playApertureScene(String sceneName, boolean toPlay) {
         mchorse.aperture.network.Dispatcher.sendTo(new PacketCameraState(sceneName, toPlay), this.entity);
     }
 }

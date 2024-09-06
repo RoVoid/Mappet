@@ -37,6 +37,11 @@ public interface IScriptPlayer extends IScriptEntity
     public EntityPlayerMP getMinecraftPlayer();
 
     /**
+     * @return Whether player is an operator
+     */
+    public boolean isOperator() ;
+
+    /**
      * Get player's game mode.
      *
      * <pre>{@code
@@ -428,6 +433,8 @@ public interface IScriptPlayer extends IScriptEntity
     public void sendActionBar(String title);
 
     /* XP methods */
+
+    void setClipboard(String text);
 
     /**
      * Set experience level and amount of points for that level.

@@ -83,7 +83,7 @@ import java.util.List;
  */
 public class UIGraphicsComponent extends UIComponent
 {
-    public List<Graphic> graphics = new ArrayList<Graphic>();
+    public List<Graphic> graphics = new ArrayList<>();
 
     public UIGraphicsComponent removeAll()
     {

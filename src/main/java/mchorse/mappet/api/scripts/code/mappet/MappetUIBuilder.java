@@ -27,7 +27,7 @@ import java.util.List;
 public class MappetUIBuilder implements IMappetUIBuilder
 {
     private UI ui;
-    private UIComponent current;
+    private final UIComponent current;
     private String script;
     private String function;
 

@@ -17,64 +17,53 @@ import net.minecraft.server.MinecraftServer;
 
 import javax.script.ScriptException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class ScriptServer implements IScriptServer
-{
-    private MinecraftServer server;
+public class ScriptServer implements IScriptServer {
+    private final MinecraftServer server;
 
     private IMappetStates states;
 
-    public ScriptServer(MinecraftServer server)
-    {
+    public ScriptServer(MinecraftServer server) {
         this.server = server;
     }
 
     @Override
-    public MinecraftServer getMinecraftServer()
-    {
+    public MinecraftServer getMinecraftServer() {
         return this.server;
     }
 
     @Override
-    public IScriptWorld getWorld(int dimension)
-    {
+    public IScriptWorld getWorld(int dimension) {
         return new ScriptWorld(this.server.getWorld(dimension));
     }
 
     @Override
-    public List<IScriptEntity> getEntities(String targetSelector)
-    {
-        List<IScriptEntity> entities = new ArrayList<IScriptEntity>();
+    public List<IScriptEntity> getEntities(String targetSelector) {
+        List<IScriptEntity> entities = new ArrayList<>();
 
-        try
-        {
-            for (Entity entity : EntitySelector.matchEntities(this.server, targetSelector, Entity.class))
-            {
+        try {
+            for (Entity entity : EntitySelector.matchEntities(this.server, targetSelector, Entity.class)) {
                 entities.add(ScriptEntity.create(entity));
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception ignored) {
         }
 
         return entities;
     }
 
     @Override
-    public IScriptEntity getEntity(String uuid)
-    {
+    public IScriptEntity getEntity(String uuid) {
         return ScriptEntity.create(this.server.getEntityFromUuid(UUID.fromString(uuid)));
     }
 
     @Override
-    public List<IScriptPlayer> getAllPlayers()
-    {
-        List<IScriptPlayer> entities = new ArrayList<IScriptPlayer>();
+    public List<IScriptPlayer> getAllPlayers() {
+        List<IScriptPlayer> entities = new ArrayList<>();
 
-        for (EntityPlayerMP player : this.server.getPlayerList().getPlayers())
-        {
+        for (EntityPlayerMP player : this.server.getPlayerList().getPlayers()) {
             entities.add(new ScriptPlayer(player));
         }
 
@@ -82,12 +71,10 @@ public class ScriptServer implements IScriptServer
     }
 
     @Override
-    public IScriptPlayer getPlayer(String username)
-    {
+    public IScriptPlayer getPlayer(String username) {
         EntityPlayerMP player = this.server.getPlayerList().getPlayerByUsername(username);
 
-        if (player != null)
-        {
+        if (player != null) {
             return new ScriptPlayer(player);
         }
 
@@ -95,10 +82,8 @@ public class ScriptServer implements IScriptServer
     }
 
     @Override
-    public IMappetStates getStates()
-    {
-        if (this.states == null)
-        {
+    public IMappetStates getStates() {
+        if (this.states == null) {
             this.states = new MappetStates(Mappet.states);
         }
 
@@ -106,67 +91,52 @@ public class ScriptServer implements IScriptServer
     }
 
     @Override
-    public boolean entityExists(String uuid) throws IllegalArgumentException
-    {
-        try
-        {
+    public boolean entityExists(String uuid) throws IllegalArgumentException {
+        try {
             UUID parsedUuid = UUID.fromString(uuid);
 
             return this.server.getEntityFromUuid(parsedUuid) != null;
-        }
-        catch (IllegalArgumentException ex)
-        {
+        } catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException("Invalid UUID string: " + uuid, ex);
         }
     }
 
     @Override
-    public void executeScript(String scriptName)
-    {
+    public void executeScript(String scriptName) {
         executeScript(scriptName, "main");
     }
 
     @Override
-    public void executeScript(String scriptName, String function)
-    {
+    public void executeScript(String scriptName, String function) {
         DataContext context = new DataContext(server);
-        try
-        {
+        try {
             Mappet.scripts.execute(scriptName, function, context);
-        }
-        catch (ScriptException e)
-        {
+        } catch (ScriptException e) {
             String fileName = e.getFileName() == null ? scriptName : e.getFileName();
-
-            e.printStackTrace();
-            throw new RuntimeException("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage(), e);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+            Mappet.logger.error("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
+            //hrow new RuntimeException("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage(), e);
+        } catch (Exception e) {
             throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
         }
     }
 
     @Override
-    public void executeScript(String scriptName, String function, Object... args)
-    {
+    public void executeScript(String scriptName, String function, Object... args) {
         DataContext context = new DataContext(server);
 
-        try
-        {
+        try {
             Mappet.scripts.execute(scriptName, function, context, args);
-        }
-        catch (ScriptException e)
-        {
+        } catch (ScriptException e) {
             String fileName = e.getFileName() == null ? scriptName : e.getFileName();
-            e.printStackTrace();
-            throw new RuntimeException("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage(), e);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+            Mappet.logger.error("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
+            // throw new RuntimeException("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage(), e);
+        } catch (Exception e) {
             throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public List<String> getOppedPlayerNames() {
+        return Arrays.asList(this.server.getPlayerList().getOppedPlayerNames());
     }
 }

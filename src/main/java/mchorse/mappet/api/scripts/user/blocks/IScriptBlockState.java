@@ -7,7 +7,7 @@ import net.minecraft.block.state.IBlockState;
  * Scripted block state.
  *
  * <p>This interface represents a block state that can be used
- * to compare or place into the world. You can use {@link mchorse.mappet.api.scripts.user.IScriptFactory#createBlockState(String, int)}
+ * to compare or place into the world. You can use {@link mchorse.mappet.api.scripts.user.IScriptFactory#createBlock(String, int)}
  * to query for comparison.</p>
  *
  * <pre>{@code

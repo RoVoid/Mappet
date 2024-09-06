@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class GuiUserInterface extends GuiBase
 {
-    private UIContext context;
+    private final UIContext context;
 
     public GuiUserInterface(Minecraft mc, UI ui)
     {

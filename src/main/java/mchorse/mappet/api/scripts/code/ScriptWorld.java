@@ -78,8 +78,8 @@ public class ScriptWorld implements IScriptWorld
 {
     public static final int MAX_VOLUME = 100;
 
-    private World world;
-    private BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+    private final World world;
+    private final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
     public ScriptWorld(World world)
     {

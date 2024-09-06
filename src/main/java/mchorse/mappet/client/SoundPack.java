@@ -14,12 +14,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.IOUtils;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -32,7 +34,7 @@ import java.util.Set;
 @SideOnly(Side.CLIENT)
 public class SoundPack implements IResourcePack
 {
-    private File folder;
+    private final File folder;
 
     public SoundPack(File folder)
     {
@@ -57,7 +59,7 @@ public class SoundPack implements IResourcePack
             return null;
         }
 
-        return new FileInputStream(file);
+        return Files.newInputStream(file.toPath());
     }
 
     private JsonObject generateJson(File folder, String prefix, JsonObject object)
