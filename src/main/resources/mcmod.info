@@ -2,13 +2,12 @@
     {
         "modid": "mappet",
         "name": "Mappet",
-        "description": "Adventure map toolset mod",
+        "description": "Mod for script tools",
         "version": "${version}",
         "mcversion": "${mcversion}",
-        "url": "https://www.curseforge.com/minecraft/mc-mods/mappet/",
-        "updateUrl": "https://raw.githubusercontent.com/mchorse/mappet/master/version.json",
         "authorList": ["mchorse", "TorayLife", "OtakuGamerAds", "RoVoid"],
-        "credits": "Andruxioid for suggesting the mod's name, and CustomNPCs Forever VK group for suggesting the mod idea! Also thanks to Evanechecssss for implementation of a couple of features.",
+        "url": "https://github.com/RoVoid/Mappet",
+        "credits": "This is a fork of Mappet by RoVoid\\n Original: https://github.com/mchorse/mappet",
         "logoFile": "",
         "screenshots": [],
         "dependencies": []

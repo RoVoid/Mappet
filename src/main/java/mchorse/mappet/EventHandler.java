@@ -64,6 +64,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -464,7 +465,7 @@ public class EventHandler {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerLogsIn(PlayerEvent.PlayerLoggedInEvent event) {
         EntityPlayerMP player = (EntityPlayerMP) event.player;
         ICharacter character = Character.get(player);
@@ -495,6 +496,10 @@ public class EventHandler {
 
         // display present global HUDs player on any player that has a global HUD in his displayed HUDs scenes list
         for (EntityPlayerMP p : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+            if(player.getName().equals(p.getName())) {
+                player.connection.disconnect(new TextComponentTranslation("mappet.error.event.busy"));
+                return;
+            }
             ICharacter c = Character.get(p);
             if (c != null) {
                 Map<String, List<HUDScene>> displayed = c.getDisplayedHUDs();
@@ -764,21 +769,24 @@ public class EventHandler {
             Mappet.settings.serverTick.trigger(this.context);
             this.context.cancel(false);
         }
+
+        if (!Mappet.settings.playerTick.isEmpty()) {
+            for (EntityPlayer player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+                this.context = new DataContext(player);
+                Mappet.settings.playerTick.trigger(this.context);
+                this.context.cancel(false);
+            }
+        }
     }
 
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) return;
         if (event.player.world.isRemote) {
             RenderingHandler.update();
             KeyboardHandler.updateHeldKeys();
             return;
         }
-        if (event.phase == TickEvent.Phase.START) return;
-        if (!Mappet.settings.playerTick.isEmpty()) {
-            this.context = new DataContext(event.player);
-            Mappet.settings.playerTick.trigger(this.context);
-        }
-
         Character character = Character.get(event.player);
         if (character != null) {
             character.getPositionCache().updatePlayer(event.player);

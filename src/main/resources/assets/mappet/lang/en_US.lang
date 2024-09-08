@@ -13,6 +13,7 @@ mappet.error.crafting.empty_output=§fCrafting table recipe's output item(s) by 
 
 mappet.error.event.missing=§fEvent by ID §7%s§f is missing!
 mappet.error.event.empty=§fEvent by ID §7%s§f is empty (it has no entry node)!
+mappet.error.event.busy=§fYou are already logged in!
 
 mappet.error.npc.missing=§fNPC by ID §7%s§f is missing!
 mappet.error.npc.empty=§fNPC by ID §7%s§f has no states!

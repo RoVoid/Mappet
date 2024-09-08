@@ -17,7 +17,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 
 group = "mchorse.mappet"
-archivesBaseName = "mappet"
+archivesBaseName = "Mappet"
 sourceCompatibility = targetCompatibility = "1.8"
 compileJava.options.encoding = 'UTF-8'
 
@@ -56,7 +56,6 @@ dependencies {
 }
 
 jar.finalizedBy('shadowJar')
-jar.finalizedBy('reobfJar')
 
 
 import org.apache.tools.ant.filters.ReplaceTokens
@@ -77,6 +76,8 @@ compileJava {
     source = processSource.outputs
 }
 
+tasks.jar.enabled = false
+
 shadowJar {
     dependencies {
         include(dependency("org.reflections:reflections:0.10.2"))
@@ -92,6 +93,19 @@ shadowJar {
     for (dependency in dependenciesToRelocate) {
         relocate dependency, "mchorse.mappet.libs." + dependency
     }
+
+    finalizedBy('incrementExportCount')
+
+}
+
+tasks.register('incrementExportCount') {
+    doLast {
+        def exportCountFile = file("$rootDir/exportCount.txt")
+        def exportCount = 0
+        if (exportCountFile.exists()) exportCount = exportCountFile.text.toInteger()
+        exportCount++
+        exportCountFile.text = exportCount.toString()
+    }
 }
 
 tasks.register('prepareAssets', Copy) {
@@ -101,13 +115,11 @@ tasks.register('prepareAssets', Copy) {
     def exportCount = 0
 
     if (exportCountFile.exists()) exportCount = exportCountFile.text.toInteger()
-    project.version += "-${exportCount}"
+    version = ((String) version).replace('x', exportCount.toString())
+    project.version = version
 
-    inputs.property 'version', project.version
+    inputs.property 'version', version
     inputs.property "mcversion", mcversion
-
-    exportCount++
-    exportCountFile.text = exportCount.toString()
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
@@ -119,7 +131,6 @@ tasks.register('prepareAssets', Copy) {
 
     into project.file('build/classes/java/main')
 }
-
 
 classes.dependsOn(prepareAssets)
 

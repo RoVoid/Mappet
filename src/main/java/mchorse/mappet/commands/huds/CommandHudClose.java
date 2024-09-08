@@ -56,7 +56,7 @@ public class CommandHudClose extends CommandHudBase
         }
         else
         {
-            character.closeAllHUD();
+            character.closeAllHUDs();
         }
     }
 }

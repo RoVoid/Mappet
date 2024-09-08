@@ -493,7 +493,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     public void closeAllHUD() {
         Character character = Character.get(this.entity);
         if (character == null) return;
-        character.closeAllHUD();
+        character.closeAllHUDs();
     }
 
     @Override

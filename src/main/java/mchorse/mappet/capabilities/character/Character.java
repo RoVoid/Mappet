@@ -238,7 +238,7 @@ public class Character implements ICharacter {
     }
 
     @Override
-    public void closeAllHUD() {
+    public void closeAllHUDs() {
         for (Map.Entry<String, List<HUDScene>> entry : getDisplayedHUDs().entrySet()) {
             if (entry.getValue().get(0).global) {
                 for (EntityPlayer player : this.player.world.playerEntities)
