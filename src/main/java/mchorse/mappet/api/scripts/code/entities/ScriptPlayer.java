@@ -47,6 +47,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScriptPlayer {
@@ -491,6 +492,13 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
 
     @Override
     public void closeAllHUD() {
+        Character character = Character.get(this.entity);
+        if (character == null) return;
+        character.closeAllHUDs();
+    }
+
+    @Override
+    public void closeAllHUD(List<String> ignores) {
         Character character = Character.get(this.entity);
         if (character == null) return;
         character.closeAllHUDs();

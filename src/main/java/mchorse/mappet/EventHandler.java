@@ -20,6 +20,8 @@ import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.triggers.Trigger;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.api.utils.IExecutable;
+import mchorse.mappet.blocks.BlockRegion;
+import mchorse.mappet.blocks.BlockTrigger;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.CharacterProvider;
 import mchorse.mappet.capabilities.character.ICharacter;
@@ -39,6 +41,7 @@ import mchorse.mappet.network.common.quests.PacketQuests;
 import mchorse.mappet.network.common.scripts.PacketClick;
 import mchorse.mappet.utils.RunnableExecutionFork;
 import mchorse.mclib.utils.ReflectionUtils;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -58,13 +61,16 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.login.server.SPacketDisconnect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -270,10 +276,18 @@ public class EventHandler {
 
     @SubscribeEvent
     public void onPlayerPlaceBlock(BlockEvent.PlaceEvent event) {
+        EntityPlayerMP player = (EntityPlayerMP) event.getPlayer();
+        MinecraftServer server = player.getServer();
+        if (server != null && !server.getPlayerList().canSendCommands(player.getGameProfile())) {
+            Block block = event.getPlacedBlock().getBlock();
+            if (block instanceof BlockTrigger || block instanceof BlockRegion) {
+                event.setCanceled(true);
+                return;
+            }
+        }
         if (!Mappet.settings.blockPlace.isEmpty()) {
             IBlockState state = event.getPlacedBlock();
-            DataContext context = new DataContext(event.getPlayer()).set("block", state.getBlock().getRegistryName().toString()).set("meta", state.getBlock().getMetaFromState(state)).set("x", event.getPos().getX()).set("y", event.getPos().getY()).set("z", event.getPos().getZ());
-
+            DataContext context = new DataContext(player).set("block", state.getBlock().getRegistryName().toString()).set("meta", state.getBlock().getMetaFromState(state)).set("x", event.getPos().getX()).set("y", event.getPos().getY()).set("z", event.getPos().getZ());
             this.trigger(event, Mappet.settings.blockPlace, context);
         }
     }
@@ -455,7 +469,6 @@ public class EventHandler {
     public void onPlayerClientLogsIn(PlayerEvent.PlayerLoggedInEvent event) {
         EntityPlayerMP player = (EntityPlayerMP) event.player;
 
-        // play sounds for the player if he has config "reload all sounds on log in" set to true
         if (Mappet.loadCustomSoundsOnLogin.get()) {
             IScriptPlayer scriptPlayer = new ScriptPlayer(player);
             for (String sound : SoundPack.getCustomSoundEvents()) {
@@ -465,9 +478,11 @@ public class EventHandler {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent
     public void onPlayerLogsIn(PlayerEvent.PlayerLoggedInEvent event) {
         EntityPlayerMP player = (EntityPlayerMP) event.player;
+        if (event.player == null) return;
+
         ICharacter character = Character.get(player);
         Instant lastClear = Mappet.data.getLastClear();
 
@@ -496,10 +511,6 @@ public class EventHandler {
 
         // display present global HUDs player on any player that has a global HUD in his displayed HUDs scenes list
         for (EntityPlayerMP p : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
-            if(player.getName().equals(p.getName())) {
-                player.connection.disconnect(new TextComponentTranslation("mappet.error.event.busy"));
-                return;
-            }
             ICharacter c = Character.get(p);
             if (c != null) {
                 Map<String, List<HUDScene>> displayed = c.getDisplayedHUDs();

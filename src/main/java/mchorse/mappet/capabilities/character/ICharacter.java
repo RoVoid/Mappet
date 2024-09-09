@@ -68,5 +68,7 @@ public interface ICharacter extends INBTSerializable<NBTTagCompound>
 
     public void closeAllHUDs();
 
+    void closeAllHUDs(List<String> ignores);
+
     public Map<String, List<HUDScene>> getDisplayedHUDs();
 }

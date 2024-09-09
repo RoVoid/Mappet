@@ -239,13 +239,18 @@ public class Character implements ICharacter {
 
     @Override
     public void closeAllHUDs() {
+        closeAllHUDs(new ArrayList<>());
+    }
+
+    @Override
+    public void closeAllHUDs(List<String> ignores) {
         for (Map.Entry<String, List<HUDScene>> entry : getDisplayedHUDs().entrySet()) {
+            if(ignores.contains(entry.getKey())) continue;
             if (entry.getValue().get(0).global) {
                 for (EntityPlayer player : this.player.world.playerEntities)
                     Dispatcher.sendTo(new PacketHUDScene(entry.getKey(), null), (EntityPlayerMP) player);
             } else Dispatcher.sendTo(new PacketHUDScene(entry.getKey(), null), (EntityPlayerMP) player);
         }
-
         getDisplayedHUDs().clear();
     }
 

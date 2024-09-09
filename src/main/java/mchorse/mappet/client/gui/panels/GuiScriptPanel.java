@@ -256,7 +256,6 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
     private void openDocumentation(GuiIconElement element) {
         GuiDocumentationOverlayPanel panel = new GuiDocumentationOverlayPanel(this.mc);
-
         GuiOverlay.addOverlay(GuiBase.getCurrent(), panel, 0.9F, 0.9F);
     }
 

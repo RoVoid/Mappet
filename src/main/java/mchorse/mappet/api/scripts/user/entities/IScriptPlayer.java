@@ -11,6 +11,7 @@ import mchorse.mappet.api.scripts.user.nbt.INBTCompound;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.player.EntityPlayerMP;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -784,6 +785,8 @@ public interface IScriptPlayer extends IScriptEntity
      * @param id HUD scene's ID/filename.
      */
     public void closeHUD(String id);
+
+    void closeAllHUD(List<String> ignores);
 
     /**
      * Get all HUD scenes (including global HUDs) that are currently displayed for this player.

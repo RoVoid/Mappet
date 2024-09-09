@@ -15,7 +15,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -84,8 +83,9 @@ public class BlockTrigger extends Block implements ITileEntityProvider {
         TileTrigger trigger = (TileTrigger) tile;
 
         MinecraftServer server = playerIn.getServer();
-        if (server != null && server.getPlayerList().canSendCommands(playerIn.getGameProfile()) && playerIn.isCreative() && !playerIn.isSneaking()) {
-            Dispatcher.sendTo(new PacketEditTrigger(trigger), (EntityPlayerMP) playerIn);
+        if (playerIn.isCreative() && !playerIn.isSneaking()) {
+            if (server != null && server.getPlayerList().canSendCommands(playerIn.getGameProfile()))
+                Dispatcher.sendTo(new PacketEditTrigger(trigger), (EntityPlayerMP) playerIn);
         } else {
             trigger.rightClick.trigger(new DataContext(playerIn)
                     .set("x", pos.getX())
@@ -93,23 +93,6 @@ public class BlockTrigger extends Block implements ITileEntityProvider {
                     .set("z", pos.getZ()));
         }
         return true;
-    }
-
-
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        if (!worldIn.isRemote && placer instanceof EntityPlayerMP) {
-            EntityPlayerMP player = (EntityPlayerMP) placer;
-            MinecraftServer server = player.getServer();
-            if(server == null || !server.getPlayerList().canSendCommands(player.getGameProfile())){
-                worldIn.setBlockToAir(pos);
-                if (!player.isCreative() && !player.inventory.addItemStackToInventory(new ItemStack(this))) {
-                    player.dropItem(new ItemStack(this), false);
-                }
-                return;
-            }
-        }
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     /* Meta */

@@ -71,22 +71,6 @@ public class BlockRegion extends Block implements ITileEntityProvider {
         return true;
     }
 
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        if (!worldIn.isRemote && placer instanceof EntityPlayerMP) {
-            EntityPlayerMP player = (EntityPlayerMP) placer;
-            MinecraftServer server = player.getServer();
-            if (server == null || !server.getPlayerList().canSendCommands(player.getGameProfile())) {
-                worldIn.setBlockToAir(pos);
-                if (!player.isCreative() && !player.inventory.addItemStackToInventory(new ItemStack(this))) {
-                    player.dropItem(new ItemStack(this), false);
-                }
-                return;
-            }
-        }
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
-    }
-
     /* Make the block walkable through and invisible */
 
     @Override

@@ -29,7 +29,7 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
     private static DocEntry top;
     private static DocEntry entry;
 
-    public GuiDocEntrySearchList list;
+    public GuiDocEntrySearchList searchList;
     public GuiScrollElement documentation;
     public GuiIconElement javadocs;
     public GuiIconElement copy;
@@ -200,14 +200,14 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
     public GuiDocumentationOverlayPanel(Minecraft mc, DocEntry entry) {
         super(mc, IKey.lang("mappet.gui.scripts.documentation.title"));
 
-        this.list = new GuiDocEntrySearchList(mc, (l) -> this.pick(l.get(0)));
-        this.list.label(IKey.lang("mappet.gui.search"));
+        this.searchList = new GuiDocEntrySearchList(mc, (l) -> this.pick(l.get(0)));
+        this.searchList.label(IKey.lang("mappet.gui.search"));
         this.documentation = new GuiScrollElement(mc);
 
-        this.list.flex().relative(this.content).w(240).h(1F);
+        this.searchList.flex().relative(this.content).w(240).h(1F);
         this.documentation.flex().relative(this.content).x(240).w(1F, -240).h(1F).column(4).vertical().stretch().scroll().padding(10);
 
-        this.content.add(this.list, this.documentation);
+        this.content.add(this.searchList, this.documentation);
         this.javadocs = new GuiIconElement(mc, Icons.SERVER, (b) -> this.openJavadocs());
         this.javadocs.tooltip(IKey.lang("mappet.gui.scripts.documentation.javadocs")).flex().wh(16, 16);
         this.copy = new GuiIconElement(mc, Icons.COPY, (b) -> this.copyMethod());
@@ -227,22 +227,22 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
 
         entryIn = entryIn.getEntry();
         List<DocEntry> entries = entryIn.getEntries();
-        boolean wasSame = this.list.list.getList().size() >= 2 && this.list.list.getList().get(1).parent == entryIn.parent;
+        boolean wasSame = this.searchList.list.getList().size() >= 2 && this.searchList.list.getList().get(1).parent == entryIn.parent;
 
         /* If the list isn't the same or if the current item got double-clicked
          * to enter into the section */
         if (entry == entryIn || !wasSame) {
-            this.list.list.clear();
+            this.searchList.list.clear();
 
             if (entryIn.parent != null) {
-                this.list.list.add(new DocDelegate(entryIn.parent));
+                this.searchList.list.add(new DocDelegate(entryIn.parent));
             }
 
-            this.list.list.add(entries);
-            this.list.list.sort();
+            this.searchList.list.add(entries);
+            this.searchList.list.sort();
 
             if (isMethod) {
-                this.list.list.setCurrentScroll(entryIn);
+                this.searchList.list.setCurrentScroll(entryIn);
             }
         }
 
@@ -278,8 +278,8 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
     }
 
     private void copyMethod() {
-        if (this.list.list.getCurrentFirst() != null) {
-            GuiScreen.setClipboardString(this.list.list.getCurrentFirst().getName().replaceAll("§.", ""));
+        if (this.searchList.list.getCurrentFirst() != null) {
+            GuiScreen.setClipboardString(this.searchList.list.getCurrentFirst().getName().replaceAll("§.", ""));
         }
     }
 

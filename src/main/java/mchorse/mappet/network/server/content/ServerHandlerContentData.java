@@ -1,5 +1,6 @@
 package mchorse.mappet.network.server.content;
 
+import mchorse.mappet.api.utils.AbstractData;
 import mchorse.mappet.api.utils.manager.IManager;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.network.Dispatcher;
@@ -26,7 +27,7 @@ public class ServerHandlerContentData extends ServerMessageHandler<PacketContent
             return;
         }
 
-        IManager manager = message.type.getManager();
+        IManager<? extends AbstractData> manager = message.type.getManager();
 
         if (message.rename != null)
         {
@@ -55,7 +56,7 @@ public class ServerHandlerContentData extends ServerMessageHandler<PacketContent
         }
 
         /* Synchronize names to other players */
-        List<String> names = new ArrayList<String>(message.type.getManager().getKeys());
+        List<String> names = new ArrayList<>(message.type.getManager().getKeys());
 
         for (EntityPlayerMP otherPlayer : player.getServer().getPlayerList().getPlayers())
         {

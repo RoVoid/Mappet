@@ -56,12 +56,19 @@ dependencies {
 }
 
 jar.finalizedBy('shadowJar')
+jar.finalizedBy('reobfJar')
 
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
 tasks.register('processSource', Sync) {
     outputs.upToDateWhen { false }
+
+//    def exportCountFile = file("$rootDir/exportCount.txt")
+//    def exportCount = 0
+//
+//    if (exportCountFile.exists()) exportCount = exportCountFile.text.toInteger()
+//    version = ((String) version).replace('x', exportCount.toString())
 
     from sourceSets.main.java
     filter(ReplaceTokens, tokens: [MAPPET     : version,
@@ -94,28 +101,22 @@ shadowJar {
         relocate dependency, "mchorse.mappet.libs." + dependency
     }
 
-    finalizedBy('incrementExportCount')
-
+//    finalizedBy('incrementExportCount')
 }
 
-tasks.register('incrementExportCount') {
-    doLast {
-        def exportCountFile = file("$rootDir/exportCount.txt")
-        def exportCount = 0
-        if (exportCountFile.exists()) exportCount = exportCountFile.text.toInteger()
-        exportCount++
-        exportCountFile.text = exportCount.toString()
-    }
-}
+//tasks.register('incrementExportCount') {
+//    doLast {
+//        def exportCountFile = file("$rootDir/exportCount.txt")
+//        def exportCount = 0
+//        if (exportCountFile.exists()) exportCount = exportCountFile.text.toInteger()
+//        exportCount++
+//        exportCountFile.text = exportCount.toString()
+//    }
+//}
 
 tasks.register('prepareAssets', Copy) {
     group = 'build'
 
-    def exportCountFile = file("$rootDir/exportCount.txt")
-    def exportCount = 0
-
-    if (exportCountFile.exists()) exportCount = exportCountFile.text.toInteger()
-    version = ((String) version).replace('x', exportCount.toString())
     project.version = version
 
     inputs.property 'version', version
@@ -135,22 +136,6 @@ tasks.register('prepareAssets', Copy) {
 classes.dependsOn(prepareAssets)
 
 tasks.withType(Jar).configureEach { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
-
-/* Dev build */
-tasks.register('deobfJar', Jar) {
-    from sourceSets.main.output
-    archiveClassifier.set('dev')
-}
-
-tasks.register('sourcesJar', Jar) {
-    from sourceSets.main.allJava
-    archiveClassifier.set('sources')
-}
-
-artifacts {
-    archives deobfJar
-    archives sourcesJar
-}
 
 /* Comparing keys */
 tasks.register('compareLangFiles') {

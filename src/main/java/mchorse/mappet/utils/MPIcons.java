@@ -904,7 +904,6 @@ public class MPIcons {
         IconRegistry.register("key_i", KEY_I);
         IconRegistry.register("key_o", KEY_O);
         IconRegistry.register("key_p", KEY_P);
-        IconRegistry.register("key_q", KEY_Q);
         IconRegistry.register("key_left_bracket", KEY_LEFT_BRACKET);
         IconRegistry.register("key_right_bracket", KEY_RIGHT_BRACKET);
         IconRegistry.register("key_left_brace", KEY_LEFT_BRACE);
