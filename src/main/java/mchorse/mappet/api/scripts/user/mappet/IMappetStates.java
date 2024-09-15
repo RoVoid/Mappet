@@ -30,7 +30,9 @@ public interface IMappetStates
      *
      * @return original value plus the provided value
      */
-    public double add(String id, double value);
+     double add(String id, double value);
+
+    String add(String id, String value);
 
     /**
      * Set numeric value to existing state by ID.
@@ -42,7 +44,7 @@ public interface IMappetStates
      *    c.send("Total spending is now " + states.getNumber("total_spending"));
      * }</pre>
      */
-    public void setNumber(String id, double value);
+     void setNumber(String id, double value);
 
     /**
      * Set string value to existing state by ID.
@@ -54,7 +56,9 @@ public interface IMappetStates
      *    c.getSubject().send("Your name is " + states.getString("name"));
      * }</pre>
      */
-    public void setString(String id, String value);
+     void setString(String id, String value);
+
+    void setBoolean(String id, boolean value);
 
     /**
      * Get a numeric value of a state by given ID.
@@ -67,7 +71,7 @@ public interface IMappetStates
      *
      * @return state value, or 0 if no state found
      */
-    public double getNumber(String id);
+     double getNumber(String id);
 
     /**
      * Check if a state instance of number.
@@ -78,7 +82,7 @@ public interface IMappetStates
      *    c.send("State is number: " + states.isNumber("state_number"));
      * }</pre>
      */
-    public boolean isNumber(String id);
+     boolean isNumber(String id);
 
     /**
      * Get a string value of a state by given ID.
@@ -91,7 +95,7 @@ public interface IMappetStates
      *
      * @return state value, or empty string if no state found
      */
-    public String getString(String id);
+     String getString(String id);
 
     /**
      * Check if a state instance of string.
@@ -102,7 +106,11 @@ public interface IMappetStates
      *    c.send("State is string: " + states.isString("state_string"));
      * }</pre>
      */
-    public boolean isString(String id);
+     boolean isString(String id);
+
+    boolean getBoolean(String id);
+
+    boolean isBoolean(String id);
 
     /**
      * Removes a state by given ID.
@@ -114,7 +122,7 @@ public interface IMappetStates
      *    states.reset("total_spendings");
      * }</pre>
      */
-    public void reset(String id);
+     void reset(String id);
 
     /**
      * Removes multiple states by using mask.
@@ -126,7 +134,7 @@ public interface IMappetStates
      *    states.resetMasked("regions.*");
      * }</pre>
      */
-    public void resetMasked(String id);
+     void resetMasked(String id);
 
     /**
      * Remove all states.
@@ -138,7 +146,7 @@ public interface IMappetStates
      *    states.clear();
      * }</pre>
      */
-    public void clear();
+     void clear();
 
     /**
      * Check whether state by given ID exists.
@@ -150,7 +158,7 @@ public interface IMappetStates
      *    c.getSubject().send("Your name is " + name);
      * }</pre>
      */
-    public boolean has(String id);
+     boolean has(String id);
 
     /**
      * Get IDs of all states.
@@ -164,5 +172,5 @@ public interface IMappetStates
      *    }
      * }</pre>
      */
-    public Set<String> keys();
+     Set<String> keys();
 }

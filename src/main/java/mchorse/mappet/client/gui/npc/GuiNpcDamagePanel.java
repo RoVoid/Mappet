@@ -19,7 +19,7 @@ public class GuiNpcDamagePanel extends GuiNpcPanel
 
     public GuiNpcDamagePanel(Minecraft mc)
     {
-        super(mc);
+        super(mc, IKey.lang("mappet.gui.npcs.damage.title"));
 
         this.damage = new GuiTrackpadElement(mc, (v) -> this.state.damage.set(v.floatValue()));
         this.damage.limit(0);

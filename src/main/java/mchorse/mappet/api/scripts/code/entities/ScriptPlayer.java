@@ -7,6 +7,7 @@ import mchorse.mappet.api.scripts.code.mappet.MappetQuests;
 import mchorse.mappet.api.scripts.code.mappet.MappetUIBuilder;
 import mchorse.mappet.api.scripts.code.mappet.MappetUIContext;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
+import mchorse.mappet.api.scripts.code.score.ScriptTeam;
 import mchorse.mappet.api.scripts.user.data.ScriptVector;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.items.IScriptInventory;
@@ -37,6 +38,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.*;
+import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.BlockPos;
@@ -280,7 +282,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     }
 
     @Override
-    public void setClipboard(String text){
+    public void setClipboard(String text) {
         Dispatcher.sendTo(new PacketClipboard(text), this.getMinecraftPlayer());
     }
 
@@ -328,6 +330,17 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
         return this.entity.getFoodStats().getSaturationLevel();
     }
 
+    @Override
+    public void join(ScriptTeam team) {
+        team.join(this);
+    }
+
+    @Override
+    public void leave() {
+        ScorePlayerTeam team = (ScorePlayerTeam) entity.getTeam();
+        if (team != null) new ScriptTeam(entity.getWorldScoreboard(), team).leave(this);
+    }
+
     /* Sounds */
 
     @Override
@@ -370,7 +383,9 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     @Override
     public IMappetQuests getQuests() {
         if (this.quests == null) {
-            this.quests = new MappetQuests(Character.get(this.entity).getQuests(), this.entity);
+            Character character = Character.get(this.entity);
+            if (character != null)
+                this.quests = new MappetQuests(character.getQuests(), this.entity);
         }
 
         return this.quests;
@@ -437,7 +452,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     @Override
     public IMappetUIContext getUIContext() {
         ICharacter character = Character.get(this.entity);
-        if(character == null) return null;
+        if (character == null) return null;
         UIContext context = character.getUIContext();
 
         return context == null ? null : new MappetUIContext(context);
@@ -491,17 +506,17 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     }
 
     @Override
-    public void closeAllHUD() {
+    public void closeAllHUDs() {
         Character character = Character.get(this.entity);
         if (character == null) return;
         character.closeAllHUDs();
     }
 
     @Override
-    public void closeAllHUD(List<String> ignores) {
+    public void closeAllHUDs(List<String> ignores) {
         Character character = Character.get(this.entity);
         if (character == null) return;
-        character.closeAllHUDs();
+        character.closeAllHUDs(ignores);
     }
 
     @Override

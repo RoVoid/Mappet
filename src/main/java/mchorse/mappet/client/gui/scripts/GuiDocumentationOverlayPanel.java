@@ -71,12 +71,14 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
             DocList items = new DocList();
             DocList blocks = new DocList();
             DocList ui = new DocList();
+            DocList score = new DocList();
             docLists.put("topPackage", topPackage);
             docLists.put("scripting", scripting);
             docLists.put("entities", entities);
             docLists.put("nbt", nbt);
             docLists.put("items", items);
             docLists.put("blocks", blocks);
+            docLists.put("score", score);
             docLists.put("ui", ui);
             mixinsHook();
             /* Place for mixins */
@@ -129,6 +131,11 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
                 blocks.doc = docs.getPackage("mchorse.mappet.api.scripts.user.blocks").doc;
                 blocks.parent = scripting;
                 scripting.entries.add(blocks);
+
+                score.name = "/ Score";
+                score.doc = docs.getPackage("mchorse.mappet.api.scripts.user.score").doc;
+                score.parent = scripting;
+                scripting.entries.add(score);
             }
 
             for (DocClass docClass : docs.classes) {
@@ -157,6 +164,7 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
                     functions.add(() -> addWithNewStructure(input -> input.name.contains("nbt"), docClass, docLists.get("nbt")));
                     functions.add(() -> addWithNewStructure(input -> input.name.contains("items"), docClass, docLists.get("items")));
                     functions.add(() -> addWithNewStructure(input -> input.name.contains("blocks"), docClass, docLists.get("blocks")));
+                    functions.add(() -> addWithNewStructure(input -> input.name.contains("score"), docClass, docLists.get("score")));
                     mixinsHook();
                     /* Place for mixins */
                     functions.add(() -> addWithNewStructure(input -> !input.name.endsWith("Graphic"), docClass, docLists.get("scripting")));

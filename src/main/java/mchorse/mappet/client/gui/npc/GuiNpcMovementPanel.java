@@ -33,7 +33,7 @@ public class GuiNpcMovementPanel extends GuiNpcPanel
 
     public GuiNpcMovementPanel(Minecraft mc)
     {
-        super(mc);
+        super(mc, IKey.lang("mappet.gui.npcs.movement.title"));
 
         this.speed = new GuiTrackpadElement(mc, (v) -> this.state.speed.set(v.floatValue()));
         this.flightMaxHeight = new GuiTrackpadElement(mc, (v) -> this.state.flightMaxHeight.set(v));

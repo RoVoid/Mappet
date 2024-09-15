@@ -4,6 +4,7 @@ import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.ScriptPlayer;
 import mchorse.mappet.api.scripts.code.mappet.MappetStates;
+import mchorse.mappet.api.scripts.code.score.ScriptScoreboard;
 import mchorse.mappet.api.scripts.user.IScriptServer;
 import mchorse.mappet.api.scripts.user.IScriptWorld;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
@@ -138,5 +139,10 @@ public class ScriptServer implements IScriptServer {
     @Override
     public List<String> getOppedPlayerNames() {
         return Arrays.asList(this.server.getPlayerList().getOppedPlayerNames());
+    }
+
+    @Override
+    public ScriptScoreboard getScoreboard(){
+        return new ScriptScoreboard(server.getEntityWorld().getScoreboard());
     }
 }

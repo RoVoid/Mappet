@@ -26,7 +26,7 @@ public class GuiNpcGeneralPanel extends GuiNpcPanel
 
     public GuiNpcGeneralPanel(Minecraft mc)
     {
-        super(mc);
+        super(mc, IKey.lang("mappet.gui.npcs.general.title"));
 
         this.faction = new GuiButtonElement(mc, IKey.lang("mappet.gui.overlays.faction"), (t) -> this.openFactions());
         this.morph = new GuiNestedEdit(mc, this::openMorphMenu);

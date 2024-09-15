@@ -15,7 +15,7 @@ public class GuiNpcHealthPanel extends GuiNpcPanel
 
     public GuiNpcHealthPanel(Minecraft mc)
     {
-        super(mc);
+        super(mc, IKey.lang("mappet.gui.npcs.health.title"));
 
         this.maxHealth = new GuiTrackpadElement(mc, (v) -> this.state.maxHealth.set(v.floatValue()));
         this.maxHealth.limit(0);

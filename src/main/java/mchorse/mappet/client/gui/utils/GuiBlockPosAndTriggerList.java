@@ -69,13 +69,9 @@ public class GuiBlockPosAndTriggerList extends GuiElement
         element.position.set(pos);
         element.trigger.set(trigger);
         element.position.callback = (blockPos) ->
-        {
-            this.posList.set(this.getChildren().indexOf(element), blockPos);
-        };
+                this.posList.set(this.getChildren().indexOf(element), blockPos);
         element.position.context(() ->
-        {
-            return element.position.createDefaultContextMenu().action(Icons.REMOVE, IKey.lang("mappet.gui.block_pos.context.remove"), () -> this.removeBlock(element), Colors.NEGATIVE);
-        });
+                element.position.createDefaultContextMenu().action(Icons.REMOVE, IKey.lang("mappet.gui.block_pos.context.remove"), () -> this.removeBlock(element), Colors.NEGATIVE));
 
         return element;
     }

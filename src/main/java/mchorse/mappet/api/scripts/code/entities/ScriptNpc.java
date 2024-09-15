@@ -27,7 +27,7 @@ public class ScriptNpc extends ScriptEntity<EntityNpc> implements IScriptNpc
     }
 
     @Override
-    public String getNpcId()
+    public String getId()
     {
         return this.entity.getId();
     }
@@ -384,11 +384,16 @@ public class ScriptNpc extends ScriptEntity<EntityNpc> implements IScriptNpc
     public void clearPatrolPoints()
     {
         NpcState state = this.entity.getState();
-
         state.patrol.clear();
-
         this.entity.setState(state, false);
     }
+
+//    public  void addPatrolPoints(){
+//        NpcState npcState = this.entity.getState();
+//        npcState.patrol.add(new BlockPos(x, y, z));
+//        npcState.patrolTriggers.add(new Trigger());
+//        this.entity.setState(npcState, true);
+//    }
 
     @Override
     public void removePatrolPoint(int index)

@@ -21,7 +21,7 @@ public class GuiNpcRespawnPanel extends GuiNpcPanel
 
     public GuiNpcRespawnPanel(Minecraft mc)
     {
-        super(mc);
+        super(mc, IKey.lang("mappet.gui.npcs.respawn.title"));
 
         this.respawn = new GuiToggleElement(mc, IKey.lang("mappet.gui.npcs.respawn.respawn"), (b) -> this.state.respawn.set(b.isToggled()));
         this.respawnDelay = new GuiTrackpadElement(mc, (v) -> this.state.respawnDelay.set(v.intValue()));

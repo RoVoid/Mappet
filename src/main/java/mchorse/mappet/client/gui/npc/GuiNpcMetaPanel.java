@@ -21,7 +21,7 @@ public class GuiNpcMetaPanel extends GuiNpcPanel
 
     public GuiNpcMetaPanel(Minecraft mc, boolean id)
     {
-        super(mc);
+        super(mc, IKey.lang("mappet.gui.npcs.meta.title"));
 
         this.id = new GuiTextElement(mc, 1000, (t) -> this.state.id.set(t));
         this.states = new GuiButtonElement(mc, IKey.lang("mappet.gui.npcs.meta.states.pick"), (b) -> this.openStates());

@@ -1,5 +1,6 @@
 package mchorse.mappet.api.scripts.user;
 
+import mchorse.mappet.api.scripts.code.score.ScriptScoreboard;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.mappet.IMappetStates;
@@ -189,4 +190,6 @@ public interface IScriptServer
     void executeScript(String scriptName, String function, Object... args);
 
     List<String> getOppedPlayerNames();
+
+    ScriptScoreboard getScoreboard();
 }

@@ -272,7 +272,7 @@ tasks.register('openBuiltJarsDir', Exec) {
     ignoreExitValue true
 }
 
-tasks.register('scriptingJavadocsJson', Exec) {
+task 'scriptingJavadocsJson'(type: Exec) {
     executable "javadoc"
     args "-doclet", "mchorse.utils.doclets.JsonDoclet", "-docletpath", "./run/jsonDoclet.jar", "-sourcepath", "./src/main/java/", "-subpackages", "mchorse.mappet.api.scripts.user:mchorse.mappet.api.ui.components:mchorse.mappet.client.gui.utils.graphics"
 

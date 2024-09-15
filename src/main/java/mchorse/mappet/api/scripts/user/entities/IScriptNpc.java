@@ -42,7 +42,7 @@ public interface IScriptNpc extends IScriptEntity
      *    c.send(npc.getNpcId() === "test");
      * }</pre>
      */
-    public String getNpcId();
+    public String getId();
 
     /**
      * Get NPC's state.
@@ -149,7 +149,7 @@ public interface IScriptNpc extends IScriptEntity
      * c.getSubject().setNpcSpeed(speed);
      * }</pre>
      */
-    public void setNpcSpeed(float speed);
+    void setNpcSpeed(float speed);
 
     /**
      * Gets the speed of the NPC.
