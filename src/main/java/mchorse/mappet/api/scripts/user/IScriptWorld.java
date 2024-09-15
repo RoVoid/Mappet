@@ -1,5 +1,6 @@
 package mchorse.mappet.api.scripts.user;
 
+import mchorse.mappet.api.scripts.code.ScriptWorldBorder;
 import mchorse.mappet.api.scripts.code.mappet.MappetSchematic;
 import mchorse.mappet.api.scripts.user.blocks.IScriptBlockState;
 import mchorse.mappet.api.scripts.user.blocks.IScriptTileEntity;
@@ -938,6 +939,8 @@ public interface IScriptWorld
     {
         this.displayMorph(morph, expiration, x, y, z, yaw, pitch, range, null);
     }
+
+    ScriptWorldBorder getBorder();
 
     /**
      * Display a world morph to all players at given point with rotation
