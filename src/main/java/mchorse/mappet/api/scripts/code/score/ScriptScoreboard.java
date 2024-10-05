@@ -2,9 +2,7 @@ package mchorse.mappet.api.scripts.code.score;
 
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.user.score.IScriptScoreboard;
-import net.minecraft.scoreboard.IScoreCriteria;
-import net.minecraft.scoreboard.ScoreObjective;
-import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.scoreboard.*;
 
 import javax.annotation.Nullable;
 

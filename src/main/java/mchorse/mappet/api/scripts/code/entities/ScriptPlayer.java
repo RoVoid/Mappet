@@ -7,6 +7,8 @@ import mchorse.mappet.api.scripts.code.mappet.MappetQuests;
 import mchorse.mappet.api.scripts.code.mappet.MappetUIBuilder;
 import mchorse.mappet.api.scripts.code.mappet.MappetUIContext;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
+import mchorse.mappet.api.scripts.code.score.ScriptScoreObjective;
+import mchorse.mappet.api.scripts.code.score.ScriptScoreboard;
 import mchorse.mappet.api.scripts.code.score.ScriptTeam;
 import mchorse.mappet.api.scripts.user.data.ScriptVector;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
@@ -331,14 +333,68 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     }
 
     @Override
+    public ScriptScoreboard getScoreboard() {
+        return new ScriptScoreboard(entity.getWorldScoreboard());
+    }
+
+    @Override
     public void join(ScriptTeam team) {
-        team.join(this);
+        if (team != null) team.join(this);
+    }
+
+    @Override
+    public void join(String name) {
+        getScoreboard().getTeam(name).join(this);
     }
 
     @Override
     public void leave() {
         ScorePlayerTeam team = (ScorePlayerTeam) entity.getTeam();
         if (team != null) new ScriptTeam(entity.getWorldScoreboard(), team).leave(this);
+    }
+
+    @Override
+    public void setScore(ScriptScoreObjective objective, int value) {
+        objective.set(this, value);
+    }
+
+    @Override
+    public void setScore(String name, int value) {
+        ScriptScoreObjective objective = getScoreboard().getObjective(name);
+        if (objective != null) objective.set(this, value);
+    }
+
+    @Override
+    public int addScore(ScriptScoreObjective objective, int value) {
+        return objective.add(this, value);
+    }
+
+    @Override
+    public int addScore(String name, int value) {
+        ScriptScoreObjective objective = getScoreboard().getObjective(name);
+        return objective != null ? objective.add(this, value) : 0;
+    }
+
+    @Override
+    public int getScore(ScriptScoreObjective objective) {
+        return objective.get(this);
+    }
+
+    @Override
+    public int getScore(String name) {
+        ScriptScoreObjective objective = getScoreboard().getObjective(name);
+        return objective != null ? objective.get(this) : 0;
+    }
+
+    @Override
+    public void resetScore(ScriptScoreObjective objective) {
+        objective.reset(this);
+    }
+
+    @Override
+    public void resetScore(String name) {
+        ScriptScoreObjective objective = getScoreboard().getObjective(name);
+        if (objective != null) objective.reset(this);
     }
 
     /* Sounds */
@@ -384,8 +440,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     public IMappetQuests getQuests() {
         if (this.quests == null) {
             Character character = Character.get(this.entity);
-            if (character != null)
-                this.quests = new MappetQuests(character.getQuests(), this.entity);
+            if (character != null) this.quests = new MappetQuests(character.getQuests(), this.entity);
         }
 
         return this.quests;
@@ -415,8 +470,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
 
     @Override
     public boolean openUI(IMappetUIBuilder in, boolean defaultData) {
-        if (!(in instanceof MappetUIBuilder))
-            return false;
+        if (!(in instanceof MappetUIBuilder)) return false;
 
 
         MappetUIBuilder builder = (MappetUIBuilder) in;

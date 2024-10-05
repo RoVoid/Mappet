@@ -13,13 +13,17 @@ public interface IScriptWorldBorder {
 
     void setCenter(double x, double z);
 
-    int getSize();
-
-    void setSize(int size);
-
     void setTransition(double size);
 
-    void setTransition(double oldSize, double newSize, long time);
+    /**
+     * @param time seconds
+     */
+    void setTransition(double fromSize, double toSize, long time);
+
+    /**
+     * @param time seconds
+     */
+    void setTransition(double size, long time);
 
     double getDamageBuffer();
 

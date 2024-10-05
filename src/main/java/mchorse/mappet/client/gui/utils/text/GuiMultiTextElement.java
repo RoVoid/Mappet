@@ -22,6 +22,7 @@ import mchorse.mclib.utils.undo.UndoManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.SoundEvent;
@@ -1291,11 +1292,11 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
                         String substringBeforeCursor = line.substring(0, cursor.getOffset(line)).trim();
                         int lastDot = substringBeforeCursor.lastIndexOf('.');
                         if (lastDot != -1) {
-                            String methodName = substringBeforeCursor.substring(lastDot + 1);
+                            String methodName = substringBeforeCursor.substring(lastDot + 1).toLowerCase();
                             List<DocMethod> methods = GuiDocumentationOverlayPanel.getDocs().getAllMethods();
                             List<String> matchingMethods = new ArrayList<>();
                             for (DocMethod method : methods) {
-                                if (method.name.contains(methodName) && !matchingMethods.contains(method.name)) {
+                                if (method.name.toLowerCase().startsWith(methodName) && !matchingMethods.contains(method.name)) {
                                     matchingMethods.add(method.name);
                                     if (matchingMethods.size() > 3) break;
                                 }
@@ -1307,9 +1308,29 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
                                         maxWidth[0] = font.getStringWidth(text);
                                     }
                                 });
-                                Gui.drawRect(newX + cursorW + 5, newY - 5 - ((this.font.FONT_HEIGHT + 4) * matchingMethods.size()), newX + cursorW + 10 + maxWidth[0], newY - 5, 0xbb000000);
+
+                                GlStateManager.pushMatrix();
+                                GlStateManager.translate(0, 0, 20);
+
+                                int rectOffset = (this.font.FONT_HEIGHT + 4) * matchingMethods.size();
+                                if (i < 10)
+                                    Gui.drawRect(newX + cursorW + 5, newY + this.font.FONT_HEIGHT + 5 + rectOffset, newX + cursorW + 10 + maxWidth[0], newY + this.font.FONT_HEIGHT + 5, 0xbb000000);
+                                else
+                                    Gui.drawRect(newX + cursorW + 5, newY - 5 - rectOffset, newX + cursorW + 10 + maxWidth[0], newY - 5, 0xbb000000);
+
                                 for (int ii = 1; ii <= matchingMethods.size(); ii++) {
-                                    font.drawString(matchingMethods.get(ii - 1), newX + cursorW + 7, newY - 3 - ((this.font.FONT_HEIGHT + 4) * ii), this.textColor, this.textShadow);
+                                    int textOffset = (this.font.FONT_HEIGHT + 4) * ii + 3;
+                                    textOffset = i < 10 ? textOffset + this.font.FONT_HEIGHT - 9 : -textOffset;
+                                    font.drawString(matchingMethods.get(ii - 1), newX + cursorW + 7, newY + textOffset, this.textColor, this.textShadow);
+                                }
+                                GlStateManager.popMatrix();
+
+                                if ((matchingMethods.size() != 1 || !matchingMethods.get(0).toLowerCase().equals(methodName)) && Keyboard.isKeyDown(Keyboard.KEY_TAB)) {
+                                    String preline = line.substring(0, line.lastIndexOf('.', cursor.getOffset(line)) + 1);
+                                    int k = line.indexOf('(', cursor.getOffset(line));
+                                    line = preline + matchingMethods.get(0) + (k == -1 ? "()" : "") + line.substring(k == -1 ? cursor.getOffset(line) : k);
+                                    textLine.text = line;
+                                    cursor.offset = preline.length() + matchingMethods.get(0).length() + (k == -1 ? 2 : 0);
                                 }
                             }
                         }

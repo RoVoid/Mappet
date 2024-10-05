@@ -29,20 +29,16 @@ public class ScriptWorldBorder implements IScriptWorldBorder {
         border.setCenter(x, z);
     }
     @Override
-    public int getSize() {
-        return border.getSize();
-    }
-    @Override
-    public void setSize(int size) {
-        border.setSize(size);
-    }
-    @Override
     public void setTransition(double size) {
         border.setTransition(size);
     }
     @Override
+    public void setTransition(double size, long time) {
+        setTransition(border.getDiameter(), size, time);
+    }
+    @Override
     public void setTransition(double oldSize, double newSize, long time) {
-        border.setTransition(oldSize, newSize, time);
+        border.setTransition(oldSize, newSize, time * 1000);
     }
     @Override
     public double getDamageBuffer() {
