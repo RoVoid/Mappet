@@ -9,32 +9,26 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Themes
-{
+public class Themes {
     private static File editorThemes;
 
     /**
      * Open editor themes folder
      */
-    public static void open()
-    {
+    public static void open() {
         GuiUtils.openWebLink(editorThemes.toURI());
     }
 
     /**
      * Get all theme files
      */
-    public static List<File> themes()
-    {
-        List<File> themes = new ArrayList<File>();
+    public static List<File> themes() {
+        List<File> themes = new ArrayList<>();
         File[] files = editorThemes.listFiles();
 
-        if (files != null)
-        {
-            for (File file : files)
-            {
-                if (file.isFile() && file.getName().endsWith(".json"))
-                {
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile() && file.getName().endsWith(".json")) {
                     themes.add(file);
                 }
             }
@@ -46,10 +40,8 @@ public class Themes
     /**
      * Get theme file
      */
-    public static File themeFile(String name)
-    {
-        if (!name.endsWith(".json"))
-        {
+    public static File themeFile(String name) {
+        if (!name.endsWith(".json")) {
             name += ".json";
         }
 
@@ -59,14 +51,11 @@ public class Themes
     /**
      * Read theme out of the file
      */
-    public static SyntaxStyle readTheme(File file)
-    {
-        try
-        {
+    public static SyntaxStyle readTheme(File file) {
+        try {
             return new SyntaxStyle(NBTToJsonLike.read(file));
+        } catch (Exception ignored) {
         }
-        catch (Exception e)
-        {}
 
         return null;
     }
@@ -74,24 +63,19 @@ public class Themes
     /**
      * Write a theme into a file
      */
-    public static void writeTheme(File file, SyntaxStyle style)
-    {
-        try
-        {
+    public static void writeTheme(File file, SyntaxStyle style) {
+        try {
             NBTToJsonLike.write(file, style.toNBT());
+        } catch (Exception ignored) {
         }
-        catch (Exception e)
-        {}
     }
 
     /**
      * Initiate themes system
      */
-    public static void initiate()
-    {
+    public static void initiate() {
         /* Just in case */
-        if (editorThemes != null)
-        {
+        if (editorThemes != null) {
             return;
         }
 
@@ -100,14 +84,13 @@ public class Themes
 
         File monokai = new File(editorThemes, "monokai.json");
         File dracula = new File(editorThemes, "dracula.json");
+        File vscode = new File(editorThemes, "vscode.json");
 
-        if (!monokai.isFile())
-        {
+        if (!monokai.isFile()) {
             writeTheme(monokai, new SyntaxStyle());
         }
 
-        if (!dracula.isFile())
-        {
+        if (!dracula.isFile()) {
             SyntaxStyle draculaStyle = new SyntaxStyle();
 
             draculaStyle.title = "Dracula";
@@ -124,6 +107,25 @@ public class Themes
             draculaStyle.background = 0x2b2b2b;
 
             writeTheme(dracula, draculaStyle);
+        }
+
+        if (!vscode.isFile()) {
+            SyntaxStyle vscodeStyle = new SyntaxStyle();
+
+            vscodeStyle.title = "VS Code";
+            vscodeStyle.shadow = true;
+            vscodeStyle.primary = 0xe280ff;
+            vscodeStyle.secondary = 0x6ea2f1;
+            vscodeStyle.identifier = 0xdfe78c;
+            vscodeStyle.special = 0xc2a573;
+            vscodeStyle.strings = 0xe6a67f;
+            vscodeStyle.comments = 0x5e9955;
+            vscodeStyle.numbers = 0xb380ff;
+            vscodeStyle.other = 0xededfe;
+            vscodeStyle.lineNumbers = 0x556368;
+            vscodeStyle.background = 0x212121;
+
+            writeTheme(vscode, vscodeStyle);
         }
     }
 }
