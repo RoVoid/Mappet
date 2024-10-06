@@ -7,41 +7,34 @@ import mchorse.mappet.network.common.content.PacketStates;
 import mchorse.mclib.network.ServerMessageHandler;
 import mchorse.mclib.utils.OpHelper;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 
-public class ServerHandlerStates extends ServerMessageHandler<PacketStates>
-{
-    public static States getStates(MinecraftServer server, String target)
-    {
-        if (target.equals("~"))
-        {
+public class ServerHandlerStates extends ServerMessageHandler<PacketStates> {
+    public static States getStates(MinecraftServer server, String target) {
+        if (target.equals("~")) {
             return Mappet.states;
-        }
-        else
-        {
+        } else {
             EntityPlayerMP player = server.getPlayerList().getPlayerByUsername(target);
-
-            if (target != null)
-            {
-                return Character.get(player).getStates();
-            }
+            Character character = Character.get(player);
+            if (character != null) return character.getStates();
         }
-
         return null;
     }
 
     @Override
-    public void run(EntityPlayerMP player, PacketStates message)
-    {
-        if (!OpHelper.isPlayerOp(player))
-        {
+    public void run(EntityPlayerMP player, PacketStates message) {
+        if (!OpHelper.isPlayerOp(player)) {
             return;
         }
 
         States states = getStates(player.world.getMinecraftServer(), message.target);
 
-        if (states != null)
-        {
+        if (states != null) {
+            NBTTagCompound nbt = states.serializeNBT();
+            for (String key : message.states.getKeySet()) {
+                if (!message.changes.contains(key)) message.states.setTag(key, nbt.getTag(key));
+            }
             states.deserializeNBT(message.states);
         }
     }

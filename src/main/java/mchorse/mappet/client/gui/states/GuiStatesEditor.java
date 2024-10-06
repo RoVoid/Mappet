@@ -7,34 +7,40 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
-public class GuiStatesEditor extends GuiScrollElement
-{
+public class GuiStatesEditor extends GuiScrollElement {
     private States states;
+    private final States prestates = new States();
 
-    public GuiStatesEditor(Minecraft mc)
-    {
+    public GuiStatesEditor(Minecraft mc) {
         super(mc);
 
         this.flex().column(5).vertical().stretch().scroll().padding(10);
     }
 
-    public States get()
-    {
+    public States get() {
         return this.states;
     }
 
-    public GuiStatesEditor set(States states)
-    {
+    public List<String> getChanges() {
+        List<String> changes = new ArrayList<>();
+        for (String key : prestates.values.keySet()) {
+            if (!prestates.areValuesEqual(key, states.values.get(key))) changes.add(key);
+        }
+        return changes;
+    }
+
+    public GuiStatesEditor set(States states) {
         this.states = states;
+        this.prestates.copy(states, true);
 
         this.removeAll();
 
-        if (states != null)
-        {
-            for (String key : states.values.keySet())
-            {
+        if (states != null) {
+            for (String key : states.values.keySet()) {
                 this.add(new GuiState(this.mc, key, states));
             }
         }
@@ -45,23 +51,19 @@ public class GuiStatesEditor extends GuiScrollElement
         return this;
     }
 
-    private void sortElements()
-    {
+    private void sortElements() {
         this.getChildren().sort(Comparator.comparing(a -> ((GuiState) a).getKey()));
     }
 
-    public void addNew()
-    {
-        if (this.states == null)
-        {
+    public void addNew() {
+        if (this.states == null) {
             return;
         }
 
         int index = this.states.values.size() + 1;
         String key = "state_" + index;
 
-        while (this.states.values.containsKey(key))
-        {
+        while (this.states.values.containsKey(key)) {
             index += 1;
             key = "state_" + index;
         }
@@ -75,12 +77,10 @@ public class GuiStatesEditor extends GuiScrollElement
     }
 
     @Override
-    public void draw(GuiContext context)
-    {
+    public void draw(GuiContext context) {
         super.draw(context);
 
-        if (this.states != null && this.states.values.isEmpty())
-        {
+        if (this.states != null && this.states.values.isEmpty()) {
             int w = this.area.w / 2;
             int x = this.area.mx(w);
 

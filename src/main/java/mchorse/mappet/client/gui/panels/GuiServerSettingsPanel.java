@@ -366,7 +366,7 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
 
         if (this.statesEditor.get() != null)
         {
-            Dispatcher.sendToServer(new PacketStates(this.lastTarget, this.statesEditor.get().serializeNBT()));
+            Dispatcher.sendToServer(new PacketStates(this.lastTarget, this.statesEditor.get().serializeNBT(), this.statesEditor.getChanges()));
         }
     }
 

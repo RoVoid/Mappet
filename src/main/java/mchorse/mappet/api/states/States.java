@@ -161,10 +161,16 @@ public class States implements INBTSerializable<NBTTagCompound> {
     }
 
     public void copy(States states) {
+        copy(states, false);
+    }
+
+    public void copy(States states, boolean withoutPost) {
+        if(states == null) return;
+
         this.values.clear();
         this.values.putAll(states.values);
 
-        this.post(null, null, null);
+        if(!withoutPost) this.post(null, null, null);
     }
 
     /* Quest convenience methods */
@@ -243,6 +249,16 @@ public class States implements INBTSerializable<NBTTagCompound> {
         }
 
         return id;
+    }
+
+    public boolean areValuesEqual(String key, Object otherValue) {
+        Object value = this.values.get(key);
+        if (value == null && otherValue == null) return true;
+        if (value == null || otherValue == null) return false;
+        if (value instanceof Number && otherValue instanceof Number) {
+            return ((Number) value).doubleValue() == ((Number) otherValue).doubleValue();
+        }
+        return value.equals(otherValue);
     }
 
     /* NBT */
