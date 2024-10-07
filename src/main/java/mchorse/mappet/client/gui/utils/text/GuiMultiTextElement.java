@@ -85,6 +85,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
 
     private int lastW;
 
+    private boolean ignoreTab = false;
+
     public static List<String> splitNewlineString(String string) {
         List<String> splits = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
@@ -365,7 +367,7 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
     /**
      * Select only a textful &gt; :)
      */
-    public boolean selectTextful(String text, boolean reverse) {
+    public void selectTextful(String text, boolean reverse) {
         this.deselect();
 
         List<String> splits = splitNewlineString(text);
@@ -380,9 +382,9 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
 
             if (i < splits.size() - 1) {
                 if (reverse && this.selection.offset < 0) {
-                    return false;
+                    return;
                 } else if (!reverse && this.selection.offset + l < line.length()) {
-                    return false;
+                    return;
                 }
 
                 this.selection.line += reverse ? -1 : 1;
@@ -390,7 +392,6 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             }
         }
 
-        return true;
     }
 
     public void checkSelection(boolean selecting) {
@@ -1098,6 +1099,10 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
         }
         /* Text input */
         else if (context.keyCode == Keyboard.KEY_TAB) {
+            if (ignoreTab) {
+                ignoreTab = false;
+                return false;
+            }
             this.keyTab(undo.ready());
             undo.post(undo.postText, this.cursor, this.selection);
             this.playSound(GuiScreen.isShiftKeyDown() ? SoundEvents.BLOCK_PISTON_CONTRACT : SoundEvents.BLOCK_PISTON_EXTEND);
@@ -1243,6 +1248,70 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
         this.writeString(undo.postText);
     }
 
+    private List<String> findMatchingMethods(String methodName) {
+        List<DocMethod> methods = GuiDocumentationOverlayPanel.getDocs().getAllMethods();
+        List<String> matchingMethods = new ArrayList<>();
+        for (DocMethod method : methods) {
+            if (method.name.toLowerCase().startsWith(methodName) && !matchingMethods.contains(method.name)) {
+                matchingMethods.add(method.name);
+                if (matchingMethods.size() > 3) break;
+            }
+        }
+        return matchingMethods;
+    }
+
+    private void drawMatchingMethodsOverlay(List<String> matchingMethods, int x, int y, int cursorW, int i) {
+        int[] maxWidth = {0};
+        matchingMethods.forEach((text) -> {
+            if (maxWidth[0] < font.getStringWidth(text)) {
+                maxWidth[0] = font.getStringWidth(text);
+            }
+        });
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0, 0, 20);
+
+        int rectOffset = (this.font.FONT_HEIGHT + 4) * matchingMethods.size();
+        if (i < 10)
+            Gui.drawRect(x + cursorW + 5, y + this.font.FONT_HEIGHT + 5 + rectOffset, y + cursorW + 10 + maxWidth[0], y + this.font.FONT_HEIGHT + 5, 0xbb000000);
+        else
+            Gui.drawRect(x + cursorW + 5, y - 5 - rectOffset, y + cursorW + 10 + maxWidth[0], y - 5, 0xbb000000);
+
+        for (int ii = 1; ii <= matchingMethods.size(); ii++) {
+            int textOffset = (this.font.FONT_HEIGHT + 4) * ii + 3;
+            textOffset = i < 10 ? textOffset + this.font.FONT_HEIGHT - 9 : -textOffset;
+            font.drawString(matchingMethods.get(ii - 1), x + cursorW + 7, y + textOffset, this.textColor, this.textShadow);
+        }
+        GlStateManager.popMatrix();
+    }
+
+    // Метод проверки, нужно ли выполнять автозаполнение
+    private boolean shouldComplete(List<String> matchingMethods, String methodName) {
+        return (matchingMethods.size() != 1 || !matchingMethods.get(0).toLowerCase().equals(methodName)) && Keyboard.isKeyDown(Keyboard.KEY_TAB);
+    }
+
+    private String completeLine(String line, List<String> matchingMethods) {
+        int cursorPosition = cursor.getOffset(line);
+
+        String preline = line.substring(0, line.lastIndexOf('.', cursorPosition) + 1);
+        String selectedMethod = matchingMethods.get(0);
+
+        int openParenIndex = line.indexOf('(', cursorPosition);
+
+        if (openParenIndex == -1) {
+            line = preline + selectedMethod + "()";
+            cursor.offset = preline.length() + selectedMethod.length() + 1;
+        } else {
+            String postline = line.substring(openParenIndex);
+            line = preline + selectedMethod + postline;
+            cursor.offset = preline.length() + selectedMethod.length();
+        }
+
+        this.changedLine(cursor.line);
+        return line;
+    }
+
+
     @Override
     public void draw(GuiContext context) {
         this.handleLogic(context);
@@ -1293,44 +1362,13 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
                         int lastDot = substringBeforeCursor.lastIndexOf('.');
                         if (lastDot != -1) {
                             String methodName = substringBeforeCursor.substring(lastDot + 1).toLowerCase();
-                            List<DocMethod> methods = GuiDocumentationOverlayPanel.getDocs().getAllMethods();
-                            List<String> matchingMethods = new ArrayList<>();
-                            for (DocMethod method : methods) {
-                                if (method.name.toLowerCase().startsWith(methodName) && !matchingMethods.contains(method.name)) {
-                                    matchingMethods.add(method.name);
-                                    if (matchingMethods.size() > 3) break;
-                                }
-                            }
+                            List<String> matchingMethods = findMatchingMethods(methodName);
+
                             if (!matchingMethods.isEmpty()) {
-                                int[] maxWidth = {0};
-                                matchingMethods.forEach((text) -> {
-                                    if (maxWidth[0] < font.getStringWidth(text)) {
-                                        maxWidth[0] = font.getStringWidth(text);
-                                    }
-                                });
-
-                                GlStateManager.pushMatrix();
-                                GlStateManager.translate(0, 0, 20);
-
-                                int rectOffset = (this.font.FONT_HEIGHT + 4) * matchingMethods.size();
-                                if (i < 10)
-                                    Gui.drawRect(newX + cursorW + 5, newY + this.font.FONT_HEIGHT + 5 + rectOffset, newX + cursorW + 10 + maxWidth[0], newY + this.font.FONT_HEIGHT + 5, 0xbb000000);
-                                else
-                                    Gui.drawRect(newX + cursorW + 5, newY - 5 - rectOffset, newX + cursorW + 10 + maxWidth[0], newY - 5, 0xbb000000);
-
-                                for (int ii = 1; ii <= matchingMethods.size(); ii++) {
-                                    int textOffset = (this.font.FONT_HEIGHT + 4) * ii + 3;
-                                    textOffset = i < 10 ? textOffset + this.font.FONT_HEIGHT - 9 : -textOffset;
-                                    font.drawString(matchingMethods.get(ii - 1), newX + cursorW + 7, newY + textOffset, this.textColor, this.textShadow);
-                                }
-                                GlStateManager.popMatrix();
-
-                                if ((matchingMethods.size() != 1 || !matchingMethods.get(0).toLowerCase().equals(methodName)) && Keyboard.isKeyDown(Keyboard.KEY_TAB)) {
-                                    String preline = line.substring(0, line.lastIndexOf('.', cursor.getOffset(line)) + 1);
-                                    int k = line.indexOf('(', cursor.getOffset(line));
-                                    line = preline + matchingMethods.get(0) + (k == -1 ? "()" : "") + line.substring(k == -1 ? cursor.getOffset(line) : k);
-                                    textLine.text = line;
-                                    cursor.offset = preline.length() + matchingMethods.get(0).length() + (k == -1 ? 2 : 0);
+                                drawMatchingMethodsOverlay(matchingMethods, newX, newY, cursorW, i);
+                                if (shouldComplete(matchingMethods, methodName)) {
+                                    textLine.text = completeLine(line, matchingMethods);
+                                    ignoreTab = true;
                                 }
                             }
                         }
