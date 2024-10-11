@@ -583,6 +583,8 @@ public interface IScriptPlayer extends IScriptEntity {
 
     void clearServerPack();
 
+    void enableBlackAndWhiteShader(boolean enable);
+
     /**
      * Play a sound event only to this player with volume and pitch.
      *

@@ -39,6 +39,13 @@ public class MappetStates implements IMappetStates {
     }
 
     @Override
+    public boolean toggleBoolean(String id) {
+        boolean value = getBoolean(id);
+        this.states.setBoolean(id, !value);
+        return value;
+    }
+
+    @Override
     public double getNumber(String id) {
         return this.states.getNumber(id);
     }

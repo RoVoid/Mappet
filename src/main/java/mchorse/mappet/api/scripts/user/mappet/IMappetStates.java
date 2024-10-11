@@ -60,6 +60,8 @@ public interface IMappetStates
 
     void setBoolean(String id, boolean value);
 
+    boolean toggleBoolean(String id);
+
     /**
      * Get a numeric value of a state by given ID.
      *

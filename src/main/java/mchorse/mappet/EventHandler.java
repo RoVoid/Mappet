@@ -61,16 +61,12 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.NetHandlerPlayServer;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.login.server.SPacketDisconnect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -476,6 +472,7 @@ public class EventHandler {
                 CommonProxy.eventHandler.addExecutable(new RunnableExecutionFork(1, () -> scriptPlayer.stopSound(sound)));
             }
         }
+
     }
 
     @SubscribeEvent

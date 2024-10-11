@@ -26,6 +26,7 @@ import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
 import mchorse.mappet.entities.utils.WalkSpeedManager;
 import mchorse.mappet.network.Dispatcher;
+import mchorse.mappet.network.common.PacketBlackAndWhiteShader;
 import mchorse.mappet.network.common.PacketPack;
 import mchorse.mappet.network.common.scripts.PacketClipboard;
 import mchorse.mappet.network.common.scripts.PacketEntityRotations;
@@ -408,6 +409,11 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     @Override
     public void clearServerPack() {
         Dispatcher.sendTo(new PacketPack(null), entity);
+    }
+
+    @Override
+    public void enableBlackAndWhiteShader(boolean enable) {
+        Dispatcher.sendTo(new PacketBlackAndWhiteShader(enable), entity);
     }
 
     /* Sounds */
