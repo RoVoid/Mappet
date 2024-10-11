@@ -33,34 +33,29 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 @SideOnly(Side.CLIENT)
-public class ClientProxy extends CommonProxy
-{
+public class ClientProxy extends CommonProxy {
     private static int requestId = 0;
     private static Map<Integer, Consumer<List<String>>> consumers = new HashMap<Integer, Consumer<List<String>>>();
 
     public static File sounds;
 
-    public static void requestNames(IContentType type, Consumer<List<String>> consumer)
-    {
+    public static void requestNames(IContentType type, Consumer<List<String>> consumer) {
         consumers.put(requestId, consumer);
         Dispatcher.sendToServer(new PacketContentRequestNames(type, requestId));
 
         requestId += 1;
     }
 
-    public static void process(List<String> names, int id)
-    {
+    public static void process(List<String> names, int id) {
         Consumer<List<String>> consumer = consumers.remove(id);
 
-        if (consumer != null)
-        {
+        if (consumer != null) {
             consumer.accept(names);
         }
     }
 
     @Override
-    public void preInit(FMLPreInitializationEvent event)
-    {
+    public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
 
         RenderingHandler handler = new RenderingHandler();
@@ -82,8 +77,7 @@ public class ClientProxy extends CommonProxy
     }
 
     @Override
-    public void init(FMLInitializationEvent event)
-    {
+    public void init(FMLInitializationEvent event) {
         super.init(event);
     }
 }

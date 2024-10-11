@@ -1,5 +1,6 @@
 package mchorse.mappet.api.scripts.user;
 
+import mchorse.mappet.api.scripts.code.ScriptResourcePack;
 import mchorse.mappet.api.scripts.user.blocks.IScriptBlockState;
 import mchorse.mappet.api.scripts.user.data.ScriptBox;
 import mchorse.mappet.api.scripts.user.data.ScriptVector;
@@ -896,4 +897,6 @@ public interface IScriptFactory
      */
     String encrypt(String text, String secretKey);
     String decrypt(String text, String secretKey);
+
+    ScriptResourcePack pack(String name);
 }

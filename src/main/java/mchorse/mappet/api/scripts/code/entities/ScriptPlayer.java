@@ -2,6 +2,7 @@ package mchorse.mappet.api.scripts.code.entities;
 
 import io.netty.buffer.Unpooled;
 import mchorse.aperture.network.common.PacketCameraState;
+import mchorse.mappet.api.scripts.code.ScriptResourcePack;
 import mchorse.mappet.api.scripts.code.items.ScriptInventory;
 import mchorse.mappet.api.scripts.code.mappet.MappetQuests;
 import mchorse.mappet.api.scripts.code.mappet.MappetUIBuilder;
@@ -25,6 +26,7 @@ import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
 import mchorse.mappet.entities.utils.WalkSpeedManager;
 import mchorse.mappet.network.Dispatcher;
+import mchorse.mappet.network.common.PacketPack;
 import mchorse.mappet.network.common.scripts.PacketClipboard;
 import mchorse.mappet.network.common.scripts.PacketEntityRotations;
 import mchorse.mappet.network.common.scripts.PacketSound;
@@ -395,6 +397,17 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     public void resetScore(String name) {
         ScriptScoreObjective objective = getScoreboard().getObjective(name);
         if (objective != null) objective.reset(this);
+    }
+
+    @Override
+    public void updateServerPack(ScriptResourcePack resourcePack) {
+        if (resourcePack.getPack() == null) return;
+        Dispatcher.sendTo(new PacketPack(resourcePack.getPack()), entity);
+    }
+
+    @Override
+    public void clearServerPack() {
+        Dispatcher.sendTo(new PacketPack(null), entity);
     }
 
     /* Sounds */

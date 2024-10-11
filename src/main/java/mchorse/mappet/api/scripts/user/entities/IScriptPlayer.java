@@ -1,5 +1,6 @@
 package mchorse.mappet.api.scripts.user.entities;
 
+import mchorse.mappet.api.scripts.code.ScriptResourcePack;
 import mchorse.mappet.api.scripts.code.score.ScriptScoreObjective;
 import mchorse.mappet.api.scripts.code.score.ScriptScoreboard;
 import mchorse.mappet.api.scripts.code.score.ScriptTeam;
@@ -557,6 +558,7 @@ public interface IScriptPlayer extends IScriptEntity {
     ScriptScoreboard getScoreboard();
 
     void join(ScriptTeam team);
+
     void join(String name);
 
     void leave();
@@ -576,6 +578,10 @@ public interface IScriptPlayer extends IScriptEntity {
     void resetScore(ScriptScoreObjective objective);
 
     void resetScore(String name);
+
+    void updateServerPack(ScriptResourcePack resourcePack);
+
+    void clearServerPack();
 
     /**
      * Play a sound event only to this player with volume and pitch.

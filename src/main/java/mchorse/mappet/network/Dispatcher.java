@@ -1,6 +1,7 @@
 package mchorse.mappet.network;
 
 import mchorse.mappet.Mappet;
+import mchorse.mappet.network.client.ClientHandlerPack;
 import mchorse.mappet.network.client.blocks.ClientHandlerEditConditionModel;
 import mchorse.mappet.network.client.blocks.ClientHandlerEditEmitter;
 import mchorse.mappet.network.client.blocks.ClientHandlerEditRegion;
@@ -29,20 +30,12 @@ import mchorse.mappet.network.client.ui.ClientHandlerCloseUI;
 import mchorse.mappet.network.client.ui.ClientHandlerUI;
 import mchorse.mappet.network.client.ui.ClientHandlerUIData;
 import mchorse.mappet.network.client.utils.ClientHandlerChangedBoundingBox;
+import mchorse.mappet.network.common.PacketPack;
 import mchorse.mappet.network.common.blocks.PacketEditConditionModel;
 import mchorse.mappet.network.common.blocks.PacketEditEmitter;
 import mchorse.mappet.network.common.blocks.PacketEditRegion;
 import mchorse.mappet.network.common.blocks.PacketEditTrigger;
-import mchorse.mappet.network.common.content.PacketContentData;
-import mchorse.mappet.network.common.content.PacketContentExit;
-import mchorse.mappet.network.common.content.PacketContentFolder;
-import mchorse.mappet.network.common.content.PacketContentNames;
-import mchorse.mappet.network.common.content.PacketContentRequestData;
-import mchorse.mappet.network.common.content.PacketContentRequestNames;
-import mchorse.mappet.network.common.content.PacketRequestServerSettings;
-import mchorse.mappet.network.common.content.PacketRequestStates;
-import mchorse.mappet.network.common.content.PacketServerSettings;
-import mchorse.mappet.network.common.content.PacketStates;
+import mchorse.mappet.network.common.content.*;
 import mchorse.mappet.network.common.crafting.PacketCraft;
 import mchorse.mappet.network.common.crafting.PacketCraftingTable;
 import mchorse.mappet.network.common.dialogue.PacketDialogueFragment;
@@ -58,11 +51,7 @@ import mchorse.mappet.network.common.huds.PacketHUDScene;
 import mchorse.mappet.network.common.items.PacketScriptedItemInfo;
 import mchorse.mappet.network.common.logs.PacketLogs;
 import mchorse.mappet.network.common.logs.PacketRequestLogs;
-import mchorse.mappet.network.common.npc.PacketNpcJump;
-import mchorse.mappet.network.common.npc.PacketNpcList;
-import mchorse.mappet.network.common.npc.PacketNpcState;
-import mchorse.mappet.network.common.npc.PacketNpcStateChange;
-import mchorse.mappet.network.common.npc.PacketNpcTool;
+import mchorse.mappet.network.common.npc.*;
 import mchorse.mappet.network.common.quests.PacketQuest;
 import mchorse.mappet.network.common.quests.PacketQuestAction;
 import mchorse.mappet.network.common.quests.PacketQuestVisibility;
@@ -76,15 +65,7 @@ import mchorse.mappet.network.server.blocks.ServerHandlerEditConditionModel;
 import mchorse.mappet.network.server.blocks.ServerHandlerEditEmitter;
 import mchorse.mappet.network.server.blocks.ServerHandlerEditRegion;
 import mchorse.mappet.network.server.blocks.ServerHandlerEditTrigger;
-import mchorse.mappet.network.server.content.ServerHandlerContentData;
-import mchorse.mappet.network.server.content.ServerHandlerContentExit;
-import mchorse.mappet.network.server.content.ServerHandlerContentFolder;
-import mchorse.mappet.network.server.content.ServerHandlerContentRequestData;
-import mchorse.mappet.network.server.content.ServerHandlerContentRequestNames;
-import mchorse.mappet.network.server.content.ServerHandlerRequestServerSettings;
-import mchorse.mappet.network.server.content.ServerHandlerRequestStates;
-import mchorse.mappet.network.server.content.ServerHandlerServerSettings;
-import mchorse.mappet.network.server.content.ServerHandlerStates;
+import mchorse.mappet.network.server.content.*;
 import mchorse.mappet.network.server.crafting.ServerHandlerCraft;
 import mchorse.mappet.network.server.crafting.ServerHandlerCraftingTable;
 import mchorse.mappet.network.server.dialogue.ServerHandlerFinishDialogue;
@@ -116,13 +97,10 @@ import net.minecraftforge.fml.relauncher.Side;
 /**
  * Network dispatcher
  */
-public class Dispatcher
-{
-    public static final AbstractDispatcher DISPATCHER = new AbstractDispatcher(Mappet.MOD_ID)
-    {
+public class Dispatcher {
+    public static final AbstractDispatcher DISPATCHER = new AbstractDispatcher(Mappet.MOD_ID) {
         @Override
-        public void register()
-        {
+        public void register() {
             /* Crafting table */
             this.register(PacketCraftingTable.class, ClientHandlerCraftingTable.class, Side.CLIENT);
             this.register(PacketCraftingTable.class, ServerHandlerCraftingTable.class, Side.SERVER);
@@ -217,18 +195,18 @@ public class Dispatcher
 
             /* Utils */
             this.register(PacketChangedBoundingBox.class, ClientHandlerChangedBoundingBox.class, Side.CLIENT);
+
+            this.register(PacketPack.class, ClientHandlerPack.class, Side.CLIENT);
         }
     };
 
     /**
      * Send message to players who are tracking given entity
      */
-    public static void sendToTracked(Entity entity, IMessage message)
-    {
+    public static void sendToTracked(Entity entity, IMessage message) {
         EntityTracker tracker = ((WorldServer) entity.world).getEntityTracker();
 
-        for (EntityPlayer player : tracker.getTrackingPlayers(entity))
-        {
+        for (EntityPlayer player : tracker.getTrackingPlayers(entity)) {
             sendTo(message, (EntityPlayerMP) player);
         }
     }
@@ -236,24 +214,21 @@ public class Dispatcher
     /**
      * Send message to given player
      */
-    public static void sendTo(IMessage message, EntityPlayerMP player)
-    {
+    public static void sendTo(IMessage message, EntityPlayerMP player) {
         DISPATCHER.sendTo(message, player);
     }
 
     /**
      * Send message to the server
      */
-    public static void sendToServer(IMessage message)
-    {
+    public static void sendToServer(IMessage message) {
         DISPATCHER.sendToServer(message);
     }
 
     /**
      * Register all the networking messages and message handlers
      */
-    public static void register()
-    {
+    public static void register() {
         DISPATCHER.register();
     }
 }
