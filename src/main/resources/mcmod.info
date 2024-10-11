@@ -2,12 +2,12 @@
     {
         "modid": "mappet",
         "name": "Mappet",
-        "description": "Mod for script tools",
+        "description": "Mod for scripting",
         "version": "${version}",
         "mcversion": "${mcversion}",
-        "authorList": ["mchorse", "TorayLife", "OtakuGamerAds", "RoVoid"],
+        "authorList": ["RoVoid"],
         "url": "https://github.com/RoVoid/Mappet",
-        "credits": "This is a fork of Mappet by RoVoid\\n Original: https://github.com/mchorse/mappet",
+        "credits": "This is a fork of Mappet by RoVoid\\n Original: https://github.com/mchorse/mappet by McHorse",
         "logoFile": "",
         "screenshots": [],
         "dependencies": []
