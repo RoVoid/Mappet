@@ -33,6 +33,7 @@ import mchorse.mappet.entities.EntityNpc;
 import mchorse.mappet.entities.utils.MappetNpcRespawnManager;
 import mchorse.mappet.events.StateChangedEvent;
 import mchorse.mappet.network.Dispatcher;
+import mchorse.mappet.network.client.ClientHandlerLockPerspective;
 import mchorse.mappet.network.common.events.PacketEventHotkeys;
 import mchorse.mappet.network.common.huds.PacketHUDScene;
 import mchorse.mappet.network.common.npc.PacketNpcJump;
@@ -530,18 +531,26 @@ public class EventHandler {
             Mappet.settings.playerLogIn.trigger(context);
         }
 
+        ClientHandlerLockPerspective.setLockedPerspective(-1);
+
         this.loggedInPlayers.add(player.getUniqueID());
     }
 
+    /**
+     * WORKS ONLY ON DEDICATED SERVER
+     */
     @SubscribeEvent
     public void onPlayerLogsOut(PlayerEvent.PlayerLoggedOutEvent event) {
-        if (!Mappet.settings.playerLogOut.isEmpty()) {
-            DataContext context = new DataContext(event.player);
+        MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+        if (server != null && server.isDedicatedServer()) {
+            if (!Mappet.settings.playerLogOut.isEmpty()) {
+                DataContext context = new DataContext(event.player);
 
-            Mappet.settings.playerLogOut.trigger(context);
+                Mappet.settings.playerLogOut.trigger(context);
+            }
+
+            this.loggedInPlayers.remove(event.player.getUniqueID());
         }
-
-        this.loggedInPlayers.remove(event.player.getUniqueID());
     }
 
     /**
@@ -582,6 +591,17 @@ public class EventHandler {
 
         if (!Mappet.settings.hotkeys.hotkeys.isEmpty()) {
             Dispatcher.sendTo(new PacketEventHotkeys(Mappet.settings), player);
+        }
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (ClientHandlerLockPerspective.getLockedPerspective() != -1) {
+            Minecraft mc = Minecraft.getMinecraft();
+            if (mc.gameSettings.thirdPersonView != ClientHandlerLockPerspective.getLockedPerspective()) {
+                mc.gameSettings.thirdPersonView = ClientHandlerLockPerspective.getLockedPerspective();
+            }
         }
     }
 

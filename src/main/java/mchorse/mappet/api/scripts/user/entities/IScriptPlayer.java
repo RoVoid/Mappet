@@ -585,6 +585,10 @@ public interface IScriptPlayer extends IScriptEntity {
 
     void enableBlackAndWhiteShader(boolean enable);
 
+    void lockPerspective(int perspective);
+
+    void unlockPerspective();
+
     /**
      * Play a sound event only to this player with volume and pitch.
      *

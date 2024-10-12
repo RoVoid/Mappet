@@ -2,6 +2,7 @@ package mchorse.mappet.network;
 
 import mchorse.mappet.Mappet;
 import mchorse.mappet.network.client.ClientHandlerBlackAndWhiteShader;
+import mchorse.mappet.network.client.ClientHandlerLockPerspective;
 import mchorse.mappet.network.client.ClientHandlerPack;
 import mchorse.mappet.network.client.blocks.ClientHandlerEditConditionModel;
 import mchorse.mappet.network.client.blocks.ClientHandlerEditEmitter;
@@ -32,6 +33,7 @@ import mchorse.mappet.network.client.ui.ClientHandlerUI;
 import mchorse.mappet.network.client.ui.ClientHandlerUIData;
 import mchorse.mappet.network.client.utils.ClientHandlerChangedBoundingBox;
 import mchorse.mappet.network.common.PacketBlackAndWhiteShader;
+import mchorse.mappet.network.common.PacketLockPerspective;
 import mchorse.mappet.network.common.PacketPack;
 import mchorse.mappet.network.common.blocks.PacketEditConditionModel;
 import mchorse.mappet.network.common.blocks.PacketEditEmitter;
@@ -200,6 +202,7 @@ public class Dispatcher {
 
             this.register(PacketPack.class, ClientHandlerPack.class, Side.CLIENT);
             this.register(PacketBlackAndWhiteShader.class, ClientHandlerBlackAndWhiteShader.class, Side.CLIENT);
+            this.register(PacketLockPerspective.class, ClientHandlerLockPerspective.class, Side.CLIENT);
         }
     };
 

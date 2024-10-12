@@ -292,7 +292,7 @@ mappet.gui.settings.triggers.descriptions.player_login=Этот триггер �
 mappet.gui.settings.triggers.variables.player_login=§7N/A§r
 
 mappet.gui.settings.triggers.player_logout=Игрок: при выходе
-mappet.gui.settings.triggers.descriptions.player_logout=Этот триггер срабатывает когда игрок выходит с сервера.
+mappet.gui.settings.triggers.descriptions.player_logout=Этот триггер срабатывает когда игрок выходит с сервера.\n\n§cРАБОТАЕТ ТОЛЬКО НА ВЫДЕЛЕННОМ СЕРВЕРЕ!§r
 mappet.gui.settings.triggers.variables.player_logout=§7N/A§r
 
 mappet.gui.settings.triggers.player_lmb=Игрок: клик ЛКМ (по воздуху)
