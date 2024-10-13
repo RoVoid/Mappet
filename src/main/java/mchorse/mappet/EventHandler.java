@@ -140,6 +140,8 @@ public class EventHandler {
 
     private int skinCounter;
 
+    static int previousPerspective = 0;
+
     private static boolean isMohist() {
         if (isMohist != null) {
             return isMohist;
@@ -482,6 +484,11 @@ public class EventHandler {
         EntityPlayerMP player = (EntityPlayerMP) event.player;
         if (event.player == null) return;
 
+        if (event.player.world.isRemote) {
+            ClientHandlerLockPerspective.setLockedPerspective(-1);
+            ClientHandlerBlackAndWhiteShader.enableBlackAndWhiteShader(false);
+        }
+
         ICharacter character = Character.get(player);
         Instant lastClear = Mappet.data.getLastClear();
 
@@ -531,8 +538,6 @@ public class EventHandler {
 
             Mappet.settings.playerLogIn.trigger(context);
         }
-
-        ClientHandlerLockPerspective.setLockedPerspective(-1);
 
         this.loggedInPlayers.add(player.getUniqueID());
     }
@@ -604,8 +609,8 @@ public class EventHandler {
                 mc.gameSettings.thirdPersonView = ClientHandlerLockPerspective.getLockedPerspective();
             }
         }
-        if (ClientHandlerBlackAndWhiteShader.previousPerspective != mc.gameSettings.thirdPersonView) {
-            ClientHandlerBlackAndWhiteShader.previousPerspective = mc.gameSettings.thirdPersonView;
+        if (previousPerspective != mc.gameSettings.thirdPersonView) {
+            previousPerspective = mc.gameSettings.thirdPersonView;
             ClientHandlerBlackAndWhiteShader.update();
         }
     }

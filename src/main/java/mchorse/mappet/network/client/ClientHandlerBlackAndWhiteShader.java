@@ -10,7 +10,6 @@ import net.minecraft.util.ResourceLocation;
 
 public class ClientHandlerBlackAndWhiteShader extends ClientMessageHandler<PacketBlackAndWhiteShader> {
     static boolean enable = false;
-    public static int previousPerspective = Minecraft.getMinecraft().gameSettings.thirdPersonView;
 
     @Override
     public void run(EntityPlayerSP entityPlayerSP, PacketBlackAndWhiteShader message) {
