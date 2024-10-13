@@ -1,6 +1,5 @@
 package mchorse.mappet.api.scripts.code;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import io.netty.buffer.Unpooled;
 import mchorse.blockbuster.common.GunProps;
@@ -48,18 +47,16 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SPacketCustomPayload;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
@@ -73,6 +70,8 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 public class ScriptWorld implements IScriptWorld {
     public static final int MAX_VOLUME = 100;
@@ -314,15 +313,9 @@ public class ScriptWorld implements IScriptWorld {
     @Override
     public int getDimensionId() {
         Integer[] ids = DimensionManager.getIDs();
-
-        for (int id : ids) {
-            World world = this.world.getMinecraftServer().getWorld(id);
-
-            if (world == this.world) {
-                return id;
-            }
-        }
-
+        MinecraftServer server = this.world.getMinecraftServer();
+        if (server == null) return 0;
+        for (int id : ids) if (server.getWorld(id) == this.world) return id;
         return 0;
     }
 
@@ -425,7 +418,7 @@ public class ScriptWorld implements IScriptWorld {
 
     @Override
     public List<IScriptEntity> getEntities(double x1, double y1, double z1, double x2, double y2, double z2, boolean ignoreVolumeLimit) {
-        List<IScriptEntity> entities = new ArrayList<IScriptEntity>();
+        List<IScriptEntity> entities = new ArrayList<>();
 
         double minX = Math.min(x1, x2);
         double minY = Math.min(y1, y2);
@@ -443,7 +436,7 @@ public class ScriptWorld implements IScriptWorld {
         int maxChunkX = ((int) maxX) >> 4;
         int maxChunkZ = ((int) maxZ) >> 4;
 
-        Predicate<Entity> filter = entity -> entity != null;
+        Predicate<Entity> filter = Objects::nonNull;
 
         for (int chunkX = minChunkX; chunkX <= maxChunkX; chunkX++) {
             for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ++) {
@@ -459,7 +452,7 @@ public class ScriptWorld implements IScriptWorld {
                     );
 
                     List<Entity> chunkEntities = new ArrayList<>();
-                    chunk.getEntitiesWithinAABBForEntity(null, chunkAABB, chunkEntities, filter);
+                    chunk.getEntitiesWithinAABBForEntity(null, chunkAABB, chunkEntities, filter::test);
                     for (Entity entity : chunkEntities) {
                         entities.add(ScriptEntity.create(entity));
                     }
@@ -473,7 +466,7 @@ public class ScriptWorld implements IScriptWorld {
     @Override
     public List<IScriptEntity> getEntities(double x, double y, double z, double radius) {
         radius = Math.abs(radius);
-        List<IScriptEntity> entities = new ArrayList<IScriptEntity>();
+        List<IScriptEntity> entities = new ArrayList<>();
 
         if (radius > (double) MAX_VOLUME / 2) {
             return entities;
@@ -510,13 +503,17 @@ public class ScriptWorld implements IScriptWorld {
 
     @Override
     public void playSound(String event, double x, double y, double z, float volume, float pitch) {
-        for (EntityPlayerMP player : this.world.getMinecraftServer().getPlayerList().getPlayers()) {
+        MinecraftServer server = this.world.getMinecraftServer();
+        if (server == null) return;
+        for (EntityPlayerMP player : server.getPlayerList().getPlayers()) {
             WorldUtils.playSound(player, event, x, y, z, volume, pitch);
         }
     }
 
     @Override
     public void stopSound(String event, String category) {
+        MinecraftServer server = this.world.getMinecraftServer();
+        if (server == null) return;
         PacketBuffer packetbuffer = new PacketBuffer(Unpooled.buffer());
 
         packetbuffer.writeString(category);
@@ -567,6 +564,7 @@ public class ScriptWorld implements IScriptWorld {
     @Override
     public boolean testForBlock(int x, int y, int z, String blockId, int meta) {
         Block value = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blockId));
+        if (value == null) return false;
         ImmutableList<IBlockState> validStates = value.getBlockState().getValidStates();
         IBlockState state = meta >= 0 && meta < validStates.size() ? validStates.get(meta) : value.getDefaultState();
 
@@ -719,12 +717,8 @@ public class ScriptWorld implements IScriptWorld {
         Item itemFromBlock = Item.getItemFromBlock(block);
 
         if (itemFromBlock == Items.AIR) {
-            RayTraceResult rayTraceResult = new RayTraceResult(new Vec3d(x + 0.5, y + 0.5, z + 0.5), EnumFacing.UP, this.pos);
-            itemStack = block.getPickBlock(blockState, rayTraceResult, this.world, this.pos, null);
-
-            if (itemStack.isEmpty()) {
-                return ScriptItemStack.EMPTY;
-            }
+            itemStack = block.getItem(this.world, this.pos, blockState);
+            if (itemStack.isEmpty()) return ScriptItemStack.EMPTY;
         } else {
             itemStack = new ItemStack(itemFromBlock, 1, block.getMetaFromState(blockState));
         }
@@ -748,6 +742,11 @@ public class ScriptWorld implements IScriptWorld {
     @Override
     public ScriptWorldBorder getBorder() {
         return new ScriptWorldBorder(world.getWorldBorder());
+    }
+
+    @Override
+    public int getLight(int x, int y, int z) {
+        return world.getLight(new BlockPos(x, y, z));
     }
 
     /* Mappet stuff */
@@ -793,14 +792,14 @@ public class ScriptWorld implements IScriptWorld {
             try {
                 return this.shootBBGunProjectileMethod(shooter, x, y, z, yaw, pitch, gunPropsNbtString);
             } catch (Exception e) {
-                e.printStackTrace();
+                Mappet.logger.error(e.getMessage());
             }
         }
         return null;
     }
 
     @Optional.Method(modid = "blockbuster")
-    private IScriptEntity shootBBGunProjectileMethod(IScriptEntity shooter, double x, double y, double z, double yaw, double pitch, String gunPropsNbtString) throws NBTException {
+    private IScriptEntity shootBBGunProjectileMethod(IScriptEntity shooter, double x, double y, double z, double yaw, double pitch, String gunPropsNbtString) {
         ScriptFactory factory = new ScriptFactory();
 
         EntityLivingBase entityLivingBase = (EntityLivingBase) shooter.getMinecraftEntity();
@@ -815,8 +814,6 @@ public class ScriptWorld implements IScriptWorld {
         projectile.setInitialMotion();
         entityLivingBase.world.spawnEntity(projectile);
 
-        IScriptEntity spawnedEntity = ScriptEntity.create(projectile);
-
-        return spawnedEntity;
+        return ScriptEntity.create(projectile);
     }
 }

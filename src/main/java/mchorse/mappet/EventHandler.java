@@ -33,6 +33,7 @@ import mchorse.mappet.entities.EntityNpc;
 import mchorse.mappet.entities.utils.MappetNpcRespawnManager;
 import mchorse.mappet.events.StateChangedEvent;
 import mchorse.mappet.network.Dispatcher;
+import mchorse.mappet.network.client.ClientHandlerBlackAndWhiteShader;
 import mchorse.mappet.network.client.ClientHandlerLockPerspective;
 import mchorse.mappet.network.common.events.PacketEventHotkeys;
 import mchorse.mappet.network.common.huds.PacketHUDScene;
@@ -597,11 +598,15 @@ public class EventHandler {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onClientTick(TickEvent.ClientTickEvent event) {
+        Minecraft mc = Minecraft.getMinecraft();
         if (ClientHandlerLockPerspective.getLockedPerspective() != -1) {
-            Minecraft mc = Minecraft.getMinecraft();
             if (mc.gameSettings.thirdPersonView != ClientHandlerLockPerspective.getLockedPerspective()) {
                 mc.gameSettings.thirdPersonView = ClientHandlerLockPerspective.getLockedPerspective();
             }
+        }
+        if (ClientHandlerBlackAndWhiteShader.previousPerspective != mc.gameSettings.thirdPersonView) {
+            ClientHandlerBlackAndWhiteShader.previousPerspective = mc.gameSettings.thirdPersonView;
+            ClientHandlerBlackAndWhiteShader.update();
         }
     }
 
@@ -629,6 +634,18 @@ public class EventHandler {
 
             context.getValues().put("entityItem", ScriptEntityItem.create(event.getEntityItem()));
             this.trigger(event, Mappet.settings.playerItemToss, context);
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerJump(LivingEvent.LivingJumpEvent event) {
+        if (event.getEntityLiving().world.isRemote) return;
+        if (!(event.getEntityLiving() instanceof EntityPlayer)) return;
+
+        if (!Mappet.settings.playerJump.isEmpty()) {
+            DataContext context = new DataContext(event.getEntityLiving());
+
+            this.trigger(event, Mappet.settings.playerJump, context);
         }
     }
 
@@ -767,7 +784,7 @@ public class EventHandler {
         this.playersToCheck.clear();
 
         /* This block of code might be a bit confusing, but essentially
-         * what it does is prevents concurrent modification when timer nodes
+         * what it does is prevent concurrent modification when timer nodes
          * add consequent execution forks, this way I can reliably keep track
          * of order of both the old executions which are not yet executed and
          * of new forks that were added by new timer nodes */

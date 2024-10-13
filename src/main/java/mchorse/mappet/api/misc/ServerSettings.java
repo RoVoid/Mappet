@@ -17,15 +17,14 @@ import java.util.Map;
 /**
  * Global server settings
  */
-public class ServerSettings implements INBTSerializable<NBTTagCompound>
-{
-    private File file;
+public class ServerSettings implements INBTSerializable<NBTTagCompound> {
+    private final File file;
 
-    private final Map<String, String> keyToAlias = new HashMap<String, String>();
+    private final Map<String, String> keyToAlias = new HashMap<>();
 
     public final Map<String, Trigger> registered = new LinkedHashMap<>();
 
-    public final Map<String, Trigger> registeredForgeTriggers = new LinkedHashMap<String, Trigger>();
+    public final Map<String, Trigger> registeredForgeTriggers = new LinkedHashMap<>();
 
     public final TriggerHotkeys hotkeys = new TriggerHotkeys();
 
@@ -85,22 +84,20 @@ public class ServerSettings implements INBTSerializable<NBTTagCompound>
 
     public final Trigger playerEntityLeash;
 
+    public final Trigger playerJump;
+
     public final Trigger stateChanged;
 
-    public Trigger register(String key, Trigger trigger)
-    {
+    public Trigger register(String key, Trigger trigger) {
         return this.register(key, null, trigger);
     }
 
-    public Trigger register(String key, String alias, Trigger trigger)
-    {
-        if (this.registered.containsKey(key))
-        {
+    public Trigger register(String key, String alias, Trigger trigger) {
+        if (this.registered.containsKey(key)) {
             throw new IllegalStateException("Server trigger '" + key + "' is already registered!");
         }
 
-        if (alias != null)
-        {
+        if (alias != null) {
             this.keyToAlias.put(key, alias);
         }
 
@@ -109,8 +106,7 @@ public class ServerSettings implements INBTSerializable<NBTTagCompound>
         return trigger;
     }
 
-    public ServerSettings(File file)
-    {
+    public ServerSettings(File file) {
         this.file = file;
 
         this.blockBreak = this.register("block_break", "break_block", new Trigger());
@@ -142,6 +138,7 @@ public class ServerSettings implements INBTSerializable<NBTTagCompound>
         this.projectileImpact = this.register("projectile_impact", new Trigger());
         this.onLivingEquipmentChange = this.register("living_equipment_change", new Trigger());
         this.playerEntityLeash = this.register("player_entity_leash", new Trigger());
+        this.playerJump = this.register("player_jump", new Trigger());
         this.stateChanged = this.register("state_changed", new Trigger());
 
         Mappet.EVENT_BUS.post(new RegisterServerTriggerEvent(this));
@@ -149,84 +146,65 @@ public class ServerSettings implements INBTSerializable<NBTTagCompound>
 
     /* Deserialization / Serialization */
 
-    public void load()
-    {
-        if (this.file == null || !this.file.isFile())
-        {
+    public void load() {
+        if (this.file == null || !this.file.isFile()) {
             return;
         }
 
-        try
-        {
+        try {
             NBTTagCompound tag = NBTToJsonLike.read(this.file);
 
-            if (!tag.hasKey("Hotkeys"))
-            {
+            if (!tag.hasKey("Hotkeys")) {
                 /* Backward compatibility with beta */
                 File hotkeys = new File(this.file.getParentFile(), "hotkeys.json");
 
-                if (hotkeys.isFile())
-                {
-                    try
-                    {
+                if (hotkeys.isFile()) {
+                    try {
                         NBTTagCompound hotkeysTag = NBTToJsonLike.read(hotkeys);
 
                         tag.setTag("Hotkeys", hotkeysTag);
                         hotkeys.delete();
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception ignored) {
                     }
                 }
             }
 
             this.deserializeNBT(tag);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Mappet.logger.error(e.getMessage());
         }
     }
 
-    public void save()
-    {
-        try
-        {
+    public void save() {
+        try {
             NBTToJsonLike.write(this.file, this.serializeNBT());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Mappet.logger.error(e.getMessage());
         }
     }
 
     /* NBT */
 
     @Override
-    public NBTTagCompound serializeNBT()
-    {
+    public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         NBTTagCompound triggers = new NBTTagCompound();
 
-        for (Map.Entry<String, Trigger> entry : this.registered.entrySet())
-        {
+        for (Map.Entry<String, Trigger> entry : this.registered.entrySet()) {
             this.writeTrigger(triggers, entry.getKey(), entry.getValue());
         }
 
-        if (!triggers.hasNoTags())
-        {
+        if (!triggers.hasNoTags()) {
             tag.setTag("Triggers", triggers);
         }
 
         NBTTagCompound forgeTriggers = new NBTTagCompound();
 
-        for (Map.Entry<String, Trigger> entry : this.registeredForgeTriggers.entrySet())
-        {
+        for (Map.Entry<String, Trigger> entry : this.registeredForgeTriggers.entrySet()) {
             this.writeTrigger(forgeTriggers, entry.getKey(), entry.getValue());
         }
 
-        if (!forgeTriggers.hasNoTags())
-        {
+        if (!forgeTriggers.hasNoTags()) {
             tag.setTag("ForgeTriggers", forgeTriggers);
         }
 
@@ -235,36 +213,27 @@ public class ServerSettings implements INBTSerializable<NBTTagCompound>
         return tag;
     }
 
-    private void writeTrigger(NBTTagCompound tag, String key, Trigger trigger)
-    {
-        if (trigger != null)
-        {
+    private void writeTrigger(NBTTagCompound tag, String key, Trigger trigger) {
+        if (trigger != null) {
             NBTTagCompound triggerTag = trigger.serializeNBT();
 
-            if (!triggerTag.hasNoTags())
-            {
+            if (!triggerTag.hasNoTags()) {
                 tag.setTag(key, triggerTag);
             }
         }
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
-    {
-        if (tag.hasKey("Triggers"))
-        {
+    public void deserializeNBT(NBTTagCompound tag) {
+        if (tag.hasKey("Triggers")) {
             NBTTagCompound triggers = tag.getCompoundTag("Triggers");
 
-            for (Map.Entry<String, Trigger> entry : this.registered.entrySet())
-            {
+            for (Map.Entry<String, Trigger> entry : this.registered.entrySet()) {
                 String oldAlias = this.keyToAlias.get(entry.getKey());
 
-                if (triggers.hasKey(oldAlias, Constants.NBT.TAG_COMPOUND))
-                {
+                if (triggers.hasKey(oldAlias, Constants.NBT.TAG_COMPOUND)) {
                     this.readTrigger(triggers, oldAlias, entry.getValue());
-                }
-                else
-                {
+                } else {
                     this.readTrigger(triggers, entry.getKey(), entry.getValue());
                 }
             }
@@ -272,32 +241,26 @@ public class ServerSettings implements INBTSerializable<NBTTagCompound>
 
         this.registeredForgeTriggers.clear();
 
-        if (tag.hasKey("ForgeTriggers"))
-        {
+        if (tag.hasKey("ForgeTriggers")) {
             NBTTagCompound forgeTriggers = tag.getCompoundTag("ForgeTriggers");
 
-            for (String key : forgeTriggers.getKeySet())
-            {
+            for (String key : forgeTriggers.getKeySet()) {
                 Trigger trigger = new Trigger();
                 trigger.deserializeNBT(forgeTriggers.getCompoundTag(key));
                 this.registeredForgeTriggers.put(key, trigger);
             }
         }
 
-        if (tag.hasKey("Hotkeys"))
-        {
+        if (tag.hasKey("Hotkeys")) {
             this.hotkeys.deserializeNBT(tag.getCompoundTag("Hotkeys"));
         }
     }
 
-    private void readTrigger(NBTTagCompound tag, String key, Trigger trigger)
-    {
-        if (tag.hasKey(key, Constants.NBT.TAG_COMPOUND))
-        {
+    private void readTrigger(NBTTagCompound tag, String key, Trigger trigger) {
+        if (tag.hasKey(key, Constants.NBT.TAG_COMPOUND)) {
             NBTTagCompound triggerTag = tag.getCompoundTag(key);
 
-            if (!triggerTag.hasNoTags())
-            {
+            if (!triggerTag.hasNoTags()) {
                 trigger.deserializeNBT(triggerTag);
             }
         }

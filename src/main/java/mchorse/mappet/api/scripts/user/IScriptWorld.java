@@ -942,6 +942,8 @@ public interface IScriptWorld
 
     ScriptWorldBorder getBorder();
 
+    int getLight(int x, int y, int z);
+
     /**
      * Display a world morph to all players at given point with rotation
      * some blocks away in this world only to given player.
