@@ -70,12 +70,40 @@ public class ScriptVector {
         return new ScriptVector(this.x + x, this.y + y, this.z + z);
     }
 
+    public ScriptVector subtract(ScriptVector other) {
+        return subtract(other.x, other.y, other.z);
+    }
+
+    public ScriptVector subtract(double x, double y, double z) {
+        return new ScriptVector(this.x - x, this.y - y, this.z - z);
+    }
+
     public ScriptVector multiply(double scalar) {
         return new ScriptVector(this.x * scalar, this.y * scalar, this.z * scalar);
     }
 
     public ScriptVector multiply(ScriptVector other) {
         return new ScriptVector(this.x * other.x, this.y * other.y, this.z * other.z);
+    }
+
+    public ScriptVector divide(double scalar) {
+        return new ScriptVector(this.x / scalar, this.y / scalar, this.z / scalar);
+    }
+
+    public ScriptVector divide(ScriptVector other) {
+        return new ScriptVector(this.x / other.x, this.y / other.y, this.z / other.z);
+    }
+
+    public double dotProduct(ScriptVector other) {
+        return x * other.x + y * other.y + z * other.z;
+    }
+
+    public ScriptVector crossProduct(ScriptVector other) {
+        return new ScriptVector(
+                this.y * other.z - this.z * other.y,
+                this.z * other.x - this.x * other.z,
+                this.x * other.y - this.y * other.x
+        );
     }
 
     public double length() {
@@ -96,5 +124,17 @@ public class ScriptVector {
     public ScriptVector normalize() {
         double length = this.length();
         return new ScriptVector(this.x / length, this.y / length, this.z / length);
+    }
+
+    public boolean equals(ScriptVector other) {
+        return equals(other.x, other.y, other.z);
+    }
+
+    public boolean equals(double x, double y, double z) {
+        return (this.x == x) && (this.y == y) && (this.z == z);
+    }
+
+    public double getAngle(ScriptVector other) {
+        return Math.acos(dotProduct(other));
     }
 }

@@ -2,8 +2,6 @@ package mchorse.mappet.api.scripts.user;
 
 import mchorse.mappet.api.scripts.code.ScriptResourcePack;
 import mchorse.mappet.api.scripts.user.blocks.IScriptBlockState;
-import mchorse.mappet.api.scripts.user.data.ScriptBox;
-import mchorse.mappet.api.scripts.user.data.ScriptVector;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
@@ -16,12 +14,6 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.Entity;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.EnumParticleTypes;
-
-import javax.vecmath.Matrix3d;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Vector2d;
-import javax.vecmath.Vector3d;
-import javax.vecmath.Vector4d;
 
 /**
  * Scripting API factory that allows to initialize/create different stuff.
@@ -38,8 +30,7 @@ import javax.vecmath.Vector4d;
  *    }
  * }</pre>
  */
-public interface IScriptFactory
-{
+public interface IScriptFactory {
     /**
      * Get a block state that can be used to place and compare blocks in
      * the {@link IScriptWorld}.
@@ -81,8 +72,7 @@ public interface IScriptFactory
      *    c.send(item.serialize());
      * }</pre>
      */
-    default INBTCompound createCompound()
-    {
+    default INBTCompound createCompound() {
         return this.createCompound(null);
     }
 
@@ -147,8 +137,7 @@ public interface IScriptFactory
      *    c.send(list.stringify());
      * }</pre>
      */
-    default INBTList createList()
-    {
+    default INBTList createList() {
         return this.createList(null);
     }
 
@@ -193,8 +182,7 @@ public interface IScriptFactory
      * @return an item stack from the string NBT data, or an empty item stack
      * if the data doesn't have a valid reference to an existing item
      */
-    default IScriptItemStack createItemNBT(String nbt)
-    {
+    default IScriptItemStack createItemNBT(String nbt) {
         return this.createItem(this.createCompound(nbt));
     }
 
@@ -227,8 +215,7 @@ public interface IScriptFactory
      * @return an item stack with an item specified by ID, or an empty item
      * stack if the block doesn't exist
      */
-    default IScriptItemStack createItem(String itemId)
-    {
+    default IScriptItemStack createItem(String itemId) {
         return this.createItem(itemId, 1);
     }
 
@@ -245,8 +232,7 @@ public interface IScriptFactory
      * @return an item stack with an item specified by ID, or an empty item
      * stack if the block doesn't exist
      */
-    default IScriptItemStack createItem(String itemId, int count)
-    {
+    default IScriptItemStack createItem(String itemId, int count) {
         return this.createItem(itemId, count, 0);
     }
 
@@ -278,8 +264,7 @@ public interface IScriptFactory
      * @return an item stack with an item specified by ID, or an empty item
      * stack if the block doesn't exist
      */
-    default IScriptItemStack createBlockItem(String blockId)
-    {
+    default IScriptItemStack createBlockItem(String blockId) {
         return this.createItem(blockId, 1);
     }
 
@@ -296,8 +281,7 @@ public interface IScriptFactory
      * @return an item stack with an item specified by ID, or an empty item
      * stack if the block doesn't exist
      */
-    default IScriptItemStack createBlockItem(String blockId, int count)
-    {
+    default IScriptItemStack createBlockItem(String blockId, int count) {
         return this.createItem(blockId, count, 0);
     }
 
@@ -357,8 +341,7 @@ public interface IScriptFactory
      *    c.getSubject().setMorph(morph);
      * }</pre>
      */
-    default AbstractMorph createMorph(String nbt)
-    {
+    default AbstractMorph createMorph(String nbt) {
         return this.createMorph(this.createCompound(nbt));
     }
 
@@ -394,8 +377,7 @@ public interface IScriptFactory
      *    }
      * }</pre>
      */
-    default IMappetUIBuilder createUI()
-    {
+    default IMappetUIBuilder createUI() {
         return this.createUI("", "");
     }
 
@@ -429,11 +411,10 @@ public interface IScriptFactory
      *    }
      * }</pre>
      *
-     * @param event Script event (whose script ID will be used for UI's user input handler).
+     * @param event    Script event (whose script ID will be used for UI's user input handler).
      * @param function Given script's function that will be used as UI's user input handler.
      */
-    default IMappetUIBuilder createUI(IScriptEvent event, String function)
-    {
+    default IMappetUIBuilder createUI(IScriptEvent event, String function) {
         return this.createUI(event.getScript(), function);
     }
 
@@ -474,7 +455,7 @@ public interface IScriptFactory
      *    }
      * }</pre>
      *
-     * @param script The script which will be used as UI's user input handler.
+     * @param script   The script which will be used as UI's user input handler.
      * @param function Given script's function that will be used as UI's user input handler.
      */
     IMappetUIBuilder createUI(String script, String function);
@@ -520,8 +501,7 @@ public interface IScriptFactory
      *    c.send(mappet.dump(morph));
      * }</pre>
      */
-    default String dump(Object object)
-    {
+    default String dump(Object object) {
         return this.dump(object, true);
     }
 
@@ -536,53 +516,9 @@ public interface IScriptFactory
      * }</pre>
      *
      * @param simple Whether you want to see simple or full information about
-     * the object.
+     *               the object.
      */
     String dump(Object object, boolean simple);
-
-    /**
-     * Generate a random number between 0 and the given max value (but not
-     * including the maximum value).
-     *
-     * <pre>{@code
-     *    var randomNumber = mappet.random(10);
-     *
-     *    c.send(randomNumber);
-     * }</pre>
-     *
-     * @param max Maximum value.
-     */
-    double random(double max);
-
-    /**
-     * Generate a random number between the given min value and the given max value
-     * (but not including the maximum value).
-     *
-     * <pre>{@code
-     *    var randomNumber = mappet.random(5, 10);
-     *
-     *    c.send(randomNumber);
-     * }</pre>
-     *
-     * @param min Minimum value.
-     * @param max Maximum value.
-     */
-    double random(double min, double max);
-
-    /**
-     * Generate a random number between the given min value and the given max value
-     * (but not including the maximum value) with given seed.
-     *
-     * <pre>{@code
-     *    var randomNumber = mappet.random(5, 10, 4141241);
-     *
-     *    c.send(randomNumber);
-     * }</pre>
-     *
-     * @param min Minimum value.
-     * @param max Maximum value.
-     */
-    double random(double min, double max, long seed);
 
     /**
      * Return Minecraft's formatting code.
@@ -624,241 +560,6 @@ public interface IScriptFactory
      */
     IScriptEntity getMappetEntity(Entity minecraftEntity);
 
-    /* Vector math */
-
-    /**
-     * Create a ScriptVector.
-     */
-    default ScriptVector vector(double x, double y, double z)
-    {
-        return new ScriptVector(x, y, z);
-    }
-
-    /**
-     * Create an empty (0, 0) 2D vector.
-     */
-    default Vector2d vector2()
-    {
-        return new Vector2d();
-    }
-
-    /**
-     * Create a 2D vector.
-     *
-     * <pre>{@code
-     *    var a = mappet.vector2(1, 0);
-     *    var b = mappet.vector2(-1, 1);
-     *
-     *    a.normalize();
-     *    b.normalize();
-     *
-     *    c.send("Dot product of a and b is: " + a.dot(b));
-     * }</pre>
-     */
-    default Vector2d vector2(double x, double y)
-    {
-        return new Vector2d(x, y);
-    }
-
-    /**
-     * Copy a 2D vector.
-     *
-     * <pre>{@code
-     *    var a = mappet.vector2(25, 17);
-     *    var b = mappet.vector2(a);
-     *
-     *    b.x += 40;
-     *    b.y -= 5;
-     *
-     *    var d = mappet.vector2(b);
-     *
-     *    d.sub(a);
-     *
-     *    c.send("Distance between a and b is: " + d.length());
-     * }</pre>
-     */
-    default Vector2d vector2(Vector2d v)
-    {
-        return new Vector2d(v);
-    }
-
-    /**
-     * Create an empty (0, 0, 0) 3D vector.
-     */
-    default Vector3d vector3()
-    {
-        return new Vector3d();
-    }
-
-    /**
-     * Create a 3D vector.
-     *
-     * <pre>{@code
-     *    var look = c.getSubject().getLook();
-     *    var a = mappet.vector3(look.x, look.y, look.z);
-     *    var b = mappet.vector3(0, 0, 1);
-     *
-     *    a.normalize();
-     *    b.normalize();
-     *
-     *    c.send("Dot product of entity's look vector and positive Z is: " + a.dot(b));
-     * }</pre>
-     */
-    default Vector3d vector3(double x, double y, double z)
-    {
-        return new Vector3d(x, y, z);
-    }
-
-    /**
-     * Copy a 3D vector.
-     *
-     * <pre>{@code
-     *    var pos = c.getSubject().getPosition();
-     *    var a = mappet.vector3(pos.x, pos.y, pos.z);
-     *    var b = mappet.vector3(10, 4, 50);
-     *
-     *    var d = mappet.vector3(b);
-     *
-     *    d.sub(a);
-     *
-     *    c.send("Distance between you and point (10, 4, 50) is: " + d.length());
-     * }</pre>
-     */
-    default Vector3d vector3(Vector3d v)
-    {
-        return new Vector3d(v);
-    }
-
-    /**
-     * Create a 4D vector.
-     */
-    default Vector4d vector4()
-    {
-        return new Vector4d();
-    }
-
-    /**
-     * Create a 4D vector.
-     */
-    default Vector4d vector4(double x, double y, double z, double w)
-    {
-        return new Vector4d(x, y, z, w);
-    }
-
-    /**
-     * Copy a 4D vector.
-     */
-    default Vector4d vector4(Vector4d v)
-    {
-        return new Vector4d(v);
-    }
-
-    /**
-     * Create an identity 3x3 matrix.
-     *
-     * <pre>{@code
-     *    var v = mappet.vector3(0, 0, 1);
-     *    var rotation = mappet.matrix3();
-     *
-     *    rotation.rotY(Math.PI / 2);
-     *    rotation.transform(v);
-     *
-     *    c.send("Final point is: " + v);
-     * }</pre>
-     */
-    default Matrix3d matrix3()
-    {
-        Matrix3d m = new Matrix3d();
-
-        m.setIdentity();
-
-        return m;
-    }
-
-    /**
-     * Copy a 3x3 matrix.
-     */
-    default Matrix3d matrix3(Matrix3d m)
-    {
-        return new Matrix3d(m);
-    }
-
-    /**
-     * Create an identity 4x4 matrix.
-     *
-     * <pre>{@code
-     *    var v = mappet.vector4(0, 0, 1, 1);
-     *    var rotation = mappet.matrix4();
-     *
-     *    rotation.rotY(Math.PI / 2);
-     *
-     *    var translation = mappet.matrix4();
-     *
-     *    translation.setTranslation(mappet.vector3(0, 4, 0));
-     *    rotation.mul(translation);
-     *    rotation.transform(v);
-     *
-     *    c.send("Final point is: " + v.x + ", " + v.y + ", " + v.z);
-     * }</pre>
-     */
-    default Matrix4d matrix4()
-    {
-        Matrix4d m = new Matrix4d();
-
-        m.setIdentity();
-
-        return m;
-    }
-
-    /**
-     * Copy a 4x4 matrix.
-     */
-    default Matrix4d matrix4(Matrix4d m)
-    {
-        return new Matrix4d(m);
-    }
-
-    /**
-     * Create a bounding box.
-     *
-     * <pre>{@code
-     * function main(c)
-     * {
-     *     var subject = c.getSubject();
-     *     var subjectPosition = subject.getPosition();
-     *     var box = mappet.box(-10, 4, -10, 10, 6, 10);
-     *     if (box.contains(subjectPosition)){
-     *         c.send("the player in in the box")
-     *     }
-     * }
-     * }</pre>
-     */
-    default ScriptBox box(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
-    {
-        return new ScriptBox(minX, minY, minZ, maxX, maxY, maxZ);
-    }
-
-    /**
-     * Determines whether a point is located inside a bounding volume specified by two corners.
-     * This method works with different vector types (2D, 3D, and 4D).
-     *
-     * <pre>{@code
-     *   var pos = c.getSubject().getPosition();
-     *   var point = mappet.vector3(pos.x, pos.y, pos.z);
-     *   var bound1 = mappet.vector3(0, 0, 0);
-     *   var bound2 = mappet.vector3(10, 10, 10);
-     *   var isInside = mappet.isPointInBounds(point, bound1, bound2);
-     *   c.send("Is the point inside the bounding volume? " + isInside);
-     * }</pre>
-     *
-     * @param point The position of the point to check.
-     * @param bound1 The position of one corner of the bounding volume.
-     * @param bound2 The position of the opposite corner of the bounding volume.
-     * @return true if the point is inside the bounding volume, false otherwise.
-     * @throws IllegalArgumentException if the input vectors have different dimensions.
-     */
-    boolean isPointInBounds(Object point, Object bound1, Object bound2);
-
     /**
      * Converts an object to an INBTCompound representation.
      *
@@ -885,7 +586,7 @@ public interface IScriptFactory
      * }</pre>
      *
      * @param format string to format
-     * @param args arguments to replace
+     * @param args   arguments to replace
      * @return formatted string
      */
     String format(String format, Object... args);
@@ -896,6 +597,7 @@ public interface IScriptFactory
      * @return Encrypted text by secretKey
      */
     String encrypt(String text, String secretKey);
+
     String decrypt(String text, String secretKey);
 
     ScriptResourcePack pack(String name);

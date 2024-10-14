@@ -3,6 +3,7 @@ package mchorse.mappet.api.scripts;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.ScriptEvent;
 import mchorse.mappet.api.scripts.code.ScriptFactory;
+import mchorse.mappet.api.scripts.code.ScriptMath;
 import mchorse.mappet.api.utils.AbstractData;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.events.RegisterScriptVariablesEvent;
@@ -83,6 +84,7 @@ public class Script extends AbstractData
             }
 
             this.engine.put("mappet", new ScriptFactory());
+            this.engine.put("math", new ScriptMath());
             evalEngineCode(isKotlin, uniqueImports, finalCode);
         }
     }

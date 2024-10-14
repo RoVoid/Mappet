@@ -1,7 +1,9 @@
 package mchorse.mappet.api.scripts;
 
+import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.ScriptEvent;
 import mchorse.mappet.api.scripts.code.ScriptFactory;
+import mchorse.mappet.api.scripts.code.ScriptMath;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.api.utils.manager.BaseManager;
 import mchorse.mappet.utils.ScriptUtils;
@@ -18,20 +20,15 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ScriptManager extends BaseManager<Script>
 {
-    public final Map<String, Object> objects = new HashMap<String, Object>();
+    public final Map<String, Object> objects = new HashMap<>();
 
-    private Map<String, Script> uniqueScripts = new HashMap<String, Script>();
-    public Map<String, Script> globalLibraries = new HashMap<String, Script>();
-    private Map<Object, ScriptEngine> repls = new HashMap<Object, ScriptEngine>();
+    private final Map<String, Script> uniqueScripts = new HashMap<>();
+    public Map<String, Script> globalLibraries = new HashMap<>();
+    private final Map<Object, ScriptEngine> repls = new HashMap<>();
     private String replOutput = "";
 
     public ScriptManager(File folder)
@@ -55,6 +52,7 @@ public class ScriptManager extends BaseManager<Script>
 
             engine.put("____manager____", this);
             engine.put("mappet", new ScriptFactory());
+            engine.put("math", new ScriptMath());
 
             ScriptEvent event = new ScriptEvent(this.prepareContext(key), "", "");
             engine.put("c", event);
@@ -79,6 +77,7 @@ public class ScriptManager extends BaseManager<Script>
     {
         ScriptEvent event = new ScriptEvent(context, "", "");
         engine.put("mappet", new ScriptFactory());
+        engine.put("math", new ScriptMath());
         engine.put("c", event);
 
         return engine.eval(code);
@@ -116,7 +115,7 @@ public class ScriptManager extends BaseManager<Script>
             object = TextFormatting.GRAY + "undefined";
         }
 
-        this.replOutput += object.toString() + "\n";
+        this.replOutput += object + "\n";
     }
 
     /**
@@ -173,11 +172,13 @@ public class ScriptManager extends BaseManager<Script>
             return Collections.emptySet();
         }
 
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
 
         this.recursiveFind(set, this.folder, "");
 
-        for (File file : this.folder.listFiles())
+        if(this.folder.listFiles() == null) return set;
+
+        for (File file : Objects.requireNonNull(this.folder.listFiles()))
         {
             String name = file.getName();
 
@@ -229,7 +230,7 @@ public class ScriptManager extends BaseManager<Script>
 
                 script.code = code.replaceAll("\t", "    ").replaceAll("\r", "");
             }
-            catch (Exception e)
+            catch (Exception ignored)
             {}
         }
 
@@ -253,7 +254,7 @@ public class ScriptManager extends BaseManager<Script>
 
                 result = true;
             }
-            catch (Exception e)
+            catch (Exception ignored)
             {}
         }
 
@@ -348,7 +349,7 @@ public class ScriptManager extends BaseManager<Script>
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                Mappet.logger.error(e.getMessage());
             }
         }
     }
