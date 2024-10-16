@@ -33,7 +33,7 @@ public class ServerHandlerStates extends ServerMessageHandler<PacketStates> {
         if (states != null) {
             NBTTagCompound nbt = states.serializeNBT();
             for (String key : message.states.getKeySet()) {
-                if (!message.changes.contains(key)) message.states.setTag(key, nbt.getTag(key));
+                if (!message.changes.contains(key) && states.values.containsKey(key)) message.states.setTag(key, nbt.getTag(key));
             }
             states.deserializeNBT(message.states);
         }

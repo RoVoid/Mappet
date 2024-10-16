@@ -477,17 +477,14 @@ public class EventHandler {
             }
         }
 
+        ClientHandlerLockPerspective.setLockedPerspective(-1);
+        ClientHandlerBlackAndWhiteShader.enableBlackAndWhiteShader(false);
     }
 
     @SubscribeEvent
     public void onPlayerLogsIn(PlayerEvent.PlayerLoggedInEvent event) {
         EntityPlayerMP player = (EntityPlayerMP) event.player;
         if (event.player == null) return;
-
-        if (event.player.world.isRemote) {
-            ClientHandlerLockPerspective.setLockedPerspective(-1);
-            ClientHandlerBlackAndWhiteShader.enableBlackAndWhiteShader(false);
-        }
 
         ICharacter character = Character.get(player);
         Instant lastClear = Mappet.data.getLastClear();

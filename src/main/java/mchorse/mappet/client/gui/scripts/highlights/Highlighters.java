@@ -86,11 +86,11 @@ public class Highlighters
             jsHighlighter.operators = ImmutableSet.of("+", "-", "=", "/", "*", "<", ">", "~", "&", "|", "!");
             jsHighlighter.primaryKeywords = ImmutableSet.of(
                     "break", "continue", "switch", "case", "default", "try",
-                    "catch", "delete", "do", "while", "else", "finally", "if",
+                    "catch", "delete", "do", "while", "finally", "if",
                     "else", "for", "each", "in", "instanceof",
                     "new", "throw", "typeof", "with", "yield", "return"
             );
-            jsHighlighter.secondaryKeywords = ImmutableSet.of("const", "function", "var", "let", "prototype", "Math", "JSON", "mappet");
+            jsHighlighter.secondaryKeywords = ImmutableSet.of("const", "function", "var", "let", "prototype", "Math", "JSON", "mappet", "math");
             jsHighlighter.special = ImmutableSet.of("this", "arguments");
             jsHighlighter.typeKeywords = ImmutableSet.of("true", "false", "null", "undefined");
             jsHighlighter.functionName = Pattern.compile("[\\w_][\\d\\w_]*", Pattern.CASE_INSENSITIVE);
@@ -118,7 +118,7 @@ public class Highlighters
             );
             ktsHighlighter.secondaryKeywords = ImmutableSet.of(
                     "abstract", "extends", "final", "implements", "interface", "super", "throws",
-                    "data", "class", "fun", "var", "val", "import", "Java", "JSON", "mappet"
+                    "data", "class", "fun", "var", "val", "import", "Java", "JSON", "mappet", "math"
             );
             ktsHighlighter.special = ImmutableSet.of("this", "it");
             ktsHighlighter.typeKeywords = ImmutableSet.of("true", "false", "null", "undefined", "enum");
