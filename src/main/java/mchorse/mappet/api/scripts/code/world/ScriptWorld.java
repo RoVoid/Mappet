@@ -1,4 +1,4 @@
-package mchorse.mappet.api.scripts.code;
+package mchorse.mappet.api.scripts.code.world;
 
 import com.google.common.collect.ImmutableList;
 import io.netty.buffer.Unpooled;
@@ -7,6 +7,8 @@ import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.npcs.Npc;
 import mchorse.mappet.api.npcs.NpcState;
+import mchorse.mappet.api.scripts.code.ScriptFactory;
+import mchorse.mappet.api.scripts.code.ScriptRayTrace;
 import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
 import mchorse.mappet.api.scripts.code.blocks.ScriptTileEntity;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
@@ -16,7 +18,7 @@ import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
 import mchorse.mappet.api.scripts.code.mappet.MappetSchematic;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
 import mchorse.mappet.api.scripts.user.IScriptRayTrace;
-import mchorse.mappet.api.scripts.user.IScriptWorld;
+import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import mchorse.mappet.api.scripts.user.blocks.IScriptBlockState;
 import mchorse.mappet.api.scripts.user.blocks.IScriptTileEntity;
 import mchorse.mappet.api.scripts.user.data.ScriptVector;
@@ -116,6 +118,10 @@ public class ScriptWorld implements IScriptWorld {
         }
     }
 
+    @Override
+    public void setBlock(IScriptBlockState state, ScriptVector pos) {
+        setBlock(state, (int) pos.x, (int) pos.y, (int) pos.z);
+    }
 
     @Override
     public void setBlock(IScriptBlockState state, int x, int y, int z) {
@@ -782,6 +788,16 @@ public class ScriptWorld implements IScriptWorld {
     public MappetSchematic createSchematic() {
         return MappetSchematic.create(this);
     }
+
+    @Override
+    public ScriptStructure loadStructure(String name){
+        return new ScriptStructure(this, name);
+    }
+
+//    public TemplateManager getStructureManager(){
+//        if(!(world instanceof WorldServer)) return null;
+//        return ((WorldServer) world).getStructureTemplateManager();
+//    }
 
 
     /* BlockBuster stuff */

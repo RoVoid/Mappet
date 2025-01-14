@@ -4,6 +4,7 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.user.entities.IScriptNpc;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
+import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -220,6 +221,12 @@ public interface IScriptEvent
      * 2 or above - multiple commands were executed using target selectors.
      */
     public int executeCommand(String command);
+
+    void executeScript(String scriptName);
+
+    void executeScript(String scriptName, String function);
+
+    void executeScript(String scriptName, String function, Object... args);
 
     /**
      * Send a message to all players in the chat.

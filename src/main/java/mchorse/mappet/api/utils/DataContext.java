@@ -32,14 +32,14 @@ public class DataContext
     private boolean canceled;
 
     private TriggerSender sender;
-    private Map<String, Object> values = new HashMap<String, Object>();
+    private Map<String, Object> values = new HashMap<>();
 
     public DataContext(Entity subject, Entity object)
     {
         this(subject.world);
 
         this.subject = subject;
-        this.object = object;
+        if(object != null) this.object = object;
 
         this.setup();
     }

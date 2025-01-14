@@ -2,11 +2,13 @@ package mchorse.mappet.api.scripts.code;
 
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import mchorse.mappet.CommonProxy;
+import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.ScriptExecutionFork;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
+import mchorse.mappet.api.scripts.code.world.ScriptWorld;
 import mchorse.mappet.api.scripts.user.IScriptEvent;
 import mchorse.mappet.api.scripts.user.IScriptServer;
-import mchorse.mappet.api.scripts.user.IScriptWorld;
+import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.user.entities.IScriptNpc;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
@@ -14,6 +16,7 @@ import mchorse.mappet.api.utils.DataContext;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 
+import javax.script.ScriptException;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -155,6 +158,35 @@ public class ScriptEvent implements IScriptEvent {
     @Override
     public int executeCommand(String command) {
         return this.context.execute(command);
+    }
+
+    @Override
+    public void executeScript(String scriptName) {
+        executeScript(scriptName, "main");
+    }
+
+    @Override
+    public void executeScript(String scriptName, String function) {
+        try {
+            Mappet.scripts.execute(scriptName, function, context);
+        } catch (ScriptException e) {
+            String fileName = e.getFileName() == null ? scriptName : e.getFileName();
+            Mappet.logger.error("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void executeScript(String scriptName, String function, Object... args) {
+        try {
+            Mappet.scripts.execute(scriptName, function, context, args);
+        } catch (ScriptException e) {
+            String fileName = e.getFileName() == null ? scriptName : e.getFileName();
+            Mappet.logger.error("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
+        }
     }
 
     @Override

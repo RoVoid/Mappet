@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class Npc extends AbstractData
 {
-    public Map<String, NpcState> states = new HashMap<String, NpcState>();
+    public Map<String, NpcState> states = new HashMap<>();
 
     @Override
     public NBTTagCompound serializeNBT()

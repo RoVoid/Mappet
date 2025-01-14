@@ -339,6 +339,10 @@ mappet.gui.settings.triggers.player_journal=Игрок: при открытии 
 mappet.gui.settings.triggers.descriptions.player_journal=Этот отменяемый триггер срабатывает когда игрок открывает журнал.\n\nВы можете использовать этот триггер чтобы реализовать собственный журнал, используя UI API. Когда триггер отменён, стандартный журнал не будет открыт.
 mappet.gui.settings.triggers.variables.player_journal=§7N/A§r
 
+mappet.gui.settings.triggers.player_jump=Игрок: при прыжке
+mappet.gui.settings.triggers.descriptions.player_jump=Этот триггер срабатывает когда игрок прыгает.
+mappet.gui.settings.triggers.variables.player_jump=§7N/A§r
+
 mappet.gui.settings.triggers.projectile_impact=Снаряд: при попадании
 mappet.gui.settings.triggers.descriptions.projectile_impact=Этот отменяемый триггер срабатываетт когда снаряд попадает по энтити или блоку.
 mappet.gui.settings.triggers.variables.projectile_impact=§6pos§r, позиция, где попал снаряд.\n§6entity§r, сущность в которую попал снаряд.\n§6projectile§r, сам снаряд, который попал по сущности.\n§6thrower§r, сущность которая бросила снаряд.
@@ -778,6 +782,7 @@ mappet.gui.scripts.overlay.title_morph=Морф
 mappet.gui.scripts.overlay.title_item=Предмет
 mappet.gui.scripts.overlay.insert=Вставить
 mappet.gui.scripts.overlay.pick_morph=Выберите морф...
+mappet.gui.scripts.beautifier=Украсить код
 
 mappet.gui.states.server=Серверные состояния
 mappet.gui.states.player=Состояния %s
@@ -897,4 +902,17 @@ mappet.translation.wiki=Вики
 mappet.translation.wiki_url=https://github.com/Andruxioid/mappet_ru/wiki
 mappet.translation.community=Дискорд
 mappet.translation.community_url=https://discord.gg/QhvbgSWpYn
-mappet.translation.sounds=Открыть папку со звуками
+
+mappet.error.event.busy=§fYou are already logged in!
+mappet.gui.settings.triggers.player_entity_leash=Player: leash an entity
+mappet.gui.settings.triggers.descriptions.player_entity_leash=This cancelable trigger gets triggered when a player leashes an entity.
+mappet.gui.settings.triggers.variables.player_entity_leash=§6hand§r, the hand that leashed the entity (§7main§r or §7off§r).
+mappet.gui.quests.visible = Visible
+mappet.gui.scripted_item.item_title=Display name
+mappet.gui.scripted_item.item_lore=Lore
+mappet.gui.scripted_item.item_lore_add=Add a line of lore
+mappet.gui.scripted_item.item_lore_remove=Remove this line of lore
+mappet.gui.npcs.behavior.always_wander=Always wander
+mappet.gui.npcs.behavior.can_fly=Can fly (experimental)
+mappet.gui.npcs.movement.flight_max_height=Flight max height
+mappet.gui.npcs.movement.flight_min_height=Flight min heightmappet.translation.sounds=Открыть папку со звуками

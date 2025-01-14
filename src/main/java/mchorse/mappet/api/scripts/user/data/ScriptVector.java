@@ -137,4 +137,8 @@ public class ScriptVector {
     public double getAngle(ScriptVector other) {
         return Math.acos(dotProduct(other));
     }
+
+    public BlockPos toBlockPos() {
+        return new BlockPos(x, y, z);
+    }
 }

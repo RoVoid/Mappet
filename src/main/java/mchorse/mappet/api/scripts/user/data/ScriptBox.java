@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.user.data;
 
-import mchorse.mappet.api.scripts.code.ScriptWorld;
+import mchorse.mappet.api.scripts.code.world.ScriptWorld;
 import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;

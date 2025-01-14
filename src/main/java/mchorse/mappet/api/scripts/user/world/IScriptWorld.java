@@ -1,7 +1,10 @@
-package mchorse.mappet.api.scripts.user;
+package mchorse.mappet.api.scripts.user.world;
 
-import mchorse.mappet.api.scripts.code.ScriptWorldBorder;
+import mchorse.mappet.api.scripts.code.world.ScriptStructure;
+import mchorse.mappet.api.scripts.code.world.ScriptWorldBorder;
 import mchorse.mappet.api.scripts.code.mappet.MappetSchematic;
+import mchorse.mappet.api.scripts.user.IScriptFactory;
+import mchorse.mappet.api.scripts.user.IScriptRayTrace;
 import mchorse.mappet.api.scripts.user.blocks.IScriptBlockState;
 import mchorse.mappet.api.scripts.user.blocks.IScriptTileEntity;
 import mchorse.mappet.api.scripts.user.data.ScriptVector;
@@ -77,6 +80,8 @@ public interface IScriptWorld
      * @return The value of the game rule. The type of the value will match the expected type for the game rule.
      */
     public Object getGameRule(String gameRule);
+
+    void setBlock(IScriptBlockState state, ScriptVector pos);
 
     /**
      * Set a block at XYZ, use {@link IScriptFactory#createBlock(String, int)}
@@ -972,6 +977,8 @@ public interface IScriptWorld
     public void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, float yaw, float pitch, int range, IScriptPlayer player);
 
     /* BlockBuster stuff */
+
+    ScriptStructure loadStructure(String name);
 
     /**
      * Shoots a gun projectile entity.

@@ -30,7 +30,7 @@ public class NpcLexer
 
     public String id;
     public String state;
-    public List<String> properties = new ArrayList<String>();
+    public List<String> properties = new ArrayList<>();
 
     public static NpcLexer parse(String input, String npcId)
     {

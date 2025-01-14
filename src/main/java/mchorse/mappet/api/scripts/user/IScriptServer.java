@@ -4,6 +4,7 @@ import mchorse.mappet.api.scripts.code.score.ScriptScoreboard;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.mappet.IMappetStates;
+import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.List;

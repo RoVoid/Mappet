@@ -564,7 +564,10 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
         }
 
         this.healthFailsafe();
-        this.state.triggerDamaged.trigger(this);
+        DataContext context = new DataContext(this, damage.getTrueSource());
+        context.set("damage", damageAmount);
+        context.set("damageType", damage.getDamageType());
+        this.state.triggerDamaged.trigger(context);
     }
 
     @Override

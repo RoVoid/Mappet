@@ -2,7 +2,7 @@ package mchorse.mappet.api.scripts.code.mappet;
 
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.schematics.Schematic;
-import mchorse.mappet.api.scripts.user.IScriptWorld;
+import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import mchorse.mappet.api.scripts.user.mappet.IMappetSchematic;
 
 public class MappetSchematic implements IMappetSchematic
