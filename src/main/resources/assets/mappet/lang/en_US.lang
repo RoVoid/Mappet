@@ -819,6 +819,7 @@ mappet.gui.logs.context.copy=Copy message
 mappet.gui.logs.toggle.ignore_case=Ignore case
 mappet.gui.logs.toggle.regex=Regex
 mappet.gui.logs.toggle.onlyMessage=Only message
+mappet.gui.logs.button.clearHistory=Clear
 
 # GUI enums
 

@@ -805,7 +805,7 @@ mappet.gui.logs.context.copy=Копировать сообщение
 mappet.gui.logs.toggle.ignore_case=Игнорировать регистр
 mappet.gui.logs.toggle.regex=Регулярное выражение
 mappet.gui.logs.toggle.onlyMessage=Только сообщение
-
+mappet.gui.logs.button.clearHistory=Очистить
 
 mappet.gui.shapes.box=Куб
 mappet.gui.shapes.sphere=Сфера

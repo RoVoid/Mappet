@@ -12,6 +12,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.function.Consumer;
+
 /**
  * Item stack (slot) UI component.
  *
@@ -62,6 +64,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class UIStackComponent extends UIComponent
 {
     public ItemStack stack = ItemStack.EMPTY;
+    public boolean locked = false;
 
     /**
      * Set item stack component's item from scripts.
@@ -95,6 +98,20 @@ public class UIStackComponent extends UIComponent
         return this;
     }
 
+    public UIStackComponent lock()
+    {
+        return setLocked(true);
+    }
+
+    public UIStackComponent setLocked(boolean locked)
+    {
+        this.change("Lock");
+
+        this.locked = locked;
+
+        return this;
+    }
+
     @Override
     @DiscardMethod
     protected int getDefaultUpdateDelay()
@@ -113,6 +130,10 @@ public class UIStackComponent extends UIComponent
         {
             ((GuiSlotElement) element).setStack(this.stack);
         }
+        else if (key.equals("Lock"))
+        {
+            ((AbstractGuiSlotElement) element).locked = this.locked;
+        }
     }
 
     @Override
@@ -120,7 +141,7 @@ public class UIStackComponent extends UIComponent
     @SideOnly(Side.CLIENT)
     public GuiElement create(Minecraft mc, UIContext context)
     {
-        final GuiSlotElement element = new GuiSlotElement(mc, 0, null);
+        final GuiSlotElement element = new AbstractGuiSlotElement(mc, 0, null);
 
 
         element.callback = this.id.isEmpty() ? null : (stack) ->
@@ -154,6 +175,7 @@ public class UIStackComponent extends UIComponent
         super.serializeNBT(tag);
 
         tag.setTag("Stack", this.stack.serializeNBT());
+        tag.setBoolean("Lock", locked);
     }
 
     @Override
@@ -165,6 +187,24 @@ public class UIStackComponent extends UIComponent
         if (tag.hasKey("Stack"))
         {
             this.stack = new ItemStack(tag.getCompoundTag("Stack"));
+        }
+        else if (tag.hasKey("Lock"))
+        {
+            locked = tag.getBoolean("Lock");
+        }
+    }
+
+    private static class AbstractGuiSlotElement extends GuiSlotElement{
+
+        public boolean locked = false;
+
+        public AbstractGuiSlotElement(Minecraft mc, int slot, Consumer<ItemStack> callback) {
+            super(mc, slot, callback);
+        }
+
+        @Override
+        protected void click(int mouseButton) {
+            if(!locked) super.click(mouseButton);
         }
     }
 }

@@ -9,12 +9,14 @@ import mchorse.mappet.client.gui.utils.GuiTextLabeledElement;
 import mchorse.mappet.client.gui.utils.text.GuiText;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.common.logs.PacketRequestLogs;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.mclib.GuiDashboardPanel;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.time.LocalDateTime;
@@ -38,6 +40,7 @@ public class GuiLogPanel extends GuiDashboardPanel<GuiMappetDashboard>
     GuiToggleElement toggleIgnoreCase;
     GuiToggleElement toggleRegex;
     GuiToggleElement toggleOnlyMessage;
+    GuiButtonElement clearHistory;
 
     private static final Pattern replacePattern = Pattern.compile("\\r(?=[^\\[\\n])");
 
@@ -93,6 +96,13 @@ public class GuiLogPanel extends GuiDashboardPanel<GuiMappetDashboard>
         });
         this.toggleOnlyMessage.flex().relative(this.toggleRegex).anchorY(1F).anchorX(1F).wh(1F, 1F).y(-1F, 10).x(1F);
 
+        clearHistory= new GuiButtonElement(mc, IKey.lang("mappet.gui.logs.button.clearHistory"), (b) ->
+        {
+            logLines.clear();
+            createTextElements();
+        });
+        this.clearHistory.flex().relative(this.toggleOnlyMessage).anchorY(1F).anchorX(1F).wh(1F, 1F).y(-1F, 10).x(1F);
+
         /* Levels */
 
         this.levelFlags = new GuiLoggingLevelList(mc, (l) -> this.createTextElements());
@@ -107,6 +117,7 @@ public class GuiLogPanel extends GuiDashboardPanel<GuiMappetDashboard>
         this.add(this.toggleIgnoreCase);
         this.add(this.toggleRegex);
         this.add(this.toggleOnlyMessage);
+        this.add(this.clearHistory);
 
         this.resize();
     }
@@ -167,11 +178,7 @@ public class GuiLogPanel extends GuiDashboardPanel<GuiMappetDashboard>
 
         for (String line : lines)
         {
-            if (line.equals(""))
-            {
-                continue;
-            }
-
+            if (line.isEmpty())continue;
             this.logLines.add(line);
         }
     }

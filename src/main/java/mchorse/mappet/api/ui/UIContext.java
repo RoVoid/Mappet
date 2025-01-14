@@ -296,7 +296,7 @@ public class UIContext {
 
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            Mappet.logger.error(e.getMessage());
         }
 
         return false;
