@@ -16,7 +16,6 @@ import mchorse.mclib.client.gui.mclib.GuiDashboardPanel;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.time.LocalDateTime;
@@ -24,8 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class GuiLogPanel extends GuiDashboardPanel<GuiMappetDashboard>
-{
+public class GuiLogPanel extends GuiDashboardPanel<GuiMappetDashboard> {
     String lastLogTime = LocalDateTime.of(1, 1, 1, 0, 0, 0).format(MappetLogger.dtf);
     List<String> logLines = new ArrayList<>();
     String search = "";
@@ -44,8 +42,7 @@ public class GuiLogPanel extends GuiDashboardPanel<GuiMappetDashboard>
 
     private static final Pattern replacePattern = Pattern.compile("\\r(?=[^\\[\\n])");
 
-    public GuiLogPanel(Minecraft mc, GuiMappetDashboard dashboard)
-    {
+    public GuiLogPanel(Minecraft mc, GuiMappetDashboard dashboard) {
         super(mc, dashboard);
 
         this.context(() ->
@@ -96,7 +93,7 @@ public class GuiLogPanel extends GuiDashboardPanel<GuiMappetDashboard>
         });
         this.toggleOnlyMessage.flex().relative(this.toggleRegex).anchorY(1F).anchorX(1F).wh(1F, 1F).y(-1F, 10).x(1F);
 
-        clearHistory= new GuiButtonElement(mc, IKey.lang("mappet.gui.logs.button.clearHistory"), (b) ->
+        clearHistory = new GuiButtonElement(mc, IKey.lang("mappet.gui.logs.button.clearHistory"), (b) ->
         {
             logLines.clear();
             createTextElements();
@@ -123,15 +120,13 @@ public class GuiLogPanel extends GuiDashboardPanel<GuiMappetDashboard>
     }
 
     @Override
-    public void appear()
-    {
+    public void appear() {
         super.appear();
 
         this.sendRequestPacket();
     }
 
-    public void update(String data)
-    {
+    public void update(String data) {
         this.fillList(data);
 
         this.updateLastTime();
@@ -139,16 +134,13 @@ public class GuiLogPanel extends GuiDashboardPanel<GuiMappetDashboard>
         this.createTextElements();
     }
 
-    public void createTextElements()
-    {
+    public void createTextElements() {
         this.text.removeAll();
 
-        for (String line : this.logLines)
-        {
+        for (String line : this.logLines) {
             LoggerLevel level = this.getLineLevel(line);
 
-            if (!this.levelFlags.flags.get(level) || !this.isMatchesSearch(line))
-            {
+            if (!this.levelFlags.flags.get(level) || !this.isMatchesSearch(line)) {
                 continue;
             }
 
@@ -169,72 +161,58 @@ public class GuiLogPanel extends GuiDashboardPanel<GuiMappetDashboard>
         this.text.resize();
     }
 
-    public void fillList(String data)
-    {
+    public void fillList(String data) {
 
         data = replacePattern.matcher(data).replaceAll("\n");
 
         String[] lines = data.split("\r");
 
-        for (String line : lines)
-        {
-            if (line.isEmpty())continue;
+        for (String line : lines) {
+            if (line.isEmpty()) continue;
             this.logLines.add(line);
         }
     }
 
-    public void updateLastTime()
-    {
+    public void updateLastTime() {
         String last = this.logLines.get(this.logLines.size() - 1);
 
         this.lastLogTime = last.substring(1, last.indexOf("]"));
     }
 
-    public boolean isMatchesSearch(String line)
-    {
-        if (this.searchOnlyMessage)
-        {
+    public boolean isMatchesSearch(String line) {
+        if (this.searchOnlyMessage) {
             int secondIndex = line.indexOf(']', line.indexOf(']') + 1);
             line = line.substring(secondIndex + 1);
         }
 
-        if (this.searchRegex)
-        {
-            try
-            {
+        if (this.searchRegex) {
+            try {
                 Pattern searchPattern = Pattern.compile(this.search);
                 return searchPattern.matcher(line).find();
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 return false;
             }
-        }
-        else if (this.searchIgnoreCase)
-        {
+        } else if (this.searchIgnoreCase) {
             return line.toLowerCase().contains(this.search.toLowerCase());
         }
 
         return line.contains(this.search);
     }
 
-    public LoggerLevel getLineLevel(String line)
-    {
+    public LoggerLevel getLineLevel(String line) {
         int secondOpenBracket = line.indexOf('[', line.indexOf('[') + 1);
         int secondClosedBracket = line.indexOf(']', secondOpenBracket);
 
         LoggerLevel level = null;
 
-        if (secondClosedBracket != -1)
-        {
+        if (secondClosedBracket != -1) {
             level = LoggerLevel.valueOf(line.substring(secondOpenBracket + 1, secondClosedBracket));
         }
 
         return level;
     }
 
-    public void sendRequestPacket()
-    {
+    public void sendRequestPacket() {
         Dispatcher.sendToServer(new PacketRequestLogs().setLastDate(this.lastLogTime));
     }
 }

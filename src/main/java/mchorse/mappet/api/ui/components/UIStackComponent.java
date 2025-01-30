@@ -61,8 +61,7 @@ import java.util.function.Consumer;
  *    }
  * }</pre>
  */
-public class UIStackComponent extends UIComponent
-{
+public class UIStackComponent extends UIComponent {
     public ItemStack stack = ItemStack.EMPTY;
     public boolean locked = false;
 
@@ -81,16 +80,14 @@ public class UIStackComponent extends UIComponent
      *    }
      * }</pre>
      */
-    public UIStackComponent stack(IScriptItemStack stack)
-    {
+    public UIStackComponent stack(IScriptItemStack stack) {
         return this.stack(stack == null ? null : stack.getMinecraftItemStack());
     }
 
     /**
      * Set item stack component's item. See the example in {@link #stack(IScriptItemStack)}.
      */
-    public UIStackComponent stack(ItemStack stack)
-    {
+    public UIStackComponent stack(ItemStack stack) {
         this.change("Stack");
 
         this.stack = stack == null ? ItemStack.EMPTY : stack.copy();
@@ -98,13 +95,11 @@ public class UIStackComponent extends UIComponent
         return this;
     }
 
-    public UIStackComponent lock()
-    {
+    public UIStackComponent lock() {
         return setLocked(true);
     }
 
-    public UIStackComponent setLocked(boolean locked)
-    {
+    public UIStackComponent setLocked(boolean locked) {
         this.change("Lock");
 
         this.locked = locked;
@@ -114,24 +109,19 @@ public class UIStackComponent extends UIComponent
 
     @Override
     @DiscardMethod
-    protected int getDefaultUpdateDelay()
-    {
+    protected int getDefaultUpdateDelay() {
         return UIComponent.DELAY;
     }
 
     @Override
     @DiscardMethod
     @SideOnly(Side.CLIENT)
-    protected void applyProperty(UIContext context, String key, GuiElement element)
-    {
+    protected void applyProperty(UIContext context, String key, GuiElement element) {
         super.applyProperty(context, key, element);
 
-        if (key.equals("Stack"))
-        {
+        if (key.equals("Stack")) {
             ((GuiSlotElement) element).setStack(this.stack);
-        }
-        else if (key.equals("Lock"))
-        {
+        } else if (key.equals("Lock")) {
             ((AbstractGuiSlotElement) element).locked = this.locked;
         }
     }
@@ -139,8 +129,7 @@ public class UIStackComponent extends UIComponent
     @Override
     @DiscardMethod
     @SideOnly(Side.CLIENT)
-    public GuiElement create(Minecraft mc, UIContext context)
-    {
+    public GuiElement create(Minecraft mc, UIContext context) {
         final GuiSlotElement element = new AbstractGuiSlotElement(mc, 0, null);
 
 
@@ -158,20 +147,17 @@ public class UIStackComponent extends UIComponent
 
     @Override
     @DiscardMethod
-    public void populateData(NBTTagCompound tag)
-    {
+    public void populateData(NBTTagCompound tag) {
         super.populateData(tag);
 
-        if (!this.id.isEmpty())
-        {
+        if (!this.id.isEmpty()) {
             tag.setTag(this.id, this.stack.serializeNBT());
         }
     }
 
     @Override
     @DiscardMethod
-    public void serializeNBT(NBTTagCompound tag)
-    {
+    public void serializeNBT(NBTTagCompound tag) {
         super.serializeNBT(tag);
 
         tag.setTag("Stack", this.stack.serializeNBT());
@@ -180,21 +166,17 @@ public class UIStackComponent extends UIComponent
 
     @Override
     @DiscardMethod
-    public void deserializeNBT(NBTTagCompound tag)
-    {
+    public void deserializeNBT(NBTTagCompound tag) {
         super.deserializeNBT(tag);
 
-        if (tag.hasKey("Stack"))
-        {
+        if (tag.hasKey("Stack")) {
             this.stack = new ItemStack(tag.getCompoundTag("Stack"));
-        }
-        else if (tag.hasKey("Lock"))
-        {
+        } else if (tag.hasKey("Lock")) {
             locked = tag.getBoolean("Lock");
         }
     }
 
-    private static class AbstractGuiSlotElement extends GuiSlotElement{
+    public static class AbstractGuiSlotElement extends GuiSlotElement {
 
         public boolean locked = false;
 
@@ -204,7 +186,7 @@ public class UIStackComponent extends UIComponent
 
         @Override
         protected void click(int mouseButton) {
-            if(!locked) super.click(mouseButton);
+            if (!locked) super.click(mouseButton);
         }
     }
 }

@@ -44,7 +44,7 @@ public class ScriptStructure implements IScriptStructure {
 
     @Override
     public void takeBlocks(int x1, int y1, int z1, int x2, int y2, int z2, boolean withEntities) {
-        takeBlocks(new BlockPos(x1, y1, z1), new BlockPos(x2 - x1 + 1, y2 - y1 + 1, z2 - z1 + 1), withEntities);
+        takeBlocks(new BlockPos(Math.min(x1, x2), Math.min(y1, y2), Math.min(z1, z2)), new BlockPos(Math.abs(x2 - x1) + 1, Math.abs(y2 - y1) + 1, Math.abs(z2 - z1) + 1), withEntities);
     }
 
     public void placeBlocks(BlockPos pos, int rotation, int mirror, boolean withEntities) {
