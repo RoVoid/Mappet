@@ -176,6 +176,7 @@ public class UIStackComponent extends UIComponent {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     public static class AbstractGuiSlotElement extends GuiSlotElement {
 
         public boolean locked = false;
