@@ -60,10 +60,10 @@ public abstract class UIComponent implements INBTSerializable<NBTTagCompound>
     public UIUnit h = new UIUnit();
 
     public int updateDelay = this.getDefaultUpdateDelay();
-    public List<UIKeybind> keybinds = new ArrayList<UIKeybind>();
-    public List<UIContextItem> context = new ArrayList<UIContextItem>();
+    public List<UIKeybind> keybinds = new ArrayList<>();
+    public List<UIContextItem> context = new ArrayList<>();
 
-    protected Set<String> changedProperties = new HashSet<String>();
+    protected Set<String> changedProperties = new HashSet<>();
 
     /**
      * Set the ID of the component.
@@ -245,7 +245,6 @@ public abstract class UIComponent implements INBTSerializable<NBTTagCompound>
 
     /**
      * Add a keybind with optional Control and/or Shift modifier(s).
-     * See {@link #keybind(int, String, String, boolean, boolean)} for proper example.
      */
     public UIComponent keybind(int keyCode, String action, String label, boolean ctrl, boolean shift)
     {
@@ -677,11 +676,9 @@ public abstract class UIComponent implements INBTSerializable<NBTTagCompound>
         for (UIKeybind keybind : this.keybinds)
         {
             Keybind key = element.keys().register(IKey.str(keybind.label), keybind.keyCode, () ->
-            {
-                context.sendKey(keybind.action);
-            });
+                    context.sendKey(keybind.action));
 
-            List<Integer> held = new ArrayList<Integer>();
+            List<Integer> held = new ArrayList<>();
 
             if (keybind.isCtrl())
             {

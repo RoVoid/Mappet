@@ -8,10 +8,10 @@ import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.world.ScriptWorld;
 import mchorse.mappet.api.scripts.user.IScriptEvent;
 import mchorse.mappet.api.scripts.user.IScriptServer;
-import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.user.entities.IScriptNpc;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
+import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import mchorse.mappet.api.utils.DataContext;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
@@ -190,9 +190,10 @@ public class ScriptEvent implements IScriptEvent {
     }
 
     @Override
-    public void send(String message) {
+    public void send(String... message) {
+        TextComponentString text = new TextComponentString(message == null ? "null" : String.join(" ", message));
         for (EntityPlayer player : this.context.server.getPlayerList().getPlayers()) {
-            player.sendMessage(new TextComponentString(message == null ? "null" : message));
+            player.sendMessage(text);
         }
     }
 }

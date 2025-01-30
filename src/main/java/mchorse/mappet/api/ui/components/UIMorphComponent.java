@@ -286,22 +286,20 @@ public class UIMorphComponent extends UIComponent
         }
 
         GuiNestedEdit edit = new GuiNestedEdit(mc, (editing) ->
-        {
-            GuiMappetDashboard.get(mc).openMorphMenu(renderer.getRoot(), editing, renderer.morph.copy(), (morph) ->
-            {
-                if (this.id.isEmpty())
+                GuiMappetDashboard.get(mc).openMorphMenu(renderer.getRoot(), editing, renderer.morph.copy(), (morph) ->
                 {
-                    return;
-                }
+                    if (this.id.isEmpty())
+                    {
+                        return;
+                    }
 
-                AbstractMorph copy = MorphUtils.copy(morph);
-                NBTTagCompound copyTag = MorphUtils.toNBT(copy);
+                    AbstractMorph copy = MorphUtils.copy(morph);
+                    NBTTagCompound copyTag = MorphUtils.toNBT(copy);
 
-                renderer.morph.setDirect(copy);
-                context.data.setTag(this.id, copyTag == null ? new NBTTagCompound() : copyTag);
-                context.dirty(this.id, this.updateDelay);
-            });
-        });
+                    renderer.morph.setDirect(copy);
+                    context.data.setTag(this.id, copyTag == null ? new NBTTagCompound() : copyTag);
+                    context.dirty(this.id, this.updateDelay);
+                }));
 
         edit.flex().relative(renderer).x(0.5F).y(1F, -30).wh(100, 20).anchorX(0.5F);
         edit.setVisible(this.editing);

@@ -51,8 +51,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *    }
  * }</pre>
  */
-public class UITextareaComponent extends UILabelBaseComponent
-{
+public class UITextareaComponent extends UILabelBaseComponent {
     /**
      * Disable textarea's background.
      *
@@ -61,8 +60,7 @@ public class UITextareaComponent extends UILabelBaseComponent
      *    uiContext.get("textarea").noBackground();
      * }</pre>
      */
-    public UITextareaComponent noBackground()
-    {
+    public UITextareaComponent noBackground() {
         this.hasBackground = false;
 
         return this;
@@ -70,33 +68,28 @@ public class UITextareaComponent extends UILabelBaseComponent
 
     @Override
     @DiscardMethod
-    protected int getDefaultUpdateDelay()
-    {
+    protected int getDefaultUpdateDelay() {
         return UIComponent.DELAY;
     }
 
     @Override
     @DiscardMethod
     @SideOnly(Side.CLIENT)
-    protected void applyProperty(UIContext context, String key, GuiElement element)
-    {
+    protected void applyProperty(UIContext context, String key, GuiElement element) {
         super.applyProperty(context, key, element);
 
-        if (key.equals("Label"))
-        {
-            ((GuiMultiTextElement) element).setText(this.label);
+        if (key.equals("Label")) {
+            ((GuiMultiTextElement<?>) element).setText(this.label);
         }
     }
 
     @Override
     @DiscardMethod
     @SideOnly(Side.CLIENT)
-    public GuiElement create(Minecraft mc, UIContext context)
-    {
-        GuiMultiTextElement<TextLine> element = new GuiMultiTextElement<TextLine>(mc, (t) ->
+    public GuiElement create(Minecraft mc, UIContext context) {
+        GuiMultiTextElement<TextLine> element = new GuiMultiTextElement<>(mc, (t) ->
         {
-            if (!this.id.isEmpty())
-            {
+            if (!this.id.isEmpty()) {
                 context.data.setString(this.id, t);
                 context.dirty(this.id, this.updateDelay);
             }
@@ -110,12 +103,10 @@ public class UITextareaComponent extends UILabelBaseComponent
 
     @Override
     @DiscardMethod
-    public void populateData(NBTTagCompound tag)
-    {
+    public void populateData(NBTTagCompound tag) {
         super.populateData(tag);
 
-        if (!this.id.isEmpty())
-        {
+        if (!this.id.isEmpty()) {
             tag.setString(this.id, this.label);
         }
     }

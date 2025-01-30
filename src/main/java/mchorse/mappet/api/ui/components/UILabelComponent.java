@@ -125,21 +125,19 @@ public class UILabelComponent extends UILabelBaseComponent
 
         GuiLabel label = (GuiLabel) element;
 
-        if (key.equals("Label"))
-        {
-            label.label = IKey.str(this.getLabel());
-        }
-        else if (key.equals("Background"))
-        {
-            label.background = this.background;
-        }
-        else if (key.equals("AnchorX"))
-        {
-            label.anchorX = this.anchorX;
-        }
-        else if (key.equals("AnchorY"))
-        {
-            label.anchorY = this.anchorY;
+        switch (key) {
+            case "Label":
+                label.label = IKey.str(this.getLabel());
+                break;
+            case "Background":
+                label.background = this.background;
+                break;
+            case "AnchorX":
+                label.anchorX = this.anchorX;
+                break;
+            case "AnchorY":
+                label.anchorY = this.anchorY;
+                break;
         }
     }
 

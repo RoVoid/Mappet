@@ -57,7 +57,7 @@ import java.util.List;
  */
 public class UIStringListComponent extends UIComponent
 {
-    public List<String> values = new ArrayList<String>();
+    public List<String> values = new ArrayList<>();
     public Integer selected;
     public Integer background;
 

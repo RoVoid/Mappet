@@ -11,7 +11,7 @@ import java.util.List;
 
 public abstract class UIParentComponent extends UIComponent
 {
-    public List<UIComponent> children = new ArrayList<UIComponent>();
+    public List<UIComponent> children = new ArrayList<>();
 
     @Override
     @DiscardMethod

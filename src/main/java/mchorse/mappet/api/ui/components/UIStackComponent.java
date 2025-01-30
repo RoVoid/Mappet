@@ -61,12 +61,14 @@ public class UIStackComponent extends UIComponent {
     public GuiElement create(Minecraft mc, UIContext context) {
         final AbstractGuiSlotElement element = new AbstractGuiSlotElement(mc, 0, null);
 
-        element.callback = this.id.isEmpty() ? null : (stack) -> {
-            context.data.setTag(this.id, stack.serializeNBT());
-            context.data.setInteger(this.id + ".slot", element.lastSlot);
-            context.dirty(this.id, this.updateDelay);
+        element.callback = id.isEmpty() ? null : (stack) -> {
+            context.data.setTag(id, stack.serializeNBT());
+            context.data.setBoolean(id + ".locked", locked);
+            context.data.setInteger(id + ".slot", element.lastSlot);
+            context.dirty(id, updateDelay);
         };
-        element.setStack(this.stack);
+        element.setStack(stack);
+        element.locked = locked;
         element.drawDisabled = false;
 
         return this.apply(element, context);
@@ -76,8 +78,9 @@ public class UIStackComponent extends UIComponent {
     @DiscardMethod
     public void populateData(NBTTagCompound tag) {
         super.populateData(tag);
-        if (!this.id.isEmpty()) {
-            tag.setTag(this.id, this.stack.serializeNBT());
+        if (!id.isEmpty()) {
+            tag.setTag(id, stack.serializeNBT());
+            tag.setBoolean(id + ".locked", locked);
         }
     }
 
@@ -85,7 +88,7 @@ public class UIStackComponent extends UIComponent {
     @DiscardMethod
     public void serializeNBT(NBTTagCompound tag) {
         super.serializeNBT(tag);
-        tag.setTag("Stack", this.stack.serializeNBT());
+        tag.setTag("Stack", stack.serializeNBT());
         tag.setBoolean("Lock", locked);
     }
 
@@ -94,7 +97,7 @@ public class UIStackComponent extends UIComponent {
     public void deserializeNBT(NBTTagCompound tag) {
         super.deserializeNBT(tag);
         if (tag.hasKey("Stack")) {
-            this.stack = new ItemStack(tag.getCompoundTag("Stack"));
+            stack = new ItemStack(tag.getCompoundTag("Stack"));
         }
         if (tag.hasKey("Lock")) {
             locked = tag.getBoolean("Lock");

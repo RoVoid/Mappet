@@ -15,10 +15,7 @@ public class AbstractGuiSlotElement extends GuiSlotElement {
 
     @Override
     protected void click(int mouseButton) {
-        if (!locked) {
-            super.click(mouseButton);
-        }
+        if (!locked) super.click(mouseButton);
+        else acceptStack(getStack(), -1);
     }
-
-
 }

@@ -16,62 +16,61 @@ import java.util.function.Consumer;
  * into script's function. It contains many different useful methods to
  * interact with Minecraft on the server side.</p>
  */
-public interface IScriptEvent
-{
+public interface IScriptEvent {
     /**
      * Get script's ID to which this event was passed to.
      */
-    public String getScript();
+    String getScript();
 
     /**
      * Get script's function name.
      */
-    public String getFunction();
+    String getFunction();
 
     /**
      * Get subject (primary) entity that was passed into the event.
      */
-    public IScriptEntity getSubject();
+    IScriptEntity getSubject();
 
     /**
      * Get object (secondary) entity that was passed into the event.
      */
-    public IScriptEntity getObject();
+    IScriptEntity getObject();
 
     /**
      * Get the first player from either subject or object (or <code>null</code>, if there is no player).
      */
-    public IScriptPlayer getPlayer();
+    IScriptPlayer getPlayer();
 
     /**
      * Get the first Mappet NPC from either subject or object (or <code>null</code>, if there is no NPC).
      */
-    public IScriptNpc getNPC();
+    IScriptNpc getNPC();
 
     /**
      * Get the world in which this event happened.
      */
-    public IScriptWorld getWorld();
+    IScriptWorld getWorld();
 
     /**
      * Get the server in which this event happened.
      */
-    public IScriptServer getServer();
+    IScriptServer getServer();
 
     /**
      * Get a map of extra context values that was passed into the event.
      */
-    public Map<String, Object> getValues();
+    Map<String, Object> getValues();
 
     /**
      * Get a value for given key (might be a <code>null</code>).
      */
-    public Object getValue(String key);
+    Object getValue(String key);
 
     /**
      * Set a value for given key in extra data.
      */
-    public void setValue(String key, Object value);
+    void setValue(String key, Object value);
 
     /* Useful methods */
 
@@ -94,7 +93,7 @@ public interface IScriptEvent
      *    }
      * }</pre>
      */
-    public void cancel();
+    void cancel();
 
     /**
      * Schedule execution of the same script (with same function)
@@ -125,8 +124,7 @@ public interface IScriptEvent
      *
      * @param delay How many ticks should pass before scheduled script will be executed.
      */
-    public default void scheduleScript(int delay)
-    {
+    default void scheduleScript(int delay) {
         this.scheduleScript(this.getFunction(), delay);
     }
 
@@ -150,8 +148,7 @@ public interface IScriptEvent
      *    }
      * }</pre>
      */
-    public default void scheduleScript(String function, int delay)
-    {
+    default void scheduleScript(String function, int delay) {
         this.scheduleScript(this.getScript(), function, delay);
     }
 
@@ -186,7 +183,7 @@ public interface IScriptEvent
      *    }
      * }</pre>
      */
-    public void scheduleScript(String script, String function, int delay);
+    void scheduleScript(String script, String function, int delay);
 
     /**
      * Schedule a JavaScript function (instead of script). Once the timer has expired,
@@ -202,13 +199,13 @@ public interface IScriptEvent
      *    }
      * }</pre>
      */
-    public void scheduleScript(int delay, ScriptObjectMirror function);
+    void scheduleScript(int delay, ScriptObjectMirror function);
 
     /**
      * Schedule a function (instead of script). Once the timer has expired,
      * given function will be called with this context as the only argument.
      */
-    public void scheduleScript(int delay, Consumer<IScriptEvent> consumer);
+    void scheduleScript(int delay, Consumer<IScriptEvent> consumer);
 
     /**
      * Execute a command.
@@ -220,7 +217,7 @@ public interface IScriptEvent
      * @return How many successful commands were run. 0 - command errored, 1 - command was successful,
      * 2 or above - multiple commands were executed using target selectors.
      */
-    public int executeCommand(String command);
+    int executeCommand(String command);
 
     void executeScript(String scriptName);
 
@@ -235,5 +232,6 @@ public interface IScriptEvent
      *    c.send("Hi :)");
      * }</pre>
      */
-    public void send(String message);
+
+    void send(String... message);
 }
