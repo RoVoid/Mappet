@@ -39,11 +39,7 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -58,19 +54,18 @@ import java.util.logging.Handler;
  * Adventure map toolset mod
  */
 @Mod(
-    modid = Mappet.MOD_ID,
-    name = "Mappet",
-    version = Mappet.VERSION,
-    dependencies =
-        "required-after:mclib@[@MCLIB@,);"+
-        "required-after:metamorph@[@METAMORPH@,);"+
-        "after:blockbuster@[@BLOCKBUSTER@,);"+
-        "after:aperture@[@APERTURE@,);",
-    updateJSON = "https://raw.githubusercontent.com/mchorse/mappet/master/version.json"
+        modid = Mappet.MOD_ID,
+        name = "Mappet",
+        version = Mappet.VERSION,
+        dependencies =
+                "required-after:mclib@[@MCLIB@,);" +
+                        "required-after:metamorph@[@METAMORPH@,);" +
+                        "after:blockbuster@[@BLOCKBUSTER@,);" +
+                        "after:aperture@[@APERTURE@,);",
+        updateJSON = "https://raw.githubusercontent.com/mchorse/mappet/master/version.json"
 )
 
-public final class Mappet
-{
+public final class Mappet {
     public static final String MOD_ID = "mappet";
 
     public static final String VERSION = "@MAPPET@";
@@ -98,11 +93,9 @@ public final class Mappet
 
     public static BlockConditionModel conditionModelBlock;
 
-    public static CreativeTabs creativeTab = new CreativeTabs(MOD_ID)
-    {
+    public static CreativeTabs creativeTab = new CreativeTabs(MOD_ID) {
         @Override
-        public ItemStack getTabIconItem()
-        {
+        public ItemStack getTabIconItem() {
             return new ItemStack(emitterBlock);
         }
     };
@@ -175,14 +168,12 @@ public final class Mappet
 
     public static ValueBoolean scriptDocsNewStructure;
 
-    public Mappet()
-    {
+    public Mappet() {
         MinecraftForge.EVENT_BUS.register(new RegisterHandler());
     }
 
     @SubscribeEvent
-    public void onConfigRegister(RegisterConfigEvent event)
-    {
+    public void onConfigRegister(RegisterConfigEvent event) {
         ConfigBuilder builder = event.createBuilder(MOD_ID);
 
         builder.category("general").register(new ValueButtons("buttons").clientSide());
@@ -216,33 +207,28 @@ public final class Mappet
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public void onDashboardPanelsRemove(RemoveDashboardPanels event)
-    {
+    public void onDashboardPanelsRemove(RemoveDashboardPanels event) {
         GuiMappetDashboard.dashboard = null;
     }
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event)
-    {
+    public void preInit(FMLPreInitializationEvent event) {
         McLib.EVENT_BUS.register(this);
         proxy.preInit(event);
     }
 
     @Mod.EventHandler
-    public void init(FMLInitializationEvent event)
-    {
+    public void init(FMLInitializationEvent event) {
         proxy.init(event);
     }
 
     @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event)
-    {
+    public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
     }
 
     @Mod.EventHandler
-    public void serverStarting(FMLServerStartingEvent event)
-    {
+    public void serverStarting(FMLServerStartingEvent event) {
         /* Register command */
         event.registerServerCommand(new CommandMappet());
 
@@ -251,12 +237,10 @@ public final class Mappet
 
         mappetWorldFolder.mkdirs();
 
-        if (logger != null)
-        {
+        if (logger != null) {
             Handler[] handlers = logger.getHandlers();
 
-            for (Handler handler : handlers)
-            {
+            for (Handler handler : handlers) {
                 handler.close();
                 logger.removeHandler(handler);
             }
@@ -285,8 +269,7 @@ public final class Mappet
         huds = new HUDManager(new File(mappetWorldFolder, "huds"));
 
         /* Initiate */
-        if (!settings.serverLoad.isEmpty())
-        {
+        if (!settings.serverLoad.isEmpty()) {
             settings.serverLoad.trigger(new DataContext(event.getServer()));
         }
 
@@ -297,10 +280,8 @@ public final class Mappet
     }
 
     @Mod.EventHandler
-    public void serverStopped(FMLServerStoppedEvent event)
-    {
-        if (settings != null)
-        {
+    public void serverStopped(FMLServerStoppedEvent event) {
+        if (settings != null) {
             settings.save();
             settings = null;
             states.save();

@@ -5,6 +5,7 @@ import mchorse.mappet.api.npcs.Npc;
 import mchorse.mappet.api.npcs.NpcState;
 import mchorse.mappet.api.scripts.user.data.ScriptVector;
 import mchorse.mappet.api.scripts.user.entities.IScriptNpc;
+import mchorse.mappet.api.triggers.Trigger;
 import mchorse.mappet.entities.EntityNpc;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -388,12 +389,12 @@ public class ScriptNpc extends ScriptEntity<EntityNpc> implements IScriptNpc
         this.entity.setState(state, false);
     }
 
-//    public  void addPatrolPoints(){
-//        NpcState npcState = this.entity.getState();
-//        npcState.patrol.add(new BlockPos(x, y, z));
-//        npcState.patrolTriggers.add(new Trigger());
-//        this.entity.setState(npcState, true);
-//    }
+    public void addPatrolPoints(float x, float y, float z){
+        NpcState npcState = this.entity.getState();
+        npcState.patrol.add(new BlockPos(x, y, z));
+        npcState.patrolTriggers.add(new Trigger());
+        this.entity.setState(npcState, true);
+    }
 
     @Override
     public void removePatrolPoint(int index)

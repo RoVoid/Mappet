@@ -1,6 +1,5 @@
 buildscript {
     repositories {
-        jcenter()
         mavenCentral()
         gradlePluginPortal()
         maven { url = 'https://maven.minecraftforge.net/' }
@@ -40,7 +39,6 @@ minecraft {
     }
 }
 
-
 dependencies {
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2860'
 
@@ -51,24 +49,22 @@ dependencies {
     compileOnly files("run/libs/mclib-${mclib}-${mcversion}-dev.jar")
     compileOnly files("run/libs/aperture-${aperture}-${mcversion}-dev.jar")
     compileOnly files("run/libs/nashorn.jar")
-    implementation("org.reflections:reflections:0.10.2")
+
+    implementation ("org.reflections:reflections:0.9.12")
+    implementation ('org.ow2.asm:asm:5.2') { force = true }
+    implementation ('org.ow2.asm:asm-tree:5.2') { force = true }
+    implementation ('org.ow2.asm:asm-util:5.2') { force = true }
+
     implementation("net.minecraftforge:mergetool:0.2.3.3") { force = true }
 }
 
 jar.finalizedBy('shadowJar')
 jar.finalizedBy('reobfJar')
 
-
 import org.apache.tools.ant.filters.ReplaceTokens
 
 tasks.register('processSource', Sync) {
     outputs.upToDateWhen { false }
-
-//    def exportCountFile = file("$rootDir/exportCount.txt")
-//    def exportCount = 0
-//
-//    if (exportCountFile.exists()) exportCount = exportCountFile.text.toInteger()
-//    version = ((String) version).replace('x', exportCount.toString())
 
     from sourceSets.main.java
     filter(ReplaceTokens, tokens: [MAPPET     : version,
@@ -87,10 +83,11 @@ tasks.jar.enabled = false
 
 shadowJar {
     dependencies {
-        include(dependency("org.reflections:reflections:0.10.2"))
+        include(dependency("org.reflections:reflections:0.9.12"))
         include(dependency("org.slf4j:slf4j-api:1.7.32"))
         include(dependency("org.javassist:javassist:3.28.0-GA"))
     }
+
     archiveClassifier.set("")
 
     def dependenciesToRelocate = ["org.reflections",
@@ -100,19 +97,7 @@ shadowJar {
     for (dependency in dependenciesToRelocate) {
         relocate dependency, "mchorse.mappet.libs." + dependency
     }
-
-//    finalizedBy('incrementExportCount')
 }
-
-//tasks.register('incrementExportCount') {
-//    doLast {
-//        def exportCountFile = file("$rootDir/exportCount.txt")
-//        def exportCount = 0
-//        if (exportCountFile.exists()) exportCount = exportCountFile.text.toInteger()
-//        exportCount++
-//        exportCountFile.text = exportCount.toString()
-//    }
-//}
 
 tasks.register('prepareAssets', Copy) {
     group = 'build'
@@ -272,7 +257,7 @@ tasks.register('openBuiltJarsDir', Exec) {
     ignoreExitValue true
 }
 
-task 'scriptingJavadocsJson'(type: Exec) {
+tasks.register('scriptingJavadocsJson', Exec) {
     executable "javadoc"
     args "-doclet", "mchorse.utils.doclets.JsonDoclet", "-docletpath", "./run/jsonDoclet.jar", "-sourcepath", "./src/main/java/", "-subpackages", "mchorse.mappet.api.scripts.user:mchorse.mappet.api.ui.components:mchorse.mappet.client.gui.utils.graphics"
 
@@ -280,14 +265,5 @@ task 'scriptingJavadocsJson'(type: Exec) {
         file("src/main/resources/assets/mappet/docs.json").setText(file("docs.json").text)
     }
 }
-
-//tasks.register('scriptingJavadocsJson', Exec) {
-//    executable "javadoc"
-//    args "-X", "-doclet", "robot.utils.doclets.JsonDoclet", "-docletpath", "./run/jsonDocletByRobot.jar", "-sourcepath", "./src/main/java/"
-//
-//    doLast {
-//        file("src/main/resources/assets/mappet/docs.json").setText(file("docs.json").text)
-//    }
-//}
 
 tasks.processResources.dependsOn(scriptingJavadocsJson)

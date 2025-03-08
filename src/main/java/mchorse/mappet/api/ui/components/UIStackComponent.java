@@ -15,6 +15,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class UIStackComponent extends UIComponent {
     public ItemStack stack = ItemStack.EMPTY;
     public boolean locked = false;
+    public boolean frameVisible = true;
+    public boolean itemTooltipVisible = true;
 
     public UIStackComponent stack(IScriptItemStack stack) {
         return this.stack(stack == null ? ItemStack.EMPTY : stack.getMinecraftItemStack());
@@ -36,6 +38,26 @@ public class UIStackComponent extends UIComponent {
         return this;
     }
 
+    public UIStackComponent withoutFrame() {
+        return frameVisible(false);
+    }
+
+    public UIStackComponent frameVisible(boolean visible) {
+        this.change("FrameVisible");
+        this.frameVisible = visible;
+        return this;
+    }
+
+    public UIStackComponent hideItemTooltip() {
+        return itemTooltipVisible(false);
+    }
+
+    public UIStackComponent itemTooltipVisible(boolean visible) {
+        this.change("TooltipVisible");
+        this.itemTooltipVisible = visible;
+        return this;
+    }
+
     @Override
     @DiscardMethod
     protected int getDefaultUpdateDelay() {
@@ -49,9 +71,19 @@ public class UIStackComponent extends UIComponent {
         super.applyProperty(context, key, element);
 
         if (key.equals("Stack") && element instanceof GuiSlotElement) {
-            ((GuiSlotElement) element).setStack(this.stack);
-        } else if (key.equals("Lock") && element instanceof AbstractGuiSlotElement) {
-            ((AbstractGuiSlotElement) element).locked = this.locked;
+            ((GuiSlotElement) element).setStack(stack);
+        } else if (element instanceof AbstractGuiSlotElement) {
+            switch (key) {
+                case "Lock":
+                    ((AbstractGuiSlotElement) element).locked = locked;
+                    break;
+                case "FrameVisible":
+                    ((AbstractGuiSlotElement) element).frameVisible = frameVisible;
+                    break;
+                case "TooltipVisible":
+                    ((AbstractGuiSlotElement) element).itemTooltipVisible = itemTooltipVisible;
+                    break;
+            }
         }
     }
 
@@ -69,6 +101,8 @@ public class UIStackComponent extends UIComponent {
         };
         element.setStack(stack);
         element.locked = locked;
+        element.frameVisible = frameVisible;
+        element.itemTooltipVisible = itemTooltipVisible;
         element.drawDisabled = false;
 
         return this.apply(element, context);
@@ -90,17 +124,17 @@ public class UIStackComponent extends UIComponent {
         super.serializeNBT(tag);
         tag.setTag("Stack", stack.serializeNBT());
         tag.setBoolean("Lock", locked);
+        tag.setBoolean("FrameVisible", frameVisible);
+        tag.setBoolean("TooltipVisible", itemTooltipVisible);
     }
 
     @Override
     @DiscardMethod
     public void deserializeNBT(NBTTagCompound tag) {
         super.deserializeNBT(tag);
-        if (tag.hasKey("Stack")) {
-            stack = new ItemStack(tag.getCompoundTag("Stack"));
-        }
-        if (tag.hasKey("Lock")) {
-            locked = tag.getBoolean("Lock");
-        }
+        if (tag.hasKey("Stack")) stack = new ItemStack(tag.getCompoundTag("Stack"));
+        if (tag.hasKey("Lock")) locked = tag.getBoolean("Lock");
+        if (tag.hasKey("FrameVisible")) frameVisible = tag.getBoolean("FrameVisible");
+        if (tag.hasKey("TooltipVisible")) itemTooltipVisible = tag.getBoolean("TooltipVisible");
     }
 }

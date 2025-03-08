@@ -54,7 +54,7 @@ import java.util.UUID;
 public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnData, IMorphProvider {
     public static final int RENDER_DISTANCE = 160;
 
-    private Morph morph = new Morph();
+    private final Morph morph = new Morph();
     private NpcState state = new NpcState();
 
     private int lastDamageTime;
@@ -158,10 +158,6 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
             } else {
                 // This is a server
                 passenger.setPosition(finalPosX, offsetY, finalPosZ);
-
-                // Copy the passenger's rotation to this entity
-                this.rotationYaw = passenger.rotationYaw;
-                this.rotationPitch = passenger.rotationPitch;
             }
 
             // Always align this entity's rotation with the passenger
@@ -183,10 +179,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
             this.rotationYawHead = player.rotationYawHead;
 
             if (forward != 0 || strafe != 0) {
-                float baseSpeed = state.speed.get() / 15; // slightly faster speed than walking (from testing)
-                //boolean sprinting = GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindSprint);
-                //float sprintMultiplier = sprinting ? 1.5F : 1.0F; // adjust the multiplier according to desired sprint speed
-                float speed = baseSpeed;// * sprintMultiplier
+                float speed = state.speed.get() / 15;
 
                 // Calculate motion based on player input
                 double motionX = -Math.sin(Math.toRadians(this.rotationYaw)) * forward + Math.cos(Math.toRadians(this.rotationYaw)) * strafe;
@@ -359,11 +352,11 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
         return this.state;
     }
 
+    public void setState(NpcState state) {
+        setState(state, true);
+    }
+
     public void setState(NpcState state, boolean notify) {
-        notify = true;
-        // I added this because it is fine if it always notified the clients.
-        // If I faced issues later I can revert this and check all usages of this method
-        // to see if they need to notify the clients or not. (to make sure that e.g. shadowSize, steer-, etc.)
 
         this.state = new NpcState();
         this.state.deserializeNBT(state.serializeNBT());
@@ -385,12 +378,9 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
         /* Morphing */
         this.morph.set(state.morph);
 
-        if (notify) {
-            this.sendNpcStateChangePacket();
-        }
+        if (notify) this.sendNpcStateChangePacket();
 
         this.faction = null;
-
         this.initEntityAI();
     }
 
@@ -411,7 +401,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
             return null;
         }
 
-        if (this.state.follow.equals("@r")) {
+        if (this.state.follow.get().equals("@r")) {
             List<EntityPlayer> players = this.world.playerEntities;
             int index = MathHelper.clamp((int) (Math.random() * players.size() - 1), 0, players.size() - 1);
 
@@ -426,14 +416,14 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Mappet.logger.error(e.getMessage());
             }
         } else {
             try {
                 EntityPlayer player = this.world.getPlayerEntityByName(this.state.follow.get());
-
                 return player == null ? this.world.getPlayerEntityByUUID(UUID.fromString(this.state.follow.get())) : player;
             } catch (Exception e) {
+                Mappet.logger.error(e.getMessage());
             }
         }
 

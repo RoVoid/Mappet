@@ -354,7 +354,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     @Override
     public void leave() {
         ScorePlayerTeam team = (ScorePlayerTeam) entity.getTeam();
-        if (team != null) new ScriptTeam(entity.getWorldScoreboard(), team).leave(this);
+        entity.getWorldScoreboard().removePlayerFromTeam(getMinecraftPlayer().getName(), team);
     }
 
     @Override

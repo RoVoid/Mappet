@@ -10,7 +10,6 @@ import mchorse.mclib.client.gui.utils.IconRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -24,7 +23,7 @@ public class MPIcons {
     public static final ResourceLocation DEFAULT = new ResourceLocation(Mappet.MOD_ID, "textures/gui/icons/mappet.png");
     public static final ResourceLocation LV = new ResourceLocation(Mappet.MOD_ID, "textures/gui/icons/lv.png");
     public static final ResourceLocation KEYS = new ResourceLocation(Mappet.MOD_ID, "textures/gui/icons/keys.png");
-    public static final ResourceLocation RIFLE_RANGE = new ResourceLocation(Mappet.MOD_ID, "textures/gui/icons/riflerange.png");
+    public static final ResourceLocation RIFLE_RANGE = new ResourceLocation(Mappet.MOD_ID, "textures/gui/icons/i.png");
 
 
     public static final Icon REPL = registerIcon("repl", new Icon(DEFAULT, 0, 0));
@@ -34,7 +33,6 @@ public class MPIcons {
     public static final Icon ALLY = registerIcon("ally", new Icon(RIFLE_RANGE, 0, 0));
     public static final Icon ENEMY = registerIcon("enemy", new Icon(RIFLE_RANGE, 16, 0));
     public static final Icon ARROW = registerIcon("arrow", new Icon(RIFLE_RANGE, 32, 0));
-
 
     //HORSE
     public static final Icon BULLET = new Icon(LV, 0, 224);

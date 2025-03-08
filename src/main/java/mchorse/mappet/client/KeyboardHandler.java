@@ -31,61 +31,44 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Keyboard handler
- *
+ * <p>
  * This class is responsible for handling keyboard input (i.e. key
  * presses) and storing keybindings associated with this mod.
  */
 @SideOnly(Side.CLIENT)
-public class KeyboardHandler
-{
-    public static final Set<TriggerHotkey> hotkeys = new HashSet<TriggerHotkey>();
-    public static final List<TriggerHotkey> held = new ArrayList<TriggerHotkey>();
+public class KeyboardHandler {
+    public static final Set<TriggerHotkey> hotkeys = new HashSet<>();
+    public static final List<TriggerHotkey> held = new ArrayList<>();
     public static boolean clientPlayerJournal;
 
     public KeyBinding openMappetDashboard;
     public KeyBinding openJournal;
     public KeyBinding runCurrentScript;
 
-    private GuiButton button;
-    private KeyBinding openScriptedItem;
+    private final KeyBinding openScriptedItem;
 
-    public static void openPlayerJournal()
-    {
-        if (clientPlayerJournal)
-        {
+    public static void openPlayerJournal() {
+        if (clientPlayerJournal) {
             Minecraft mc = Minecraft.getMinecraft();
-
             mc.displayGuiScreen(new GuiJournalScreen(mc));
-        }
-        else
-        {
+        } else {
             Dispatcher.sendToServer(new PacketPlayerJournal());
         }
     }
 
-    public static void updateHeldKeys()
-    {
-        if (held.isEmpty())
-        {
-            return;
-        }
+    public static void updateHeldKeys() {
+        if (held.isEmpty()) return;
 
         Iterator<TriggerHotkey> it = held.iterator();
 
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             int keycode = it.next().keycode;
 
-            if (!Keyboard.isKeyDown(keycode))
-            {
+            if (!Keyboard.isKeyDown(keycode)) {
                 it.remove();
 
                 Dispatcher.sendToServer(new PacketEventHotkey(keycode, false));
@@ -93,99 +76,64 @@ public class KeyboardHandler
         }
     }
 
-    public KeyboardHandler()
-    {
+    public KeyboardHandler() {
         String prefix = "mappet.keys.";
 
-        this.openMappetDashboard = new KeyBinding(prefix + "dashboard", Keyboard.KEY_EQUALS, prefix + "category");
-        this.openJournal = new KeyBinding(prefix + "journal", Keyboard.KEY_J, prefix + "category");
-        this.runCurrentScript = new KeyBinding(prefix + "runCurrentScript", Keyboard.KEY_F6, prefix + "category");
-        this.openScriptedItem = new KeyBinding(prefix + "scripted_item", Keyboard.KEY_END, prefix + "category");
+        openMappetDashboard = new KeyBinding(prefix + "dashboard", Keyboard.KEY_GRAVE, prefix + "category");
+        openJournal = new KeyBinding(prefix + "journal", Keyboard.KEY_NONE, prefix + "category");
+        runCurrentScript = new KeyBinding(prefix + "runCurrentScript", Keyboard.KEY_F6, prefix + "category");
+        openScriptedItem = new KeyBinding(prefix + "scripted_item", Keyboard.KEY_NONE, prefix + "category");
 
-        ClientRegistry.registerKeyBinding(this.openMappetDashboard);
-        ClientRegistry.registerKeyBinding(this.openJournal);
-        ClientRegistry.registerKeyBinding(this.runCurrentScript);
-        ClientRegistry.registerKeyBinding(this.openScriptedItem);
+        ClientRegistry.registerKeyBinding(openMappetDashboard);
+        ClientRegistry.registerKeyBinding(openJournal);
+        ClientRegistry.registerKeyBinding(runCurrentScript);
+        ClientRegistry.registerKeyBinding(openScriptedItem);
     }
 
     @SubscribeEvent
-    public void onKeyPress(KeyInputEvent event)
-    {
+    public void onKeyPress(KeyInputEvent event) {
         Minecraft mc = Minecraft.getMinecraft();
-
-        if (this.openMappetDashboard.isPressed() && OpHelper.isPlayerOp())
-        {
-            if (Mappet.dashboardOnlyCreative.get())
-            {
-                if (mc.player.capabilities.isCreativeMode)
-                {
+        if (openMappetDashboard.isPressed() && OpHelper.isPlayerOp()) {
+            if (Mappet.dashboardOnlyCreative.get()) {
+                if (mc.player.capabilities.isCreativeMode) {
                     mc.displayGuiScreen(GuiMappetDashboard.get(mc));
                 }
-            }
-            else
-            {
+            } else {
                 mc.displayGuiScreen(GuiMappetDashboard.get(mc));
             }
         }
-
-        if (this.openJournal.isPressed())
-        {
+        if (openJournal.isPressed()) {
             openPlayerJournal();
         }
-
-        if (this.runCurrentScript.isPressed())
-        {
+        if (runCurrentScript.isPressed()) {
             Script script = GuiMappetDashboard.get(mc).script.getData();
-
-            if (script == null)
-            {
-                return;
-            }
-
+            if (script == null) return;
             mc.player.sendChatMessage("/mp script exec " + mc.player.getName() + " " + script.getId());
         }
-
-        if (this.openScriptedItem.isPressed())
-        {
+        if (openScriptedItem.isPressed()) {
             ItemStack stack = mc.player.getHeldItemMainhand();
-
-            if (!stack.getItem().equals(Items.AIR))
-            {
+            if (!stack.getItem().equals(Items.AIR)) {
                 mc.displayGuiScreen(new GuiScriptedItemScreen(mc, stack));
             }
         }
-
-        if (Keyboard.getEventKeyState())
-        {
-            handleKeys();
-        }
+        if (Keyboard.getEventKeyState()) handleKeys();
     }
 
-    private void handleKeys()
-    {
+    private void handleKeys() {
         int key = Keyboard.getEventKey() == 0 ? Keyboard.getEventCharacter() + 256 : Keyboard.getEventKey();
 
-        for (TriggerHotkey hotkey : hotkeys)
-        {
-            if (hotkey.keycode == key)
-            {
+        for (TriggerHotkey hotkey : hotkeys) {
+            if (hotkey.keycode == key) {
                 Dispatcher.sendToServer(new PacketEventHotkey(key, true));
-
-                if (hotkey.toggle)
-                {
-                    held.add(hotkey);
-                }
-
+                if (hotkey.toggle) held.add(hotkey);
                 return;
             }
         }
     }
 
     @SubscribeEvent
-    public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post event)
-    {
-        if (event.getGui() instanceof GuiInventory || event.getGui() instanceof GuiContainerCreative)
-        {
+    public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post event) {
+        if (event.getGui() instanceof GuiInventory || event.getGui() instanceof GuiContainerCreative) {
             int x = Mappet.journalButtonX.get();
             int y = event.getGui().height - 20 - Mappet.journalButtonY.get();
 
@@ -194,29 +142,22 @@ public class KeyboardHandler
     }
 
     @SubscribeEvent
-    public void onGuiAction(GuiScreenEvent.ActionPerformedEvent.Post event)
-    {
-        if (event.getButton() instanceof GuiJournalButton)
-        {
-            openPlayerJournal();
-        }
+    public void onGuiAction(GuiScreenEvent.ActionPerformedEvent.Post event) {
+        if (event.getButton() instanceof GuiJournalButton) openPlayerJournal();
     }
 
-    public static class GuiJournalButton extends GuiButton
-    {
+    public static class GuiJournalButton extends GuiButton {
         private static final ResourceLocation ICON = new ResourceLocation("textures/items/book_writable.png");
-        private static IKey TOOLTIP = IKey.lang("mappet.gui.player_journal");
+        private static final IKey TOOLTIP = IKey.lang("mappet.gui.player_journal");
 
-        private Area area = new Area();
+        private final Area area = new Area();
 
-        public GuiJournalButton(int buttonId, int x, int y, String buttonText)
-        {
+        public GuiJournalButton(int buttonId, int x, int y, String buttonText) {
             super(buttonId, x, y, 20, 20, buttonText);
         }
 
         @Override
-        public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
-        {
+        public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
             boolean hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
             float factor = hovered ? 0.8F : 1F;
 
@@ -226,8 +167,7 @@ public class KeyboardHandler
             mc.renderEngine.bindTexture(ICON);
             Gui.drawModalRectWithCustomSizedTexture(this.x + this.width / 2 - 8, this.y + this.height / 2 - 8, 0, 0, 16, 16, 16, 16);
 
-            if (hovered)
-            {
+            if (hovered) {
                 String label = TOOLTIP.get();
                 TooltipStyle style = TooltipStyle.get();
                 int w = mc.fontRenderer.getStringWidth(label);

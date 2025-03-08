@@ -6,8 +6,6 @@ import mchorse.mappet.client.gui.scripts.utils.SyntaxHighlighter;
 import mchorse.mappet.utils.NBTToJsonLike;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
 
 public class Highlighters
@@ -15,25 +13,6 @@ public class Highlighters
     private static File editorHighlighters;
 
     private static SyntaxHighlighter defaultHighlighter;
-
-    public static List<File> highlighters()
-    {
-        List<File> highlighters = new ArrayList<File>();
-        File[] files = editorHighlighters.listFiles();
-
-        if (files != null)
-        {
-            for (File file : files)
-            {
-                if (file.isFile() && file.getName().endsWith(".json"))
-                {
-                    highlighters.add(file);
-                }
-            }
-        }
-
-        return highlighters;
-    }
 
     public static File highlighterFile(String name)
     {
@@ -51,7 +30,7 @@ public class Highlighters
         {
             return new SyntaxHighlighter(NBTToJsonLike.read(file));
         }
-        catch (Exception e)
+        catch (Exception ignored)
         {}
 
         return defaultHighlighter;
@@ -63,7 +42,7 @@ public class Highlighters
         {
             NBTToJsonLike.write(file, highlighter.toNBT());
         }
-        catch (Exception e)
+        catch (Exception ignored)
         {}
     }
 
@@ -93,7 +72,7 @@ public class Highlighters
             jsHighlighter.secondaryKeywords = ImmutableSet.of("const", "function", "var", "let", "prototype", "Math", "JSON", "mappet", "math");
             jsHighlighter.special = ImmutableSet.of("this", "arguments");
             jsHighlighter.typeKeywords = ImmutableSet.of("true", "false", "null", "undefined");
-            jsHighlighter.functionName = Pattern.compile("[\\w_][\\d\\w_]*", Pattern.CASE_INSENSITIVE);
+            jsHighlighter.functionName = Pattern.compile("[\\w_]", Pattern.CASE_INSENSITIVE);
 
             writeHighlighter(js, jsHighlighter);
             Highlighters.defaultHighlighter = jsHighlighter;
@@ -110,10 +89,10 @@ public class Highlighters
             ktsHighlighter.primaryKeywords = ImmutableSet.of(
                     "break", "continue", "switch", "case", "try",
                     "catch", "delete", "do", "while", "else", "finally", "if",
-                    "else", "for", "is", "as", "in", "instanceof",
+                    "for", "is", "as", "in", "instanceof",
                     "new", "throw", "typeof", "with", "yield", "when", "return",
                     "by", "constructor", "delegate", "dynamic", "field", "get", "set", "init", "value",
-                    "where", "actual", "annotation", "companion", "field", "external", "infix", "inline", "inner", "internal",
+                    "where", "actual", "annotation", "companion", "external", "infix", "inline", "inner", "internal",
                     "open", "operator", "out", "override", "suspend", "vararg"
             );
             ktsHighlighter.secondaryKeywords = ImmutableSet.of(
@@ -122,7 +101,7 @@ public class Highlighters
             );
             ktsHighlighter.special = ImmutableSet.of("this", "it");
             ktsHighlighter.typeKeywords = ImmutableSet.of("true", "false", "null", "undefined", "enum");
-            ktsHighlighter.functionName = Pattern.compile("[\\w_][\\d\\w_]*", Pattern.CASE_INSENSITIVE);
+            ktsHighlighter.functionName = Pattern.compile("[\\w_]+", Pattern.CASE_INSENSITIVE);
 
 
             writeHighlighter(kts, ktsHighlighter);
