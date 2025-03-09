@@ -1,9 +1,10 @@
 package mchorse.mappet.api.ui.components;
 
+import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
-import mchorse.mappet.client.gui.AbstractGuiSlotElement;
+import mchorse.mappet.client.gui.ExtendedGuiSlotElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiSlotElement;
 import net.minecraft.client.Minecraft;
@@ -26,6 +27,10 @@ public class UIStackComponent extends UIComponent {
         this.change("Stack");
         this.stack = stack == null ? ItemStack.EMPTY : stack.copy();
         return this;
+    }
+
+    public IScriptItemStack getStack() {
+        return ScriptItemStack.create(stack);
     }
 
     public UIStackComponent lock() {
@@ -72,16 +77,16 @@ public class UIStackComponent extends UIComponent {
 
         if (key.equals("Stack") && element instanceof GuiSlotElement) {
             ((GuiSlotElement) element).setStack(stack);
-        } else if (element instanceof AbstractGuiSlotElement) {
+        } else if (element instanceof ExtendedGuiSlotElement) {
             switch (key) {
                 case "Lock":
-                    ((AbstractGuiSlotElement) element).locked = locked;
+                    ((ExtendedGuiSlotElement) element).locked = locked;
                     break;
                 case "FrameVisible":
-                    ((AbstractGuiSlotElement) element).frameVisible = frameVisible;
+                    ((ExtendedGuiSlotElement) element).frameVisible = frameVisible;
                     break;
                 case "TooltipVisible":
-                    ((AbstractGuiSlotElement) element).itemTooltipVisible = itemTooltipVisible;
+                    ((ExtendedGuiSlotElement) element).itemTooltipVisible = itemTooltipVisible;
                     break;
             }
         }
@@ -91,11 +96,10 @@ public class UIStackComponent extends UIComponent {
     @DiscardMethod
     @SideOnly(Side.CLIENT)
     public GuiElement create(Minecraft mc, UIContext context) {
-        final AbstractGuiSlotElement element = new AbstractGuiSlotElement(mc, 0, null);
+        final ExtendedGuiSlotElement element = new ExtendedGuiSlotElement(mc, 0, null);
 
         element.callback = id.isEmpty() ? null : (stack) -> {
             context.data.setTag(id, stack.serializeNBT());
-            context.data.setBoolean(id + ".locked", locked);
             context.data.setInteger(id + ".slot", element.lastSlot);
             context.dirty(id, updateDelay);
         };
@@ -112,10 +116,9 @@ public class UIStackComponent extends UIComponent {
     @DiscardMethod
     public void populateData(NBTTagCompound tag) {
         super.populateData(tag);
-        if (!id.isEmpty()) {
-            tag.setTag(id, stack.serializeNBT());
-            tag.setBoolean(id + ".locked", locked);
-        }
+        if (id.isEmpty()) return;
+        tag.setTag(id, stack.serializeNBT());
+        tag.setBoolean(id + ".locked", locked);
     }
 
     @Override

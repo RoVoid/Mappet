@@ -15,12 +15,12 @@ import net.minecraft.item.ItemStack;
 
 import java.util.function.Consumer;
 
-public class AbstractGuiSlotElement extends GuiSlotElement {
+public class ExtendedGuiSlotElement extends GuiSlotElement {
     public boolean locked = false;
     public boolean frameVisible = true;
     public boolean itemTooltipVisible = true;
 
-    public AbstractGuiSlotElement(Minecraft mc, int slot, Consumer<ItemStack> callback) {
+    public ExtendedGuiSlotElement(Minecraft mc, int slot, Consumer<ItemStack> callback) {
         super(mc, slot, callback);
     }
 

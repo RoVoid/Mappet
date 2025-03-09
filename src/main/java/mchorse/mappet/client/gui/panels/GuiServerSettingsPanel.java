@@ -247,7 +247,7 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
 
     private void openSearch(GuiIconElement element)
     {
-        List<String> targets = new ArrayList<String>();
+        List<String> targets = new ArrayList<>();
 
         targets.add("~");
 
