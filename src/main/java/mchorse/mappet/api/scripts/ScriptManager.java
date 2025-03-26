@@ -124,8 +124,11 @@ public class ScriptManager extends BaseManager<Script>
     public Object execute(String id, String function, DataContext context) throws ScriptException, NoSuchMethodException
     {
         Script script = this.getScript(id);
-
-        return script == null ? null : script.execute(function, context);
+        if(script == null){
+            Mappet.logger.error("Failed to execute script '"+id+"', maybe is not exists");
+            return null;
+        }
+        return script.execute(function, context);
     }
 
     public Object execute(String id, String function, DataContext context, Object... args) throws ScriptException, NoSuchMethodException
