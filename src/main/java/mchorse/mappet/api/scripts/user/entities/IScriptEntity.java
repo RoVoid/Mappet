@@ -56,7 +56,7 @@ public interface IScriptEntity
      * }
      * }</pre>
      */
-    public Entity getMinecraftEntity();
+    Entity getMinecraftEntity();
 
     /**
      * Get entity's world.
@@ -68,7 +68,7 @@ public interface IScriptEntity
      *    world.setRaining(true);
      * }</pre>
      */
-    public IScriptWorld getWorld();
+    IScriptWorld getWorld();
 
     /* Entity properties */
 
@@ -81,7 +81,7 @@ public interface IScriptEntity
      *    c.send(c.getSubject().getName() + "'s position is (" + pos.x + ", " + pos.y + ", " + pos.z + ")");
      * }</pre>
      */
-    public ScriptVector getPosition();
+    ScriptVector getPosition();
 
     /**
      * Set entity's position (teleport).
@@ -90,7 +90,7 @@ public interface IScriptEntity
      *    c.getSubject().setPosition(800, 8, -135);
      * }</pre>
      */
-    public void setPosition(double x, double y, double z);
+    void setPosition(double x, double y, double z);
 
     /**
      * Returns the dimension of the entity.
@@ -108,7 +108,7 @@ public interface IScriptEntity
      *
      * @return The dimension of the entity as an integer.
      */
-    public int getDimension();
+    int getDimension();
 
     /**
      * Set the dimension of the entity.
@@ -119,7 +119,7 @@ public interface IScriptEntity
      *
      * @param dimension The dimension to teleport the entity to.
      */
-    public void setDimension(int dimension);
+    void setDimension(int dimension);
 
     /**
      * Get entity's motion.
@@ -130,7 +130,7 @@ public interface IScriptEntity
      *    c.send(c.getSubject().getName() + "'s motion is (" + motion.x + ", " + motion.y + ", " + motion.z + ")");
      * }</pre>
      */
-    public ScriptVector getMotion();
+    ScriptVector getMotion();
 
     /**
      * Set entity's motion.
@@ -145,7 +145,7 @@ public interface IScriptEntity
      *    }
      * }</pre>
      */
-    public void setMotion(double x, double y, double z);
+    void setMotion(double x, double y, double z);
 
     /**
      * Set entity's server-sided motion. (<code>.setMotion()</code> causes rubber banding)
@@ -159,7 +159,7 @@ public interface IScriptEntity
      *     }
      * }</pre>
      */
-    public void addMotion(double x, double y, double z);
+    void addMotion(double x, double y, double z);
 
     /**
      * Get entity's rotation (x is pitch, y is yaw, and z is yaw head, if entity
@@ -174,7 +174,7 @@ public interface IScriptEntity
      *     c.send(c.getSubject().getName() + "'s rotations are (" + pitch + ", " + yaw + ", " + yaw_head + ")");
      * }</pre>
      */
-    public ScriptVector getRotations();
+    ScriptVector getRotations();
 
     /**
      * Set entity's rotation.
@@ -184,22 +184,22 @@ public interface IScriptEntity
      *    c.getSubject().setRotations(0, 0, 0);
      * }</pre>
      */
-    public void setRotations(float pitch, float yaw, float yawHead);
+    void setRotations(float pitch, float yaw, float yawHead);
 
     /**
      * Get entity's pitch (vertical rotation).
      */
-    public float getPitch();
+    float getPitch();
 
     /**
      * Get entity's yaw (horizontal rotation).
      */
-    public float getYaw();
+    float getYaw();
 
     /**
      * Get entity's head yaw.
      */
-    public float getYawHead();
+    float getYawHead();
 
     /**
      * Get a vector in which direction entity looks.
@@ -210,7 +210,7 @@ public interface IScriptEntity
      *     c.getSubject().setMotion(look.x * 0.5, look.y * 0.5, look.z * 0.5);
      * }</pre>
      */
-    public ScriptVector getLook();
+    ScriptVector getLook();
 
     /**
      * Returns the eye height of the entity.
@@ -221,17 +221,17 @@ public interface IScriptEntity
      *    c.send("This entity's eye height is: " + s.getEyeHeight());
      * }</pre>
      */
-    public float getEyeHeight();
+    float getEyeHeight();
 
     /**
      * Get entity's current hitbox width (and depth, it's the same number).
      */
-    public float getWidth();
+    float getWidth();
 
     /**
      * Get entity's current hitbox height.
      */
-    public float getHeight();
+    float getHeight();
 
     /**
      * Get health points of this entity (20 is the max default for players).
@@ -245,7 +245,7 @@ public interface IScriptEntity
      *    }
      * }</pre>
      */
-    public float getHp();
+    float getHp();
 
     /**
      * Set entity's health points. Given value that is more than max HP will get limited to max HP.
@@ -260,7 +260,7 @@ public interface IScriptEntity
      *    }
      * }</pre>
      */
-    public void setHp(float hp);
+    void setHp(float hp);
 
     /**
      * Get maximum health points this entity can have.
@@ -271,7 +271,7 @@ public interface IScriptEntity
      *    subject.send(subject.getName() + " can have up to " + subject.getMaxHp() + " HP!");
      * }</pre>
      */
-    public float getMaxHp();
+    float getMaxHp();
 
     /**
      * Set entity's maximum health points.
@@ -282,7 +282,7 @@ public interface IScriptEntity
      *    subject.send(subject.getName() + " can have up to " + subject.getMaxHp() + " HP!");
      * }</pre>
      */
-    public void setMaxHp(float hp);
+    void setMaxHp(float hp);
 
     /**
      * Check whether this entity is in water.
@@ -293,7 +293,7 @@ public interface IScriptEntity
      *     c.send("Is the entity in water? " + subject.isInWater());
      * }</pre>
      */
-    public boolean isInWater();
+    boolean isInWater();
 
     /**
      * Check whether this entity is in lava.
@@ -304,7 +304,7 @@ public interface IScriptEntity
      *     c.send("Is the entity in lava? " + subject.isInLava());
      * }</pre>
      */
-    public boolean isInLava();
+    boolean isInLava();
 
     /**
      * Check whether this entity is on fire.
@@ -319,7 +319,7 @@ public interface IScriptEntity
      *    }
      * }</pre>
      */
-    public boolean isBurning();
+    boolean isBurning();
 
     /**
      * Set entity on fire for given amount of ticks. If <code>0</code> will be
@@ -335,7 +335,7 @@ public interface IScriptEntity
      *    }
      * }</pre>
      */
-    public void setBurning(int seconds);
+    void setBurning(int seconds);
 
     /**
      * Is this entity is sneaking.
@@ -349,7 +349,7 @@ public interface IScriptEntity
      *    }
      * }</pre>
      */
-    public boolean isSneaking();
+    boolean isSneaking();
 
     /**
      * Is this entity is sprinting.
@@ -363,12 +363,12 @@ public interface IScriptEntity
      *    }
      * }</pre>
      */
-    public boolean isSprinting();
+    boolean isSprinting();
 
     /**
      * Is this entity on the ground.
      */
-    public boolean isOnGround();
+    boolean isOnGround();
 
     /* Ray tracing */
 
@@ -376,13 +376,13 @@ public interface IScriptEntity
      * Ray trace from entity's looking direction (including any entity intersection).
      * Check {@link IScriptRayTrace} for an example.
      */
-    public IScriptRayTrace rayTrace(double maxDistance);
+    IScriptRayTrace rayTrace(double maxDistance);
 
     /**
      * Ray trace from entity's looking direction (excluding entities).
      * Check {@link IScriptRayTrace} for an example.
      */
-    public IScriptRayTrace rayTraceBlock(double maxDistance);
+    IScriptRayTrace rayTraceBlock(double maxDistance);
 
     /* Items */
 
@@ -400,7 +400,7 @@ public interface IScriptEntity
      *    }
      * }</pre>
      */
-    public IScriptItemStack getMainItem();
+    IScriptItemStack getMainItem();
 
     /**
      * Set item held in main hand.
@@ -410,7 +410,7 @@ public interface IScriptEntity
      *    c.getSubject().setMainItem(mappet.createItem("minecraft:diamond_hoe"));
      * }</pre>
      */
-    public void setMainItem(IScriptItemStack stack);
+    void setMainItem(IScriptItemStack stack);
 
     /**
      * Get item held in off hand.
@@ -426,7 +426,7 @@ public interface IScriptEntity
      *    }
      * }</pre>
      */
-    public IScriptItemStack getOffItem();
+    IScriptItemStack getOffItem();
 
     /**
      * Set item held in off hand.
@@ -435,7 +435,7 @@ public interface IScriptEntity
      *    c.getSubject().setOffItem(mappet.createItem("minecraft:shield"));
      * }</pre>
      */
-    public void setOffItem(IScriptItemStack stack);
+    void setOffItem(IScriptItemStack stack);
 
     /**
      * Give item to this entity. (like the /give command)
@@ -444,7 +444,7 @@ public interface IScriptEntity
      *    c.getSubject().giveItem(mappet.createItem("minecraft:diamond", 64));
      * }</pre>
      */
-    public void giveItem(IScriptItemStack stack);
+    void giveItem(IScriptItemStack stack);
 
     /**
      * Give item to this entity. (like the /give command)
@@ -453,7 +453,44 @@ public interface IScriptEntity
      *    c.getSubject().giveItem(mappet.createItem("minecraft:diamond", 64), false, true);
      * }</pre>
      */
-    public void giveItem(IScriptItemStack stack, boolean playSound, boolean dropIfInventoryFull);
+    void giveItem(IScriptItemStack stack, boolean playSound, boolean dropIfInventoryFull);
+
+    /**
+     * Remove one item from the subject's inventory.
+     *
+     * <pre>{@code
+     *    c.getSubject().removeItem(mappet.createItem("minecraft:diamond"));
+     * }</pre>
+     */
+    int removeItem(IScriptItemStack stack);
+
+    /**
+     * Remove {count} items from the subject's inventory. If {count} < 0, remove all items.
+     *
+     * <pre>{@code
+     *    var deletedCount = c.getSubject().removeItem(mappet.createItem("minecraft:diamond"), 4);
+     * }</pre>
+     */
+    int removeItem(IScriptItemStack stack, int count);
+
+    /**
+     * Find the first occurrence of the specified item in the subject's inventory.
+     *
+     * <pre>{@code
+     *    var index = c.getSubject().findItem(mappet.createItem("minecraft:diamond"));
+     * }</pre>
+     */
+    int findItem(IScriptItemStack stack);
+
+    /**
+     * Find the first occurrence of the specified item starting from {startIndex} in the subject's inventory.
+     *
+     * <pre>{@code
+     *    var index = c.getSubject().findItem(mappet.createItem("minecraft:diamond"), 4);
+     * }</pre>
+     */
+    int findItem(IScriptItemStack stack, int startIndex);
+
 
     /**
      * Return the entity's helmet's item stack.
@@ -462,7 +499,7 @@ public interface IScriptEntity
      *   c.send( c.getSubject().getHelmet().serialize() )
      * }</pre>
      */
-    public IScriptItemStack getHelmet();
+    IScriptItemStack getHelmet();
 
     /**
      * Return the entity's  chestplate's item stack.
@@ -471,7 +508,7 @@ public interface IScriptEntity
      *   c.send( c.getSubject().getChestplate().serialize() )
      * }</pre>
      */
-    public IScriptItemStack getChestplate();
+    IScriptItemStack getChestplate();
 
     /**
      * Return the entity's  leggings' item stack.
@@ -480,7 +517,7 @@ public interface IScriptEntity
      *   c.send( c.getSubject().getLeggings().serialize() )
      * }</pre>
      */
-    public IScriptItemStack getLeggings();
+    IScriptItemStack getLeggings();
 
     /**
      * Return the entity's  boots' item stack.
@@ -489,7 +526,7 @@ public interface IScriptEntity
      *   c.send( c.getSubject().getBoots().serialize() )
      * }</pre>
      */
-    public IScriptItemStack getBoots();
+    IScriptItemStack getBoots();
 
     /**
      * Set the entity's  helemt.
@@ -499,7 +536,7 @@ public interface IScriptEntity
      *   c.getSubject().setHelmet(item)
      * }</pre>
      */
-    public void setHelmet(IScriptItemStack itemStack);
+    void setHelmet(IScriptItemStack itemStack);
 
     /**
      * Set the entity's  chestplate.
@@ -509,7 +546,7 @@ public interface IScriptEntity
      *   c.getSubject().setChestplate(item)
      * }</pre>
      */
-    public void setChestplate(IScriptItemStack itemStack);
+    void setChestplate(IScriptItemStack itemStack);
 
     /**
      * Set the entity's  leggings.
@@ -519,7 +556,7 @@ public interface IScriptEntity
      *   c.getSubject().setLeggings(item)
      * }</pre>
      */
-    public void setLeggings(IScriptItemStack itemStack);
+    void setLeggings(IScriptItemStack itemStack);
 
     /**
      * Set the entity's  boots.
@@ -529,7 +566,7 @@ public interface IScriptEntity
      *   c.getSubject().setBoots(item)
      * }</pre>
      */
-    public void setBoots(IScriptItemStack itemStack);
+    void setBoots(IScriptItemStack itemStack);
 
     /**
      * Set the entity's  whole armor set.
@@ -548,7 +585,7 @@ public interface IScriptEntity
      *     }
      * }</pre>
      */
-    public default void setArmor(IScriptItemStack helmet, IScriptItemStack chestplate, IScriptItemStack leggings, IScriptItemStack boots)
+    default void setArmor(IScriptItemStack helmet, IScriptItemStack chestplate, IScriptItemStack leggings, IScriptItemStack boots)
     {
         this.setHelmet(helmet);
         this.setChestplate(chestplate);
@@ -566,7 +603,7 @@ public interface IScriptEntity
      *   }
      * }</pre>
      */
-    public default void clearArmor()
+    default void clearArmor()
     {
         this.setArmor(ScriptItemStack.EMPTY, ScriptItemStack.EMPTY, ScriptItemStack.EMPTY, ScriptItemStack.EMPTY);
     }
@@ -576,12 +613,12 @@ public interface IScriptEntity
     /**
      * Set entity's speed.
      */
-    public void setSpeed(float speed);
+    void setSpeed(float speed);
 
     /**
      * Get this entity's attack target.
      */
-    public IScriptEntity getTarget();
+    IScriptEntity getTarget();
 
     /**
      * Set this entity's attack target to given entity.
@@ -600,17 +637,17 @@ public interface IScriptEntity
      *     }
      * }</pre>
      */
-    public void setTarget(IScriptEntity entity);
+    void setTarget(IScriptEntity entity);
 
     /**
      * Check whether entity's AI is enabled.
      */
-    public boolean isAIEnabled();
+    boolean isAIEnabled();
 
     /**
      * Set entity's AI to be enabled or disabled (if it has it).
      */
-    public void setAIEnabled(boolean enabled);
+    void setAIEnabled(boolean enabled);
 
     /**
      * Get unique ID of this entity, which can be used, if needed, in
@@ -628,18 +665,18 @@ public interface IScriptEntity
      * }
      * }</pre>
      */
-    public String getUniqueId();
+    String getUniqueId();
 
     /**
      * Get entity's resource location ID, like <code>minecraft:pig</code> or
      * <code>minecraft:zombie</code>.
      */
-    public String getEntityId();
+    String getEntityId();
 
     /**
      * Get how many ticks did this entity existed.
      */
-    public int getTicks();
+    int getTicks();
 
     /**
      * Get combined light value of where the entity is currently standing.
@@ -654,33 +691,33 @@ public interface IScriptEntity
      *     // Do something with skyLight and torchLight
      * }</pre>
      */
-    public int getCombinedLight();
+    int getCombinedLight();
 
     /**
      * Get entity name.
      */
-    public String getName();
+    String getName();
 
     /**
      * Set entity name.
      */
-    public void setName(String name);
+    void setName(String name);
 
     /**
      * Set entity to invisible.
      */
-    public void setInvisible(boolean invisible);
+    void setInvisible(boolean invisible);
 
     /**
      * Get entity's full (copy of its) NBT data.
      */
-    public INBTCompound getFullData();
+    INBTCompound getFullData();
 
     /**
      * Overwrite NBT data of this entity. <b>WARNING</b>: use it only if you know
      * what are you doing as this method can corrupt entities.
      */
-    public void setFullData(INBTCompound data);
+    void setFullData(INBTCompound data);
 
     /**
      * Get Forge's custom tag compound in which you can story any
@@ -690,38 +727,38 @@ public interface IScriptEntity
      * NBT compound. Any changes to returned compound <b>will be reflected
      * upon entity's data</b>.</p>
      */
-    public INBTCompound getEntityData();
+    INBTCompound getEntityData();
 
     /**
      * Check whether this entity is a player.
      */
-    public boolean isPlayer();
+    boolean isPlayer();
 
     /**
      * Check whether this entity is an NPC.
      */
     @Deprecated
-    public boolean isNpc();
+    boolean isNpc();
 
     /**
      * Check whether this entity is an NPC.
      */
-    public boolean isNPC();
+    boolean isNPC();
 
     /**
      * Check whether this entity is an item.
      */
-    public boolean isItem();
+    boolean isItem();
 
     /**
      * Check whether this entity is living base.
      */
-    public boolean isLivingBase();
+    boolean isLivingBase();
 
     /**
      * Check whether this entity is same as given entity.
      */
-    public boolean isSame(IScriptEntity entity);
+    boolean isSame(IScriptEntity entity);
 
     /**
      * Check if an entity is in a radius of another specific entity
@@ -743,7 +780,7 @@ public interface IScriptEntity
      *     }
      * }</pre>
      */
-    public boolean isEntityInRadius(IScriptEntity entity, double radius);
+    boolean isEntityInRadius(IScriptEntity entity, double radius);
 
     /**
      * Check if this entity is standing in a given block.
@@ -757,7 +794,7 @@ public interface IScriptEntity
      *     }
      * }</pre>
      */
-    public default boolean isInBlock(int x, int y, int z)
+    default boolean isInBlock(int x, int y, int z)
     {
         return this.isInArea(x, y, z, x + 1, y + 1, z + 1);
     }
@@ -774,7 +811,7 @@ public interface IScriptEntity
      *     }
      * }</pre>
      */
-    public boolean isInArea(double x1, double y1, double z1, double x2, double y2, double z2);
+    boolean isInArea(double x1, double y1, double z1, double x2, double y2, double z2);
 
     /**
      * Inflict some damage on this entity (use {@link #kill()} to kill the entity though).
@@ -783,7 +820,7 @@ public interface IScriptEntity
      * c.getSubject().damage(1); //dealt you 1 damage
      * }</pre>
      */
-    public void damage(float health);
+    void damage(float health);
 
     /**
      * Damage this entity as given entity was the source of attack.
@@ -801,7 +838,7 @@ public interface IScriptEntity
      * }
      * }</pre>
      */
-    public void damageAs(IScriptEntity entity, float health);
+    void damageAs(IScriptEntity entity, float health);
 
     /**
      * Sets IS_UNBLOCKABLE to TRUE
@@ -824,7 +861,7 @@ public interface IScriptEntity
      * }
      * }</pre>
      */
-    public void damageWithItemsAs(IScriptPlayer player);
+    void damageWithItemsAs(IScriptPlayer player);
 
     /**
      * Mount this entity to given entity.
@@ -842,7 +879,7 @@ public interface IScriptEntity
      *     }
      * }</pre>
      */
-    public void mount(IScriptEntity entity);
+    void mount(IScriptEntity entity);
 
     /**
      * Dismount this entity from the entity it's riding.
@@ -854,7 +891,7 @@ public interface IScriptEntity
      *     }
      * }</pre>
      */
-    public void dismount();
+    void dismount();
 
     /**
      * Returns the entity that this entity rides on.
@@ -866,7 +903,7 @@ public interface IScriptEntity
      * }</pre
      */
 
-    public IScriptEntity getMount();
+    IScriptEntity getMount();
 
     /**
      * Returns the bounding box of this entity.
@@ -879,7 +916,7 @@ public interface IScriptEntity
      *
      * @return the bounding box of this entity
      */
-    public ScriptBox getBoundingBox();
+    ScriptBox getBoundingBox();
 
     /**
      * Drop the item an entity is holding.
@@ -891,7 +928,7 @@ public interface IScriptEntity
      * entityItem.setInfinitePickupDelay();
      * }</pre>
      */
-    public ScriptEntityItem dropItem(int amount);
+    ScriptEntityItem dropItem(int amount);
 
     /**
      * Drop one item of what the entity is holding.
@@ -903,7 +940,7 @@ public interface IScriptEntity
      * entityItem.setInfinitePickupDelay();
      * }</pre>
      */
-    public ScriptEntityItem dropItem();
+    ScriptEntityItem dropItem();
 
     /**
      * Drop an item of the entity even if it is not holding it.
@@ -916,12 +953,12 @@ public interface IScriptEntity
      * entityItem.setInfinitePickupDelay();
      * }</pre>
      */
-    public ScriptEntityItem dropItem(IScriptItemStack itemStack);
+    ScriptEntityItem dropItem(IScriptItemStack itemStack);
 
     /**
      * Get entity's fall distance.
      */
-    public float getFallDistance();
+    float getFallDistance();
 
     /**
      * Set entity's fall distance.
@@ -929,23 +966,23 @@ public interface IScriptEntity
      * <p>You can use this method, by calling it with <code>0</code>, to prevent fall
      * damage when teleporting an entity which was already falling.</p>
      */
-    public void setFallDistance(float distance);
+    void setFallDistance(float distance);
 
     /**
      * Remove this entity from the server without any dead effects (essentially despawn).
      */
-    public void remove();
+    void remove();
 
     /**
      * Kill this entity from the server by inflicting lots of damage
      * (similar to <code>/kill</code> command).
      */
-    public void kill();
+    void kill();
 
     /**
      * Swing entity's main hand.
      */
-    public default void swingArm()
+    default void swingArm()
     {
         this.swingArm(0);
     }
@@ -955,7 +992,7 @@ public interface IScriptEntity
      *
      * @param arm <code>0</code> is primary (main), <code>1</code> is secondary (off-hand).
      */
-    public void swingArm(int arm);
+    void swingArm(int arm);
 
     /**
      * Returns leashed entities by this entity.
@@ -1040,7 +1077,7 @@ public interface IScriptEntity
      *     c.getSubject().setModifier("generic.movementSpeed", 0.5);
      * }</pre>
      */
-    public void setModifier(String modifierName, double value);
+    void setModifier(String modifierName, double value);
 
     /**
      * Return an entity's modifier.
@@ -1049,7 +1086,7 @@ public interface IScriptEntity
      *     c.send(c.getSubject().getModifier("generic.movementSpeed"));
      * }</pre>
      */
-    public double getModifier(String modifierName);
+    double getModifier(String modifierName);
 
     /**
      * Remove entity's modifier.
@@ -1058,7 +1095,7 @@ public interface IScriptEntity
      *     c.getSubject().removeModifier("generic.movementSpeed");
      * }</pre>
      */
-    public void removeModifier(String modifierName);
+    void removeModifier(String modifierName);
 
     /**
      * Remove all the modifiers of the entity.
@@ -1067,7 +1104,7 @@ public interface IScriptEntity
      *     c.getSubject().removeAllModifiers();
      * }</pre>
      */
-    public void removeAllModifiers();
+    void removeAllModifiers();
 
     /* Potion effects */
 
@@ -1091,7 +1128,7 @@ public interface IScriptEntity
      * @param amplifier How strong is potion effect.
      * @param particles Whether potion effect's particles should be emitted.
      */
-    public void applyPotion(Potion potion, int duration, int amplifier, boolean particles);
+    void applyPotion(Potion potion, int duration, int amplifier, boolean particles);
 
     /**
      * Check whether given potion effect is present on this entity.
@@ -1110,7 +1147,7 @@ public interface IScriptEntity
      *    }
      * }</pre>
      */
-    public boolean hasPotion(Potion potion);
+    boolean hasPotion(Potion potion);
 
     /**
      * Remove given potion effect from this entity.
@@ -1132,7 +1169,7 @@ public interface IScriptEntity
      * @return <code>true</code> if there was effect, and it was successfully removed,
      * <code>false</code> if had no given effect present.
      */
-    public boolean removePotion(Potion potion);
+    boolean removePotion(Potion potion);
 
     /**
      * Remove all potion effects from this entity.
@@ -1148,7 +1185,7 @@ public interface IScriptEntity
      *    subject.send("You've been freed from all potion effects!");
      * }</pre>
      */
-    public void clearPotions();
+    void clearPotions();
 
     /* Mappet stuff */
 
@@ -1167,7 +1204,7 @@ public interface IScriptEntity
      *
      * @return entity's states, or null if this entity doesn't have states.
      */
-    public IMappetStates getStates();
+    IMappetStates getStates();
 
     /**
      * Get entity's morph (works with player and NPCs).
@@ -1184,7 +1221,7 @@ public interface IScriptEntity
      *    }
      * }</pre>
      */
-    public AbstractMorph getMorph();
+    AbstractMorph getMorph();
 
     /**
      * Set entity's morph (works with player and NPCs).
@@ -1198,7 +1235,7 @@ public interface IScriptEntity
      *
      * @return if entity's morph was changed successfully.
      */
-    public boolean setMorph(AbstractMorph morph);
+    boolean setMorph(AbstractMorph morph);
 
     /**
      * Display a world morph to all players that see this entity (including themselves).
@@ -1213,7 +1250,7 @@ public interface IScriptEntity
      * }
      * }</pre>
      */
-    public default void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z)
+    default void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z)
     {
         this.displayMorph(morph, expiration, x, y, z, true);
     }
@@ -1233,7 +1270,7 @@ public interface IScriptEntity
      * @param expiration For how many ticks will this displayed morph exist on the client side.
      * @param rotate Whether attached world morph should replicate entity's rotation (i.e. copy head rotation).
      */
-    public default void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, boolean rotate)
+    default void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, boolean rotate)
     {
         this.displayMorph(morph, expiration, x, y, z, 0, 0, rotate);
     }
@@ -1255,7 +1292,7 @@ public interface IScriptEntity
      * @param pitch Vertical rotation in degrees.
      * @param rotate Whether attached world morph should replicate entity's rotation (i.e. copy head rotation).
      */
-    public default void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, float yaw, float pitch, boolean rotate)
+    default void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, float yaw, float pitch, boolean rotate)
     {
         this.displayMorph(morph, expiration, x, y, z, yaw, pitch, rotate, null);
     }
@@ -1279,7 +1316,7 @@ public interface IScriptEntity
      * @param rotate Whether attached world morph should replicate entity's rotation (i.e. copy head rotation).
      * @param player The player that only should see the morph, or null for everyone.
      */
-    public void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, float yaw, float pitch, boolean rotate, IScriptPlayer player);
+    void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, float yaw, float pitch, boolean rotate, IScriptPlayer player);
 
     /**
      * Spawn a BB gun projectile. It works only if Blockbuster mod is present.
@@ -1292,7 +1329,7 @@ public interface IScriptEntity
      *     c.getSubject().shootBBGunProjectile('{Gun:{Damage:1.0f,Projectile:{Meta:0b,Block:"minecraft:stone",Name:"block"},Gravity:0.0f}}')
      * }</pre>
      */
-    public IScriptEntity shootBBGunProjectile(String gunPropsNBT);
+    IScriptEntity shootBBGunProjectile(String gunPropsNBT);
 
     /**
      * Executes a command as a entity.
@@ -1304,7 +1341,7 @@ public interface IScriptEntity
      *    }
      * }</pre>
      */
-    public void executeCommand(String command);
+    void executeCommand(String command);
 
     /**
      * Execute for the entity a script with a given script name
@@ -1316,7 +1353,7 @@ public interface IScriptEntity
      *
      * @param scriptName The name of the script to execute.
      */
-    public void executeScript(String scriptName);
+    void executeScript(String scriptName);
 
     /**
      * Execute for the entity a script with a given script name.
@@ -1326,7 +1363,7 @@ public interface IScriptEntity
      * }</pre>
      * @param function The name of the function within the script to execute.
      */
-    public void executeScript(String scriptName, String function);
+    void executeScript(String scriptName, String function);
 
 
     /**
@@ -1366,7 +1403,7 @@ public interface IScriptEntity
      * @param y Y position
      * @param z Z position
      */
-    public void lockPosition(double x, double y, double z);
+    void lockPosition(double x, double y, double z);
 
     /**
      * Unlock the entity's position.
@@ -1375,7 +1412,7 @@ public interface IScriptEntity
      *    c.getSubject().unlockPosition();
      * }</pre>
      */
-    public void unlockPosition();
+    void unlockPosition();
 
     /**
      * Check if the entity's position is locked.
@@ -1387,7 +1424,7 @@ public interface IScriptEntity
      *    }
      * }</pre>
      */
-    public boolean isPositionLocked();
+    boolean isPositionLocked();
 
     /**
      * Lock the entity's rotation.
@@ -1402,7 +1439,7 @@ public interface IScriptEntity
      * @param pitch Pitch rotation
      * @param yawHead Yaw rotation of the head
      */
-    public void lockRotation(float yaw, float pitch, float yawHead);
+    void lockRotation(float yaw, float pitch, float yawHead);
 
     /**
      * Unlock the entity's rotation.
@@ -1411,7 +1448,7 @@ public interface IScriptEntity
      *    c.getSubject().unlockRotation();
      * }</pre>
      */
-    public void unlockRotation();
+    void unlockRotation();
 
     /**
      * Check if the entity's rotation is locked.
@@ -1423,7 +1460,7 @@ public interface IScriptEntity
      *    }
      * }</pre>
      */
-    public boolean isRotationLocked();
+    boolean isRotationLocked();
 
     /**
      * <p>Moves the entity to the specified position (<b>x, y, z</b>)
@@ -1471,7 +1508,7 @@ public interface IScriptEntity
      * @param y The target y-coordinate for the entity.
      * @param z The target z-coordinate for the entity.
      */
-    public void moveTo(String interpolation, int durationTicks, double x, double y, double z, boolean disableAI);
+    void moveTo(String interpolation, int durationTicks, double x, double y, double z, boolean disableAI);
 
     /* Entity AI */
 
@@ -1484,7 +1521,7 @@ public interface IScriptEntity
      *
      * @param entity The entity to observe
      */
-    public void observe(IScriptEntity entity);
+    void observe(IScriptEntity entity);
 
     /**
      * Adds a patrol point to the entity
@@ -1502,7 +1539,7 @@ public interface IScriptEntity
      * @param shouldCirculate should the entity patrol the points in a loop
      * @param executeCommandOnArrival command to execute when the entity arrives at the point
      */
-    public void addEntityPatrol(double x, double y, double z, double speed, boolean shouldCirculate, String executeCommandOnArrival);
+    void addEntityPatrol(double x, double y, double z, double speed, boolean shouldCirculate, String executeCommandOnArrival);
 
     /**
      * Clears all patrol points from the entity
@@ -1511,7 +1548,7 @@ public interface IScriptEntity
      * c.getSubject().clearEntityPatrols();
      * }</pre>
      */
-    public void clearEntityPatrols();
+    void clearEntityPatrols();
 
     /**
      * Sets the entity's AI to look with specific rotations
@@ -1520,7 +1557,7 @@ public interface IScriptEntity
      *     c.getSubject().setRotationsAI(0, 90, 0);
      * }</pre>
      */
-    public void setRotationsAI(float yaw, float pitch, float yawHead);
+    void setRotationsAI(float yaw, float pitch, float yawHead);
 
     /**
      * Clears the entity's AI rotations
@@ -1529,7 +1566,7 @@ public interface IScriptEntity
      *     c.getSubject().clearRotationsAI();
      * }</pre>
      */
-    public void clearRotationsAI();
+    void clearRotationsAI();
 
     /**
      * Executes a command at a specific frequency on an entity.
@@ -1537,7 +1574,7 @@ public interface IScriptEntity
      * <pre>{@code
      *    c.getSubject().executeRepeatingCommand("/tp @s ~ ~2 ~", 20);
      */
-    public void executeRepeatingCommand(String command, int frequency);
+    void executeRepeatingCommand(String command, int frequency);
 
     /**
      * Removes a repeating command from an entity.
@@ -1546,7 +1583,7 @@ public interface IScriptEntity
      *    c.getSubject().removeRepeatingCommand("/tp @s ~ ~2 ~");
      * }</pre>
      */
-    public void removeRepeatingCommand(String command);
+    void removeRepeatingCommand(String command);
 
     /**
      * Clears all the repeating commands of an entity.
@@ -1555,5 +1592,5 @@ public interface IScriptEntity
      *    c.getSubject().clearAllRepeatingCommands();
      * }</pre>
      */
-    public void clearAllRepeatingCommands();
+    void clearAllRepeatingCommands();
 }

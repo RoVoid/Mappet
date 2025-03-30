@@ -1,4 +1,3 @@
-#PARSE_ESCAPES
 
 # Error
 mappet.error.states.invalid_target=§fГлобальное состояние или состояние игрока §7%s§f отсутствует!
@@ -13,6 +12,7 @@ mappet.error.crafting.empty_output=§fПредмет(ы) вывода из та�
 
 mappet.error.event.missing=§fСобытие с ID §7%s§f не найдено!
 mappet.error.event.empty=§fСобытие с ID §7%s§f пустое (не имеет вступительного нода)!
+mappet.error.event.busy=§fYou are already logged in!
 
 mappet.error.npc.missing=§fNPC с ID §7%s§f не найден!
 mappet.error.npc.empty=§fNPC с ID §7%s§f не имеет состояний!
@@ -351,6 +351,10 @@ mappet.gui.settings.triggers.living_equipment_change=Живое: при смен
 mappet.gui.settings.triggers.descriptions.living_equipment_change=Этот триггер срабатывает когда живая сущность меняет снаряжение.
 mappet.gui.settings.triggers.variables.living_equipment_change=§6item§r, текущий предмет.\n§6slot§r, слот, откуда был взят предмет.
 
+mappet.gui.settings.triggers.player_entity_leash=Player: leash an entity
+mappet.gui.settings.triggers.descriptions.player_entity_leash=This cancelable trigger gets triggered when a player leashes an entity.
+mappet.gui.settings.triggers.variables.player_entity_leash=§6hand§r, the hand that leashed the entity (§7main§r or §7off§r).
+
 mappet.gui.settings.triggers.state_changed=Маппет: при смене состояния
 mappet.gui.settings.triggers.descriptions.state_changed=Этот триггер срабатывает когда изменяется состояние.
 mappet.gui.settings.triggers.variables.state_changed=§6entity§r, игрок/NPC у которого меняется состояние.(null если меняется глобальное состояние)\n§6key§r, ID состояния которое изменяется.\n§6current§r, текущее значение состояния.\n§6previous§r, предыдущее значение состояния.
@@ -401,7 +405,7 @@ mappet.gui.quests.rewards.context.remove=Удалить эту награду
 mappet.gui.quests.rewards.context.add_item=Добавить награду в предметах
 mappet.gui.quests.reward_item.title=Предметы награды
 mappet.gui.quests.info.empty=Чтобы начать редактирование, создайте или выберите квест из списка справа...
-mappet.gui.quests.visible=Видимый
+mappet.gui.quests.visible = Visible
 
 mappet.gui.interaction.back=Назад
 mappet.gui.interaction.accept=Принять
@@ -429,13 +433,17 @@ mappet.gui.npc_tool.npc=NPC
 mappet.gui.npc_tool.state=Состояние
 
 mappet.gui.scripted_item.title=Настройка скриптового предмета
+mappet.gui.scripted_item.item_title=Display name
+mappet.gui.scripted_item.item_lore=Lore
+mappet.gui.scripted_item.item_lore_add=Add a line of lore
+mappet.gui.scripted_item.item_lore_remove=Remove this line of lore
 mappet.gui.scripted_item.interact_with_air=При взаимодействии с воздухом
 mappet.gui.scripted_item.interact_with_entity=При взаимодействии с сущностью
 mappet.gui.scripted_item.interact_with_block=При взаимодействии с блоком
-mappet.gui.scripted_item.attack_entity=При атаке сущности
+mappet.gui.scripted_item.hit_block=При ударе по блоку
 mappet.gui.scripted_item.break_block=При разрушении блока
 mappet.gui.scripted_item.place_block=При установке блока
-mappet.gui.scripted_item.hit_block=При ударе по блоку
+mappet.gui.scripted_item.attack_entity=При атаке сущности
 mappet.gui.scripted_item.on_holder_tick=При удерживании (в руке)
 mappet.gui.scripted_item.pickup=При подборе предмета
 mappet.gui.scripted_item.first_pickup=При подборе предмета (в первый раз)
@@ -464,7 +472,6 @@ mappet.gui.scripted_item.descriptions.use_start=Этот триггер сраб
 mappet.gui.scripted_item.descriptions.use_stop=Этот триггер срабатывает когда игрок прерывает использование скриптовый предмет. В переменных доступен §6item§r - предмет, который используют, и §6duration§r длительность использования.
 mappet.gui.scripted_item.descriptions.on_use_tick=Этот триггер срабатывает каждый тик, когда игрок использует скриптовый предмет. В переменных доступен §6item§r - предмет, который используют, и §6duration§r длительность использования.
 mappet.gui.scripted_item.descriptions.finished_using=TЭтот триггер срабатывает когда игрок заканчивает (успешно) использовать скриптовый предмет. В переменных доступен §6item§r - предмет, который используют, и §6duration§r длительность использования.
-
 
 mappet.gui.crafting.title=Название таблицы рецептов
 mappet.gui.crafting.action=Название кнопки "Крафт"
@@ -575,6 +582,8 @@ mappet.gui.npcs.behavior.title=Поведение
 mappet.gui.npcs.behavior.look_at_player=Смотрит на игрока
 mappet.gui.npcs.behavior.look_around=Осматривается
 mappet.gui.npcs.behavior.wander=Бродит
+mappet.gui.npcs.behavior.always_wander=Always wander
+mappet.gui.npcs.behavior.can_fly=Can fly (experimental)
 mappet.gui.npcs.behavior.can_pick_up_loot=При инициализации: Может поднимать лут
 mappet.gui.npcs.behavior.can_be_steered=Can be steered
 mappet.gui.npcs.behavior.initialize=Триггер при инициализации NPC
@@ -603,6 +612,7 @@ mappet.gui.npcs.movement.steering_x_offset=Steering X offset
 mappet.gui.npcs.movement.steering_y_offset=Steering Y offset
 mappet.gui.npcs.movement.steering_z_offset=Steering Z offset
 mappet.gui.npcs.movement.speed=Скорость
+mappet.gui.npcs.movement.flight_max_height=Flight max height
 mappet.gui.npcs.movement.can_swim=Может плавать
 mappet.gui.npcs.movement.immovable=Недвижимый
 mappet.gui.npcs.movement.post=Точка поста
@@ -783,6 +793,7 @@ mappet.gui.scripts.overlay.title_item=Предмет
 mappet.gui.scripts.overlay.insert=Вставить
 mappet.gui.scripts.overlay.pick_morph=Выберите морф...
 mappet.gui.scripts.beautifier=Украсить код
+mappet.gui.scripts.documentation.copy=Копировать метод
 
 mappet.gui.states.server=Серверные состояния
 mappet.gui.states.player=Состояния %s
@@ -806,6 +817,7 @@ mappet.gui.logs.toggle.ignore_case=Игнорировать регистр
 mappet.gui.logs.toggle.regex=Регулярное выражение
 mappet.gui.logs.toggle.onlyMessage=Только сообщение
 mappet.gui.logs.button.clearHistory=Очистить
+
 
 mappet.gui.shapes.box=Куб
 mappet.gui.shapes.sphere=Сфера
@@ -902,17 +914,6 @@ mappet.translation.wiki=Вики
 mappet.translation.wiki_url=https://github.com/Andruxioid/mappet_ru/wiki
 mappet.translation.community=Дискорд
 mappet.translation.community_url=https://discord.gg/QhvbgSWpYn
+mappet.translation.sounds=Open sounds foldermappet.gui.npcs.movement.flight_min_height
 
-mappet.error.event.busy=§fYou are already logged in!
-mappet.gui.settings.triggers.player_entity_leash=Player: leash an entity
-mappet.gui.settings.triggers.descriptions.player_entity_leash=This cancelable trigger gets triggered when a player leashes an entity.
-mappet.gui.settings.triggers.variables.player_entity_leash=§6hand§r, the hand that leashed the entity (§7main§r or §7off§r).
-mappet.gui.quests.visible = Visible
-mappet.gui.scripted_item.item_title=Display name
-mappet.gui.scripted_item.item_lore=Lore
-mappet.gui.scripted_item.item_lore_add=Add a line of lore
-mappet.gui.scripted_item.item_lore_remove=Remove this line of lore
-mappet.gui.npcs.behavior.always_wander=Always wander
-mappet.gui.npcs.behavior.can_fly=Can fly (experimental)
-mappet.gui.npcs.movement.flight_max_height=Flight max height
-mappet.gui.npcs.movement.flight_min_height=Flight min heightmappet.translation.sounds=Открыть папку со звуками
+mappet.gui.npcs.movement.flight_min_height=Flight min heightmappet.gui.quests.visible=Видимый

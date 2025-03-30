@@ -7,7 +7,6 @@ import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.mappet.CommonProxy;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.ScriptRayTrace;
-import mchorse.mappet.api.scripts.code.world.ScriptWorld;
 import mchorse.mappet.api.scripts.code.entities.ai.EntitiesAIPatrol;
 import mchorse.mappet.api.scripts.code.entities.ai.EntityAILookAtTarget;
 import mchorse.mappet.api.scripts.code.entities.ai.repeatingCommand.EntityAIRepeatingCommand;
@@ -17,8 +16,8 @@ import mchorse.mappet.api.scripts.code.entities.ai.rotations.RotationDataStorage
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
 import mchorse.mappet.api.scripts.code.mappet.MappetStates;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
+import mchorse.mappet.api.scripts.code.world.ScriptWorld;
 import mchorse.mappet.api.scripts.user.IScriptRayTrace;
-import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import mchorse.mappet.api.scripts.user.data.ScriptBox;
 import mchorse.mappet.api.scripts.user.data.ScriptVector;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
@@ -26,6 +25,7 @@ import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
 import mchorse.mappet.api.scripts.user.mappet.IMappetStates;
 import mchorse.mappet.api.scripts.user.nbt.INBTCompound;
+import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import mchorse.mappet.api.states.States;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.client.morphs.WorldMorph;
@@ -384,9 +384,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public void giveItem(IScriptItemStack stack, boolean playSound, boolean dropIfInventoryFull) {
-        if (stack == null || stack.isEmpty()) {
-            return;
-        }
+        if (stack == null || stack.isEmpty()) return;
 
         if (this.isPlayer()) {
             EntityPlayer player = (EntityPlayer) this.entity;
@@ -421,6 +419,88 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
                 }
             }
         }
+    }
+
+    @Override
+    public int removeItem(IScriptItemStack stack) {
+        return removeItem(stack, 1);
+    }
+
+    @Override
+    public int removeItem(IScriptItemStack stack, int count) {
+        if (stack == null || stack.isEmpty() || count == 0) return 0;
+        ItemStack itemStack = stack.getMinecraftItemStack().copy();
+        int deleteCount = 0;
+        if (this.isPlayer()) {
+            EntityPlayer player = (EntityPlayer) this.entity;
+            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+                if (count > 0 && deleteCount >= count) return deleteCount;
+                ItemStack _stack = player.inventory.getStackInSlot(i);
+                if (_stack.isItemEqualIgnoreDurability(itemStack)) {
+                    if (count > 0 && deleteCount + _stack.getCount() > count) {
+                        _stack.setCount(_stack.getCount() - (count - deleteCount));
+                        deleteCount = count;
+                    } else {
+                        deleteCount += _stack.getCount();
+                        player.inventory.removeStackFromSlot(i);
+                    }
+                }
+            }
+        } else if (this.isLivingBase()) {
+            if (this.entity instanceof EntityLivingBase) {
+                EntityLivingBase living = (EntityLivingBase) this.entity;
+
+                if (living.getHeldItemMainhand().isItemEqualIgnoreDurability(itemStack)) {
+                    if (count > 0 && deleteCount + living.getHeldItemMainhand().getCount() > count) {
+                        living.getHeldItemMainhand().setCount(living.getHeldItemMainhand().getCount() - (count - deleteCount));
+                        deleteCount = count;
+                    } else {
+                        deleteCount += living.getHeldItemMainhand().getCount();
+                        living.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
+                    }
+                }
+
+                if (living.getHeldItemOffhand().isItemEqualIgnoreDurability(itemStack)) {
+                    if (count > 0 && deleteCount + living.getHeldItemOffhand().getCount() > count) {
+                        living.getHeldItemOffhand().setCount(living.getHeldItemOffhand().getCount() - (count - deleteCount));
+                        deleteCount = count;
+                    } else {
+                        deleteCount += living.getHeldItemOffhand().getCount();
+                        living.setHeldItem(EnumHand.OFF_HAND, ItemStack.EMPTY);
+                    }
+                }
+            }
+        }
+        return deleteCount;
+    }
+
+    @Override
+    public int findItem(IScriptItemStack stack) {
+        return findItem(stack, 0);
+    }
+
+    @Override
+    public int findItem(IScriptItemStack stack, int startIndex) {
+        if (stack == null || stack.isEmpty() || startIndex < 0) return -1;
+        ItemStack itemStack = stack.getMinecraftItemStack().copy();
+        if (this.isPlayer()) {
+            EntityPlayer player = (EntityPlayer) this.entity;
+            for (int i = startIndex; i < player.inventory.getSizeInventory(); i++) {
+                if (player.inventory.getStackInSlot(i).isItemEqualIgnoreDurability(itemStack)) {
+                    return i;
+                }
+            }
+        } else if (this.isLivingBase()) {
+            if (this.entity instanceof EntityLivingBase) {
+                EntityLivingBase living = (EntityLivingBase) this.entity;
+                if (startIndex == 0 && living.getHeldItemMainhand().isItemEqualIgnoreDurability(itemStack)) {
+                    return 0;
+                } else if (startIndex <= 1 && living.getHeldItemOffhand().isItemEqualIgnoreDurability(itemStack)) {
+                    return 1;
+                }
+            }
+        }
+        return -1;
     }
 
     @Override
