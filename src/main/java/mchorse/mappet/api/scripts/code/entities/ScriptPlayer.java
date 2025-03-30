@@ -53,10 +53,9 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.GameType;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScriptPlayer {
     private IMappetQuests quests;
@@ -425,6 +424,16 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     @Override
     public void unlockPerspective(){
         lockPerspective(-1);
+    }
+
+    @Override
+    public ArrayList<String> getModsList(){
+        NetworkDispatcher dispatcher = NetworkDispatcher.get(getMinecraftPlayer().connection.netManager);
+        ArrayList<String> list= new ArrayList<>();
+        if (dispatcher != null) {
+            dispatcher.getModList().forEach((modId, version) -> list.add(modId + ":" + version));
+        }
+        return list;
     }
 
     /* Sounds */
