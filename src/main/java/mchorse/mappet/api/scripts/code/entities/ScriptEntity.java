@@ -31,6 +31,7 @@ import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.client.morphs.WorldMorph;
 import mchorse.mappet.entities.EntityNpc;
 import mchorse.mappet.network.Dispatcher;
+import mchorse.mappet.network.PacketPlayAnimation;
 import mchorse.mappet.network.common.scripts.PacketEntityRotations;
 import mchorse.mappet.network.common.scripts.PacketWorldMorph;
 import mchorse.mappet.utils.EntityUtils;
@@ -146,6 +147,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         }
 
         MinecraftServer minecraftServer = this.entity.getServer();
+        if(minecraftServer == null) return;
         WorldServer worldServer = minecraftServer.getWorld(dimension);
 
         // anonymous class to override the Teleporter within the method itself
@@ -526,7 +528,6 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         if (this.entity instanceof EntityLivingBase) {
             return ScriptItemStack.create(((EntityLivingBase) this.entity).getItemStackFromSlot(EntityEquipmentSlot.LEGS).copy());
         }
-
         return null;
     }
 
@@ -535,7 +536,6 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         if (this.entity instanceof EntityLivingBase) {
             return ScriptItemStack.create(((EntityLivingBase) this.entity).getItemStackFromSlot(EntityEquipmentSlot.FEET).copy());
         }
-
         return null;
     }
 
@@ -557,6 +557,13 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     @Override
     public void setBoots(IScriptItemStack itemStack) {
         this.entity.setItemStackToSlot(EntityEquipmentSlot.FEET, itemStack.getMinecraftItemStack());
+    }
+
+    @Override
+    public void playAnimation(String animation) {
+        PacketPlayAnimation packet = new PacketPlayAnimation(animation, entity.getUniqueID().toString());
+        Dispatcher.sendToTracked(entity, packet);
+        if (entity instanceof EntityPlayerMP) Dispatcher.sendTo(packet, (EntityPlayerMP) entity);
     }
 
     /* Entity meta */
@@ -1302,9 +1309,8 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         try {
             target = ObfuscationReflectionHelper.getPrivateValue(EntityAIWatchClosest.class, watchClosestTask, "field_75334_a", "closestEntity");
         } catch (Exception e) {
-            e.printStackTrace();
+            Mappet.logger.error(e.getMessage());
         }
-
         return target;
     }
 

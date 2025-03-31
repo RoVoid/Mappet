@@ -208,10 +208,7 @@ public class ScriptFactory implements IScriptFactory {
 
     @Override
     public AbstractMorph createMorph(INBTCompound compound) {
-        if (compound == null) {
-            return null;
-        }
-
+        if (compound == null) return null;
         return MorphManager.INSTANCE.morphFromNBT(compound.getNBTTagCompound());
     }
 

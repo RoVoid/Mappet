@@ -48,6 +48,7 @@ dependencies {
     compileOnly files("run/libs/metamorph-${metamorph}-${mcversion}-dev.jar")
     compileOnly files("run/libs/mclib-${mclib}-${mcversion}-dev.jar")
     compileOnly files("run/libs/aperture-${aperture}-${mcversion}-dev.jar")
+    compileOnly files("run/libs/chameleon-${chameleon}-${mcversion}-dev.jar")
     compileOnly files("run/libs/nashorn.jar")
 
     implementation ("org.reflections:reflections:0.9.12")
@@ -71,7 +72,8 @@ tasks.register('processSource', Sync) {
                                    MCLIB      : mclib,
                                    METAMORPH  : metamorph,
                                    BLOCKBUSTER: blockbuster,
-                                   APERTURE   : aperture,])
+                                   APERTURE   : aperture,
+                                   CHAMELEON   : chameleon])
     into "$buildDir/src"
 }
 

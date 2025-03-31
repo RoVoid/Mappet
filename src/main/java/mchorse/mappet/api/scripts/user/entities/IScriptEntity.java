@@ -608,6 +608,16 @@ public interface IScriptEntity
         this.setArmor(ScriptItemStack.EMPTY, ScriptItemStack.EMPTY, ScriptItemStack.EMPTY, ScriptItemStack.EMPTY);
     }
 
+    /**
+     * Play an animation on this entity, (need ChameleonMorph)
+     *
+     * <pre>@code
+     *     c.getSubject().playAnimation("running");
+     * </pre>
+     *
+     */
+    void playAnimation(String animation);
+
     /* Entity meta */
 
     /**
@@ -1198,7 +1208,7 @@ public interface IScriptEntity
      *     var states = c.getSubject().getStates()
      *     states.add("run", 1)
      *
-     *     c.send("state run: \u00A76"+states.getNumber("run"))
+     *     c.send("state run: §6"+states.getNumber("run"))
      * }
      * }</pre>
      *

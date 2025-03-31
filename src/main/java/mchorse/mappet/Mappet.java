@@ -61,7 +61,8 @@ import java.util.logging.Handler;
                 "required-after:mclib@[@MCLIB@,);" +
                         "required-after:metamorph@[@METAMORPH@,);" +
                         "after:blockbuster@[@BLOCKBUSTER@,);" +
-                        "after:aperture@[@APERTURE@,);",
+                        "after:aperture@[@APERTURE@,);" +
+                        "after:chameleon@[@CHAMELEON@,);",
         updateJSON = "https://raw.githubusercontent.com/mchorse/mappet/master/version.json"
 )
 
