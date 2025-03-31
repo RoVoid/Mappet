@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import mchorse.chameleon.animation.ActionConfig;
 import mchorse.chameleon.animation.Animator;
 import mchorse.chameleon.metamorph.ChameleonMorph;
-import mchorse.mappet.Mappet;
 import mchorse.mclib.network.ClientMessageHandler;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -65,9 +64,9 @@ public class PacketPlayAnimation implements IMessage {
                     ActionConfig config = chameleonMorph.actions.getConfig(message.animation);
                     animator.addAction(animator.createAction(animator.animation, config, false));
                 } catch (NoSuchMethodException e) {
-                    Mappet.logger.error("Method 'getAnimator' not found in ChameleonMorph. Ensure compatibility with Chameleon mod!");
+                    System.err.println("Method 'getAnimator' not found in ChameleonMorph. Ensure compatibility with Chameleon mod!");
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    Mappet.logger.error(e.getMessage());
+                    System.err.println(e.getMessage());
                 }
             });
         }

@@ -182,7 +182,7 @@ public class Dispatcher {
             this.register(PacketRepl.class, ServerHandlerRepl.class, Side.SERVER);
             this.register(PacketSound.class, ClientHandlerSound.class, Side.CLIENT);
             this.register(PacketWorldMorph.class, ClientHandlerWorldMorph.class, Side.CLIENT);
-
+            this.register(PacketPlayAnimation.class, PacketPlayAnimation.ClientHandler.class, Side.CLIENT);
 
             /* HUD & UI */
             this.register(PacketHUDScene.class, ClientHandlerHUDScene.class, Side.CLIENT);
