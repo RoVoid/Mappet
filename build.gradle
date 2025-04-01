@@ -51,7 +51,9 @@ dependencies {
     compileOnly files("run/libs/chameleon-${chameleon}-${mcversion}-dev.jar")
     compileOnly files("run/libs/nashorn.jar")
 
-    implementation ("org.reflections:reflections:0.9.12")
+    implementation ('org.reflections:reflections:0.9.12')
+    implementation ('org.slf4j:slf4j-api:1.7.32')
+    implementation ('org.javassist:javassist:3.28.0-GA')
     implementation ('org.ow2.asm:asm:5.2') { force = true }
     implementation ('org.ow2.asm:asm-tree:5.2') { force = true }
     implementation ('org.ow2.asm:asm-util:5.2') { force = true }
@@ -81,7 +83,7 @@ compileJava {
     source = processSource.outputs
 }
 
-tasks.jar.enabled = false
+//tasks.jar.enabled = false
 
 shadowJar {
     dependencies {
