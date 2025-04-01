@@ -620,6 +620,12 @@ public interface IScriptEntity
 
     /* Entity meta */
 
+    boolean isTamed(IScriptPlayer player);
+
+    void setOwner(IScriptPlayer player);
+
+    IScriptPlayer getOwner();
+
     /**
      * Set entity's speed.
      */

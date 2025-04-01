@@ -46,6 +46,7 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
@@ -147,7 +148,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         }
 
         MinecraftServer minecraftServer = this.entity.getServer();
-        if(minecraftServer == null) return;
+        if (minecraftServer == null) return;
         WorldServer worldServer = minecraftServer.getWorld(dimension);
 
         // anonymous class to override the Teleporter within the method itself
@@ -564,6 +565,28 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         PacketPlayAnimation packet = new PacketPlayAnimation(animation, entity.getUniqueID().toString());
         Dispatcher.sendToTracked(entity, packet);
         if (entity instanceof EntityPlayerMP) Dispatcher.sendTo(packet, (EntityPlayerMP) entity);
+    }
+
+@Override
+public boolean isTamed(IScriptPlayer player) {
+        if (!(entity instanceof EntityTameable)) return false;
+        return ((EntityTameable) entity).isTamed();
+    }
+
+    @Override
+    public void setOwner(IScriptPlayer player) {
+        if (!(entity instanceof EntityTameable)) return;
+        if (player == null) ((EntityTameable) entity).setTamed(false);
+        else ((EntityTameable) entity).setTamedBy(player.getMinecraftPlayer());
+    }
+
+    @Override
+    public IScriptPlayer getOwner() {
+        if (!(entity instanceof EntityTameable)) return null;
+        EntityTameable _entity = (EntityTameable) entity;
+        if (_entity.isTamed() && _entity.getOwner() != null)
+            return new ScriptPlayer((EntityPlayerMP) _entity.getOwner());
+        return null;
     }
 
     /* Entity meta */

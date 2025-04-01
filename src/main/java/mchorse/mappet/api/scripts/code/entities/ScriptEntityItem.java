@@ -51,13 +51,13 @@ public class ScriptEntityItem extends ScriptEntity<EntityItem> implements IScrip
     }
 
     @Override
-    public String getOwner()
+    public String getItemOwner()
     {
         return this.entity.getOwner();
     }
 
     @Override
-    public void setOwner(String owner)
+    public void setItemOwner(String owner)
     {
         this.entity.setOwner(owner);
     }

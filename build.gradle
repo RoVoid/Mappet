@@ -63,6 +63,7 @@ dependencies {
 
 jar.finalizedBy('shadowJar')
 jar.finalizedBy('reobfJar')
+jar.finalizedBy('moveToExportFolder')
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
@@ -84,6 +85,12 @@ compileJava {
 }
 
 //tasks.jar.enabled = false
+
+tasks.register('moveToExportFolder', Copy) {
+    from "build/libs/Mappet-${version}.jar"
+    into "_exports"
+}
+
 
 shadowJar {
     dependencies {

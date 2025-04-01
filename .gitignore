@@ -26,3 +26,5 @@ run
 *.blend1
 /classes/
 docs.json
+
+_exports/

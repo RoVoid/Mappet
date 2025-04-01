@@ -25,7 +25,7 @@ public interface IScriptEntityItem extends IScriptEntity
      * }</pre>
      * @return how many ticks entity exists
      */
-    public int getAge();
+    int getAge();
 
     /**
      * Set entity's age.
@@ -44,7 +44,7 @@ public interface IScriptEntityItem extends IScriptEntity
      *
      * @param age ticks
      */
-    public void setAge(int age);
+    void setAge(int age);
 
     /**
      * Get entity's pickup delay.
@@ -61,7 +61,7 @@ public interface IScriptEntityItem extends IScriptEntity
      * }</pre>
      * @return How many ticks remains until someone can pick up this item
      */
-    public int getPickupDelay();
+    int getPickupDelay();
 
     /**
      * Set entity's pickup delay.
@@ -80,7 +80,7 @@ public interface IScriptEntityItem extends IScriptEntity
      *
      * @param delay In ticks
      */
-    public void setPickupDelay(int delay);
+    void setPickupDelay(int delay);
 
     /**
      * Get entity's lifespan (max age).
@@ -97,7 +97,7 @@ public interface IScriptEntityItem extends IScriptEntity
      * }</pre>
      * @return How many ticks remains until someone can pick up this item
      */
-    public int getLifespan();
+    int getLifespan();
 
     /**
      * Set entity's lifespan (max age).
@@ -116,7 +116,7 @@ public interface IScriptEntityItem extends IScriptEntity
      *
      * @param lifespan In ticks
      */
-    public void setLifespan(int lifespan);
+    void setLifespan(int lifespan);
 
     /**
      * Get entity's owner nickname (Who can pick up this item).
@@ -134,7 +134,7 @@ public interface IScriptEntityItem extends IScriptEntity
      * }</pre>
      * @return Nickname of player who can pick up this item.
      */
-    public String getOwner();
+    String getItemOwner();
 
     /**
      * Set entity's owner nickname (Who can pick up this item).
@@ -151,7 +151,7 @@ public interface IScriptEntityItem extends IScriptEntity
      * }
      * }</pre>
      */
-    public void setOwner(String owner);
+    void setItemOwner(String owner);
 
     /**
      * Get entity's thrower nickname (Who throw this item).
@@ -169,7 +169,7 @@ public interface IScriptEntityItem extends IScriptEntity
      * }</pre>
      * @return Nickname of player who throw this item.
      */
-    public String getThrower();
+    String getThrower();
 
     /**
      * Set entity's thrower nickname (Who throw this item).
@@ -185,7 +185,7 @@ public interface IScriptEntityItem extends IScriptEntity
      * }
      * }</pre>
      */
-    public void setThrower(String thrower);
+    void setThrower(String thrower);
 
     /**
      * Get itemStack from this entity.
@@ -208,7 +208,7 @@ public interface IScriptEntityItem extends IScriptEntity
      * }
      * }</pre>
      */
-    public IScriptItemStack getItem();
+    IScriptItemStack getItem();
 
     /**
      * Get itemStack from this entity.
@@ -233,7 +233,7 @@ public interface IScriptEntityItem extends IScriptEntity
      * }
      * }</pre>
      */
-    public void setItem(IScriptItemStack itemStack);
+    void setItem(IScriptItemStack itemStack);
 
     /**
      * Makes item unaffordable.
@@ -251,12 +251,12 @@ public interface IScriptEntityItem extends IScriptEntity
      * }
      * }</pre>
      */
-    public void setInfinitePickupDelay();
+    void setInfinitePickupDelay();
 
     /**
      * Set's default pick up delay (10, actually).
      */
-    public void setDefaultPickupDelay();
+    void setDefaultPickupDelay();
 
     /**
      * Entity will not despawn.
@@ -274,7 +274,7 @@ public interface IScriptEntityItem extends IScriptEntity
      * }
      * }</pre>
      */
-    public void setNoDespawn();
+    void setNoDespawn();
 
     /**
      * Returns whether it's possible to pick up this item, or not.
@@ -300,5 +300,5 @@ public interface IScriptEntityItem extends IScriptEntity
      * }
      * }</pre>
      */
-    public boolean canPickup();
+    boolean canPickup();
 }
