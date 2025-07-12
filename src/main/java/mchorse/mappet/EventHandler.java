@@ -14,7 +14,7 @@ import mchorse.mappet.api.scripts.code.entities.ai.rotations.EntityAIRotations;
 import mchorse.mappet.api.scripts.code.entities.ai.rotations.RotationDataStorage;
 import mchorse.mappet.api.scripts.code.items.ScriptInventory;
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
-import mchorse.mappet.api.scripts.user.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.triggers.Trigger;
@@ -648,6 +648,20 @@ public class EventHandler {
             DataContext context = new DataContext(event.getEntityLiving());
 
             this.trigger(event, Mappet.settings.playerJump, context);
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
+        if (event.getEntityLiving().world.isRemote) return;
+        if (!(event.getEntityLiving() instanceof EntityPlayer)) return;
+        EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+        if(player.isDead || !player.isSprinting()) return;
+
+        if (!Mappet.settings.playerRun.isEmpty()) {
+            DataContext context = new DataContext(event.getEntityLiving());
+
+            this.trigger(event, Mappet.settings.playerRun, context);
         }
     }
 

@@ -305,6 +305,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         super.addNewData(name, data);
     }
 
+    /* TODO исправить ошибку с . (f.ile -> f.ile.js) */
     @Override
     protected void dupeData(String name) {
         if (name.lastIndexOf(".") == -1) {

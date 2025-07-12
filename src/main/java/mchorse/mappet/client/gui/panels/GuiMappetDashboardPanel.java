@@ -134,7 +134,7 @@ public abstract class GuiMappetDashboardPanel <T extends AbstractData> extends G
                     menu.action(Icons.PASTE, IKey.lang("mappet.gui.panels.context.paste"), () -> this.paste(tag));
                 }
             }
-            catch (Exception e)
+            catch (Exception ignored)
             {}
 
             if (mc.isSingleplayer())

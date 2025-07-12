@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.user.world;
 
-import mchorse.mappet.api.scripts.user.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import net.minecraft.world.gen.structure.template.Template;
 
 public interface IScriptStructure {

@@ -1,7 +1,7 @@
 package mchorse.mappet.api.scripts.code.world;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.api.scripts.user.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import mchorse.mappet.api.scripts.user.world.IScriptStructure;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.CompressedStreamTools;

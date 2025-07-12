@@ -64,6 +64,7 @@ public class SyntaxHighlighter {
         char string = '\0';
         this.last = 0;
 
+
         main:
         for (int i = 0, c = line.length(); i < c; i++) {
             char character = line.charAt(i);

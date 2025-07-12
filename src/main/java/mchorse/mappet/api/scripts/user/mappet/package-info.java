@@ -22,10 +22,10 @@
  *     <li><code>Scripting API</code> section covers functions that allow you to interact with
  *     Minecraft's mechanics to some extent and with Mappet.</li>
  *     <li><code>UI API</code> section covers functions that allow you to create custom user
- *     intrfaces (UI) which can be used for plethora of things.</li>
+ *     interfaces (UI) which can be used for plethora of things.</li>
  * </ul>
  *
- * <p>Big thanks to TorayLife for scripting API suggestions.</p>
+ * <p>Big thanks to McHorse for this mod and _Demon_ for icons!</p>
  */
 
 package mchorse.mappet.api.scripts.user.mappet;

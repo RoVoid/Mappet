@@ -33,6 +33,7 @@ public class ScriptServer implements IScriptServer {
     }
 
     @Override
+    @Deprecated
     public MinecraftServer getMinecraftServer() {
         return this.server;
     }

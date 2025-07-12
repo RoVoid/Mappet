@@ -66,16 +66,8 @@ public class ScriptFactory implements IScriptFactory {
 
     @Override
     public IScriptBlockState createBlock(String blockId, int meta) {
-        ResourceLocation location = new ResourceLocation(blockId);
-        Block block = ForgeRegistries.BLOCKS.getValue(location);
-
-        if (block != null) {
-            IBlockState state = block.getStateFromMeta(meta);
-
-            return ScriptBlockState.create(state);
-        }
-
-        return ScriptBlockState.create(null);
+        Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blockId));
+        return ScriptBlockState.create(block == null ? null : block.getStateFromMeta(meta));
     }
 
     @Override
@@ -99,8 +91,7 @@ public class ScriptFactory implements IScriptFactory {
 
     @Override
     public INBTCompound createCompoundFromJS(Object jsObject) {
-        NBTBase base = this.convertToNBT(jsObject);
-
+        NBTBase base = convertToNBT(jsObject);
         return base instanceof NBTTagCompound ? new ScriptNBTCompound((NBTTagCompound) base) : null;
     }
 
@@ -120,8 +111,7 @@ public class ScriptFactory implements IScriptFactory {
 
     @Override
     public INBTList createListFromJS(Object jsObject) {
-        NBTBase base = this.convertToNBT(jsObject);
-
+        NBTBase base = convertToNBT(jsObject);
         return base instanceof NBTTagList ? new ScriptNBTList((NBTTagList) base) : null;
     }
 

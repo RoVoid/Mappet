@@ -1,101 +1,103 @@
 package mchorse.mappet.api.scripts.user.blocks;
 
+import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import net.minecraft.block.state.IBlockState;
 
 /**
- * Scripted block state.
- *
- * <p>This interface represents a block state that can be used
- * to compare or place into the world. You can use {@link mchorse.mappet.api.scripts.user.IScriptFactory#createBlock(String, int)}
- * to query for comparison.</p>
+ * Block State
+ * <p> CREATE: {@link mchorse.mappet.api.scripts.user.IScriptFactory#createBlock(String, int)}
  *
  * <pre>{@code
- *    var andesite = mappet.createBlockState("minecraft:stone", 5);
- *
  *    function main(c)
  *    {
- *        if (c.getWorld().getBlock(214, 3, 511).isSame(andesite))
+ *        var block = c.getWorld().getBlock(214, 3, 511)
+ *        if (block.getId("minecraft:stone") && block.getMeta() === 0)
  *        {
- *            c.getSubject().send("Block at (214, 3, 511) is indeed andesite!");
+ *            c.send("Block at (214, 3, 511) is indeed stone!");
  *        }
  *    }
  * }</pre>
  */
-public interface IScriptBlockState
-{
+public interface IScriptBlockState {
     /**
-     * Get Minecraft block state instance. <b>BEWARE:</b> you need to know the MCP
-     * mappings in order to directly call methods on this instance!
+     * @deprecated Use {@link #asMinecraft()} instead
      */
-    public IBlockState getMinecraftBlockState();
+    @Deprecated
+    IBlockState getMinecraftBlockState();
 
     /**
-     * Get block's ID like <code>minecraft:stone</code>.
+     * Get Minecraft block state instance
+     *
+     * <p style="color:yellow"><b>BEWARE:</b> You need to know the MCP mappings to directly call methods on this instance!</p>
+     */
+    IBlockState asMinecraft();
+
+    /**
+     * @deprecated Use {@link #getId()} instead
+     */
+    @Deprecated
+    String getBlockId();
+
+    /**
+     * Get block's ID like <code>minecraft:stone</code>
      *
      * <pre>{@code
      *    var block = c.getWorld().getBlock(214, 3, 511);
-     *
-     *    c.getSubject().send("Block at (214, 3, 511) is " + block.getBlockId());
+     *    c.send("Block ID is " + block.getBlockId());
      * }</pre>
      */
-    public String getBlockId();
+    String getId();
 
     /**
-     * Get meta value of this state (it will always be between 0 and 15).
+     * Get meta of this state (it will always be between 0 and 15)
      *
      * <pre>{@code
      *    var andesite = mappet.createBlockState("minecraft:stone", 5);
-     *
-     *    // This will print "Andesite's meta is 5"
-     *    c.getSubject().send("Andesite's meta is " + andesite.getMeta());
+     *    c.send("Meta equals " + andesite.getMeta()); // Result: "Meta equals 5"
      * }</pre>
      */
-    public int getMeta();
+    int getMeta();
 
     /**
-     * Check whether this block state is same as given block state.
+     * Compare this block state with another
      *
      * <pre>{@code
+     *    var stone = mappet.createBlockState("minecraft:stone");
      *    var andesite = mappet.createBlockState("minecraft:stone", 5);
-     *
-     *    if (c.getWorld().getBlock(214, 3, 511).isSame(andesite))
-     *    {
-     *        c.getSubject().send("Block at (214, 3, 511) is indeed andesite!");
-     *    }
+     *    c.send(stone.isSame(andesite)); // Result: "false"
      * }</pre>
      */
-    public boolean isSame(IScriptBlockState state);
+    boolean isSame(IScriptBlockState state);
 
     /**
-     * Check whether given block state has the same block, but
-     * not necessarily the same meta value.
+     * Compare this block state with another, but not necessarily the same meta
      *
      * <pre>{@code
+     *    var stone = mappet.createBlockState("minecraft:stone");
      *    var andesite = mappet.createBlockState("minecraft:stone", 5);
-     *    var stone = mappet.createBlockState("minecraft:stone", 0);
-     *
-     *    // This will print true
-     *    c.getSubject().send(stone.isSameBlock(andesite));
+     *    var air = mappet.createBlockState("minecraft:air");
+     *    c.send(stone.isSameBlock(andesite)); // Result: "true"
+     *    c.send(stone.isSameBlock(air)); // Result: "false"
      * }</pre>
      */
-    public boolean isSameBlock(IScriptBlockState state);
+    boolean isSameBlock(IScriptBlockState state);
 
     /**
-     * Check whether given block state is occupying a full block entirely,
-     * rather than being see through or not full (1, 1, 1) block space.
+     * Returns true if the block state occupies the full block and is not transparent
      */
-    public boolean isOpaque();
+    boolean isOpaque();
 
     /**
-     * Check whether given block state has collision boxes. Minecraft's block
-     * state code requires a world instance and block coordinates to be passed,
-     * because collision box can be different depending on the place in the world.
+     * Checks if the block state has collision boxes at a given position
+     * <p>Collision shape may differ depending on the world and coordinates</p>
      */
-    public boolean hasCollision(IScriptWorld world, int x, int y, int z);
+    boolean hasCollision(IScriptWorld world, int x, int y, int z);
+
+    boolean hasCollision(IScriptWorld world, ScriptVector vector);
 
     /**
-     * Check whether given block state is air.
+     * Checks if this block state is air
      */
-    public boolean isAir();
+    boolean isAir();
 }

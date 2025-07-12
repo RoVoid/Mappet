@@ -61,8 +61,21 @@ public class Script extends AbstractData {
             allLibraries.addAll(manager.globalLibraries.keySet());
             allLibraries.addAll(this.libraries);
 
+            String[] lines = code.split("\n");
+            int pos = 0;
+            for (String line : lines) {
+                String trimmed = line.trim();
+                if (!trimmed.startsWith("import ")) break;
+                String lib = trimmed.substring(7).trim();
+                if (lib.isEmpty()) continue;
+                allLibraries.add(lib);
+                pos += line.length() + 1;
+            }
+            code = pos < code.length() ? code.substring(pos) : "";
+
+
             for (String library : allLibraries) {
-                if (shouldSkipLibrary(library, alreadyLoaded)) continue;
+                if (library.equals(this.getId()) || alreadyLoaded.contains(library)) continue;
                 total = processLibrary(manager, library, isKotlin, uniqueImports, finalCode, total);
                 alreadyLoaded.add(library);
             }
@@ -72,6 +85,7 @@ public class Script extends AbstractData {
 
             this.engine.put("mappet", new ScriptFactory());
             this.engine.put("math", new ScriptMath());
+
             evalEngineCode(isKotlin, uniqueImports, finalCode);
         }
     }
@@ -90,7 +104,7 @@ public class Script extends AbstractData {
             throw new ScriptException(message, this.getId(), -1);
         }
 
-        this.engine = ScriptUtils.sanitize(this.engine);
+        ScriptUtils.sanitize(this.engine);
     }
 
     private void configureEngineContext() {
@@ -111,13 +125,13 @@ public class Script extends AbstractData {
         return this.engine.getFactory().getLanguageName().equals("kotlin");
     }
 
-    private boolean shouldSkipLibrary(String library, Set<String> alreadyLoaded) {
-        return library.equals(this.getId()) || alreadyLoaded.contains(library);
-    }
-
     private int processLibrary(ScriptManager manager, String library, boolean isKotlin, Set<String> uniqueImports, StringBuilder finalCode, int total) {
         try {
             File scriptFile = manager.getScriptFile(library);
+            if (scriptFile == null) {
+                Mappet.logger.error("[Mappet] Didn't find " + library + ".js");
+                return total;
+            }
             String code = FileUtils.readFileToString(scriptFile, Utils.getCharset());
 
             if (isKotlin) code = processKotlinCode(code, uniqueImports);
@@ -164,8 +178,9 @@ public class Script extends AbstractData {
     }
 
 
-    private final String DEFAULT_KOTLIN_IMPORTS =
-            "import mchorse.metamorph.api.morphs.AbstractMorph" + "\n" +
+    private void evalEngineCode(boolean isKotlin, Set<String> uniqueImports, StringBuilder finalCode) throws ScriptException {
+        if (isKotlin) {
+            String DEFAULT_KOTLIN_IMPORTS = "import mchorse.metamorph.api.morphs.AbstractMorph" + "\n" +
                     "import mchorse.mappet.entities.EntityNpc" + "\n" +
                     "import net.minecraft.potion.Potion" + "\n" +
                     "import net.minecraft.entity.Entity" + "\n" +
@@ -194,9 +209,6 @@ public class Script extends AbstractData {
                     "import mchorse.mappet.api.scripts.code.items.*" + "\n" +
                     "import mchorse.mappet.api.scripts.code.mappet.*" + "\n" +
                     "import mchorse.mappet.api.scripts.code.nbt.*" + "\n";
-
-    private void evalEngineCode(boolean isKotlin, Set<String> uniqueImports, StringBuilder finalCode) throws ScriptException {
-        if (isKotlin) {
             String allCode = DEFAULT_KOTLIN_IMPORTS + "\n" + String.join("\n", uniqueImports) + "\n" + finalCode.toString();
             this.engine.eval(allCode);
         } else {

@@ -12,7 +12,7 @@ mappet.error.crafting.empty_output=§fПредмет(ы) вывода из та�
 
 mappet.error.event.missing=§fСобытие с ID §7%s§f не найдено!
 mappet.error.event.empty=§fСобытие с ID §7%s§f пустое (не имеет вступительного нода)!
-mappet.error.event.busy=§fYou are already logged in!
+mappet.error.event.busy=§fВы уже вошли в систему!
 
 mappet.error.npc.missing=§fNPC с ID §7%s§f не найден!
 mappet.error.npc.empty=§fNPC с ID §7%s§f не имеет состояний!
@@ -57,7 +57,7 @@ mappet.success.quest.declined=§fКвест с ID §7%s§f был удалён �
 mappet.success.data.saved=§fДанные с ID §7%s§f были сохранены.
 mappet.success.data.loaded=§fДанные с ID §7%s§f были загружены.
 
-mappet.success.events.stopped=§fОстановлено §7%s§f ивентов с ID %s§f!
+mappet.success.events.stopped=§fОстановлено §7%s§f событий с ID %s§f!
 
 # Commands
 mappet.commands.mp.help=Главная команда Маппета, предоставляющая подкоманды для работы с возможностями Маппета.
@@ -87,17 +87,17 @@ mappet.commands.mp.dialogue.help=Подкоманда диалогов Мапп�
 mappet.commands.mp.dialogue.open=Эта команда открывает диалог §7<id>§r для игрока/ов §7<player>§r.
 
 mappet.commands.mp.npc.help=Подкоманда управления NPC.
-mappet.commands.mp.npc.edit=Эта команда позволяет изменять значения индвидуального свойства §7<property>§r на заданное значение §7<value>§r для одного или нескольких NPC, найденных селектором цели §7<target>§r.
+mappet.commands.mp.npc.edit=Эта команда позволяет изменять значения индивидуального свойства §7<property>§r на заданное значение §7<value>§r для одного или нескольких NPC, найденных селектором цели §7<target>§r.
 mappet.commands.mp.npc.state=Эта команда позволяет переключать состояния §7<state>§r одного или нескольких NPC, найденных селектором цели §7<target>§r.\n\n Аргумент состояния §7<state>§r поддерживает следующий формат: §7[npc_id@]state[:properties]§r, где параметр ID NPC §7npc_id§r и параметр свойств §7properties§r являются необязательными.\n\nС этим форматом, вы можете менять состояния из чертежа другого NPC, или даже менять только некоторые свойства из другого состояния.
-mappet.commands.mp.npc.summon=Эта команда спавнит NPC с ID §7<id>§r с необязательным аргументом состояния §7[state]§r (аргумент §7default§r это название свойства по умолчанию) в координатах по §7[x] [y] [z]§r. Если аргументы §7[x] [y] [z]§r были опущены, то NPC будет заспавнен на месте отправителя команды. Относительные значения с §7~§r поддерживаются.
-mappet.commands.mp.npc.despawn=This command despawns all NPCs found by §7<target>§r.
+mappet.commands.mp.npc.summon=Эта команда призывает NPC с ID §7<id>§r с необязательным аргументом состояния §7[state]§r (аргумент §7default§r это название свойства по умолчанию) в координатах по §7[x] [y] [z]§r. Если аргументы §7[x] [y] [z]§r были опущены, то NPC будет призван на месте отправителя команды. Относительные значения с §7~§r поддерживаются.
+mappet.commands.mp.npc.despawn=Эта команда удаляет всех NPC, найденных по §7<target>§r.
 
 mappet.commands.mp.faction.help=Подкоманда управления фракциями. Эта команда позволяет управлять очками фракций в общем или очками фракций у одного или нескольких игроков.
 mappet.commands.mp.faction.add=Эта команда добавляет очки фракции, обработанные через выражение §7<expression>§r фракции с ID §7<id>§r. Если ID §7<id>§r не существует, то выражение §7<expression>§r будет добавлено к нулю.
 mappet.commands.mp.faction.clear=Эта команда удаляет очки фракции у фракции с ID §7[id]§r. Если аргумент ID §7[id]§r был опущен, то будут удалены очки всех фракций.
 mappet.commands.mp.faction.set=Эта команда присваивает очки фракции, обработанные через выражение §7<expression>§r, фракции с ID §7<id>§r.
 
-mappet.commands.mp.data.help=Подкоманда данных, позволяющая управлять инвентарями игроков, состояними игроков и глобальными состояними.
+mappet.commands.mp.data.help=Подкоманда данных, позволяющая управлять инвентарями игроков, состояниями игроков и глобальными состояниями.
 mappet.commands.mp.data.clear=Очищает все глобальные состояния и состояния игроков вместе с инвентарями. Если §7[inventory]§r не указан, то инвентарь не будет очищен.
 mappet.commands.mp.data.load=Загружает сохранённые данные с ID §7<id>§r. Аргумент §7[global]§r определяет необходимо ли также загружать глобальные состояния (по умолчанию аргумент стоит на §7true§r (то есть включён). Аргумент §7[players]§r позволяет выбрать другого игрока, в которого будут загружены инвентарь и состояния игрока.
 mappet.commands.mp.data.save=Сохраняет глобальные состояния вместе с текущими состояниями игрока, а также его инвентарём в данные с ID §7<id>§r.
@@ -114,7 +114,7 @@ mappet.commands.mp.hud.setup=HUD сцена §7<id>§r будет показан
 
 mappet.commands.mp.morph.help=Подкоманда управления мировыми морфами.
 mappet.commands.mp.morph.add.help=Подкоманда для отображения морфа/ов в мире.
-mappet.commands.mp.morph.add.entity=Отображает §7<morph>§r в мире на §7<expiration>§r тиков, прикреплённый ко всем сущностям найденным селектором §7<target>§r. §7<x>§r, §7<y>§r и §7<z>§r относительный сдвиг от центра нижнего края хитбокса энтити. §7<rotate>§r логическое значение (§7true§r или §7false§r), которое переключает, должен ли морф поворачиваться вслед за энтити. §7<yaw>§r и §7<pitch>§r - горизонтальные и вертикальные сдвиги поворота, соответственно.
+mappet.commands.mp.morph.add.entity=Отображает §7<morph>§r в мире на §7<expiration>§r тиков, прикреплённый ко всем сущностям найденным селектором §7<target>§r. §7<x>§r, §7<y>§r и §7<z>§r относительный сдвиг от центра нижнего края хитбокса сущности. §7<rotate>§r логическое значение (§7true§r или §7false§r), которое переключает, должен ли морф поворачиваться вслед за сущностью. §7<yaw>§r и §7<pitch>§r - горизонтальные и вертикальные сдвиги поворота, соответственно.
 mappet.commands.mp.morph.add.world=Отображает §7<morph>§r в мире на §7<expiration>§r тиков.§7<x>§r, §7<y>§r и §7<z>§r - абсолютные мировые координаты, на которых будет отображён морф. §7<yaw>§r и §7<pitch>§r - горизонтальный и вертикальный сдвиг поворота, относительно, соответственно. относительные §7~§r значения поддерживаются для §7<x>§r, §7<y>§r, §7<z>§r, §7<yaw>§r, и §7<pitch>§r аргументов.
 
 
@@ -128,8 +128,8 @@ mappet.config.comments.general.data_caching=Определяет, должны �
 
 mappet.config.general.enable_forge_triggers=Включить forge триггеры
 mappet.config.comments.general.enable_forge_triggers=Определяет, должны ли быть включены forge триггеры. \n\n§c§lВНИМАНИЕ!§r\n\nЭта опция опасна и может §c§lсломать ваш мир§r. Используйте только если знаете что вы делаете, на свой страх и риск.
-mappet.config.general.load_custom_sounds_on_login=Reload all custom sounds on login
-mappet.config.comments.general.load_custom_sounds_on_login=When enabled, reloads all custom sounds when the player logs in.
+mappet.config.general.load_custom_sounds_on_login=Перезагрузить звуки при входе
+mappet.config.comments.general.load_custom_sounds_on_login=Если включено, все пользовательские звуки перезагружаются при входе игрока.
 
 mappet.config.npc.title=NPC
 mappet.config.npc.tooltip=Настройки мода, относящиеся к NPC
@@ -182,7 +182,7 @@ mappet.config.comments.script_editor.docs_new_structure=Когда включе�
 mappet.gui.none=<none>
 mappet.gui.search=Искать...
 mappet.gui.right_click=Кликните здесь правой кнопкой мыши...
-mappet.gui.player_journal=Open player's journal...
+mappet.gui.player_journal=Открыть журнал игрока...
 mappet.gui.overlays.entities.main=Выберите ID сущности...
 mappet.gui.overlays.sounds.main=Выберите звуковое событие...
 mappet.gui.overlays.event=Выберите событие...
@@ -328,11 +328,11 @@ mappet.gui.settings.triggers.descriptions.player_entity_interact=Этот отм
 mappet.gui.settings.triggers.variables.player_entity_interact=§6hand§r, рука которая взаимодействовала с сущностью (§7main§r или §7off§r).
 
 mappet.gui.settings.triggers.player_open_container=Игрок: при открытии контейнера
-mappet.gui.settings.triggers.descriptions.player_open_container=Этот триггер срабатывает когда игрок открывает контейнер, такие как сундук, эндер сундук, печь, верстак, и т.д.
+mappet.gui.settings.triggers.descriptions.player_open_container=Этот триггер срабатывает когда игрок открывает контейнер, такие как сундук, эндер-сундук, печь, верстак, и т.д.
 mappet.gui.settings.triggers.variables.player_open_container=§6inventory§r, §7IScriptInventory§r открытый инвентарь (полезно только в скриптах).\n§6x§r, §6y§r, и §6z§r - координаты блока с инвентарём в мире (только если это блок).
 
 mappet.gui.settings.triggers.player_close_container=Игрок: при закрытии контейнера
-mappet.gui.settings.triggers.descriptions.player_close_container=Этот триггер срабатывает когда игрок закрывает контейнер, такие как сундук, эндер сундук, печь, верстак, и т.д.
+mappet.gui.settings.triggers.descriptions.player_close_container=Этот триггер срабатывает когда игрок закрывает контейнер, такие как сундук, эндер-сундук, печь, верстак, и т.д.
 mappet.gui.settings.triggers.variables.player_close_container=§6inventory§r, §7IScriptInventory§r закрытый инвентарь (полезно только в скриптах).\n§6x§r, §6y§r, и §6z§r - координаты блока с инвентарём в мире (только если это блок).
 
 mappet.gui.settings.triggers.player_journal=Игрок: при открытии журнала
@@ -343,17 +343,21 @@ mappet.gui.settings.triggers.player_jump=Игрок: при прыжке
 mappet.gui.settings.triggers.descriptions.player_jump=Этот триггер срабатывает когда игрок прыгает.
 mappet.gui.settings.triggers.variables.player_jump=§7N/A§r
 
+mappet.gui.settings.triggers.player_run=Игрок: при беге
+mappet.gui.settings.triggers.descriptions.player_run=Этот триггер срабатывает когда игрок бегает.
+mappet.gui.settings.triggers.variables.player_run=§7N/A§r
+
 mappet.gui.settings.triggers.projectile_impact=Снаряд: при попадании
-mappet.gui.settings.triggers.descriptions.projectile_impact=Этот отменяемый триггер срабатываетт когда снаряд попадает по энтити или блоку.
+mappet.gui.settings.triggers.descriptions.projectile_impact=Этот отменяемый триггер срабатывает когда снаряд попадает по сущности или блоку.
 mappet.gui.settings.triggers.variables.projectile_impact=§6pos§r, позиция, где попал снаряд.\n§6entity§r, сущность в которую попал снаряд.\n§6projectile§r, сам снаряд, который попал по сущности.\n§6thrower§r, сущность которая бросила снаряд.
 
 mappet.gui.settings.triggers.living_equipment_change=Живое: при смене снаряжения
 mappet.gui.settings.triggers.descriptions.living_equipment_change=Этот триггер срабатывает когда живая сущность меняет снаряжение.
 mappet.gui.settings.triggers.variables.living_equipment_change=§6item§r, текущий предмет.\n§6slot§r, слот, откуда был взят предмет.
 
-mappet.gui.settings.triggers.player_entity_leash=Player: leash an entity
-mappet.gui.settings.triggers.descriptions.player_entity_leash=This cancelable trigger gets triggered when a player leashes an entity.
-mappet.gui.settings.triggers.variables.player_entity_leash=§6hand§r, the hand that leashed the entity (§7main§r or §7off§r).
+mappet.gui.settings.triggers.player_entity_leash=Игрок: привязывает сущность
+mappet.gui.settings.triggers.descriptions.player_entity_leash=Этот отменяемый триггер срабатывает, когда игрок привязывает сущность.
+mappet.gui.settings.triggers.variables.player_entity_leash=§6hand§r, рука, которая держала существо на поводке (§7main§r или §7off§r).
 
 mappet.gui.settings.triggers.state_changed=Маппет: при смене состояния
 mappet.gui.settings.triggers.descriptions.state_changed=Этот триггер срабатывает когда изменяется состояние.
@@ -405,7 +409,7 @@ mappet.gui.quests.rewards.context.remove=Удалить эту награду
 mappet.gui.quests.rewards.context.add_item=Добавить награду в предметах
 mappet.gui.quests.reward_item.title=Предметы награды
 mappet.gui.quests.info.empty=Чтобы начать редактирование, создайте или выберите квест из списка справа...
-mappet.gui.quests.visible = Visible
+mappet.gui.quests.visible=Видимый
 
 mappet.gui.interaction.back=Назад
 mappet.gui.interaction.accept=Принять
@@ -433,10 +437,10 @@ mappet.gui.npc_tool.npc=NPC
 mappet.gui.npc_tool.state=Состояние
 
 mappet.gui.scripted_item.title=Настройка скриптового предмета
-mappet.gui.scripted_item.item_title=Display name
-mappet.gui.scripted_item.item_lore=Lore
-mappet.gui.scripted_item.item_lore_add=Add a line of lore
-mappet.gui.scripted_item.item_lore_remove=Remove this line of lore
+mappet.gui.scripted_item.item_title=Отображаемое имя
+mappet.gui.scripted_item.item_lore=Описание
+mappet.gui.scripted_item.item_lore_add=Добавить строку описания
+mappet.gui.scripted_item.item_lore_remove=Удалить эту строку описания
 mappet.gui.scripted_item.interact_with_air=При взаимодействии с воздухом
 mappet.gui.scripted_item.interact_with_entity=При взаимодействии с сущностью
 mappet.gui.scripted_item.interact_with_block=При взаимодействии с блоком
@@ -503,7 +507,7 @@ mappet.gui.region.offset=Смещение
 mappet.gui.region.box_size=Радиус
 mappet.gui.region.ellipse_size=Радиус эллипсоида
 mappet.gui.region.sphere_size=Радиус и высота
-mappet.gui.region.info.empty=Чтобы начать редактирование, выберите блок-регион из списка справа, или повзаимодействуйте с нужным блоком-регионом в мире...
+mappet.gui.region.info.empty=Чтобы начать редактирование, выберите блок-регион из списка справа, или взаимодействуйте с нужным блоком-регионом в мире...
 mappet.gui.region.write_states=Записать состояние
 mappet.gui.region.additive=Добавочный
 mappet.gui.region.additive_tooltip=Вместо добавления §71§r при входе в мир и отнимания после выхода, при включении опции "добавочный", §71§r будет добавлена каждый раз при входе игрока без отнимания при выходе.
@@ -519,7 +523,7 @@ mappet.gui.conditionModel.add=Добавить
 mappet.gui.conditionModel.remove=Удалить
 mappet.gui.conditionModel.move_up=Переместить вверх
 mappet.gui.conditionModel.move_down=Переместить вниз
-mappet.gui.conditionModel.info.empty=Выберите блок модели с условием из списка справа, или провзаимодействуйте с любым блоком модели с условием в мире, чтобы начать редактировать...
+mappet.gui.conditionModel.info.empty=Выберите блок модели с условием из списка справа, или взаимодействуйте с любым блоком модели с условием в мире, чтобы начать редактировать...
 
 
 mappet.gui.nodes.node.title=Название
@@ -548,11 +552,11 @@ mappet.gui.nodes.dialogue.marker=Маркер
 mappet.gui.nodes.dialogue.marker_tooltip=Если эта графа не пуста, то маркер будет записывать состояния игрока под определённым ID, к примеру, если ID диалога это §7test§r, а ID маркера это §7story§r, то данные о прочтении будут записаны в §7dialogue.test:story§r.
 mappet.gui.nodes.dialogue.closable=Можно закрыть
 mappet.gui.nodes.dialogue.content=Содержание
-mappet.gui.nodes.dialogue.provider=Квестодатель
-mappet.gui.nodes.dialogue.receiver=Квестополучатель
+mappet.gui.nodes.dialogue.provider=Квест-датель
+mappet.gui.nodes.dialogue.receiver=Квест-получатель
 mappet.gui.nodes.dialogue.auto_accept=Принимать автоматически
 mappet.gui.nodes.dialogue.allow_retake=Многоразовый квест
-mappet.gui.nodes.dialogue.condition=Это условие определяет может ли квест быть предложенным игроку (при условии что квестодатель и квестополучатель отвечают критериям квеста)
+mappet.gui.nodes.dialogue.condition=Это условие определяет может ли квест быть предложенным игроку (при условии что квест-датель и квест-получатель отвечают критериям квеста)
 mappet.gui.nodes.dialogue.skip_if_completed=Пропустить если выполнен
 mappet.gui.nodes.dialogue.skip_if_completed_tooltip=Определяет, пропустить ли этот нод если игрок уже выполнил этот квест
 mappet.gui.nodes.context.add=Добавьте нод...
@@ -569,7 +573,7 @@ mappet.gui.nodes.keys.add=Добавить ноды
 mappet.gui.nodes.info.empty_event=Чтобы начать редактировать, создайте или выберите событие из списка справа...
 mappet.gui.nodes.info.empty_dialogue=Чтобы начать редактировать, создайте или выберите диалог из списка справа...
 mappet.gui.nodes.info.empty_chain=Чтобы начать редактировать, создайте или выберите цепочку квестов из списка справа
-mappet.gui.nodes.info.empty_main=Вам небходимо обозначить вступительный нод!
+mappet.gui.nodes.info.empty_main=Вам необходимо обозначить вступительный нод!
 mappet.gui.nodes.info.empty_nodes=Чтобы начать работу с нодами, кликните сюда и добавьте нод!
 
 mappet.gui.npcs.meta.title=Метаданные
@@ -582,10 +586,10 @@ mappet.gui.npcs.behavior.title=Поведение
 mappet.gui.npcs.behavior.look_at_player=Смотрит на игрока
 mappet.gui.npcs.behavior.look_around=Осматривается
 mappet.gui.npcs.behavior.wander=Бродит
-mappet.gui.npcs.behavior.always_wander=Always wander
-mappet.gui.npcs.behavior.can_fly=Can fly (experimental)
+mappet.gui.npcs.behavior.always_wander=Всегда бродить
+mappet.gui.npcs.behavior.can_fly=Может летать (§cэкспериментально§r)
 mappet.gui.npcs.behavior.can_pick_up_loot=При инициализации: Может поднимать лут
-mappet.gui.npcs.behavior.can_be_steered=Can be steered
+mappet.gui.npcs.behavior.can_be_steered=Можно управлять
 mappet.gui.npcs.behavior.initialize=Триггер при инициализации NPC
 mappet.gui.npcs.behavior.interact=Триггер при взаимодействии с NPC
 mappet.gui.npcs.behavior.damaged=Триггер при получении урона NPC
@@ -608,16 +612,17 @@ mappet.gui.npcs.damage.invincible=Неуязвимый
 mappet.gui.npcs.damage.killable=Смертный
 mappet.gui.npcs.movement.title=Передвижение
 mappet.gui.npcs.movement.jump_power=Сила прыжка
-mappet.gui.npcs.movement.steering_x_offset=Steering X offset
-mappet.gui.npcs.movement.steering_y_offset=Steering Y offset
-mappet.gui.npcs.movement.steering_z_offset=Steering Z offset
+mappet.gui.npcs.movement.steering_x_offset=Смещение управления по X
+mappet.gui.npcs.movement.steering_y_offset=Смещение управления по Y
+mappet.gui.npcs.movement.steering_z_offset=Смещение управления по X
 mappet.gui.npcs.movement.speed=Скорость
-mappet.gui.npcs.movement.flight_max_height=Flight max height
+mappet.gui.npcs.movement.flight_max_height=Максимальная высота полета
+mappet.gui.npcs.movement.flight_min_height=Минимальная высота полета
 mappet.gui.npcs.movement.can_swim=Может плавать
 mappet.gui.npcs.movement.immovable=Недвижимый
 mappet.gui.npcs.movement.post=Точка поста
 mappet.gui.npcs.movement.patrol_circulate=Патрулирует по кругу
-mappet.gui.npcs.movement.steering_offset=Steering offset points
+mappet.gui.npcs.movement.steering_offset=Точки смещения управления
 mappet.gui.npcs.movement.patrol_points=Точки патруля
 mappet.gui.npcs.movement.follow=Следовать за целью
 mappet.gui.npcs.general.title=Общие
@@ -636,9 +641,10 @@ mappet.gui.npcs.overlay.title=Состояния NPC
 mappet.gui.npcs.context.add=Добавить состояние
 mappet.gui.npcs.context.copy=Скопировать это состояние
 mappet.gui.npcs.context.paste=Вставить состояние...
-mappet.gui.npcs.context.rename=Переназовите состояние...
+mappet.gui.npcs.context.rename=Переименуйте состояние...
 mappet.gui.npcs.context.remove=Удалить состояние
 mappet.gui.npcs.info.empty=Чтобы начать редактирование, создайте или выберите NPC из списка справа...
+mappet.gui.npcs.triggers.title=Триггеры
 
 mappet.gui.npcs.respawn.title=Возрождение
 mappet.gui.npcs.respawn.respawn=Возрождается
@@ -668,8 +674,8 @@ mappet.gui.factions.relations.context.remove=Удалить это отноше�
 mappet.gui.factions.info.empty=Чтобы начать редактирование, создайте или выберите фракцию из списка справа...
 
 mappet.gui.conditions.title=Редактор условий
-mappet.gui.conditions.or=Отметить этот блок, чтобы он руководствовался аргументом OR вместо AND (означая, что условие будет равнятся §2true§r если один из этих блоков равняется §2true§r)
-mappet.gui.conditions.not=Отметить этот блок, чтобы он инверсировал полученный результат (§2true§r становится §cfalse§r и §cfalse§r становится §2true§r)
+mappet.gui.conditions.or=Отметить этот блок, чтобы он руководствовался аргументом OR вместо AND (означая, что условие будет равняться §2true§r если один из этих блоков равняется §2true§r)
+mappet.gui.conditions.not=Отметить этот блок, чтобы он инвертировал полученный результат (§2true§r становится §cfalse§r и §cfalse§r становится §2true§r)
 mappet.gui.conditions.label_and=И
 mappet.gui.conditions.label_or=ИЛИ
 mappet.gui.conditions.target=Цель
@@ -742,12 +748,12 @@ mappet.gui.syntax_theme.colors.identifier=Для названий функций
 mappet.gui.syntax_theme.colors.special=Для ключевого слова "this"
 mappet.gui.syntax_theme.colors.strings=Для одиночных строк, взятых в " и '
 mappet.gui.syntax_theme.colors.comments=Для комментария в одной и нескольких строках
-mappet.gui.syntax_theme.colors.numbers=Для постоянных значений, таких как числа, null и undefined 
+mappet.gui.syntax_theme.colors.numbers=Для постоянных значений, таких как числа, null и undefined
 mappet.gui.syntax_theme.colors.other=Простой текст
 mappet.gui.syntax_theme.background_colors.title=Фоновые цвета
 mappet.gui.syntax_theme.background_colors.line_numbers=Цвет номеров строк
 mappet.gui.syntax_theme.background_colors.background=Фоновый цвет
-mappet.gui.syntax_theme.context.add=Добвить тему...
+mappet.gui.syntax_theme.context.add=Добавить тему...
 mappet.gui.syntax_theme.context.remove=Удалить эту тему
 mappet.gui.syntax_theme.modal.add=Впишите название для новой темы:
 
@@ -778,7 +784,7 @@ mappet.gui.scripts.repl.title=REPL (интерактивная консоль)
 mappet.gui.scripts.repl.hello_world=Hello, world!
 mappet.gui.scripts.repl.welcome=Это интерактивная консоль Маппета, (Read-Eval-Print Loop, REPL). Вы можете писать §6JS§r код, и выполнять его по нажатию клавиши Enter. Вы можете прокручиваться по истории выполнения зажав §6Ctrl§r и стрелку §6Вверх§r или §6Вниз§r.\n\nСледующие переменные доступны:\n\n- §6c§r это IScriptEvent в котором субъектом является игрок.\n- §6s§r это IScriptPlayer\n- §6mappet§r это IScriptFactory\n\nВы можете выполнить §7clear()§r функцию чтобы очистить все сообщения на экране.
 mappet.gui.scripts.repl.context.clear=Очистить
-mappet.gui.scripts.keys.word_wrap=Toggle word wrapping
+mappet.gui.scripts.keys.word_wrap=Включить перенос слов
 mappet.gui.scripts.context.paste_morph=Вставьте NBT морфа...
 mappet.gui.scripts.context.paste_item=Вставьте NBT предмета...
 mappet.gui.scripts.context.paste_player_pos=Вставить позицию игрока
@@ -868,7 +874,7 @@ mappet.gui.entity_property.armor=Броня
 mappet.gui.entity_property.ticks=Тиков существует
 mappet.gui.entity_property.light=Свет (факел)
 mappet.gui.entity_property.light_sky=Свет (небо)
-mappet.gui.entity_property.sneaking=Кродётся
+mappet.gui.entity_property.sneaking=Крадётся
 mappet.gui.entity_property.sprinting=Бежит
 mappet.gui.entity_property.on_ground=На земле
 mappet.gui.entity_property.yaw=Поворот головы по Y (yaw)
@@ -914,6 +920,4 @@ mappet.translation.wiki=Вики
 mappet.translation.wiki_url=https://github.com/Andruxioid/mappet_ru/wiki
 mappet.translation.community=Дискорд
 mappet.translation.community_url=https://discord.gg/QhvbgSWpYn
-mappet.translation.sounds=Open sounds foldermappet.gui.npcs.movement.flight_min_height
-
-mappet.gui.npcs.movement.flight_min_height=Flight min heightmappet.gui.quests.visible=Видимый
+mappet.translation.sounds=Open sounds folder

@@ -1,82 +1,84 @@
 package mchorse.mappet.api.scripts.code.blocks;
 
-import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import mchorse.mappet.api.scripts.user.blocks.IScriptBlockState;
+import mchorse.mappet.api.scripts.code.data.ScriptVector;
+import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 
-public class ScriptBlockState implements IScriptBlockState
-{
+public class ScriptBlockState implements IScriptBlockState {
     public static ScriptBlockState AIR = new ScriptBlockState(Blocks.AIR.getDefaultState());
     public static BlockPos.MutableBlockPos BLOCK_POS = new BlockPos.MutableBlockPos();
 
-    private IBlockState state;
+    private final IBlockState state;
 
-    public static IScriptBlockState create(IBlockState state)
-    {
-        if (state == Blocks.AIR.getDefaultState() || state == null)
-        {
-            return AIR;
-        }
-
-        return new ScriptBlockState(state);
-    }
-
-    private ScriptBlockState(IBlockState state)
-    {
+    private ScriptBlockState(IBlockState state) {
         this.state = state;
     }
 
-    @Override
-    public IBlockState getMinecraftBlockState()
-    {
-        return this.state;
+    public static IScriptBlockState create(IBlockState state) {
+        return (state == null || state == Blocks.AIR.getDefaultState()) ? AIR : new ScriptBlockState(state);
     }
 
     @Override
-    public int getMeta()
-    {
-        return this.state.getBlock().getMetaFromState(this.state);
+    @Deprecated
+    public IBlockState getMinecraftBlockState() {
+        return state;
     }
 
     @Override
-    public String getBlockId()
-    {
-        ResourceLocation rl = this.state.getBlock().getRegistryName();
+    public IBlockState asMinecraft() {
+        return state;
+    }
 
+    @Override
+    @Deprecated
+    public String getBlockId() {
+        ResourceLocation rl = state.getBlock().getRegistryName();
         return rl == null ? "" : rl.toString();
     }
 
     @Override
-    public boolean isSame(IScriptBlockState state)
-    {
-        ScriptBlockState otherState = (ScriptBlockState) state;
-        return this.state.getBlock() == otherState.state.getBlock() && this.getMeta() == otherState.getMeta();
+    public String getId() {
+        ResourceLocation rl = state.getBlock().getRegistryName();
+        return rl == null ? "" : rl.toString();
     }
 
     @Override
-    public boolean isSameBlock(IScriptBlockState state)
-    {
-        return this.state.getBlock() == ((ScriptBlockState) state).state.getBlock();
+    public int getMeta() {
+        return state.getBlock().getMetaFromState(state);
     }
 
     @Override
-    public boolean isOpaque()
-    {
-        return this.state.isOpaqueCube();
+    public boolean isSame(IScriptBlockState otherState) {
+        ScriptBlockState _otherState = (ScriptBlockState) otherState;
+        return state.getBlock() == _otherState.state.getBlock() && getMeta() == _otherState.getMeta();
     }
 
     @Override
-    public boolean hasCollision(IScriptWorld world, int x, int y, int z)
-    {
-        return this.state.getCollisionBoundingBox(world.getMinecraftWorld(), BLOCK_POS.setPos(x, y, z)) != null;
+    public boolean isSameBlock(IScriptBlockState otherState) {
+        return state.getBlock() == ((ScriptBlockState) otherState).state.getBlock();
     }
 
     @Override
-    public boolean isAir()
-    {
-        return this.state.getBlock() == Blocks.AIR;
+    public boolean isOpaque() {
+        return state.isOpaqueCube();
+    }
+
+    @Override
+    public boolean hasCollision(IScriptWorld world, int x, int y, int z) {
+        return state.getCollisionBoundingBox(world.getMinecraftWorld(), BLOCK_POS.setPos(x, y, z)) != null;
+    }
+
+    @Override
+    public boolean hasCollision(IScriptWorld world, ScriptVector vector) {
+        return state.getCollisionBoundingBox(world.getMinecraftWorld(), BLOCK_POS.setPos(vector.toBlockPos())) != null;
+    }
+
+    @Override
+    public boolean isAir() {
+        return state.getBlock() == Blocks.AIR;
     }
 }

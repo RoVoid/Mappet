@@ -85,6 +85,7 @@ public class ServerSettings implements INBTSerializable<NBTTagCompound> {
     public final Trigger playerEntityLeash;
 
     public final Trigger playerJump;
+    public final Trigger playerRun;
 
     public final Trigger stateChanged;
 
@@ -139,6 +140,7 @@ public class ServerSettings implements INBTSerializable<NBTTagCompound> {
         this.onLivingEquipmentChange = this.register("living_equipment_change", new Trigger());
         this.playerEntityLeash = this.register("player_entity_leash", new Trigger());
         this.playerJump = this.register("player_jump", new Trigger());
+        this.playerRun = this.register("player_run", new Trigger());
         this.stateChanged = this.register("state_changed", new Trigger());
 
         Mappet.EVENT_BUS.post(new RegisterServerTriggerEvent(this));

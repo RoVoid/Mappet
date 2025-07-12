@@ -300,7 +300,6 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
     }
 
     public static class GuiDocEntrySearchList extends GuiSearchListElement<DocEntry> {
-
         public GuiDocEntrySearchList(Minecraft mc, Consumer<List<DocEntry>> callback) {
             super(mc, callback);
         }
@@ -314,15 +313,13 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
     public static class GuiDocEntryList extends GuiListElement<DocEntry> {
         public GuiDocEntryList(Minecraft mc, Consumer<List<DocEntry>> callback) {
             super(mc, callback);
-
-            this.scroll.scrollItemSize = 16;
-            this.scroll.scrollSpeed *= 2;
+            scroll.scrollItemSize = 16;
+            scroll.scrollSpeed *= 2;
         }
 
         @Override
         protected boolean sortElements() {
-            this.list.sort((a, b) -> a.getName().compareToIgnoreCase(b.getName()));
-
+            list.sort((a, b) -> a.getName().compareToIgnoreCase(b.getName()));
             return true;
         }
 

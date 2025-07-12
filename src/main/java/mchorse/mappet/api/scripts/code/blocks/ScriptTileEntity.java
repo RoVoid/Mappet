@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class ScriptTileEntity implements IScriptTileEntity
 {
-    private TileEntity tile;
+    private final TileEntity tile;
 
     public ScriptTileEntity(TileEntity tile)
     {
@@ -16,16 +16,22 @@ public class ScriptTileEntity implements IScriptTileEntity
     }
 
     @Override
+    @Deprecated
     public TileEntity getMinecraftTileEntity()
     {
-        return this.tile;
+        return tile;
+    }
+
+    @Override
+    public TileEntity asMinecraft()
+    {
+        return tile;
     }
 
     @Override
     public String getId()
     {
-        ResourceLocation key = TileEntity.getKey(this.tile.getClass());
-
+        ResourceLocation key = TileEntity.getKey(tile.getClass());
         return key == null ? "" : key.toString();
     }
 

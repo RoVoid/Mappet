@@ -16,11 +16,6 @@ public class TextLine
         this.text = text;
     }
 
-    public void set(String text)
-    {
-        this.text = text;
-    }
-
     public int getLines()
     {
         return this.wrappedLines == null ? 1 : this.wrappedLines.size();

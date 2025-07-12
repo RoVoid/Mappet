@@ -346,6 +346,10 @@ mappet.gui.settings.triggers.player_jump=Player: jump
 mappet.gui.settings.triggers.descriptions.player_jump=This gets triggered when a player jumps.
 mappet.gui.settings.triggers.variables.player_jump=§7N/A§r
 
+mappet.gui.settings.triggers.player_run=Player: run
+mappet.gui.settings.triggers.descriptions.player_run=This gets triggered when a player runs.
+mappet.gui.settings.triggers.variables.player_run=§7N/A§r
+
 mappet.gui.settings.triggers.projectile_impact=Projectile: impact
 mappet.gui.settings.triggers.descriptions.projectile_impact=This cancellable gets triggered when a projectile hits an entity or a block.
 mappet.gui.settings.triggers.variables.projectile_impact=§6pos§r, the position where the projectile hit.\n§6entity§r, the entity that was hit.\n§6projectile§r, the projectile that hit the entity.\n§6thrower§r, the entity that threw the projectile.
@@ -408,7 +412,7 @@ mappet.gui.quests.rewards.context.remove=Remove this reward
 mappet.gui.quests.rewards.context.add_item=Add item stack reward
 mappet.gui.quests.reward_item.title=Reward items
 mappet.gui.quests.info.empty=Select or create a quest in the list on the right, to start editing...
-mappet.gui.quests.visible = Visible
+mappet.gui.quests.visible=Visible
 
 mappet.gui.interaction.back=Back
 mappet.gui.interaction.accept=Accept
@@ -643,6 +647,7 @@ mappet.gui.npcs.context.paste=Paste a state...
 mappet.gui.npcs.context.rename=Rename this state...
 mappet.gui.npcs.context.remove=Remove selected state
 mappet.gui.npcs.info.empty=Select or create an NPC in the list on the right, to start editing...
+mappet.gui.npcs.triggers.title=Triggers
 
 mappet.gui.npcs.respawn.title=Respawning
 mappet.gui.npcs.respawn.respawn=Respawn

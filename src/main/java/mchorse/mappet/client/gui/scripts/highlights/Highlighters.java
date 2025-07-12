@@ -67,12 +67,12 @@ public class Highlighters
                     "break", "continue", "switch", "case", "default", "try",
                     "catch", "delete", "do", "while", "finally", "if",
                     "else", "for", "each", "in", "instanceof",
-                    "new", "throw", "typeof", "with", "yield", "return"
+                    "new", "throw", "typeof", "with", "yield", "return", "import"
             );
             jsHighlighter.secondaryKeywords = ImmutableSet.of("const", "function", "var", "let", "prototype", "Math", "JSON", "mappet", "math");
             jsHighlighter.special = ImmutableSet.of("this", "arguments");
             jsHighlighter.typeKeywords = ImmutableSet.of("true", "false", "null", "undefined");
-            jsHighlighter.functionName = Pattern.compile("[\\w_]", Pattern.CASE_INSENSITIVE);
+            jsHighlighter.functionName =  Pattern.compile("\\b([a-zA-Z_]\\w*)\\s*\\(");
 
             writeHighlighter(js, jsHighlighter);
             Highlighters.defaultHighlighter = jsHighlighter;

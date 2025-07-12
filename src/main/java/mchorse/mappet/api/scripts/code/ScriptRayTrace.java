@@ -2,7 +2,7 @@ package mchorse.mappet.api.scripts.code;
 
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.user.IScriptRayTrace;
-import mchorse.mappet.api.scripts.user.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import net.minecraft.util.math.RayTraceResult;
 

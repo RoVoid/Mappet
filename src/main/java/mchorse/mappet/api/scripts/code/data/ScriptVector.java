@@ -1,4 +1,4 @@
-package mchorse.mappet.api.scripts.user.data;
+package mchorse.mappet.api.scripts.code.data;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -7,20 +7,8 @@ import net.minecraft.util.math.Vec3d;
  * Script vector (position) represents a position in the space
  */
 public class ScriptVector {
-    /**
-     * X coordinate
-     */
-    public double x;
 
-    /**
-     * Y coordinate
-     */
-    public double y;
-
-    /**
-     * Z coordinate
-     */
-    public double z;
+    public double x, y, z;
 
     public ScriptVector(double x, double y, double z) {
         this.x = x;
@@ -38,28 +26,6 @@ public class ScriptVector {
         this.x = pos.getX();
         this.y = pos.getY();
         this.z = pos.getZ();
-    }
-
-    @Override
-    public String toString() {
-        return "ScriptVector(" + this.x + ", " + this.y + ", " + this.z + ")";
-    }
-
-    /**
-     * Convert this vector to an array string
-     *
-     * <pre>{@code
-     * function main(c)
-     * {
-     *     var subject = c.getSubject();
-     *     var subjectPosition = subject.getPosition();
-     *     c.send("The player is at " + subjectPosition.toArrayString() + "!");
-     *     // The player is at [x, y, z]!
-     * }
-     * }</pre>
-     */
-    public String toArrayString() {
-        return "[" + this.x + ", " + this.y + ", " + this.z + "]";
     }
 
     public ScriptVector add(ScriptVector other) {
@@ -94,10 +60,12 @@ public class ScriptVector {
         return new ScriptVector(this.x / other.x, this.y / other.y, this.z / other.z);
     }
 
+    // Скалярная произведение
     public double dotProduct(ScriptVector other) {
         return x * other.x + y * other.y + z * other.z;
     }
 
+    // Векторное произведение
     public ScriptVector crossProduct(ScriptVector other) {
         return new ScriptVector(
                 this.y * other.z - this.z * other.y,
@@ -122,8 +90,7 @@ public class ScriptVector {
     }
 
     public ScriptVector normalize() {
-        double length = this.length();
-        return new ScriptVector(this.x / length, this.y / length, this.z / length);
+        return divide(length());
     }
 
     public boolean equals(ScriptVector other) {
@@ -134,11 +101,20 @@ public class ScriptVector {
         return (this.x == x) && (this.y == y) && (this.z == z);
     }
 
-    public double getAngle(ScriptVector other) {
-        return Math.acos(dotProduct(other));
+    public double angleBetween(ScriptVector other) {
+        return other == null || isZero() || other.isZero() ? -1 : Math.acos(Math.max(-1.0, Math.min(1.0, normalize().dotProduct(other.normalize()))));
     }
 
     public BlockPos toBlockPos() {
         return new BlockPos(x, y, z);
+    }
+
+    @Override
+    public String toString() {
+        return "ScriptVector(" + this.x + ", " + this.y + ", " + this.z + ")";
+    }
+
+    public boolean isZero() {
+        return x == 0 && y == 0 && z == 0;
     }
 }

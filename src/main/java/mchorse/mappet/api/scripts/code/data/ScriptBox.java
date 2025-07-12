@@ -1,7 +1,8 @@
-package mchorse.mappet.api.scripts.user.data;
+package mchorse.mappet.api.scripts.code.data;
 
-import mchorse.mappet.api.scripts.code.world.ScriptWorld;
 import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
+import mchorse.mappet.api.scripts.code.world.ScriptWorld;
+import mchorse.mappet.api.scripts.user.data.IScriptBox;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -10,23 +11,7 @@ import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Script box represents a box in the space
- *
- * <pre>{@code
- * function main(c)
- * {
- *     var subject = c.getSubject();
- *     var subjectPosition = subject.getPosition();
- *     var box = mappet.box(-10, 4, -10, 10, 6, 10);
- *     if (box.contains(subjectPosition)){
- *         c.send("the player in in the box")
- *     }
- * }
- * }</pre>
- */
-public class ScriptBox
-{
+public class ScriptBox implements IScriptBox {
     public double minX;
     public double minY;
     public double minZ;
@@ -34,8 +19,7 @@ public class ScriptBox
     public double maxY;
     public double maxZ;
 
-    public ScriptBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
-    {
+    public ScriptBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
         this.minX = Math.min(minX, maxX);
         this.minY = Math.min(minY, maxY);
         this.minZ = Math.min(minZ, maxZ);
@@ -45,13 +29,12 @@ public class ScriptBox
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "ScriptBox(" + this.minX + ", " + this.minY + ", " + this.minZ + ", " + this.maxX + ", " + this.maxY + ", " + this.maxZ + ")";
     }
 
-    public boolean isColliding(ScriptBox box)
-    {
+    @Override
+    public boolean isColliding(ScriptBox box) {
         return this.minX < box.maxX && this.maxX > box.minX && this.minY < box.maxY && this.maxY > box.minY && this.minZ < box.maxZ && this.maxZ > box.minZ;
     }
 
@@ -67,8 +50,8 @@ public class ScriptBox
      * }
      * }</pre>
      */
-    public void offset(double x, double y, double z)
-    {
+    @Override
+    public void offset(double x, double y, double z) {
         this.minX += x;
         this.minY += y;
         this.minZ += z;
@@ -94,8 +77,8 @@ public class ScriptBox
      * }
      * }</pre>
      */
-    public boolean contains(double x, double y, double z)
-    {
+    @Override
+    public boolean contains(double x, double y, double z) {
         return x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY && z >= this.minZ && z <= this.maxZ;
     }
 
@@ -114,13 +97,13 @@ public class ScriptBox
      * }
      * }</pre>
      */
-    public boolean contains(ScriptVector vector)
-    {
+    @Override
+    public boolean contains(ScriptVector vector) {
         return this.contains(vector.x, vector.y, vector.z);
     }
 
-    public boolean contains(Vector3d vector)
-    {
+    @Override
+    public boolean contains(Vector3d vector) {
         return this.contains(vector.x, vector.y, vector.z);
     }
 
@@ -146,13 +129,14 @@ public class ScriptBox
      * }</pre>
      *
      * @param scriptWorld The world in which to look for blocks.
-     * @param state The block state to match.
+     * @param state       The block state to match.
      * @return A list of positions for blocks that match the given block state.
      */
-    public List<ScriptVector> getBlocksPositions(ScriptWorld scriptWorld, ScriptBlockState state)
-    {
+    @Override
+    public List<ScriptVector> getBlocksPositions(ScriptWorld scriptWorld, ScriptBlockState state) {
         World world = scriptWorld.getMinecraftWorld();
-        IBlockState blockState = state.getMinecraftBlockState();
+        //IBlockState blockState = state.getMinecraftBlockState();
+        IBlockState blockState = state.asMinecraft();
 
         List<ScriptVector> blocks = new ArrayList<>();
 

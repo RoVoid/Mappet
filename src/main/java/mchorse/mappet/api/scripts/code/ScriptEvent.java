@@ -139,20 +139,16 @@ public class ScriptEvent implements IScriptEvent {
 
     @Override
     public void scheduleScript(int delay, ScriptObjectMirror function) {
-        if (function != null && function.isFunction()) {
-            CommonProxy.eventHandler.addExecutable(new ScriptExecutionFork(this.context.copy(), function, delay));
-        } else {
-            throw new IllegalStateException("Given object is null in script " + this.script + " (" + this.function + " function)!");
-        }
+        if (function == null || !function.isFunction())
+            throw new IllegalStateException("Given object is null in script " + script + " (" + function + " function)!");
+        CommonProxy.eventHandler.addExecutable(new ScriptExecutionFork(context.copy(), function, delay));
     }
 
     @Override
     public void scheduleScript(int delay, Consumer<IScriptEvent> consumer) {
-        if (consumer != null) {
-            CommonProxy.eventHandler.addExecutable(new ScriptExecutionFork(this.context.copy(), consumer, delay));
-        } else {
+        if (consumer == null)
             throw new IllegalStateException("Given object is null in script " + this.script + " (" + this.function + " function)!");
-        }
+        CommonProxy.eventHandler.addExecutable(new ScriptExecutionFork(this.context.copy(), consumer, delay));
     }
 
     @Override
@@ -161,32 +157,34 @@ public class ScriptEvent implements IScriptEvent {
     }
 
     @Override
-    public void executeScript(String scriptName) {
-        executeScript(scriptName, "main");
+    public Object executeScript(String scriptName) {
+        return executeScript(scriptName, "main");
     }
 
     @Override
-    public void executeScript(String scriptName, String function) {
+    public Object executeScript(String scriptName, String function) {
         try {
-            Mappet.scripts.execute(scriptName, function, context);
+            return Mappet.scripts.execute(scriptName, function, context);
         } catch (ScriptException e) {
             String fileName = e.getFileName() == null ? scriptName : e.getFileName();
             Mappet.logger.error("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
         }
+        return null;
     }
 
     @Override
-    public void executeScript(String scriptName, String function, Object... args) {
+    public Object executeScript(String scriptName, String function, Object... args) {
         try {
-            Mappet.scripts.execute(scriptName, function, context, args);
+            return Mappet.scripts.execute(scriptName, function, context, args);
         } catch (ScriptException e) {
             String fileName = e.getFileName() == null ? scriptName : e.getFileName();
             Mappet.logger.error("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
         }
+        return null;
     }
 
     @Override

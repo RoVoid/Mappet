@@ -4,120 +4,108 @@ import mchorse.mappet.api.scripts.user.nbt.INBTCompound;
 import net.minecraft.tileentity.TileEntity;
 
 /**
- * Tile entity interface.
+ * Tile Entity
  *
  * <p>This interface represents Minecraft tile entities, which are special
  * kind of entities that exist within blocks (like crafting tables, chests,
- * furnance, etc.).</p>
+ * furnace, etc.)</p>
  *
  * <pre>{@code
  *    function main(c)
  *    {
  *        var te = c.getWorld().getTileEntity(371, 4, -100);
- *
  *        if (te.getId() === "mappet:region")
  *        {
  *            var data = te.getData();
  *
- *            // Replace on enter trigger of the tile entity to /toggledownfall
- *            data.getCompound("Region").setNBT("OnEnter", '{Blocks:[{Command:"/toggledownfall",Type:"command"}]}');
+ *            // Replace on enter trigger of the tile entity to /kill @s
+ *            data.getCompound("Region").setNBT("OnEnter", '{Blocks:[{Command:"/kill @s",Type:"command"}]}');
  *            te.setData(data);
  *        }
  *    }
  * }</pre>
  */
-public interface IScriptTileEntity
-{
+public interface IScriptTileEntity {
     /**
-     * Get Minecraft tile entity instance. <b>BEWARE:</b> you need to know the MCP
-     * mappings in order to directly call methods on this instance!
-     *
-     * <pre>{@code
-     * function main(c)
-     * {
-     *     var itemInFirstSlot = c.getWorld().getTileEntity(-218, 101, 199).getMinecraftTileEntity().func_70301_a(0)
-     *
-     *     c.send(itemInFirstSlot)
-     * }
-     * }</pre>
+     * @deprecated Use {@link #asMinecraft()} instead
      */
-    public TileEntity getMinecraftTileEntity();
+    TileEntity getMinecraftTileEntity();
 
     /**
-     * Get tile entity's ID.
+     * Get Minecraft tile entity instance
      *
-     * <pre>{@code
-     * function main(c)
-     * {
-     *     var BlockTileEntity = c.getWorld().getTileEntity(-218, 101, 199)
-     *
-     *     c.send(BlockTileEntity.getId())
-     * }
-     * }</pre>
+     * <p style="color:yellow"><b>BEWARE:</b> You need to know the MCP mappings to directly call methods on this instance!</p>
      */
-    public String getId();
+    TileEntity asMinecraft();
 
     /**
-     * Check whether this tile entity is invalid (i.e. was removed from the world
-     * or unavailable for some reason).
+     * Get tile entity's ID
      *
      * <pre>{@code
      * function main(c)
      * {
-     *     var BlockTileEntity = c.getWorld().getTileEntity(-218, 101, 199)
-     *
-     *     c.send(BlockTileEntity.isInvalid())
+     *     var te = c.getWorld().getTileEntity(-218, 101, 199)
+     *     c.send(te.getId())
      * }
      * }</pre>
      */
-    public boolean isInvalid();
+    String getId();
+
 
     /**
-     * Get (a copy of) this tile entity's NBT data.
+     * Checks whether this tile entity is invalid (e.g., removed from the world or otherwise unavailable)
      *
      * <pre>{@code
      * function main(c)
      * {
-     *     var BlockTileEntity = c.getWorld().getTileEntity(-218, 101, 199)
-     *
-     *     c.send(BlockTileEntity.getData())
+     *     var te = c.getWorld().getTileEntity(-218, 101, 199)
+     *     c.send(te.isInvalid())
      * }
      * }</pre>
      */
-    public INBTCompound getData();
+    boolean isInvalid();
 
     /**
-     * Overwrite NBT data of this tile entity. <b>WARNING</b>: use it only if you
-     * know what are you doing as this method can corrupt tile entities.
+     * Returns a copy of this tile entity's NBT data
      *
      * <pre>{@code
      * function main(c)
      * {
-     *     var BlockTileEntity = c.getWorld().getTileEntity(-218, 101, 199)
-     *     var tag = mappet.createCompound('{CookTime:0,x:-218,BurnTime:0,y:101,z:199,Item:[],id:"minecraft:furnace",CookTimeTotal:0,Lock:""}')
-     *
-     *     BlockTileEntity.setData(tag)
+     *     var te = c.getWorld().getTileEntity(-218, 101, 199)
+     *     c.send(te.getData())
      * }
      * }</pre>
      */
-    public void setData(INBTCompound compound);
+    INBTCompound getData();
 
     /**
-     * Get Forge's custom tag compound in which you can story any
-     * data you want.
-     *
-     * <p>There is no setter method as you can directly work with returned
-     * NBT compound. Any changes to returned compound <b>will be reflected
-     * upon tile entity's data</b>.</p>
+     * Overwrites the NBT data of this tile entity
+     * <p style="color:yellow"><b>WARNING:</b> incorrect use may corrupt the tile entity</p>
      *
      * <pre>{@code
      * function main(c)
      * {
-     *     var BlockTileEntity = c.getWorld().getTileEntity(-218, 101, 199)
-     *
-     *     c.send(BlockTileEntity.getTileData())
+     *     var te = c.getWorld().getTileEntity(-218, 101, 199)
+     *     var newData = mappet.createCompound('{CookTime:0,x:-218,BurnTime:0,y:101,z:199,Item:[],id:"minecraft:furnace",CookTimeTotal:0,Lock:""}')
+     *     te.setData(newData)
      * }
      * }</pre>
      */
-    public INBTCompound getTileData();
+    void setData(INBTCompound compound);
+
+    /**
+     * Returns Forge's custom NBT compound where you can store arbitrary data
+     * <p>Changes to the returned compound <b>directly affect the tile entity's data</b></p>
+     *
+     * <pre>{@code
+     * function main(c)
+     * {
+     *     var te = c.getWorld().getTileEntity(-218, 101, 199)
+     *     var data = te.getTileData()
+     *     data.setInt("count", 1); // affected the block
+     *     c.send(te.getTileData())
+     * }
+     * }</pre>
+     */
+    INBTCompound getTileData();
 }

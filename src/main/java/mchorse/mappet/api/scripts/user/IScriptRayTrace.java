@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.user;
 
-import mchorse.mappet.api.scripts.user.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import net.minecraft.util.math.RayTraceResult;
 

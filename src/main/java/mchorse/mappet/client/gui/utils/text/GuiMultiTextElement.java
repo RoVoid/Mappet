@@ -289,15 +289,11 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
     }
 
     public int measureGroup(int direction, Cursor cursor) {
-        if (direction == 0) {
-            return 0;
-        }
+        if (direction == 0) return 0;
 
         List<Cursor> group = this.findGroup(direction, cursor);
 
-        if (group.isEmpty()) {
-            return 0;
-        }
+        if (group.isEmpty()) return 0;
 
         Cursor other = group.get(direction < 0 ? 0 : 1);
 
@@ -415,13 +411,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
         this.recalculateSizes();
     }
 
-    protected void changedLineAfter(int i) {
-        while (i < this.text.size()) {
-            this.calculateWrappedLine(this.text.get(i));
-
-            i += 1;
-        }
-
+    protected void changedLineAfter(int index) {
+        while (index < this.text.size()) this.calculateWrappedLine(this.text.get(index++));
         this.recalculateSizes();
     }
 
@@ -437,7 +428,7 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
         } else if (this.cursor.offset >= line.length()) {
             this.text.add(this.cursor.line + 1, this.createTextLine(""));
         } else {
-            this.text.get(this.cursor.line).set(this.cursor.start(line));
+            this.text.get(this.cursor.line).text = this.cursor.start(line);
             this.text.add(this.cursor.line + 1, this.createTextLine(this.cursor.end(line)));
             this.moveCursorToLineStart();
         }
@@ -461,7 +452,7 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
                 line = this.cursor.start(line) + character + this.cursor.end(line);
             }
 
-            this.text.get(this.cursor.line).set(line);
+            this.text.get(this.cursor.line).text = line;
             this.changedLine(this.cursor.line);
         }
     }
@@ -477,7 +468,7 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             int line = this.cursor.line;
             String remainder = this.cursor.end(this.text.get(line).text);
 
-            this.text.get(line).set(this.cursor.start(this.text.get(line).text));
+            this.text.get(line).text = this.cursor.start(this.text.get(line).text);
 
             for (int i = 0; i < size; i++) {
                 if (i != 0 && i <= size - 1) {
@@ -510,63 +501,35 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
         return undo;
     }
 
-    public String deleteCharacter() {
-        if (this.hasLine(this.cursor.line)) {
-            String line = this.text.get(this.cursor.line).text;
-            int index = Math.min(this.cursor.offset, line.length());
+    public char deleteCharacter() {
+        if (!hasLine(cursor.line)) return '\0';
 
-            if (line.isEmpty()) {
-                if (this.cursor.line > 0) {
-                    this.text.remove(this.cursor.line);
+        String line = text.get(cursor.line).text;
+        int index = Math.min(cursor.offset, line.length());
 
-                    this.cursor.line -= 1;
+        if (index == 0) {
+            if (cursor.line == 0) return '\0';
 
-                    this.moveCursorToLineEnd();
-                    this.changedLineAfter(this.cursor.line);
+            cursor.line--;
+            moveCursorToLineEnd();
+            text.get(cursor.line).text += text.remove(cursor.line + 1).text;
 
-                    return "\n";
-                }
-            } else if (index >= line.length()) {
-                String deleted = line.substring(line.length() - 1);
-
-                line = line.substring(0, line.length() - 1);
-                this.text.get(this.cursor.line).set(line);
-                this.moveCursorToLineEnd();
-
-                this.changedLine(this.cursor.line);
-
-                return deleted;
-            } else if (index == 0) {
-                if (this.cursor.line > 0) {
-                    String text = this.text.remove(this.cursor.line).text;
-
-                    this.cursor.line -= 1;
-
-                    this.moveCursorToLineEnd();
-                    this.text.get(this.cursor.line).text = this.text.get(this.cursor.line).text + text;
-                    this.changedLineAfter(this.cursor.line);
-
-                    return "\n";
-                }
-            } else {
-                String deleted = line.substring(this.cursor.getOffset(line, -1), this.cursor.getOffset(line));
-
-                line = this.cursor.start(line, -1) + this.cursor.end(line);
-                this.text.get(this.cursor.line).text = line;
-                this.moveCursor(-1, 0);
-                this.changedLine(this.cursor.line);
-
-                return deleted;
-            }
+            changedLineAfter(cursor.line);
+            return '\n';
+        } else if (index == line.length()) {
+            text.get(cursor.line).text = line.substring(0, line.length() - 1);
+            moveCursorToLineEnd();
+            changedLine(cursor.line);
+            return line.charAt(line.length() - 1);
         }
-
-        return "";
+        text.get(cursor.line).text = cursor.start(line, -1) + cursor.end(line);
+        moveCursor(-1, 0);
+        changedLine(cursor.line);
+        return line.charAt(index);
     }
 
     public void deleteSelection() {
-        if (!this.isSelected()) {
-            return;
-        }
+        if (!this.isSelected()) return;
 
         Cursor min = this.getMin();
         Cursor max = this.getMax();
@@ -575,9 +538,9 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             String line = this.text.get(min.line).text;
 
             if (min.offset <= 0 && max.offset >= line.length()) {
-                this.text.get(min.line).set("");
+                this.text.get(min.line).text = "";
             } else {
-                this.text.get(min.line).set(min.start(line) + max.end(line));
+                this.text.get(min.line).text = min.start(line) + max.end(line);
             }
         } else {
             String end = "";
@@ -589,7 +552,7 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
                     end = max.end(line);
                     this.text.remove(i);
                 } else if (i == min.line) {
-                    this.text.get(i).set(min.start(line) + end);
+                    this.text.get(i).text = min.start(line) + end;
                 } else {
                     this.text.remove(i);
                 }
@@ -1139,12 +1102,12 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
                 if (numUncommentedLines == 0 && numCommentedLines > 0) {
                     // Uncomment the line, removing the leading "//"
                     if (line.startsWith("//")) {
-                        this.text.get(i).set(line.substring(2));
+                        this.text.get(i).text = line.substring(2);
                     }
                 } else if (numUncommentedLines > 0) {
                     // Comment the line, adding leading "//"
                     if (!line.startsWith("//")) {
-                        this.text.get(i).set("//" + line);
+                        this.text.get(i).text = "//" + line;
                     }
                 }
             }
@@ -1156,7 +1119,7 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
                 this.writeString(selected);
             } else {
                 String currentLine = this.text.get(this.cursor.line).text;
-                this.text.get(this.cursor.line).set("");
+                this.text.get(this.cursor.line).text = "";
                 this.writeString(currentLine);
             }
 
@@ -1237,9 +1200,7 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
     protected void keyBackspace(TextEditUndo undo, boolean ctrl) {
         int measure = ctrl ? Math.max(Math.abs(this.measureGroup(-1, this.cursor)), 1) : 1;
 
-        for (int i = 0; i < measure; i++) {
-            undo.text = this.deleteCharacter() + undo.text;
-        }
+        for (int i = 0; i < measure; i++) undo.text = this.deleteCharacter() + undo.text;
     }
 
     protected void keyTab(TextEditUndo undo) {
@@ -1268,21 +1229,19 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
     }
 
     private void drawMatchingMethodsOverlay(List<String> matchingMethods, int x, int y, int cursorW, int i) {
-        int[] maxWidth = {0};
-        matchingMethods.forEach((text) -> {
-            if (maxWidth[0] < font.getStringWidth(text + "()")) {
-                maxWidth[0] = font.getStringWidth(text + "()");
-            }
-        });
+        int maxWidth = 0;
+        for (String method : matchingMethods) {
+            if (maxWidth < font.getStringWidth(method + "()")) maxWidth = font.getStringWidth(method + "()");
+        }
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, 0, 1);
 
         int rectOffset = (this.font.FONT_HEIGHT + 4) * matchingMethods.size();
         if (i < 15)
-            Gui.drawRect(x + cursorW + 5, y + this.font.FONT_HEIGHT + 5 + rectOffset, y + cursorW + 10 + maxWidth[0], y + this.font.FONT_HEIGHT + 5, 0xbb000000);
+            Gui.drawRect(x + cursorW + 5, y + this.font.FONT_HEIGHT + 5 + rectOffset, x + cursorW + 10 + maxWidth, y + this.font.FONT_HEIGHT + 5, 0xee000000);
         else
-            Gui.drawRect(x + cursorW + 5, y - 5 - rectOffset, y + cursorW + 10 + maxWidth[0], y - 5, 0xbb000000);
+            Gui.drawRect(x + cursorW + 5, y - 5 - rectOffset, x + cursorW + 10 + maxWidth, y - 5, 0xee000000);
 
         for (int ii = 1; ii <= matchingMethods.size(); ii++) {
             int textOffset = (this.font.FONT_HEIGHT + 4) * ii + 3;
@@ -1298,59 +1257,25 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
         return (!matchingMethods.isEmpty() && !matchingMethods.get(0).equalsIgnoreCase(methodName));
     }
 
-//    private String completeLine1(String line, List<String> matchingMethods) {
-//        int cursorPosition = cursor.getOffset(line);
-//
-//        String preline = line.substring(0, line.lastIndexOf('.', cursorPosition) + 1);
-//        String selectedMethod = matchingMethods.get(0);
-//
-//        int openParenIndex = line.indexOf('(', cursorPosition);
-//
-//        if (openParenIndex == -1) {
-//            line = preline + selectedMethod + "()";
-//            cursor.offset = preline.length() + selectedMethod.length() + 1;
-//        } else {
-//            String postline = line.substring(openParenIndex);
-//            line = preline + selectedMethod + postline;
-//            cursor.offset = preline.length() + selectedMethod.length();
-//        }
-//
-//        this.changedLine(cursor.line);
-//        return line;
-//    }
-
     private String completeLine(String line, List<String> matchingMethods) {
-        int cursorPosition = cursor.getOffset(line);
+        int index = line.lastIndexOf('.', cursor.offset) + 1;
 
-        int lastDotIndex = line.lastIndexOf('.', cursorPosition);
-
-        // Предположим, что matchingMethods содержит подходящее имя метода
         String selectedMethod = matchingMethods.get(0);
+        if (selectedMethod == null) return line;
 
-        // Разделяем строку на префикс, заменяемую часть и постфикс
-        String prefix = line.substring(0, lastDotIndex + 1);
-        String postfix = "";
-        int openParenIndex = line.indexOf('(', lastDotIndex + 1);
-        if (openParenIndex != -1) {
-            postfix = line.substring(openParenIndex);
-        }
+        String left = line.substring(0, index);
+        String right = "";
 
-        // Формируем строку с методом
-        String completedMethod = selectedMethod + "()";
+        int index1 = line.indexOf('.', cursor.offset);
+        int index2 = line.indexOf('(', cursor.offset);
+        if (index1 != -1 && index2 != -1) right = line.substring(Math.min(index1, index2));
+        else if (index1 != -1 || index2 != -1) right = line.substring(Math.max(index1, index2));
 
-        // Если в постфиксе уже есть скобки, удаляем лишние
-        if (postfix.startsWith("(")) {
-            completedMethod = completedMethod.substring(2);
-        }
+        if (!right.startsWith("(")) selectedMethod += "()";
 
-        // Собираем строку
-        line = prefix + completedMethod + postfix;
+        cursor.offset = left.length() + selectedMethod.length();
 
-        // Перемещаем курсор внутрь скобок
-        cursor.offset = prefix.length() + selectedMethod.length() + 1;
-
-        this.changedLine(cursor.line);
-        return line;
+        return left + selectedMethod + right;
     }
 
 
@@ -1411,6 +1336,7 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
                                     drawMatchingMethodsOverlay(matchingMethods, newX, newY, cursorW, i);
                                     if (shouldComplete(matchingMethods, methodName)) {
                                         textLine.text = completeLine(line, matchingMethods);
+                                        changedLine(cursor.line);
                                         ignoreTab = true;
                                     }
                                 }
