@@ -219,11 +219,11 @@ public interface IScriptEvent {
      */
     int executeCommand(String command);
 
-    Object executeScript(String scriptName);
+    void executeScript(String scriptName);
 
-    Object executeScript(String scriptName, String function);
+    void executeScript(String scriptName, String function);
 
-    Object executeScript(String scriptName, String function, Object... args);
+    void executeScript(String scriptName, String function, Object... args);
 
     /**
      * Send a message to all players in the chat.

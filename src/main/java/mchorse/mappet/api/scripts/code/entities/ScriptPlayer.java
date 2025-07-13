@@ -3,6 +3,7 @@ package mchorse.mappet.api.scripts.code.entities;
 import io.netty.buffer.Unpooled;
 import mchorse.aperture.network.common.PacketCameraState;
 import mchorse.mappet.api.scripts.code.ScriptResourcePack;
+import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import mchorse.mappet.api.scripts.code.items.ScriptInventory;
 import mchorse.mappet.api.scripts.code.mappet.MappetQuests;
 import mchorse.mappet.api.scripts.code.mappet.MappetUIBuilder;
@@ -11,7 +12,6 @@ import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
 import mchorse.mappet.api.scripts.code.score.ScriptScoreObjective;
 import mchorse.mappet.api.scripts.code.score.ScriptScoreboard;
 import mchorse.mappet.api.scripts.code.score.ScriptTeam;
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.items.IScriptInventory;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
@@ -55,7 +55,10 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScriptPlayer {
     private IMappetQuests quests;
@@ -69,8 +72,14 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     }
 
     @Override
+    @Deprecated
     public EntityPlayerMP getMinecraftPlayer() {
-        return this.entity;
+        return entity;
+    }
+
+    @Override
+    public EntityPlayerMP asMinecraft() {
+        return entity;
     }
 
     @Override
@@ -90,38 +99,31 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     @Override
     public void swingArm(int arm) {
         super.swingArm(arm);
-
         this.entity.connection.sendPacket(new SPacketAnimation(this.entity, arm == 1 ? 3 : 0));
     }
 
     /* Player's methods */
     @Override
     public boolean isOperator() {
-        MinecraftServer server = this.entity.getServer();
-        return server != null && server.getPlayerList().canSendCommands(this.entity.getGameProfile());
+        MinecraftServer server = entity.getServer();
+        return server != null && server.getPlayerList().canSendCommands(entity.getGameProfile());
     }
 
     @Override
     public int getGameMode() {
-        return this.entity.interactionManager.getGameType().getID();
+        return entity.interactionManager.getGameType().getID();
     }
 
     @Override
     public void setGameMode(int gameMode) {
         GameType type = GameType.getByID(gameMode);
-
-        if (type.getID() >= 0) {
-            this.entity.setGameType(type);
-        }
+        if (type.getID() >= 0) entity.setGameType(type);
     }
 
     @Override
     public IScriptInventory getInventory() {
-        if (this.inventory == null) {
-            this.inventory = new ScriptInventory(this.entity.inventory);
-        }
-
-        return this.inventory;
+        if (inventory == null) inventory = new ScriptInventory(this.entity.inventory);
+        return inventory;
     }
 
     @Override
@@ -417,19 +419,19 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     }
 
     @Override
-    public void lockPerspective(int perspective){
+    public void lockPerspective(int perspective) {
         Dispatcher.sendTo(new PacketLockPerspective(perspective), entity);
     }
 
     @Override
-    public void unlockPerspective(){
+    public void unlockPerspective() {
         lockPerspective(-1);
     }
 
     @Override
-    public ArrayList<String> getModsList(){
+    public ArrayList<String> getModsList() {
         NetworkDispatcher dispatcher = NetworkDispatcher.get(getMinecraftPlayer().connection.netManager);
-        ArrayList<String> list= new ArrayList<>();
+        ArrayList<String> list = new ArrayList<>();
         if (dispatcher != null) {
             dispatcher.getModList().forEach((modId, version) -> list.add(modId + ":" + version));
         }

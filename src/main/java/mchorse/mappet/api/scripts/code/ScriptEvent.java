@@ -38,103 +38,87 @@ public class ScriptEvent implements IScriptEvent {
 
     @Override
     public String getScript() {
-        return this.script == null ? "" : this.script;
+        return script == null ? "" : script;
     }
 
     @Override
     public String getFunction() {
-        return this.function == null ? "" : this.function;
+        return function == null ? "" : function;
     }
 
     @Override
     public IScriptEntity getSubject() {
-        if (this.subject == null && this.context.subject != null) {
-            this.subject = ScriptEntity.create(this.context.subject);
-        }
-
-        return this.subject;
+        if (subject == null && context.subject != null) subject = ScriptEntity.create(context.subject);
+        return subject;
     }
 
     @Override
     public IScriptEntity getObject() {
-        if (this.object == null && this.context.object != null) {
-            this.object = ScriptEntity.create(this.context.object);
-        }
+        if (object == null && context.object != null) object = ScriptEntity.create(context.object);
 
-        return this.object;
+        return object;
     }
 
     @Override
     public IScriptPlayer getPlayer() {
-        IScriptEntity subject = this.getSubject();
-        IScriptEntity object = this.getObject();
+        IScriptEntity subject = getSubject();
+        if (subject instanceof IScriptPlayer) return (IScriptPlayer) subject;
 
-        if (subject instanceof IScriptPlayer) {
-            return (IScriptPlayer) subject;
-        } else if (object instanceof IScriptPlayer) {
-            return (IScriptPlayer) object;
-        }
+        IScriptEntity object = getObject();
+        if (object instanceof IScriptPlayer) return (IScriptPlayer) object;
 
         return null;
     }
 
-    @Override
     public IScriptNpc getNPC() {
-        IScriptEntity subject = this.getSubject();
-        IScriptEntity object = this.getObject();
+        IScriptEntity subject = getSubject();
+        if (subject instanceof IScriptNpc) return (IScriptNpc) subject;
 
-        if (subject instanceof IScriptNpc) {
-            return (IScriptNpc) subject;
-        } else if (object instanceof IScriptPlayer) {
-            return (IScriptNpc) object;
-        }
+        IScriptEntity object = getObject();
+        if (object instanceof IScriptNpc) return (IScriptNpc) object;
 
         return null;
     }
 
     @Override
     public IScriptWorld getWorld() {
-        if (this.world == null && this.context.world != null) {
-            this.world = new ScriptWorld(this.context.world);
-        }
+        if (world == null && context.world != null) world = new ScriptWorld(context.world);
 
-        return this.world;
+        return world;
     }
 
     @Override
     public IScriptServer getServer() {
-        if (this.server == null && this.context.server != null) {
-            this.server = new ScriptServer(this.context.server);
-        }
+        if (server == null && context.server != null) server = new ScriptServer(context.server);
 
-        return this.server;
+        return server;
     }
 
     @Override
     public Map<String, Object> getValues() {
-        return this.context.getValues();
+        return context.getValues();
     }
 
     @Override
     public Object getValue(String key) {
-        return this.context.getValue(key);
+        return context.getValue(key);
     }
 
     @Override
     public void setValue(String key, Object value) {
-        this.context.getValues().put(key, value);
+        context.getValues().put(key, value);
     }
 
     /* Useful methods */
 
     @Override
     public void cancel() {
-        this.context.cancel();
+        context.cancel();
     }
 
     @Override
     public void scheduleScript(String script, String function, int delay) {
-        CommonProxy.eventHandler.addExecutable(new ScriptExecutionFork(this.context.copy(), script, function, delay));
+        CommonProxy.eventHandler.addExecutable(new ScriptExecutionFork(context.copy(), script, function, delay));
     }
 
     @Override
@@ -147,51 +131,45 @@ public class ScriptEvent implements IScriptEvent {
     @Override
     public void scheduleScript(int delay, Consumer<IScriptEvent> consumer) {
         if (consumer == null)
-            throw new IllegalStateException("Given object is null in script " + this.script + " (" + this.function + " function)!");
-        CommonProxy.eventHandler.addExecutable(new ScriptExecutionFork(this.context.copy(), consumer, delay));
+            throw new IllegalStateException("Given object is null in script " + script + " (" + function + " function)!");
+        CommonProxy.eventHandler.addExecutable(new ScriptExecutionFork(context.copy(), consumer, delay));
     }
 
     @Override
     public int executeCommand(String command) {
-        return this.context.execute(command);
+        return context.execute(command);
     }
 
     @Override
-    public Object executeScript(String scriptName) {
-        return executeScript(scriptName, "main");
+    public void executeScript(String scriptName) {
+        executeScript(scriptName, "main");
     }
 
     @Override
-    public Object executeScript(String scriptName, String function) {
+    public void executeScript(String scriptName, String function) {
         try {
-            return Mappet.scripts.execute(scriptName, function, context);
+            Mappet.scripts.execute(scriptName, function, context);
         } catch (ScriptException e) {
-            String fileName = e.getFileName() == null ? scriptName : e.getFileName();
-            Mappet.logger.error("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
+            Mappet.logger.error("Script Error: " + scriptName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
         }
-        return null;
     }
 
     @Override
-    public Object executeScript(String scriptName, String function, Object... args) {
+    public void executeScript(String scriptName, String function, Object... args) {
         try {
-            return Mappet.scripts.execute(scriptName, function, context, args);
+            Mappet.scripts.execute(scriptName, function, context, args);
         } catch (ScriptException e) {
-            String fileName = e.getFileName() == null ? scriptName : e.getFileName();
-            Mappet.logger.error("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
+            Mappet.logger.error("Script Error: " + scriptName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
         }
-        return null;
     }
 
     @Override
     public void send(String... message) {
         TextComponentString text = new TextComponentString(message == null ? "null" : String.join(" ", message));
-        for (EntityPlayer player : this.context.server.getPlayerList().getPlayers()) {
-            player.sendMessage(text);
-        }
+        for (EntityPlayer player : context.server.getPlayerList().getPlayers()) player.sendMessage(text);
     }
 }

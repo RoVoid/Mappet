@@ -45,8 +45,15 @@ import java.util.List;
 public interface IScriptEntity
 {
     /**
-     * Get Minecraft entity instance. <b>BEWARE:</b> you need to know the MCP
-     * mappings in order to directly call methods on this instance!
+     * Use {@link #asMinecraft()} instead
+     * @deprecated
+     */
+    @Deprecated
+    Entity getMinecraftEntity();
+
+    /**
+     * Get Minecraft entity instance
+     * <b>BEWARE:</b> you need to know the MCP mappings to directly call methods on this instance!
      *
      * <pre>{@code
      * function main(c)
@@ -56,7 +63,7 @@ public interface IScriptEntity
      * }
      * }</pre>
      */
-    Entity getMinecraftEntity();
+    Entity asMinecraft();
 
     /**
      * Get entity's world.
@@ -684,10 +691,17 @@ public interface IScriptEntity
     String getUniqueId();
 
     /**
+     * Use {@link #getId()} instead
+     * @deprecated
+     */
+    @Deprecated
+    String getEntityId();
+
+    /**
      * Get entity's resource location ID, like <code>minecraft:pig</code> or
      * <code>minecraft:zombie</code>.
      */
-    String getEntityId();
+    String getId();
 
     /**
      * Get how many ticks did this entity existed.

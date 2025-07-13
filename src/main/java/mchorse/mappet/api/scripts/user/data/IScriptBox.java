@@ -5,84 +5,87 @@ import mchorse.mappet.api.scripts.code.data.ScriptBox;
 import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import mchorse.mappet.api.scripts.code.world.ScriptWorld;
 
-import javax.vecmath.Vector3d;
 import java.util.List;
 
 /**
- * Script box represents a box in the space
+ * Script Box
+ * <p> CREATE: {@link mchorse.mappet.api.scripts.user.IScriptMath#box(double, double, double, double, double, double)} </p>
  *
  * <pre>{@code
  * function main(c)
  * {
- *     var subject = c.getSubject();
- *     var subjectPosition = subject.getPosition();
+ *     var pos = c.getSubject().getPosition();
  *     var box = mappet.box(-10, 4, -10, 10, 6, 10);
- *     if (box.contains(subjectPosition)){
- *         c.send("the player in in the box")
+ *     if (box.contains(pos)){
+ *         c.send("Player in the box")
  *     }
  * }
  * }</pre>
  */
 
-public interface IScriptBox
-{
+public interface IScriptBox {
     /**
-     * Returns a string representation of this box.
-     *
-     * @return String in the format ScriptBox(minX, minY, minZ, maxX, maxY, maxZ)
-     */
-    String toString();
-
-    /**
-     * Checks whether this box collides (intersects) with another box.
-     *
-     * @param box Another box to check collision with
-     * @return True if the boxes intersect
+     * Checks if this box collides with another.
      */
     boolean isColliding(ScriptBox box);
 
     /**
-     * Offsets (moves) this box by the given amounts.
+     * Offsets the box by given coordinates
      *
-     * @param x X-axis offset
-     * @param y Y-axis offset
-     * @param z Z-axis offset
+     * <pre>{@code
+     * function main(c)
+     * {
+     *     var box = mappet.box(-10, 4, -10, 10, 6, 10);
+     *     box.offset(10, 0, 10);
+     *     c.send(box.toString()); // ScriptBox(0.0, 4.0, 0.0, 20.0, 6.0, 20.0)
+     * }
+     * }</pre>
      */
     void offset(double x, double y, double z);
 
     /**
-     * Checks whether the specified coordinates are inside this box.
+     * <p id="title"> Checks if given coordinates are inside of this box </p>
      *
-     * @param x X coordinate
-     * @param y Y coordinate
-     * @param z Z coordinate
-     * @return True if the point is inside the box
+     * <pre>{@code
+     * function main(c)
+     * {
+     *     var box = mappet.box(-10, 4, -10, 10, 6, 10);
+     *     c.send(box.contains(0, 4, 0)) // true
+     *     c.send(box.contains(0, 7, 0)) // false
+     * }
+     * }</pre>
      */
     boolean contains(double x, double y, double z);
 
     /**
-     * Checks whether the specified vector is inside this box.
-     *
-     * @param vector A ScriptVector to check
-     * @return True if the vector is inside the box
+     * <pre>{@code
+     * function main(c)
+     * {
+     *     var box = mappet.box(-10, 4, -10, 10, 6, 10);
+     *     var pos = c.getSubject().getPosition()
+     *     if (box.contains(pos)){
+     *         c.send("Subject is inside the box")
+     *     }
+     * }
+     * }</pre>
      */
     boolean contains(ScriptVector vector);
 
     /**
-     * Checks whether the specified vector is inside this box.
+     * Returns a list of positions for blocks in the box that match a given block state in a given world.
      *
-     * @param vector A Vector3d to check
-     * @return True if the vector is inside the box
-     */
-    boolean contains(Vector3d vector);
-
-    /**
-     * Returns positions of blocks that match a given block state within this box.
+     * <pre>{@code
+     * function main(c)
+     * {
+     *     var state = mappet.createBlockState("minecraft:stone");
+     *     var box = mappet.box(-10, 4, -10, 10, 6, 10);
      *
-     * @param world The script world to scan
-     * @param state The block state to match
-     * @return List of positions of matching blocks
+     *     c.send(box.getBlocksPositions(c.getWorld(), state));
+     * }
+     * }</pre>
      */
     List<ScriptVector> getBlocksPositions(ScriptWorld world, ScriptBlockState state);
+
+    String toString();
 }
 

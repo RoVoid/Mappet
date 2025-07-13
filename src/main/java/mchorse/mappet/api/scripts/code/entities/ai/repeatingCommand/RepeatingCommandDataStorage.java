@@ -17,7 +17,7 @@ public class RepeatingCommandDataStorage extends WorldSavedData
 {
     public static final String REPEATING_COMMAND_DATA_KEY = "mappet_repeating_command_data";
 
-    private Map<UUID, List<RepeatingCommandData>> repeatingCommandDataMap = new HashMap<>();
+    private final Map<UUID, List<RepeatingCommandData>> repeatingCommandDataMap = new HashMap<>();
 
     public RepeatingCommandDataStorage()
     {
@@ -37,7 +37,6 @@ public class RepeatingCommandDataStorage extends WorldSavedData
         if (repeatingCommandDataStorage == null)
         {
             repeatingCommandDataStorage = new RepeatingCommandDataStorage();
-
             storage.setData(REPEATING_COMMAND_DATA_KEY, repeatingCommandDataStorage);
         }
         return repeatingCommandDataStorage;

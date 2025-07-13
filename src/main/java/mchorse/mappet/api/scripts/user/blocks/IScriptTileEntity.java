@@ -34,7 +34,7 @@ public interface IScriptTileEntity {
     /**
      * Get Minecraft tile entity instance
      *
-     * <p style="color:yellow"><b>BEWARE:</b> You need to know the MCP mappings to directly call methods on this instance!</p>
+     * <p><b>BEWARE:</b> You need to know the MCP mappings to directly call methods on this instance!</p>
      */
     TileEntity asMinecraft();
 
@@ -80,7 +80,7 @@ public interface IScriptTileEntity {
 
     /**
      * Overwrites the NBT data of this tile entity
-     * <p style="color:yellow"><b>WARNING:</b> incorrect use may corrupt the tile entity</p>
+     * <p><b>WARNING:</b> incorrect use may corrupt the tile entity</p>
      *
      * <pre>{@code
      * function main(c)

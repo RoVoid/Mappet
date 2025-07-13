@@ -36,10 +36,17 @@ import java.util.Set;
  */
 public interface IScriptPlayer extends IScriptEntity {
     /**
-     * Get Minecraft player entity instance. <b>BEWARE:</b> you need to know the
-     * MCP mappings in order to directly call methods on this instance!
+     * Use {@link #asMinecraft()}
+     * @deprecated
      */
+    @Deprecated
     EntityPlayerMP getMinecraftPlayer();
+
+    /**
+     * Get Minecraft player entity instance.
+     * <b>BEWARE:</b> you need to know the MCP mappings to directly call methods on this instance!
+     */
+    EntityPlayerMP asMinecraft();
 
     /**
      * @return Whether player is an operator
@@ -61,7 +68,7 @@ public interface IScriptPlayer extends IScriptEntity {
      * }</pre>
      *
      * @return Player's game mode as an integer, <code>0</code> is survival, <code>1</code>
-     * is creative, <code>2</code> is adventure , and <code>3</code> is spectator.
+     * is creative, <code>2</code> is adventure, and <code>3</code> is spectator.
      */
     int getGameMode();
 
@@ -81,7 +88,7 @@ public interface IScriptPlayer extends IScriptEntity {
      * }</pre>
      *
      * @param gameMode Player's game mode <code>0</code> is survival, <code>1</code>
-     *                 is creative, <code>2</code> is adventure , and <code>3</code> is spectator.
+     *                 is creative, <code>2</code> is adventure, and <code>3</code> is spectator.
      */
     void setGameMode(int gameMode);
 
@@ -327,7 +334,7 @@ public interface IScriptPlayer extends IScriptEntity {
     void resetCooldown(IScriptItemStack item);
 
     /**
-     * Get the inventory index of main item. Useful for e.g. main hand's cooldown methods.
+     * Get the inventory index of the main item. Useful for e.g., main hand's cooldown methods.
      *
      * <pre>{@code
      *    function main(c)
@@ -357,7 +364,7 @@ public interface IScriptPlayer extends IScriptEntity {
     void send(String message);
 
     /**
-     * Send a message to this player using text component (like <code>/tellraw</code> command).
+     * Send a message to this player using a text component (like <code>/tellraw</code> command).
      *
      * <pre>{@code
      *    var message = mappet.createCompound();
@@ -382,7 +389,7 @@ public interface IScriptPlayer extends IScriptEntity {
      *    player.setMorph(morph);
      * }</pre>
      *
-     * @return Resource location in format of "minecraft:skins/..." (which can be used in morphs)
+     * @return Resource location in the format of "minecraft:skins/..." (which can be used in morphs)
      */
     String getSkin();
 
@@ -390,7 +397,7 @@ public interface IScriptPlayer extends IScriptEntity {
      * Send title and subtitle durations (in ticks, <code>20</code> ticks = <code>1</code> second).
      * These must be sent before sending title or subtitle.
      *
-     * <p><b>BEWARE</b>: these durations will stay the same until player logs out, so you may want
+     * <p><b>BEWARE</b>: these durations will stay the same until the player logs out, so you may want
      * to change them before every time you send title and subtitle.</p>
      *
      * <p>Default values are: fadeIn = <code>10</code> ticks, idle = <code>70</code> ticks,
@@ -432,7 +439,7 @@ public interface IScriptPlayer extends IScriptEntity {
     void sendSubtitle(String title);
 
     /**
-     * Send a message to this player that will be displayed in action bar. The duration
+     * Send a message to this player that will be displayed in the action bar. The duration
      * of action bar line is <code>60</code> ticks (<code>3</code> seconds).
      */
     void sendActionBar(String title);
@@ -442,7 +449,7 @@ public interface IScriptPlayer extends IScriptEntity {
     void setClipboard(String text);
 
     /**
-     * Set experience level and amount of points for that level.
+     * Set experience level and number of points for that level.
      *
      * <pre>{@code
      *    // For more information of how levels work (i.e. how many points per
@@ -455,7 +462,7 @@ public interface IScriptPlayer extends IScriptEntity {
      * }</pre>
      *
      * @param level  Experience level.
-     * @param points Amount of experience points in that particular level.
+     * @param points Number of experience points in that particular level.
      */
     void setXp(int level, int points);
 
@@ -472,7 +479,7 @@ public interface IScriptPlayer extends IScriptEntity {
      *    c.getSubject().addXp(1000);
      * }</pre>
      *
-     * @param points Amount of experience points to add to player.
+     * @param points Number of experience points to add to player.
      */
     void addXp(int points);
 
@@ -533,7 +540,7 @@ public interface IScriptPlayer extends IScriptEntity {
     }
 
     /**
-     * Play a sound event only to this player at specific sound channel.
+     * Play a sound event only to this player at the specific sound channel.
      *
      * <pre>{@code
      *    var player = c.getSubject();
@@ -545,7 +552,7 @@ public interface IScriptPlayer extends IScriptEntity {
     void playSound(String event, String soundCategory, double x, double y, double z);
 
     /**
-     * Play a sound event only to this player with volume and pitch at specific channel.
+     * Play a sound event only to this player with volume and pitch at the specific channel.
      *
      * <pre>{@code
      *    var player = c.getSubject();
@@ -591,7 +598,7 @@ public interface IScriptPlayer extends IScriptEntity {
     void unlockPerspective();
 
     /**
-     * Returns array of mods on client [id:version]
+     * Returns array of mods on the client [id:version]
      */
     ArrayList<String> getModsList();
 
@@ -646,7 +653,7 @@ public interface IScriptPlayer extends IScriptEntity {
      * Play a sound event to this player stationary.
      *
      * <p>The difference between this method and {@link #playSound(String, double, double, double, float, float)}
-     * is that if player will get teleported, the sound will continue playing.</p>
+     * is that if player gets teleported, the sound will continue playing.</p>
      *
      * <pre>{@code
      *    var player = c.getSubject();
@@ -662,10 +669,10 @@ public interface IScriptPlayer extends IScriptEntity {
     void playStaticSound(String event, float volume, float pitch);
 
     /**
-     * Play a sound event to this player stationary at specific channel.
+     * Play a sound event to this player stationary at the specific channel.
      *
      * <p>The difference between this method and {@link #playSound(String, double, double, double, float, float)}
-     * is that if player will get teleported, the sound will continue playing.</p>
+     * is that if player gets teleported, the sound will continue playing.</p>
      *
      * <pre>{@code
      *    var player = c.getSubject();
@@ -725,7 +732,7 @@ public interface IScriptPlayer extends IScriptEntity {
      * component's default data.</p>
      *
      * <p>This is useful when you need to data to be present in the handler
-     * at start, so you wouldn't need to do extra checks.</p>
+     *  at the start, so you wouldn't need to do extra checks.</p>
      *
      * <pre>{@code
      *    function main(c)
@@ -797,7 +804,7 @@ public interface IScriptPlayer extends IScriptEntity {
      * Change a morph in a HUD scene at given index with given morph.
      *
      * @param id    HUD scene's ID/filename.
-     * @param index Index of the morph in the scene that should be changed (0 is the first, and so on).
+     * @param index Index of the morph in the scene that should be changed (0 is the first and so on).
      */
     void changeHUDMorph(String id, int index, AbstractMorph morph);
 
@@ -805,7 +812,7 @@ public interface IScriptPlayer extends IScriptEntity {
      * Change a morph in a HUD scene at given index with a morph described by given NBT data.
      *
      * @param id    HUD scene's ID/filename.
-     * @param index Index of the morph in the scene that should be changed (0 is the first, and so on).
+     * @param index Index of the morph in the scene that should be changed (0 is the first and so on).
      * @param morph NBT data of the morph.
      */
     void changeHUDMorph(String id, int index, INBTCompound morph);

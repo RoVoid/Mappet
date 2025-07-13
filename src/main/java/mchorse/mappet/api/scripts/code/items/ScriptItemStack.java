@@ -21,7 +21,7 @@ public class ScriptItemStack implements IScriptItemStack
     private static final String CAN_DESTROY = "CanDestroy";
     private static final String CAN_PLACE_ON = "CanPlaceOn";
 
-    private ItemStack stack;
+    private final ItemStack stack;
     private IScriptItem item;
 
     public static IScriptItemStack create(ItemStack stack)
@@ -40,9 +40,16 @@ public class ScriptItemStack implements IScriptItemStack
     }
 
     @Override
+    @Deprecated
     public ItemStack getMinecraftItemStack()
     {
-        return this.stack;
+        return stack;
+    }
+
+    @Override
+    public ItemStack asMinecraft()
+    {
+        return stack;
     }
 
     @Override

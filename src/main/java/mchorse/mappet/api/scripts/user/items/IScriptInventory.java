@@ -1,7 +1,7 @@
 package mchorse.mappet.api.scripts.user.items;
 
-import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
+import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import net.minecraft.inventory.IInventory;
 
 /**
@@ -32,18 +32,25 @@ import net.minecraft.inventory.IInventory;
  *    }
  * }</pre>
  */
-public interface IScriptInventory
-{
+public interface IScriptInventory {
     /**
-     * Get Minecraft inventory instance. <b>BEWARE:</b> you need to know the MCP
-     * mappings in order to directly call methods on this instance!
+     * Use {@link #asMinecraft()} instead
+     *
+     * @deprecated
      */
-    public IInventory getMinecraftInventory();
+    @Deprecated
+    IInventory getMinecraftInventory();
+
+    /**
+     * Get Minecraft inventory instance
+     * <p><b>BEWARE:</b> You need to know the MCP mappings to directly call methods on this instance!</p>
+     */
+    IInventory asMinecraft();
 
     /**
      * Check whether this inventory is empty.
      */
-    public boolean isEmpty();
+    boolean isEmpty();
 
     /**
      * Return the maximum amount of item stacks in this inventory.
@@ -60,7 +67,7 @@ public interface IScriptInventory
      *    }
      * }</pre>
      */
-    public int size();
+    int size();
 
     /**
      * Get stack in slot at given index.
@@ -79,7 +86,7 @@ public interface IScriptInventory
      *
      * @return an item stack at given index
      */
-    public IScriptItemStack getStack(int index);
+    IScriptItemStack getStack(int index);
 
     /**
      * Remove a stack at given index
@@ -101,7 +108,7 @@ public interface IScriptInventory
      *
      * @return removed item stack
      */
-    public IScriptItemStack removeStack(int index);
+    IScriptItemStack removeStack(int index);
 
     /**
      * Replace given stack at index.
@@ -113,7 +120,7 @@ public interface IScriptInventory
      *    inventory.setStack(4, mappet.createItem("minecraft:diamond_sword"));
      * }</pre>
      */
-    public void setStack(int index, IScriptItemStack stack);
+    void setStack(int index, IScriptItemStack stack);
 
     /**
      * Empty the inventory.
@@ -123,7 +130,7 @@ public interface IScriptInventory
      *    c.getSubject().getInventory().clear();
      * }</pre>
      */
-    public void clear();
+    void clear();
 
     /* Basic inventory */
 
@@ -131,17 +138,17 @@ public interface IScriptInventory
      * Get basic inventory's name. This works only for inventories that support
      * naming, like chests.
      */
-    public String getName();
+    String getName();
 
     /**
      * Whether this inventory has a name. This works only for inventories that
      * support naming, like chests.
      */
-    public boolean hasCustomName();
+    boolean hasCustomName();
 
     /**
      * Set basic inventory's name. This works only for inventories that
      * support naming, like chests.
      */
-    public void setName(String name);
+    void setName(String name);
 }

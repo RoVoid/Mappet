@@ -7,6 +7,8 @@ import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.mappet.CommonProxy;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.ScriptRayTrace;
+import mchorse.mappet.api.scripts.code.data.ScriptBox;
+import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import mchorse.mappet.api.scripts.code.entities.ai.EntitiesAIPatrol;
 import mchorse.mappet.api.scripts.code.entities.ai.EntityAILookAtTarget;
 import mchorse.mappet.api.scripts.code.entities.ai.repeatingCommand.EntityAIRepeatingCommand;
@@ -18,8 +20,6 @@ import mchorse.mappet.api.scripts.code.mappet.MappetStates;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
 import mchorse.mappet.api.scripts.code.world.ScriptWorld;
 import mchorse.mappet.api.scripts.user.IScriptRayTrace;
-import mchorse.mappet.api.scripts.code.data.ScriptBox;
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
@@ -69,11 +69,11 @@ import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.Optional;
 
 import javax.annotation.Nonnull;
 import javax.script.ScriptException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -102,8 +102,14 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     }
 
     @Override
+    @Deprecated
     public Entity getMinecraftEntity() {
-        return this.entity;
+        return entity;
+    }
+
+    @Override
+    public Entity asMinecraft() {
+        return entity;
     }
 
     @Override
@@ -409,17 +415,15 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
                     player.getEntityWorld().spawnEntity(entityItem);
                 }
             }
-        } else if (this.isLivingBase()) {
-            if (this.entity instanceof EntityLivingBase) {
-                EntityLivingBase living = (EntityLivingBase) this.entity;
+        } else if (isLivingBase()) {
+            EntityLivingBase living = (EntityLivingBase) entity;
 
-                if (living.getHeldItemMainhand().isEmpty()) {
-                    living.setHeldItem(EnumHand.MAIN_HAND, stack.getMinecraftItemStack().copy());
-                } else if (living.getHeldItemOffhand().isEmpty()) {
-                    living.setHeldItem(EnumHand.OFF_HAND, stack.getMinecraftItemStack().copy());
-                } else {
-                    living.entityDropItem(stack.getMinecraftItemStack().copy(), getEyeHeight());
-                }
+            if (living.getHeldItemMainhand().isEmpty()) {
+                living.setHeldItem(EnumHand.MAIN_HAND, stack.getMinecraftItemStack().copy());
+            } else if (living.getHeldItemOffhand().isEmpty()) {
+                living.setHeldItem(EnumHand.OFF_HAND, stack.getMinecraftItemStack().copy());
+            } else {
+                living.entityDropItem(stack.getMinecraftItemStack().copy(), getEyeHeight());
             }
         }
     }
@@ -449,28 +453,26 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
                     }
                 }
             }
-        } else if (this.isLivingBase()) {
-            if (this.entity instanceof EntityLivingBase) {
-                EntityLivingBase living = (EntityLivingBase) this.entity;
+        } else if (isLivingBase()) {
+            EntityLivingBase living = (EntityLivingBase) this.entity;
 
-                if (living.getHeldItemMainhand().isItemEqualIgnoreDurability(itemStack)) {
-                    if (count > 0 && deleteCount + living.getHeldItemMainhand().getCount() > count) {
-                        living.getHeldItemMainhand().setCount(living.getHeldItemMainhand().getCount() - (count - deleteCount));
-                        deleteCount = count;
-                    } else {
-                        deleteCount += living.getHeldItemMainhand().getCount();
-                        living.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
-                    }
+            if (living.getHeldItemMainhand().isItemEqualIgnoreDurability(itemStack)) {
+                if (count > 0 && deleteCount + living.getHeldItemMainhand().getCount() > count) {
+                    living.getHeldItemMainhand().setCount(living.getHeldItemMainhand().getCount() - (count - deleteCount));
+                    deleteCount = count;
+                } else {
+                    deleteCount += living.getHeldItemMainhand().getCount();
+                    living.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
                 }
+            }
 
-                if (living.getHeldItemOffhand().isItemEqualIgnoreDurability(itemStack)) {
-                    if (count > 0 && deleteCount + living.getHeldItemOffhand().getCount() > count) {
-                        living.getHeldItemOffhand().setCount(living.getHeldItemOffhand().getCount() - (count - deleteCount));
-                        deleteCount = count;
-                    } else {
-                        deleteCount += living.getHeldItemOffhand().getCount();
-                        living.setHeldItem(EnumHand.OFF_HAND, ItemStack.EMPTY);
-                    }
+            if (living.getHeldItemOffhand().isItemEqualIgnoreDurability(itemStack)) {
+                if (count > 0 && deleteCount + living.getHeldItemOffhand().getCount() > count) {
+                    living.getHeldItemOffhand().setCount(living.getHeldItemOffhand().getCount() - (count - deleteCount));
+                    deleteCount = count;
+                } else {
+                    deleteCount += living.getHeldItemOffhand().getCount();
+                    living.setHeldItem(EnumHand.OFF_HAND, ItemStack.EMPTY);
                 }
             }
         }
@@ -493,14 +495,12 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
                     return i;
                 }
             }
-        } else if (this.isLivingBase()) {
-            if (this.entity instanceof EntityLivingBase) {
-                EntityLivingBase living = (EntityLivingBase) this.entity;
-                if (startIndex == 0 && living.getHeldItemMainhand().isItemEqualIgnoreDurability(itemStack)) {
-                    return 0;
-                } else if (startIndex <= 1 && living.getHeldItemOffhand().isItemEqualIgnoreDurability(itemStack)) {
-                    return 1;
-                }
+        } else if (isLivingBase()) {
+            EntityLivingBase living = (EntityLivingBase) this.entity;
+            if (startIndex == 0 && living.getHeldItemMainhand().isItemEqualIgnoreDurability(itemStack)) {
+                return 0;
+            } else if (startIndex <= 1 && living.getHeldItemOffhand().isItemEqualIgnoreDurability(itemStack)) {
+                return 1;
             }
         }
         return -1;
@@ -508,7 +508,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public IScriptItemStack getHelmet() {
-        if (this.entity instanceof EntityLivingBase) {
+        if (isLivingBase()) {
             return ScriptItemStack.create(((EntityLivingBase) this.entity).getItemStackFromSlot(EntityEquipmentSlot.HEAD).copy());
         }
 
@@ -517,7 +517,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public IScriptItemStack getChestplate() {
-        if (this.entity instanceof EntityLivingBase) {
+        if (isLivingBase()) {
             return ScriptItemStack.create(((EntityLivingBase) this.entity).getItemStackFromSlot(EntityEquipmentSlot.CHEST).copy());
         }
 
@@ -526,7 +526,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public IScriptItemStack getLeggings() {
-        if (this.entity instanceof EntityLivingBase) {
+        if (isLivingBase()) {
             return ScriptItemStack.create(((EntityLivingBase) this.entity).getItemStackFromSlot(EntityEquipmentSlot.LEGS).copy());
         }
         return null;
@@ -534,7 +534,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public IScriptItemStack getBoots() {
-        if (this.entity instanceof EntityLivingBase) {
+        if (isLivingBase()) {
             return ScriptItemStack.create(((EntityLivingBase) this.entity).getItemStackFromSlot(EntityEquipmentSlot.FEET).copy());
         }
         return null;
@@ -567,8 +567,8 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         if (entity instanceof EntityPlayerMP) Dispatcher.sendTo(packet, (EntityPlayerMP) entity);
     }
 
-@Override
-public boolean isTamed(IScriptPlayer player) {
+    @Override
+    public boolean isTamed(IScriptPlayer player) {
         if (!(entity instanceof EntityTameable)) return false;
         return ((EntityTameable) entity).isTamed();
     }
@@ -634,13 +634,13 @@ public boolean isTamed(IScriptPlayer player) {
             ScriptWorld world = new ScriptWorld(this.entity.world);
 
             IScriptEntity targetCanceller = world.spawnEntity(id, x, y, z, compound);
-            livingBase.setAttackTarget((EntityLivingBase) targetCanceller.getMinecraftEntity());
-            livingBase.setRevengeTarget((EntityLivingBase) targetCanceller.getMinecraftEntity());
+            livingBase.setAttackTarget((EntityLivingBase) targetCanceller.asMinecraft());
+            livingBase.setRevengeTarget((EntityLivingBase) targetCanceller.asMinecraft());
             targetCanceller.remove();
         } else if (this.entity instanceof EntityLiving && entity.isLivingBase()) {
             EntityLiving livingBase = (EntityLiving) this.entity;
 
-            livingBase.setAttackTarget((EntityLivingBase) entity.getMinecraftEntity());
+            livingBase.setAttackTarget((EntityLivingBase) entity.asMinecraft());
         }
     }
 
@@ -666,9 +666,15 @@ public boolean isTamed(IScriptPlayer player) {
     }
 
     @Override
+    @Deprecated
     public String getEntityId() {
         ResourceLocation rl = EntityList.getKey(this.entity);
+        return rl == null ? "" : rl.toString();
+    }
 
+    @Override
+    public String getId() {
+        ResourceLocation rl = EntityList.getKey(this.entity);
         return rl == null ? "" : rl.toString();
     }
 
@@ -744,22 +750,22 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Override
     public boolean isLivingBase() {
-        return this.entity instanceof EntityLivingBase;
+        return entity instanceof EntityLivingBase;
     }
 
     @Override
-    public boolean isSame(IScriptEntity entity) {
-        return this.entity == entity.getMinecraftEntity();
+    public boolean isSame(IScriptEntity other) {
+        return entity == other.asMinecraft();
     }
 
     @Override
-    public boolean isEntityInRadius(IScriptEntity entity, double radius) {
-        return this.entity.getDistanceSq(entity.getMinecraftEntity()) <= radius * radius;
+    public boolean isEntityInRadius(IScriptEntity target, double radius) {
+        return entity.getDistanceSq(target.asMinecraft()) <= radius * radius;
     }
 
     @Override
     public boolean isInArea(double x1, double y1, double z1, double x2, double y2, double z2) {
-        return new AxisAlignedBB(x1, y1, z1, x2, y2, z2).intersects(this.entity.getEntityBoundingBox());
+        return new AxisAlignedBB(x1, y1, z1, x2, y2, z2).intersects(entity.getEntityBoundingBox());
     }
 
     @Override
@@ -776,7 +782,7 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Override
     public void damageAs(IScriptEntity _attacker, float damage, boolean ignore) {
-        Entity attacker = _attacker.getMinecraftEntity();
+        Entity attacker = _attacker.asMinecraft();
         if (!(attacker instanceof EntityLivingBase)) return;
         EntityLivingBase attackerLiving = (EntityLivingBase) attacker;
         attackerLiving.setLastAttackedEntity(this.entity);
@@ -791,7 +797,7 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Override
     public void mount(IScriptEntity entity) {
-        this.entity.startRiding(entity.getMinecraftEntity(), true);
+        this.entity.startRiding(entity.asMinecraft(), true);
     }
 
     @Override
@@ -920,7 +926,7 @@ public boolean isTamed(IScriptPlayer player) {
 
         EntityLiving leashedEntity = (EntityLiving) this.entity;
         boolean wasLeashed = leashedEntity.getLeashed();
-        leashedEntity.setLeashHolder(leashHolder.getMinecraftEntity(), true);
+        leashedEntity.setLeashHolder(leashHolder.asMinecraft(), true);
 
         // If the entity was not leashed before and is leashed now, the operation was successful.
         return !wasLeashed && leashedEntity.getLeashed();
@@ -957,7 +963,7 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Override
     public void setModifier(String modifierName, double value) {
-        if (this.entity instanceof EntityLivingBase) {
+        if (isLivingBase()) {
             EntityLivingBase entityLivingBase = (EntityLivingBase) this.entity;
             UUID uuid = entityLivingBase.getUniqueID();
             IAttributeInstance attribute = entityLivingBase.getAttributeMap().getAttributeInstanceByName(modifierName);
@@ -978,7 +984,7 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Override
     public double getModifier(String modifierName) {
-        if (this.entity instanceof EntityLivingBase) {
+        if (isLivingBase()) {
             EntityLivingBase entityLivingBase = (EntityLivingBase) this.entity;
             IAttributeInstance attribute = entityLivingBase.getAttributeMap().getAttributeInstanceByName(modifierName);
 
@@ -994,23 +1000,20 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Override
     public void removeModifier(String modifierName) {
-        if (this.entity instanceof EntityLivingBase) {
+        if (isLivingBase()) {
             EntityLivingBase entityLivingBase = (EntityLivingBase) this.entity;
             IAttributeInstance attribute = entityLivingBase.getAttributeMap().getAttributeInstanceByName(modifierName);
 
             if (attribute != null) {
                 AttributeModifier modifier = attribute.getModifier(entityLivingBase.getUniqueID());
-
-                if (modifier != null) {
-                    attribute.removeModifier(modifier);
-                }
+                if (modifier != null) attribute.removeModifier(modifier);
             }
         }
     }
 
     @Override
     public void removeAllModifiers() {
-        if (this.entity instanceof EntityLivingBase) {
+        if (isLivingBase()) {
             EntityLivingBase entityLivingBase = (EntityLivingBase) this.entity;
 
             for (IAttributeInstance attribute : entityLivingBase.getAttributeMap().getAllAttributes()) {
@@ -1023,7 +1026,7 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Override
     public void applyPotion(Potion potion, int duration, int amplifier, boolean particles) {
-        if (this.isLivingBase()) {
+        if (isLivingBase()) {
             PotionEffect effect = new PotionEffect(potion, duration, amplifier, false, particles);
 
             ((EntityLivingBase) this.entity).addPotionEffect(effect);
@@ -1055,39 +1058,30 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Override
     public void clearPotions() {
-        if (this.isLivingBase()) {
-            ((EntityLivingBase) this.entity).clearActivePotions();
-        }
+        if (isLivingBase()) ((EntityLivingBase) entity).clearActivePotions();
     }
 
     /* Mappet stuff */
 
     @Override
     public IMappetStates getStates() {
-        if (this.states == null) {
-            States states = EntityUtils.getStates(this.entity);
-
-            if (states != null) {
-                this.states = new MappetStates(states);
-            }
+        if (states == null) {
+            States entityStates = EntityUtils.getStates(this.entity);
+            if (entityStates != null) states = new MappetStates(entityStates);
         }
 
-        return this.states;
+        return states;
     }
 
     @Override
     public AbstractMorph getMorph() {
-        if (this.entity instanceof IMorphProvider) {
-            return ((IMorphProvider) this.entity).getMorph();
-        }
-
-        return null;
+        return entity instanceof IMorphProvider ? ((IMorphProvider) entity).getMorph() : null;
     }
 
     @Override
     public boolean setMorph(AbstractMorph morph) {
         if (Loader.isModLoaded("blockbuster")) {
-            return this.setActorsMorph(morph);
+            return setActorsMorph(morph);
         }
 
         return false;
@@ -1095,8 +1089,8 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Optional.Method(modid = "blockbuster")
     private boolean setActorsMorph(AbstractMorph morph) {
-        if (this.entity instanceof EntityActor) {
-            EntityActor actor = (EntityActor) this.entity;
+        if (entity instanceof EntityActor) {
+            EntityActor actor = (EntityActor) entity;
             actor.morph.setDirect(morph);
 
             PacketModifyActor message = new PacketModifyActor(actor);
@@ -1110,9 +1104,7 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Override
     public void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, float yaw, float pitch, boolean rotate, IScriptPlayer player) {
-        if (morph == null) {
-            return;
-        }
+        if (morph == null) return;
 
         WorldMorph worldMorph = new WorldMorph();
 
@@ -1124,15 +1116,15 @@ public boolean isTamed(IScriptPlayer player) {
         worldMorph.z = z;
         worldMorph.yaw = yaw;
         worldMorph.pitch = pitch;
-        worldMorph.entity = this.entity;
+        worldMorph.entity = entity;
 
         PacketWorldMorph message = new PacketWorldMorph(worldMorph);
 
         if (player == null) {
-            Dispatcher.sendToTracked(this.entity, message);
+            Dispatcher.sendToTracked(entity, message);
 
             if (this.isPlayer()) {
-                Dispatcher.sendTo(message, (EntityPlayerMP) this.entity);
+                Dispatcher.sendTo(message, (EntityPlayerMP) entity);
             }
         } else {
             Dispatcher.sendTo(message, player.getMinecraftPlayer());
@@ -1141,9 +1133,9 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Override
     public IScriptEntity shootBBGunProjectile(String gunPropsNBT) {
-        if (this.entity instanceof EntityLivingBase && Loader.isModLoaded("blockbuster")) {
+        if (isLivingBase() && Loader.isModLoaded("blockbuster")) {
             try {
-                return this.shootBBGunProjectileMethod(gunPropsNBT);
+                return shootBBGunProjectileMethod(gunPropsNBT);
             } catch (Exception e) {
                 Mappet.logger.error(e.getMessage());
             }
@@ -1154,8 +1146,8 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Optional.Method(modid = "blockbuster")
     private IScriptEntity shootBBGunProjectileMethod(String gunPropsNBT) throws NBTException {
-        if (this.entity instanceof EntityLivingBase) {
-            EntityLivingBase entityLivingBase = (EntityLivingBase) this.entity;
+        if (isLivingBase()) {
+            EntityLivingBase entityLivingBase = (EntityLivingBase) entity;
             NBTTagCompound gunPropsNBTCompound = JsonToNBT.getTagFromJson(gunPropsNBT).getCompoundTag("Gun");
             GunProps gunProps = new GunProps(gunPropsNBTCompound.getCompoundTag("Projectile"));
             gunProps.fromNBT(gunPropsNBTCompound);
@@ -1174,8 +1166,8 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Override
     public void executeCommand(String command) {
-        if (this.entity.world.getMinecraftServer() != null)
-            this.entity.world.getMinecraftServer().getCommandManager().executeCommand(this.entity, command);
+        if (entity.world.getMinecraftServer() != null)
+            entity.world.getMinecraftServer().getCommandManager().executeCommand(entity, command);
     }
 
     @Override
@@ -1216,56 +1208,54 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Override
     public void lockPosition(double x, double y, double z) {
-        this.entity.getEntityData().setBoolean("positionLocked", true);
-        this.entity.getEntityData().setDouble("lockX", x);
-        this.entity.getEntityData().setDouble("lockY", y);
-        this.entity.getEntityData().setDouble("lockZ", z);
+        entity.getEntityData().setBoolean("positionLocked", true);
+        entity.getEntityData().setDouble("lockX", x);
+        entity.getEntityData().setDouble("lockY", y);
+        entity.getEntityData().setDouble("lockZ", z);
     }
 
     @Override
     public void unlockPosition() {
-        this.entity.getEntityData().setBoolean("positionLocked", false);
+        entity.getEntityData().setBoolean("positionLocked", false);
     }
 
     @Override
     public boolean isPositionLocked() {
-        return this.entity.getEntityData().getBoolean("positionLocked");
+        return entity.getEntityData().getBoolean("positionLocked");
     }
 
     @Override
     public void lockRotation(float yaw, float pitch, float yawHead) {
-        this.entity.getEntityData().setBoolean("rotationLocked", true);
-        this.entity.getEntityData().setFloat("lockYaw", yaw);
-        this.entity.getEntityData().setFloat("lockPitch", pitch);
-        this.entity.getEntityData().setFloat("lockYawHead", yawHead);
+        entity.getEntityData().setBoolean("rotationLocked", true);
+        entity.getEntityData().setFloat("lockYaw", yaw);
+        entity.getEntityData().setFloat("lockPitch", pitch);
+        entity.getEntityData().setFloat("lockYawHead", yawHead);
     }
 
     @Override
     public void unlockRotation() {
-        this.entity.getEntityData().setBoolean("rotationLocked", false);
+        entity.getEntityData().setBoolean("rotationLocked", false);
     }
 
     @Override
     public boolean isRotationLocked() {
-        return this.entity.getEntityData().getBoolean("rotationLocked");
+        return entity.getEntityData().getBoolean("rotationLocked");
     }
 
     @Override
     public void moveTo(String interpolation, int durationTicks, double x, double y, double z, boolean disableAI) {
         if (disableAI) {
-            this.setAIEnabled(false);
-            this.moveTo(interpolation, durationTicks, x, y, z);
-            CommonProxy.eventHandler.addExecutable(new RunnableExecutionFork(durationTicks, () -> this.setAIEnabled(true)));
-        } else {
-            this.moveTo(interpolation, durationTicks, x, y, z);
-        }
+            setAIEnabled(false);
+            moveTo(interpolation, durationTicks, x, y, z);
+            CommonProxy.eventHandler.addExecutable(new RunnableExecutionFork(durationTicks, () -> setAIEnabled(true)));
+        } else moveTo(interpolation, durationTicks, x, y, z);
     }
 
     private void moveTo(String interpolation, int durationTicks, double x, double y, double z) {
         Interpolation interp = Interpolation.valueOf(interpolation.toUpperCase());
-        double startX = this.entity.posX;
-        double startY = this.entity.posY;
-        double startZ = this.entity.posZ;
+        double startX = entity.posX;
+        double startY = entity.posY;
+        double startZ = entity.posZ;
 
         for (int i = 0; i < durationTicks; i++) {
             double progress = (double) i / (double) durationTicks;
@@ -1280,11 +1270,11 @@ public boolean isTamed(IScriptPlayer player) {
     /* Entity AI */
 
     @Override
-    public void observe(IScriptEntity entity) {
-        if (this.entity instanceof EntityLiving) {
-            EntityLiving entityLiving = (EntityLiving) this.entity;
+    public void observe(IScriptEntity target) {
+        if (entity instanceof EntityLiving) {
+            EntityLiving entityLiving = (EntityLiving) entity;
 
-            if (entity == null) {
+            if (target == null) {
                 EntityAITasks.EntityAITaskEntry taskToRemove = null;
 
                 for (EntityAITasks.EntityAITaskEntry task : entityLiving.tasks.taskEntries) {
@@ -1298,14 +1288,14 @@ public boolean isTamed(IScriptPlayer player) {
                     entityLiving.tasks.removeTask(taskToRemove.action);
                 }
             } else {
-                entityLiving.tasks.addTask(8, new EntityAILookAtTarget(entityLiving, entity.getMinecraftEntity(), 1.0F));
+                entityLiving.tasks.addTask(8, new EntityAILookAtTarget(entityLiving, target.asMinecraft(), 1.0F));
             }
         }
     }
 
     public IScriptEntity getObservedEntity() {
-        if (this.entity instanceof EntityLiving) {
-            EntityLiving entityLiving = (EntityLiving) this.entity;
+        if (entity instanceof EntityLiving) {
+            EntityLiving entityLiving = (EntityLiving) entity;
 
             for (EntityAITasks.EntityAITaskEntry task : entityLiving.tasks.taskEntries) {
                 Entity target = null;
@@ -1328,20 +1318,21 @@ public boolean isTamed(IScriptPlayer player) {
     }
 
     private Entity getEntityFromWatchClosest(EntityAIWatchClosest watchClosestTask) {
-        Entity target = null;
         try {
-            target = ObfuscationReflectionHelper.getPrivateValue(EntityAIWatchClosest.class, watchClosestTask, "field_75334_a", "closestEntity");
+            Field field = EntityAIWatchClosest.class.getDeclaredField("closestEntity");
+            field.setAccessible(true);
+            return (Entity) field.get(watchClosestTask);
         } catch (Exception e) {
-            Mappet.logger.error(e.getMessage());
+            Mappet.logger.error("Failed to get closest entity: " + e.getMessage());
+            return null;
         }
-        return target;
     }
 
 
     @Override
     public void addEntityPatrol(double x, double y, double z, double speed, boolean shouldCirculate, String executeCommandOnArrival) {
-        if (this.entity instanceof EntityLiving) {
-            EntityLiving entityLiving = (EntityLiving) this.entity;
+        if (entity instanceof EntityLiving) {
+            EntityLiving entityLiving = (EntityLiving) entity;
             EntityAITasks.EntityAITaskEntry taskToRemove = findEntitiesAIPatrolTask(entityLiving);
             EntitiesAIPatrol patrolTask;
 
@@ -1360,8 +1351,8 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Override
     public void clearEntityPatrols() {
-        if (this.entity instanceof EntityLiving) {
-            EntityLiving entityLiving = (EntityLiving) this.entity;
+        if (entity instanceof EntityLiving) {
+            EntityLiving entityLiving = (EntityLiving) entity;
             EntityAITasks.EntityAITaskEntry taskToRemove = findEntitiesAIPatrolTask(entityLiving);
 
             if (taskToRemove != null) {
@@ -1372,17 +1363,15 @@ public boolean isTamed(IScriptPlayer player) {
 
     private EntityAITasks.EntityAITaskEntry findEntitiesAIPatrolTask(EntityLiving entityLiving) {
         for (EntityAITasks.EntityAITaskEntry task : entityLiving.tasks.taskEntries) {
-            if (task.action instanceof EntitiesAIPatrol) {
-                return task;
-            }
+            if (task.action instanceof EntitiesAIPatrol) return task;
         }
         return null;
     }
 
     @Override
     public void setRotationsAI(float yaw, float pitch, float yawHead) {
-        if (this.entity instanceof EntityLiving) {
-            EntityLiving entityLiving = (EntityLiving) this.entity;
+        if (entity instanceof EntityLiving) {
+            EntityLiving entityLiving = (EntityLiving) entity;
             EntityAITasks.EntityAITaskEntry taskToRemove = removeTaskIfExists(entityLiving, EntityAIRotations.class);
             entityLiving.tasks.addTask(9, new EntityAIRotations(entityLiving, yaw, pitch, yawHead, 1.0F));
 
@@ -1392,8 +1381,8 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Override
     public void clearRotationsAI() {
-        if (this.entity instanceof EntityLiving) {
-            EntityLiving entityLiving = (EntityLiving) this.entity;
+        if (entity instanceof EntityLiving) {
+            EntityLiving entityLiving = (EntityLiving) entity;
 
             removeTaskIfExists(entityLiving, EntityAIRotations.class);
             RotationDataStorage.getRotationDataStorage(entity.world).removeRotationData(entityLiving.getUniqueID());
@@ -1410,9 +1399,7 @@ public boolean isTamed(IScriptPlayer player) {
             }
         }
 
-        if (taskToRemove != null) {
-            entityLiving.tasks.removeTask(taskToRemove.action);
-        }
+        if (taskToRemove != null) entityLiving.tasks.removeTask(taskToRemove.action);
 
         return taskToRemove;
     }
@@ -1420,8 +1407,8 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Override
     public void executeRepeatingCommand(String command, int frequency) {
-        if (this.entity instanceof EntityLiving) {
-            EntityLiving entityLiving = (EntityLiving) this.entity;
+        if (entity instanceof EntityLiving) {
+            EntityLiving entityLiving = (EntityLiving) entity;
             entityLiving.tasks.addTask(10, new EntityAIRepeatingCommand(entityLiving, command, frequency));
             RepeatingCommandDataStorage.getRepeatingCommandDataStorage(entity.world).addRepeatingCommandData(entityLiving.getUniqueID(), command, frequency);
         }
@@ -1429,8 +1416,8 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Override
     public void clearAllRepeatingCommands() {
-        if (this.entity instanceof EntityLiving) {
-            EntityLiving entityLiving = (EntityLiving) this.entity;
+        if (entity instanceof EntityLiving) {
+            EntityLiving entityLiving = (EntityLiving) entity;
 
             removeTaskIfExists(entityLiving, EntityAIRepeatingCommand.class);
             RepeatingCommandDataStorage.getRepeatingCommandDataStorage(entity.world).removeRepeatingCommandData(entityLiving.getUniqueID());
@@ -1439,8 +1426,8 @@ public boolean isTamed(IScriptPlayer player) {
 
     @Override
     public void removeRepeatingCommand(String command) {
-        if (this.entity instanceof EntityLiving) {
-            EntityLiving entityLiving = (EntityLiving) this.entity;
+        if (entity instanceof EntityLiving) {
+            EntityLiving entityLiving = (EntityLiving) entity;
 
             removeSpecificRepeatingCommandTaskIfExists(entityLiving, command);
             RepeatingCommandDataStorage.getRepeatingCommandDataStorage(entity.world).removeSpecificRepeatingCommandData(entityLiving.getUniqueID(), command);

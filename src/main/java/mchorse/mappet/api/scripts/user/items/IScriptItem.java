@@ -5,21 +5,28 @@ import net.minecraft.item.Item;
 /**
  * This interface represents an item
  */
-public interface IScriptItem
-{
+public interface IScriptItem {
     /**
-     * Get Minecraft item instance. <b>BEWARE:</b> you need to know the MCP
-     * mappings in order to directly call methods on this instance!
+     * Use {@link #asMinecraft()} instead
+     *
+     * @deprecated
      */
-    public Item getMinecraftItem();
+    @Deprecated
+    Item getMinecraftItem();
+
+    /**
+     * Get Minecraft item instance
+     * <p><b>BEWARE:</b> You need to know the MCP mappings to directly call methods on this instance!</p>
+     */
+    Item asMinecraft();
 
     /**
      * Get item's ID like "minecraft:stick" or "minecraft:diamond_hoe"
      */
-    public String getId();
+    String getId();
 
     /**
      * Check whether given item is same as this one
      */
-    public boolean isSame(IScriptItem item);
+    boolean isSame(IScriptItem item);
 }

@@ -6,7 +6,7 @@ import net.minecraft.block.state.IBlockState;
 
 /**
  * Block State
- * <p> CREATE: {@link mchorse.mappet.api.scripts.user.IScriptFactory#createBlock(String, int)}
+ * <p> CREATE: {@link mchorse.mappet.api.scripts.user.IScriptFactory#createBlock(String, int)} </p>
  *
  * <pre>{@code
  *    function main(c)
@@ -21,20 +21,23 @@ import net.minecraft.block.state.IBlockState;
  */
 public interface IScriptBlockState {
     /**
-     * @deprecated Use {@link #asMinecraft()} instead
+     * Use {@link #asMinecraft()} instead
+     *
+     * @deprecated
      */
     @Deprecated
     IBlockState getMinecraftBlockState();
 
     /**
      * Get Minecraft block state instance
-     *
-     * <p style="color:yellow"><b>BEWARE:</b> You need to know the MCP mappings to directly call methods on this instance!</p>
+     * <p><b>BEWARE:</b> You need to know the MCP mappings to directly call methods on this instance!</p>
      */
     IBlockState asMinecraft();
 
     /**
-     * @deprecated Use {@link #getId()} instead
+     * Use {@link #getId()} instead
+     *
+     * @deprecated
      */
     @Deprecated
     String getBlockId();
@@ -54,7 +57,7 @@ public interface IScriptBlockState {
      *
      * <pre>{@code
      *    var andesite = mappet.createBlockState("minecraft:stone", 5);
-     *    c.send("Meta equals " + andesite.getMeta()); // Result: "Meta equals 5"
+     *    c.send("Meta equals " + andesite.getMeta()); // Meta equals 5
      * }</pre>
      */
     int getMeta();
@@ -65,7 +68,7 @@ public interface IScriptBlockState {
      * <pre>{@code
      *    var stone = mappet.createBlockState("minecraft:stone");
      *    var andesite = mappet.createBlockState("minecraft:stone", 5);
-     *    c.send(stone.isSame(andesite)); // Result: "false"
+     *    c.send(stone.isSame(andesite)); // false
      * }</pre>
      */
     boolean isSame(IScriptBlockState state);
@@ -77,8 +80,8 @@ public interface IScriptBlockState {
      *    var stone = mappet.createBlockState("minecraft:stone");
      *    var andesite = mappet.createBlockState("minecraft:stone", 5);
      *    var air = mappet.createBlockState("minecraft:air");
-     *    c.send(stone.isSameBlock(andesite)); // Result: "true"
-     *    c.send(stone.isSameBlock(air)); // Result: "false"
+     *    c.send(stone.isSameBlock(andesite)); // true
+     *    c.send(stone.isSameBlock(air)); // false
      * }</pre>
      */
     boolean isSameBlock(IScriptBlockState state);

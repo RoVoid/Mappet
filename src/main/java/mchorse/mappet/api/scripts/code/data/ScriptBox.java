@@ -7,7 +7,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,27 +28,10 @@ public class ScriptBox implements IScriptBox {
     }
 
     @Override
-    public String toString() {
-        return "ScriptBox(" + this.minX + ", " + this.minY + ", " + this.minZ + ", " + this.maxX + ", " + this.maxY + ", " + this.maxZ + ")";
-    }
-
-    @Override
     public boolean isColliding(ScriptBox box) {
-        return this.minX < box.maxX && this.maxX > box.minX && this.minY < box.maxY && this.maxY > box.minY && this.minZ < box.maxZ && this.maxZ > box.minZ;
+        return minX < box.maxX && maxX > minX && minY < maxY && maxY > box.minY && minZ < box.maxZ && maxZ > box.minZ;
     }
 
-    /**
-     * Offsets the box by given coordinates
-     *
-     * <pre>{@code
-     * function main(c)
-     * {
-     *     var box = mappet.box(-10, 4, -10, 10, 6, 10);
-     *     box.offset(10, 0, 10);
-     *     c.send(box.toString()); // ScriptBox(0.0, 4.0, 0.0, 20.0, 6.0, 20.0)
-     * }
-     * }</pre>
-     */
     @Override
     public void offset(double x, double y, double z) {
         this.minX += x;
@@ -61,90 +43,27 @@ public class ScriptBox implements IScriptBox {
         this.maxZ += z;
     }
 
-    /**
-     * Checks if given coordinates are inside of this box
-     *
-     * <pre>{@code
-     * function main(c)
-     * {
-     *     var box = mappet.box(-10, 4, -10, 10, 6, 10);
-     *     if (box.contains(0, 4, 0)){
-     *         c.send("this point is inside the box")
-     *     }
-     *     if (box.contains(0, 7, 0)){
-     *         c.send("this point is outside the box")
-     *     }
-     * }
-     * }</pre>
-     */
     @Override
     public boolean contains(double x, double y, double z) {
         return x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY && z >= this.minZ && z <= this.maxZ;
     }
 
-    /**
-     * Checks if given coordinates are inside of this box
-     *
-     * <pre>{@code
-     * function main(c)
-     * {
-     *     var subject = c.getSubject();
-     *     var subjectPosition = subject.getPosition();
-     *     var box = mappet.box(-10, 4, -10, 10, 6, 10);
-     *     if (box.contains(subjectPosition)){
-     *         c.send("the player in in the box")
-     *     }
-     * }
-     * }</pre>
-     */
     @Override
     public boolean contains(ScriptVector vector) {
         return this.contains(vector.x, vector.y, vector.z);
     }
 
     @Override
-    public boolean contains(Vector3d vector) {
-        return this.contains(vector.x, vector.y, vector.z);
-    }
-
-    /**
-     * Returns a list of positions for blocks in the box that match a given block state in a given world.
-     *
-     * <pre>{@code
-     * function main(c)
-     * {
-     *     var world = c.getWorld();
-     *     var state = mappet.createBlockState("minecraft:stone");
-     *     var box = mappet.box(-10, 4, -10, 10, 6, 10);
-     *     var blockPositions = box.getBlocksPositions(world, state);
-     *
-     *     var blockPositionsString = "[";
-     *     blockPositions.forEach(function(position) {
-     *         blockPositionsString += position.toArrayString() + ", ";
-     *     });
-     *     blockPositionsString = blockPositionsString.substring(0, blockPositionsString.length - 2);
-     *     blockPositionsString += "]";
-     *     print(blockPositions);
-     * }
-     * }</pre>
-     *
-     * @param scriptWorld The world in which to look for blocks.
-     * @param state       The block state to match.
-     * @return A list of positions for blocks that match the given block state.
-     */
-    @Override
-    public List<ScriptVector> getBlocksPositions(ScriptWorld scriptWorld, ScriptBlockState state) {
-        World world = scriptWorld.getMinecraftWorld();
-        //IBlockState blockState = state.getMinecraftBlockState();
+    public List<ScriptVector> getBlocksPositions(ScriptWorld world, ScriptBlockState state) {
+        World minecraftWorldworld = world.getMinecraftWorld();
         IBlockState blockState = state.asMinecraft();
 
         List<ScriptVector> blocks = new ArrayList<>();
 
-        for (double x = this.minX; x <= this.maxX; x++) {
-            for (double y = this.minY; y <= this.maxY; y++) {
-                for (double z = this.minZ; z <= this.maxZ; z++) {
-                    BlockPos pos = new BlockPos(x, y, z);
-                    if (world.getBlockState(pos).equals(blockState)) {
+        for (double x = minX; x <= maxX; x++) {
+            for (double y = minY; y <= maxY; y++) {
+                for (double z = minZ; z <= maxZ; z++) {
+                    if (minecraftWorldworld.getBlockState(new BlockPos(x, y, z)).equals(blockState)) {
                         blocks.add(new ScriptVector(x, y, z));
                     }
                 }
@@ -152,5 +71,10 @@ public class ScriptBox implements IScriptBox {
         }
 
         return blocks;
+    }
+
+    @Override
+    public String toString() {
+        return "ScriptBox(" + minX + ", " + minY + ", " + minZ + ", " + maxX + ", " + maxY + ", " + maxZ + ")";
     }
 }

@@ -18,20 +18,20 @@ public interface IMappetLogger
     /**
      * Logging a message with <b>ERROR</b> level.
      */
-    public void error(String message);
+    void error(String message);
 
     /**
      * Logging a message with <b>WARNING</b> level.
      */
-    public void warning(String message);
+    void warning(String message);
 
     /**
      * Logging a message with <b>INFO</b> level.
      */
-    public void info(String message);
+    void info(String message);
 
     /**
      * Logging a message with <b>DEBUG</b> level.
      */
-    public void debug(String message);
+    void debug(String message);
 }

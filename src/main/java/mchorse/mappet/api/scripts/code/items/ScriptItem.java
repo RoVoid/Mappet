@@ -4,32 +4,32 @@ import mchorse.mappet.api.scripts.user.items.IScriptItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 
-public class ScriptItem implements IScriptItem
-{
-    private Item item;
+public class ScriptItem implements IScriptItem {
+    private final Item item;
 
-    public ScriptItem(Item item)
-    {
+    public ScriptItem(Item item) {
         this.item = item;
     }
 
     @Override
-    public Item getMinecraftItem()
-    {
-        return this.item;
+    @Deprecated
+    public Item getMinecraftItem() {
+        return item;
     }
 
     @Override
-    public String getId()
-    {
-        ResourceLocation location = this.item == null ? null : this.item.getRegistryName();
+    public Item asMinecraft() {
+        return item;
+    }
 
+    @Override
+    public String getId() {
+        ResourceLocation location = item == null ? null : item.getRegistryName();
         return location == null ? "" : location.toString();
     }
 
     @Override
-    public boolean isSame(IScriptItem item)
-    {
-        return this.item == ((ScriptItem) item).getMinecraftItem();
+    public boolean isSame(IScriptItem other) {
+        return item == other.asMinecraft();
     }
 }
