@@ -7,140 +7,136 @@ import java.util.Set;
 /**
  * Interface that represents an NBT compound tag
  */
-public interface INBTCompound extends INBT
-{
+public interface INBTCompound extends INBT {
     /**
-     * Get raw NBT tag compound. <b>BEWARE:</b> you need to know the MCP
-     * mappings in order to directly call methods on this instance!
-     */
-    public NBTTagCompound getNBTTagCompound();
-
-    /**
-     * Deprecated version of {@link #getNBTTagCompound} to avoid errors
-     * in existing scripts. Use the other method!
+     * Use {@link #asMinecraft()} instead
+     * @deprecated
      */
     @Deprecated
-    public default NBTTagCompound getNBTTagComound()
-    {
-        return this.getNBTTagCompound();
-    }
+    NBTTagCompound getNBTTagCompound();
+
+    /**
+     * Get raw NBT tag compound
+     * <b>BEWARE:</b> you need to know the MCP mappings to directly call methods on this instance!
+     */
+    NBTTagCompound asMinecraft();
 
     /**
      * Check whether this NBT compound has a value by given key.
      */
-    public boolean has(String key);
+    boolean has(String key);
 
     /**
      * Remove a value by given key.
      */
-    public void remove(String key);
+    void remove(String key);
 
     /**
-     * Get all keys.
+     * Get all the keys.
      */
-    public Set<String> keys();
+    Set<String> keys();
 
     /* Assignment/query */
 
     /**
      * Get byte (8-bit integer) value by given key.
      */
-    public byte getByte(String key);
+    byte getByte(String key);
 
     /**
      * Set byte (8-bit integer) value by given key.
      */
-    public void setByte(String key, byte value);
+    void setByte(String key, byte value);
 
     /**
      * Get short (16-bit integer) value by given key.
      */
-    public short getShort(String key);
+    short getShort(String key);
 
     /**
      * Set short (16-bit integer) value by given key.
      */
-    public void setShort(String key, short value);
+    void setShort(String key, short value);
 
     /**
      * Get integer (32-bit integer) value by given key.
      */
-    public int getInt(String key);
+    int getInt(String key);
 
     /**
      * Set integer (32-bit integer) value by given key.
      */
-    public void setInt(String key, int value);
+    void setInt(String key, int value);
 
     /**
      * Get long (64-bit integer) value by given key.
      */
-    public long getLong(String key);
+    long getLong(String key);
 
     /**
      * Set long (64-bit integer) value by given key.
      */
-    public void setLong(String key, long value);
+    void setLong(String key, long value);
 
     /**
      * Get float (32-bit floating point number) value by given key.
      */
-    public float getFloat(String key);
+    float getFloat(String key);
 
     /**
      * Set float (32-bit floating point number) value by given key.
      */
-    public void setFloat(String key, float value);
+    void setFloat(String key, float value);
 
     /**
      * Get double (64-bit floating point number) value by given key.
      */
-    public double getDouble(String key);
+    double getDouble(String key);
 
     /**
      * Set double (64-bit floating point number) value by given key.
      */
-    public void setDouble(String key, double value);
+    void setDouble(String key, double value);
 
     /**
      * Get string value by given key.
      */
-    public String getString(String key);
+    String getString(String key);
 
     /**
      * Set string value by given key.
      */
-    public void setString(String key, String value);
+    void setString(String key, String value);
 
     /**
      * Get boolean (true or false) value by given key.
      */
-    public boolean getBoolean(String key);
+    boolean getBoolean(String key);
 
     /**
      * Set boolean (true or false) value by given key.
      */
-    public void setBoolean(String key, boolean value);
+    void setBoolean(String key, boolean value);
 
     /**
      * Get NBT compound by given key.
      */
-    public INBTCompound getCompound(String key);
+    INBTCompound getCompound(String key);
 
     /**
      * Set NBT compound by given key.
      */
-    public void setCompound(String key, INBTCompound value);
+    void setCompound(String key, INBTCompound value);
 
     /**
      * Get NBT list by given key.
      */
-    public INBTList getList(String key);
+    INBTList getList(String key);
 
     /**
      * Set NBT list by given key.
      */
-    public void setList(String key, INBTList value);
+    void setList(String key, INBTList value);
 
     /**
      * Set arbitrary NBT.
@@ -154,9 +150,9 @@ public interface INBTCompound extends INBT
      *    print(compound.stringify());
      * }</pre>
      *
-     * @return Whether given NBT code was successfully was inserted.
+     * @return Whether given NBT code was successfully inserted.
      */
-    public boolean setNBT(String key, String nbt);
+    boolean setNBT(String key, String nbt);
 
     /**
      * Get the value of in this compound by given key of the raw type. Following
@@ -174,7 +170,7 @@ public interface INBTCompound extends INBT
      * @param key the key of the value
      * @return the value found by that key or null
      */
-    public Object get(String key);
+    Object get(String key);
 
     /**
      * Check if this compound is equal to given compound (order of keys doesn't matter).
@@ -189,7 +185,7 @@ public interface INBTCompound extends INBT
      * @param compound the compound to compare with
      * @return whether this compound is equal to the given compound
      */
-    public boolean equals(INBTCompound compound);
+    boolean equals(INBTCompound compound);
 
     /**
      * Adds a new compound to this compound.
@@ -201,7 +197,7 @@ public interface INBTCompound extends INBT
      *    c.send(tag) //{compound:{x:"123"}}
      * }</pre>
      */
-    public void addCompound(String key);
+    void addCompound(String key);
 
     /**
      * Dumps to a JSON String.
@@ -217,5 +213,5 @@ public interface INBTCompound extends INBT
      *   c.send(tag.dumpJSON());
      * }</pre>
      */
-    public String dumpJSON();
+    String dumpJSON();
 }

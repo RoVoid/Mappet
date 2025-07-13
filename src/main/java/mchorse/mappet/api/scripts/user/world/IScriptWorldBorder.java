@@ -1,15 +1,14 @@
 package mchorse.mappet.api.scripts.user.world;
 
+import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import net.minecraft.world.border.WorldBorder;
-
-import javax.vecmath.Vector2d;
 
 public interface IScriptWorldBorder {
     WorldBorder getMinecraftWorldBorder();
 
     String getStatus();
 
-    Vector2d getCenter();
+    ScriptVector getCenter();
 
     void setCenter(double x, double z);
 

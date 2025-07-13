@@ -3,346 +3,252 @@ package mchorse.mappet.api.scripts.code.nbt;
 import mchorse.mappet.api.scripts.user.nbt.INBT;
 import mchorse.mappet.api.scripts.user.nbt.INBTCompound;
 import mchorse.mappet.api.scripts.user.nbt.INBTList;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagByte;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagDouble;
-import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagLong;
-import net.minecraft.nbt.NBTTagShort;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.*;
 
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ScriptNBTCompound implements INBTCompound
-{
-    private NBTTagCompound tag;
+public class ScriptNBTCompound implements INBTCompound {
+    private final NBTTagCompound tag;
 
-    public ScriptNBTCompound(NBTTagCompound tag)
-    {
+    public ScriptNBTCompound(NBTTagCompound tag) {
         this.tag = tag == null ? new NBTTagCompound() : tag;
     }
 
     @Override
-    public NBTTagCompound getNBTTagCompound()
-    {
-        return this.tag;
+    @Deprecated
+    public NBTTagCompound getNBTTagCompound() {
+        return tag;
     }
 
     @Override
-    public boolean isCompound()
-    {
+    public NBTTagCompound asMinecraft() {
+        return tag;
+    }
+
+    @Override
+    public boolean isCompound() {
         return true;
     }
 
     @Override
-    public boolean isList()
-    {
+    public boolean isList() {
         return false;
     }
 
     @Override
-    public String stringify()
-    {
-        return this.tag.toString();
-    }
-
-    /**
-     * Just in case someone will use toString() instead of stringify()
-     */
-    @Override
-    public String toString()
-    {
-        return this.tag.toString();
+    @Deprecated
+    public String stringify() {
+        return tag.toString();
     }
 
     @Override
-    public boolean isEmpty()
-    {
-        return this.tag.hasNoTags();
+    public String toString() {
+        return tag.toString();
     }
 
     @Override
-    public int size()
-    {
-        return this.tag.getSize();
+    public boolean isEmpty() {
+        return tag.hasNoTags();
     }
 
     @Override
-    public void combine(INBT nbt)
-    {
-        if (nbt instanceof ScriptNBTCompound)
-        {
-            this.tag.merge(((ScriptNBTCompound) nbt).tag);
-        }
+    public int size() {
+        return tag.getSize();
     }
 
     @Override
-    public boolean isSame(INBT nbt)
-    {
-        if (nbt instanceof ScriptNBTCompound)
-        {
-            return this.tag.equals(((ScriptNBTCompound) nbt).tag);
-        }
-
-        return false;
+    public void combine(INBT nbt) {
+        if (nbt instanceof ScriptNBTCompound) tag.merge(((ScriptNBTCompound) nbt).tag);
     }
 
     @Override
-    public boolean has(String key)
-    {
-        return this.tag.hasKey(key);
+    public boolean isSame(INBT nbt) {
+        return nbt instanceof ScriptNBTCompound && tag.equals(((ScriptNBTCompound) nbt).tag);
     }
 
     @Override
-    public void remove(String key)
-    {
-        this.tag.removeTag(key);
+    public boolean has(String key) {
+        return tag.hasKey(key);
     }
 
     @Override
-    public Set<String> keys()
-    {
-        return this.tag.getKeySet();
+    public void remove(String key) {
+        tag.removeTag(key);
     }
 
     @Override
-    public INBTCompound copy()
-    {
-        return new ScriptNBTCompound(this.tag.copy());
+    public Set<String> keys() {
+        return tag.getKeySet();
+    }
+
+    @Override
+    public INBTCompound copy() {
+        return new ScriptNBTCompound(tag.copy());
     }
 
     /* INBTCompound implementation */
 
     @Override
-    public byte getByte(String key)
-    {
-        return this.tag.getByte(key);
+    public byte getByte(String key) {
+        return tag.getByte(key);
     }
 
     @Override
-    public void setByte(String key, byte value)
-    {
-        this.tag.setByte(key, value);
+    public void setByte(String key, byte value) {
+        tag.setByte(key, value);
     }
 
     @Override
-    public short getShort(String key)
-    {
-        return this.tag.getShort(key);
+    public short getShort(String key) {
+        return tag.getShort(key);
     }
 
     @Override
-    public void setShort(String key, short value)
-    {
-        this.tag.setShort(key, value);
+    public void setShort(String key, short value) {
+        tag.setShort(key, value);
     }
 
     @Override
-    public int getInt(String key)
-    {
-        return this.tag.getInteger(key);
+    public int getInt(String key) {
+        return tag.getInteger(key);
     }
 
     @Override
-    public void setInt(String key, int value)
-    {
-        this.tag.setInteger(key, value);
+    public void setInt(String key, int value) {
+        tag.setInteger(key, value);
     }
 
     @Override
-    public long getLong(String key)
-    {
-        return this.tag.getLong(key);
+    public long getLong(String key) {
+        return tag.getLong(key);
     }
 
     @Override
-    public void setLong(String key, long value)
-    {
-        this.tag.setLong(key, value);
+    public void setLong(String key, long value) {
+        tag.setLong(key, value);
     }
 
     @Override
-    public float getFloat(String key)
-    {
-        return this.tag.getFloat(key);
+    public float getFloat(String key) {
+        return tag.getFloat(key);
     }
 
     @Override
-    public void setFloat(String key, float value)
-    {
-        this.tag.setFloat(key, value);
+    public void setFloat(String key, float value) {
+        tag.setFloat(key, value);
     }
 
     @Override
-    public double getDouble(String key)
-    {
-        return this.tag.getDouble(key);
+    public double getDouble(String key) {
+        return tag.getDouble(key);
     }
 
     @Override
-    public void setDouble(String key, double value)
-    {
-        this.tag.setDouble(key, value);
+    public void setDouble(String key, double value) {
+        tag.setDouble(key, value);
     }
 
     @Override
-    public String getString(String key)
-    {
-        return this.tag.getString(key);
+    public String getString(String key) {
+        return tag.getString(key);
     }
 
     @Override
-    public void setString(String key, String value)
-    {
-        this.tag.setString(key, value);
+    public void setString(String key, String value) {
+        tag.setString(key, value);
     }
 
     @Override
-    public boolean getBoolean(String key)
-    {
-        return this.tag.getBoolean(key);
+    public boolean getBoolean(String key) {
+        return tag.getBoolean(key);
     }
 
     @Override
-    public void setBoolean(String key, boolean value)
-    {
-        this.tag.setBoolean(key, value);
+    public void setBoolean(String key, boolean value) {
+        tag.setBoolean(key, value);
     }
 
     @Override
-    public INBTCompound getCompound(String key)
-    {
-        return new ScriptNBTCompound(this.tag.getCompoundTag(key));
+    public INBTCompound getCompound(String key) {
+        return new ScriptNBTCompound(tag.getCompoundTag(key));
     }
 
     @Override
-    public void setCompound(String key, INBTCompound value)
-    {
-        this.tag.setTag(key, ((ScriptNBTCompound) value).tag);
+    public void setCompound(String key, INBTCompound value) {
+        tag.setTag(key, ((ScriptNBTCompound) value).tag);
     }
 
     @Override
-    public INBTList getList(String key)
-    {
+    public INBTList getList(String key) {
         NBTBase tag = this.tag.getTag(key);
-
         return new ScriptNBTList(tag instanceof NBTTagList ? (NBTTagList) tag : new NBTTagList());
     }
 
     @Override
-    public void setList(String key, INBTList value)
-    {
-        this.tag.setTag(key, value.getNBTTagList());
+    public void setList(String key, INBTList value) {
+        tag.setTag(key, value.asMinecraft());
     }
 
     @Override
-    public boolean setNBT(String key, String nbt)
-    {
-        try
-        {
+    public boolean setNBT(String key, String nbt) {
+        try {
             NBTTagCompound tag = JsonToNBT.getTagFromJson("{data:" + nbt + "}");
 
-            this.tag.setTag(key, tag.getTag("data"));
+            tag.setTag(key, tag.getTag("data"));
 
             return true;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception ignored) {
         }
 
         return false;
     }
 
     @Override
-    public Object get(String key)
-    {
+    public Object get(String key) {
         NBTBase tag = this.tag.getTag(key);
 
-        if (tag instanceof NBTTagCompound)
-        {
-            return new ScriptNBTCompound((NBTTagCompound) tag);
-        }
-        else if (tag instanceof NBTTagList)
-        {
-            return new ScriptNBTList((NBTTagList) tag);
-        }
-        else if (tag instanceof NBTTagString)
-        {
-            return this.getString(key);
-        }
-        else if (tag instanceof NBTTagInt)
-        {
-            return this.getInt(key);
-        }
-        else if (tag instanceof NBTTagDouble)
-        {
-            return this.getDouble(key);
-        }
-        else if (tag instanceof NBTTagFloat)
-        {
-            return this.getFloat(key);
-        }
-        else if (tag instanceof NBTTagLong)
-        {
-            return this.getLong(key);
-        }
-        else if (tag instanceof NBTTagShort)
-        {
-            return this.getShort(key);
-        }
-        else if (tag instanceof NBTTagByte)
-        {
-            return this.getByte(key);
-        }
+        if (tag instanceof NBTTagCompound) return new ScriptNBTCompound((NBTTagCompound) tag);
+        else if (tag instanceof NBTTagList) return new ScriptNBTList((NBTTagList) tag);
+        else if (tag instanceof NBTTagString) return getString(key);
+        else if (tag instanceof NBTTagInt) return getInt(key);
+        else if (tag instanceof NBTTagDouble) return getDouble(key);
+        else if (tag instanceof NBTTagFloat) return getFloat(key);
+        else if (tag instanceof NBTTagLong) return getLong(key);
+        else if (tag instanceof NBTTagShort) return getShort(key);
+        else if (tag instanceof NBTTagByte) return getByte(key);
 
         return null;
     }
 
     @Override
-    public boolean equals(INBTCompound compound)
-    {
-        return compound != null && this.tag.equals(compound.getNBTTagCompound());
+    public boolean equals(INBTCompound compound) {
+        return compound != null && tag.equals(compound.asMinecraft());
     }
 
     @Override
-    public void addCompound(String key)
-    {
-        this.tag.setTag(key, new NBTTagCompound());
+    public void addCompound(String key) {
+        tag.setTag(key, new NBTTagCompound());
     }
 
     @Override
-    public String dumpJSON()
-    {
+    public String dumpJSON() {
         String result = stringify().replaceAll("([a-zA-Z0-9_]+):", "\"$1\":");
 
-        Pattern pattern = Pattern.compile("([0-9]+[bLsdf])|0b|1b");
-        Matcher matcher = pattern.matcher(result);
-        StringBuffer sb = new StringBuffer();
+        Matcher matcher = Pattern.compile("([0-9]+[bLsdf])|0b|1b").matcher(result);
+        StringBuffer buffer = new StringBuffer();
 
-        while (matcher.find())
-        {
-            if (matcher.group(0).equals("0b"))
-            {
-                matcher.appendReplacement(sb, "false");
-            }
-            else if (matcher.group(0).equals("1b"))
-            {
-                matcher.appendReplacement(sb, "true");
-            }
-            else
-            {
-                matcher.appendReplacement(sb, matcher.group(1).substring(0, matcher.group(1).length() - 1));
+        while (matcher.find()) {
+            if (matcher.group(0).equals("0b")) {
+                matcher.appendReplacement(buffer, "false");
+            } else if (matcher.group(0).equals("1b")) {
+                matcher.appendReplacement(buffer, "true");
+            } else {
+                matcher.appendReplacement(buffer, matcher.group(1).substring(0, matcher.group(1).length() - 1));
             }
         }
-
-        matcher.appendTail(sb);
-
-        return sb.toString();
+        matcher.appendTail(buffer);
+        return buffer.toString();
     }
 }

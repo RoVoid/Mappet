@@ -32,6 +32,12 @@ import net.minecraft.util.EnumParticleTypes;
  * }</pre>
  */
 public interface IScriptFactory {
+    @Deprecated
+    IScriptBlockState createBlockState(String blockId, int meta);
+
+    @Deprecated
+    IScriptBlockState createBlockState(String blockId);
+
     /**
      * Get a block state that can be used to place and compare blocks in
      * the {@link IScriptWorld}.

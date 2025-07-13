@@ -1,13 +1,15 @@
 package mchorse.mappet.api.scripts.user.world;
 
+import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
+import mchorse.mappet.api.scripts.code.data.ScriptBox;
+import mchorse.mappet.api.scripts.code.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.mappet.MappetSchematic;
 import mchorse.mappet.api.scripts.code.world.ScriptStructure;
 import mchorse.mappet.api.scripts.code.world.ScriptWorldBorder;
-import mchorse.mappet.api.scripts.code.mappet.MappetSchematic;
 import mchorse.mappet.api.scripts.user.IScriptFactory;
 import mchorse.mappet.api.scripts.user.IScriptRayTrace;
 import mchorse.mappet.api.scripts.user.blocks.IScriptBlockState;
 import mchorse.mappet.api.scripts.user.blocks.IScriptTileEntity;
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntityItem;
 import mchorse.mappet.api.scripts.user.entities.IScriptNpc;
@@ -20,7 +22,6 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
-import javax.vecmath.Vector3d;
 import java.util.List;
 
 /**
@@ -35,11 +36,17 @@ import java.util.List;
  *    }
  * }</pre>
  */
-public interface IScriptWorld
-{
+public interface IScriptWorld {
     /**
-     * Get Minecraft world instance. <b>BEWARE:</b> you need to know the MCP
-     * mappings in order to directly call methods on this instance!
+     * Use {@link #asMinecraft()} instead
+     *
+     * @deprecated
+     */
+    World getMinecraftWorld();
+
+    /**
+     * Get Minecraft world instance
+     * <b>BEWARE:</b> you need to know the MCP mappings to directly call methods on this instance!
      *
      * <pre>{@code
      * function main(c)
@@ -50,7 +57,7 @@ public interface IScriptWorld
      * }
      * }</pre>
      */
-    public World getMinecraftWorld();
+    World asMinecraft();
 
     /**
      * Set a game rule to a given value.
@@ -59,11 +66,8 @@ public interface IScriptWorld
      *   c.getWorld().setGameRule("keepInventory", true); //btw you can NOT write 1 instead of true
      *   c.getWorld().setGameRule("randomTickSpeed", 100);
      * }</pre>
-     *
-     * @param gameRule The name of the game rule to be set.
-     * @param value The value to set the game rule to. The type of the value should match the expected type for the game rule.
      */
-    public void setGameRule(String gameRule, Object value);
+    void setGameRule(String name, Object value);
 
     /**
      * Get a game rule value.
@@ -75,13 +79,14 @@ public interface IScriptWorld
      *   c.send("Keep inventory: " + keepInventory);
      *   c.send("Random tick speed: " + randomTickSpeed);
      * }</pre>
-     *
-     * @param gameRule The name of the game rule to get the value of.
-     * @return The value of the game rule. The type of the value will match the expected type for the game rule.
      */
-    public Object getGameRule(String gameRule);
+    Object getGameRule(String name);
 
     void setBlock(IScriptBlockState state, ScriptVector pos);
+
+    boolean isBlockLoaded(int x, int y, int z);
+
+    boolean isBlockLoaded(ScriptVector newPos);
 
     /**
      * Set a block at XYZ, use {@link IScriptFactory#createBlock(String, int)}
@@ -93,7 +98,7 @@ public interface IScriptWorld
      *    c.getWorld().setBlock(coarse_dirt, 214, 3, 509);
      * }</pre>
      */
-    public void setBlock(IScriptBlockState state, int x, int y, int z);
+    void setBlock(IScriptBlockState state, int x, int y, int z);
 
     /**
      * Remove a block at given XYZ.
@@ -102,7 +107,9 @@ public interface IScriptWorld
      *   c.getWorld().removeBlock(214, 3, 509);
      * }</pre>
      */
-    public void removeBlock(int x, int y, int z);
+    void removeBlock(int x, int y, int z);
+
+    void removeBlock(ScriptVector pos);
 
     /**
      * Get block state at given XYZ.
@@ -115,7 +122,7 @@ public interface IScriptWorld
      *
      * @return a block state at given XYZ, or null if the chunk isn't loaded
      */
-    public IScriptBlockState getBlock(int x, int y, int z);
+    IScriptBlockState getBlock(int x, int y, int z);
 
     /**
      * Get block state at given XYZ.
@@ -128,7 +135,7 @@ public interface IScriptWorld
      *
      * @return a block state at given XYZ, or null if the chunk isn't loaded
      */
-    public IScriptBlockState getBlock(ScriptVector pos);
+    IScriptBlockState getBlock(ScriptVector pos);
 
     /**
      * Whether a tile entity is present at given XYZ.
@@ -142,36 +149,21 @@ public interface IScriptWorld
      * }
      * }</pre>
      */
-    public boolean hasTileEntity(int x, int y, int z);
+    boolean hasTileEntity(int x, int y, int z);
 
-    /**
-     * Replace all blocks in the given area with the given block state.
-     *
-     * <pre>{@code
-     * c.getWorld().replaceBlocks(
-     *    mappet.createBlockState("minecraft:dirt", 0),
-     *    mappet.createBlockState("minecraft:dirt", 1),
-     *    mappet.vector3(214, 3, 509),
-     *    mappet.vector3(214, 3, 509)
-     * );
-     * }</pre>
-     */
-    public void replaceBlocks(IScriptBlockState blockToBeReplaced, IScriptBlockState newBlock, Vector3d pos1, Vector3d pos2);
+    boolean hasTileEntity(ScriptVector pos);
 
-    /**
-     * Replace all blocks in the given area with the given block state and tile entity data.
-     *
-     * <pre>{@code
-     * c.getWorld().replaceBlocks(
-     *    mappet.createBlockState("minecraft:dirt", 0),
-     *    mappet.createBlockState("blockbuster:model", 0),
-     *    mappet.createCompound('{Morph:{Settings:{Hands:1b},Name:"blockbuster.fred"},id:"minecraft:blockbuster_model_tile_entity"}'),
-     *    mappet.vector3(171, 61, 279),
-     *    mappet.vector3(176, 64, 276)
-     * );
-     * }</pre>
-     */
-    public void replaceBlocks(IScriptBlockState blockToBeReplaced, IScriptBlockState newBlock, INBTCompound tileData, Vector3d pos1, Vector3d pos2);
+    void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, int minX, int minY, int minZ, int maxX, int maxY, int maxZ);
+
+    void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, ScriptVector start, ScriptVector end);
+
+    void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, ScriptBox box);
+
+    void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, INBTCompound tileData, int minX, int minY, int minZ, int maxX, int maxY, int maxZ);
+
+    void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, INBTCompound tileData, ScriptVector start, ScriptVector end);
+
+    void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, INBTCompound tileData, ScriptBox box);
 
     /**
      * Get tile entity at given XYZ.
@@ -179,17 +171,17 @@ public interface IScriptWorld
      * <pre>{@code
      *    var tile = c.getWorld().getTileEntity(214, 3, 509);
      *
-     *    if (tile)
-     *    {
+     *    if (tile) {
      *        c.send("Tile entity at (214, 3, 509) is " + tile.getId());
      *    }
-     *    else
-     *    {
+     *    else {
      *        c.send("There is no tile entity at (214, 3, 509)");
      *    }
      * }</pre>
      */
-    public IScriptTileEntity getTileEntity(int x, int y, int z);
+    IScriptTileEntity getTileEntity(int x, int y, int z);
+
+    IScriptTileEntity getTileEntity(ScriptVector pos);
 
     /**
      * Check whether there is an inventory tile entity at given XYZ.
@@ -210,7 +202,9 @@ public interface IScriptWorld
      *    }
      * }</pre>
      */
-    public boolean hasInventory(int x, int y, int z);
+    boolean hasInventory(int x, int y, int z);
+
+    boolean hasInventory(ScriptVector pos);
 
     /**
      * Get inventory tile entity at given XYZ.
@@ -229,7 +223,7 @@ public interface IScriptWorld
      *
      * @return an inventory at given XYZ, or <code>null</code> if an inventory tile entity isn't present.
      */
-    public IScriptInventory getInventory(int x, int y, int z);
+    IScriptInventory getInventory(int x, int y, int z);
 
     /**
      * Check whether it's raining in the world.
@@ -250,7 +244,7 @@ public interface IScriptWorld
      *    }
      * }</pre>
      */
-    public boolean isRaining();
+    boolean isRaining();
 
     /**
      * Set raining state.
@@ -260,7 +254,7 @@ public interface IScriptWorld
      *    c.send("The ritual dance got successfully completed!");
      * }</pre>
      */
-    public void setRaining(boolean raining);
+    void setRaining(boolean raining);
 
     /**
      * Get current time of day (the one that is set by <code>/time set</code> command).
@@ -276,7 +270,7 @@ public interface IScriptWorld
      *    }
      * }</pre>
      */
-    public long getTime();
+    long getTime();
 
     /**
      * Set current time of day.
@@ -286,7 +280,7 @@ public interface IScriptWorld
      *    c.send("Another ritual dance got successfully completed!");
      * }</pre>
      */
-    public void setTime(long time);
+    void setTime(long time);
 
     /**
      * Get total time that this world existed for (in ticks).
@@ -301,7 +295,7 @@ public interface IScriptWorld
      *    }
      * }</pre>
      */
-    public long getTotalTime();
+    long getTotalTime();
 
     /**
      * Get world's dimension ID.
@@ -317,7 +311,7 @@ public interface IScriptWorld
      *    }
      * }</pre>
      */
-    public int getDimensionId();
+    int getDimensionId();
 
     /**
      * Spawn vanilla particles.
@@ -329,22 +323,24 @@ public interface IScriptWorld
      *    c.getWorld().spawnParticles(explode, false, pos.x, pos.y, pos.z, 10, 0.1, 0.1, 0.1, 0.1);
      * }</pre>
      *
-     * @param type Particle type, you can use {@link IScriptFactory#getParticleType(String)}
-     * to get the desired particle type.
+     * @param type         Particle type, you can use {@link IScriptFactory#getParticleType(String)}
+     *                     to get the desired particle type.
      * @param longDistance Whether particles should be spawned regardless of the distance
-     * @param x X coordinate of position where particles should be spawned
-     * @param y Y coordinate of position where particles should be spawned
-     * @param z Z coordinate of position where particles should be spawned
-     * @param n How many particles of given type should be spawned
-     * @param dx X random offset that shift particle relative to X coordinate where it spawned
-     * @param dy Y random offset that shift particle relative to Y coordinate where it spawned
-     * @param dz Z random offset that shift particle relative to Z coordinate where it spawned
-     * @param speed The speed of particle, different particles might use this argument differently
-     * @param args Additional arguments that can be passed into a particle, for example for
-     * "iconcrack" particle you can pass item numeric ID to spawn item particle for
-     * a specific item (F3 + H shows the numeric ID of an item)
+     * @param x            X coordinate of position where particles should be spawned
+     * @param y            Y coordinate of position where particles should be spawned
+     * @param z            Z coordinate of position where particles should be spawned
+     * @param n            How many particles of given type should be spawned
+     * @param dx           X random offset that shift particle relative to X coordinate where it spawned
+     * @param dy           Y random offset that shift particle relative to Y coordinate where it spawned
+     * @param dz           Z random offset that shift particle relative to Z coordinate where it spawned
+     * @param speed        The speed of particle, different particles might use this argument differently
+     * @param args         Additional arguments that can be passed into a particle, for example for
+     *                     "iconcrack" particle you can pass item numeric ID to spawn item particle for
+     *                     a specific item (F3 + H shows the numeric ID of an item)
      */
-    public void spawnParticles(EnumParticleTypes type, boolean longDistance, double x, double y, double z, int n, double dx, double dy, double dz, double speed, int... args);
+    void spawnParticles(EnumParticleTypes type, boolean longDistance, double x, double y, double z, int n, double dx, double dy, double dz, double speed, int... args);
+
+    void spawnParticles(EnumParticleTypes type, boolean longDistance, ScriptVector pos, int number, ScriptVector offset, double speed, int... args);
 
     /**
      * Spawn vanilla particles only to a specific player.
@@ -356,23 +352,23 @@ public interface IScriptWorld
      *    c.getWorld().spawnParticles(c.getSubject(), explode, false, pos.x, pos.y, pos.z, 10, 0.1, 0.1, 0.1, 0.1);
      * }</pre>
      *
-     * @param player The player that you want to limit seeing the particle only to
-     * @param type Particle type, you can use {@link IScriptFactory#getParticleType(String)}
-     * to get the desired particle type.
+     * @param player       The player that you want to limit seeing the particle only to
+     * @param type         Particle type, you can use {@link IScriptFactory#getParticleType(String)}
+     *                     to get the desired particle type.
      * @param longDistance Whether particles should be spawned regardless of the distance
-     * @param x X coordinate of position where particles should be spawned
-     * @param y Y coordinate of position where particles should be spawned
-     * @param z Z coordinate of position where particles should be spawned
-     * @param n How many particles of given type should be spawned
-     * @param dx X random offset that shift particle relative to X coordinate where it spawned
-     * @param dy Y random offset that shift particle relative to Y coordinate where it spawned
-     * @param dz Z random offset that shift particle relative to Z coordinate where it spawned
-     * @param speed The speed of particle, different particles might use this argument differently
-     * @param args Additional arguments that can be passed into a particle, for example for
-     * "iconcrack" particle you can pass item numeric ID to spawn item particle for
-     * a specific item (F3 + H shows the numeric ID of an item)
+     * @param x            X coordinate of position where particles should be spawned
+     * @param y            Y coordinate of position where particles should be spawned
+     * @param z            Z coordinate of position where particles should be spawned
+     * @param n            How many particles of given type should be spawned
+     * @param dx           X random offset that shift particle relative to X coordinate where it spawned
+     * @param dy           Y random offset that shift particle relative to Y coordinate where it spawned
+     * @param dz           Z random offset that shift particle relative to Z coordinate where it spawned
+     * @param speed        The speed of particle, different particles might use this argument differently
+     * @param args         Additional arguments that can be passed into a particle, for example for
+     *                     "iconcrack" particle you can pass item numeric ID to spawn item particle for
+     *                     a specific item (F3 + H shows the numeric ID of an item)
      */
-    public void spawnParticles(IScriptPlayer player, EnumParticleTypes type, boolean longDistance, double x, double y, double z, int n, double dx, double dy, double dz, double speed, int... args);
+    void spawnParticles(IScriptPlayer player, EnumParticleTypes type, boolean longDistance, double x, double y, double z, int n, double dx, double dy, double dz, double speed, int... args);
 
     /**
      * Spawn an entity at given position.
@@ -384,8 +380,7 @@ public interface IScriptWorld
      *    c.getWorld().spawnEntity("minecraft:tnt", pos.x, pos.y, pos.z);
      * }</pre>
      */
-    public default IScriptEntity spawnEntity(String id, double x, double y, double z)
-    {
+    default IScriptEntity spawnEntity(String id, double x, double y, double z) {
         return this.spawnEntity(id, x, y, z, null);
     }
 
@@ -399,7 +394,7 @@ public interface IScriptWorld
      *    c.getWorld().spawnEntity("minecraft:zombie", pos.x, pos.y + 3, pos.z, mappet.createCompound("{IsBaby:1b}"));
      * }</pre>
      */
-    public IScriptEntity spawnEntity(String id, double x, double y, double z, INBTCompound compound);
+    IScriptEntity spawnEntity(String id, double x, double y, double z, INBTCompound compound);
 
     /**
      * Spawn an NPC at given position with default state.
@@ -410,10 +405,11 @@ public interface IScriptWorld
      *    c.getWorld().spawnNpc("herobrine", pos.x, pos.y, pos.z);
      * }</pre>
      */
-    public default IScriptNpc spawnNpc(String id, double x, double y, double z)
-    {
+    default IScriptNpc spawnNpc(String id, double x, double y, double z) {
         return this.spawnNpc(id, "default", x, y, z);
     }
+
+    IScriptEntity spawnEntity(String id, ScriptVector pos, INBTCompound compound);
 
     /**
      * Spawn an NPC at given position with given state.
@@ -424,7 +420,7 @@ public interface IScriptWorld
      *    c.getWorld().spawnNpc("herobrine", "dabbing", pos.x, pos.y, pos.z);
      * }</pre>
      */
-    public IScriptNpc spawnNpc(String id, String state, double x, double y, double z);
+    IScriptNpc spawnNpc(String id, String state, double x, double y, double z);
 
     /**
      * Spawn an NPC at given position with given state and rotation.
@@ -436,6 +432,10 @@ public interface IScriptWorld
      * }</pre>
      */
     IScriptNpc spawnNpc(String id, String state, double x, double y, double z, float yaw, float pitch, float headYaw);
+
+    IScriptNpc spawnNpc(String id, String state, ScriptVector pos);
+
+    IScriptNpc spawnNpc(String id, String state, ScriptVector pos, ScriptVector rot);
 
     /**
      * Get entities within the box specified by given coordinates in this world.
@@ -459,7 +459,9 @@ public interface IScriptWorld
      *    }
      * }</pre>
      */
-    public List<IScriptEntity> getEntities(double x1, double y1, double z1, double x2, double y2, double z2);
+    List<IScriptEntity> getEntities(double x1, double y1, double z1, double x2, double y2, double z2);
+
+    List<IScriptEntity> getEntities(ScriptBox box);
 
     /**
      * Get entities within the box specified by given coordinates in this world ignoring the volume limit.
@@ -481,30 +483,9 @@ public interface IScriptWorld
      *    }
      * }</pre>
      */
-    public List<IScriptEntity> getEntities(double x1, double y1, double z1, double x2, double y2, double z2, boolean ignoreVolumeLimit);
+    List<IScriptEntity> getEntities(double x1, double y1, double z1, double x2, double y2, double z2, boolean ignoreVolumeLimit);
 
-    /**
-     * Get entities within the sphere specified by given coordinates and radius in
-     * this world. This method limits to scanning entities only within <b>50 blocks
-     * radius</b> in any direction. If the sphere provided has the radius that is
-     * longer than 100 blocks, then it will simply return an empty list.
-     *
-     * <pre>{@code
-     *    var pos = c.getSubject().getPosition();
-     *    var entities = c.getWorld().getEntities(pos.x, pos.y + 1, pos.z, 3);
-     *
-     *    for (var i in entities)
-     *    {
-     *        var entity = entities[i];
-     *
-     *        if (!entity.isSame(c.getSubject()))
-     *        {
-     *            entity.damage(2.0);
-     *        }
-     *    }
-     * }</pre>
-     */
-    public List<IScriptEntity> getEntities(double x, double y, double z, double radius);
+    List<IScriptEntity> getEntities(ScriptBox box, boolean ignoreVolumeLimit);
 
     /**
      * Play a sound event in the world.
@@ -518,8 +499,7 @@ public interface IScriptWorld
      *    c.getWorld().playSound("minecraft:entity.pig.ambient", pos.x, pos.y, pos.z);
      * }</pre>
      */
-    public default void playSound(String event, double x, double y, double z)
-    {
+    default void playSound(String event, double x, double y, double z) {
         this.playSound(event, x, y, z, 1F, 1F);
     }
 
@@ -532,7 +512,7 @@ public interface IScriptWorld
      *    c.getWorld().playSound("minecraft:entity.pig.ambient", pos.x, pos.y, pos.z, 1.0, 0.8);
      * }</pre>
      */
-    public void playSound(String event, double x, double y, double z, float volume, float pitch);
+    void playSound(String event, double x, double y, double z, float volume, float pitch);
 
     /**
      * Stop all playing sound events for every player.
@@ -541,8 +521,7 @@ public interface IScriptWorld
      *    c.getWorld().stopAllSounds();
      * }</pre>
      */
-    public default void stopAllSounds()
-    {
+    default void stopAllSounds() {
         this.stopSound("", "");
     }
 
@@ -553,10 +532,11 @@ public interface IScriptWorld
      *    c.getWorld().stopSound("minecraft:entity.pig.ambient");
      * }</pre>
      */
-    public default void stopSound(String event)
-    {
+    default void stopSound(String event) {
         this.stopSound(event, "");
     }
+
+    void playSound(String event, ScriptVector pos, float volume, float pitch);
 
     /**
      * <p>Stop specific sound event in given sound category for every player.</p>
@@ -569,7 +549,7 @@ public interface IScriptWorld
      *    c.getWorld().stopSound("minecraft:entity.pig.ambient", "master");
      * }</pre>
      */
-    public void stopSound(String event, String category);
+    void stopSound(String event, String category);
 
     /**
      * Drop item stack at given XYZ position with no velocity applied.
@@ -581,8 +561,7 @@ public interface IScriptWorld
      *    c.getWorld().dropItemStack(item, pos.x, pos.y + 3, pos.z);
      * }</pre>
      */
-    public default IScriptEntityItem dropItemStack(IScriptItemStack stack, double x, double y, double z)
-    {
+    default IScriptEntityItem dropItemStack(IScriptItemStack stack, double x, double y, double z) {
         return this.dropItemStack(stack, x, y, z, 0, 0, 0);
     }
 
@@ -596,7 +575,7 @@ public interface IScriptWorld
      *    c.getWorld().dropItemStack(item, pos.x, pos.y + 3, pos.z, 0, 1, 0);
      * }</pre>
      */
-    public IScriptEntityItem dropItemStack(IScriptItemStack stack, double x, double y, double z, double mx, double my, double mz);
+    IScriptEntityItem dropItemStack(IScriptItemStack stack, double x, double y, double z, double mx, double my, double mz);
 
     /**
      * Make an explosion in this world at given coordinates, and distance that
@@ -613,8 +592,7 @@ public interface IScriptWorld
      * }
      * }</pre>
      */
-    public default void explode(double x, double y, double z, float distance)
-    {
+    default void explode(double x, double y, double z, float distance) {
         this.explode(null, x, y, z, distance, false, true);
     }
 
@@ -633,8 +611,7 @@ public interface IScriptWorld
      * }
      * }</pre>
      */
-    public default void explode(double x, double y, double z, float distance, boolean blazeGround, boolean destroyTerrain)
-    {
+    default void explode(double x, double y, double z, float distance, boolean blazeGround, boolean destroyTerrain) {
         this.explode(null, x, y, z, distance, blazeGround, destroyTerrain);
     }
 
@@ -652,15 +629,17 @@ public interface IScriptWorld
      * }
      * }</pre>
      *
-     * @param exploder Entity that causes explosion that won't receive damage from it.
-     * @param x X coordinate in the world at which explosion must be caused.
-     * @param y Y coordinate in the world at which explosion must be caused.
-     * @param z Z coordinate in the world at which explosion must be caused.
-     * @param distance Radius (in blocks of the explosion).
-     * @param blazeGround Whether fire blocks should be placed randomly on top of remaining blocks.
+     * @param exploder       Entity that causes explosion that won't receive damage from it.
+     * @param x              X coordinate in the world at which explosion must be caused.
+     * @param y              Y coordinate in the world at which explosion must be caused.
+     * @param z              Z coordinate in the world at which explosion must be caused.
+     * @param distance       Radius (in blocks of the explosion).
+     * @param blazeGround    Whether fire blocks should be placed randomly on top of remaining blocks.
      * @param destroyTerrain Whether blocks should be destroyed by the explosion.
      */
-    public void explode(IScriptEntity exploder, double x, double y, double z, float distance, boolean blazeGround, boolean destroyTerrain);
+    void explode(IScriptEntity exploder, double x, double y, double z, float distance, boolean blazeGround, boolean destroyTerrain);
+
+    void explode(IScriptEntity exploder, ScriptVector pos, float distance, boolean blazeGround, boolean destroyTerrain);
 
     /**
      * Ray trace in this world, between two given points (including any entity intersection).
@@ -673,7 +652,7 @@ public interface IScriptWorld
      * @param y2 Y coordinate of the second point.
      * @param z2 Z coordinate of the second point.
      */
-    public IScriptRayTrace rayTrace(double x1, double y1, double z1, double x2, double y2, double z2);
+    IScriptRayTrace rayTrace(double x1, double y1, double z1, double x2, double y2, double z2);
 
     /**
      * Ray trace in this world, between two given points (excluding entities).
@@ -686,8 +665,7 @@ public interface IScriptWorld
      * @param y2 Y coordinate of the second point.
      * @param z2 Z coordinate of the second point.
      */
-    public IScriptRayTrace rayTraceBlock(double x1, double y1, double z1, double x2, double y2, double z2);
-
+    IScriptRayTrace rayTraceBlock(double x1, double y1, double z1, double x2, double y2, double z2);
 
     /**
      * Return whether a button, plate or lever is active or not.
@@ -696,24 +674,21 @@ public interface IScriptWorld
      *     c.getWorld().isActive(0, 4, 0);
      * }</pre>
      */
-    public boolean isActive(int x, int y, int z);
+    boolean isActive(int x, int y, int z);
+
+    boolean isActive(ScriptVector pos);
 
     /**
-     * Test for a specific block and meta in a specific coordinates.
-     *
-     * <pre>{@code
-     *     function main(c)
-     *     {
-     *         var pos = c.getSubject().getPosition()
-     *
-     *         if (c.getWorld().testForBlock(Math.floor(pos.x), Math.floor(pos.y), Math.floor(pos.z), "minecraft:light_weighted_pressure_plate", 1))
-     *         {
-     *             c.send("Prussure Plate is pressed.")
-     *         }
-     *     }
-     * }</pre>
+     * @setter
+     * @param block
+     * @param x
+     * @param y
+     * @param z
+     * @return
      */
-    public boolean testForBlock(int x, int y, int z, String blockId, int meta);
+    boolean testForBlock(ScriptBlockState block, int x, int y, int z);
+
+    boolean testForBlock(ScriptBlockState block, ScriptVector pos);
 
     /**
      * Fill a 3D area with a block.
@@ -725,25 +700,22 @@ public interface IScriptWorld
      * }</pre>
      *
      * @param state The block to fill the area with.
-     * @param x1 The first x coordinate.
-     * @param y1 The first y coordinate.
-     * @param z1 The first z coordinate.
-     * @param x2 The second x coordinate.
-     * @param y2 The second y coordinate.
-     * @param z2 The second z coordinate.
+     * @param x1    The first x coordinate.
+     * @param y1    The first y coordinate.
+     * @param z1    The first z coordinate.
+     * @param x2    The second x coordinate.
+     * @param y2    The second y coordinate.
+     * @param z2    The second z coordinate.
      */
-    public void fill(IScriptBlockState state, int x1, int y1, int z1, int x2, int y2, int z2);
+    void fill(IScriptBlockState state, int x1, int y1, int z1, int x2, int y2, int z2);
 
-    /**
-     * Summon a falling block with a specific block id and meta.
-     *
-     * <pre>{@code
-     *     c.getWorld().summonFallingBlock(0, 100, 0, "minecraft:dirt", 1);
-     * }</pre>
-     *
-     * @return The falling block entity.
-     */
-    public IScriptEntity summonFallingBlock(double x, double y, double z, String blockId, int meta);
+    void fill(IScriptBlockState block, ScriptVector start, ScriptVector end);
+
+    void fill(IScriptBlockState block, ScriptBox box);
+
+    IScriptEntity spawnFallingBlock(IScriptBlockState block, double x, double y, double z);
+
+    IScriptEntity spawnFallingBlock(IScriptBlockState block, ScriptVector pos);
 
     /**
      * Transform a block to a falling block in specific coordinates.
@@ -754,24 +726,16 @@ public interface IScriptWorld
      *
      * @return The falling block entity.
      */
-    public IScriptEntity setFallingBlock(int x, int y, int z);
+    @Deprecated
+    IScriptEntity setFallingBlock(int x, int y, int z);
 
-    /**
-     * Sets a tile entity.
-     *
-     * <pre>{@code
-     * c.getWorld().setTileEntity(
-     *     530, 152, 546,
-     *     mappet.createBlockState("blockbuster:model", 0),
-     *     mappet.createCompound('{Morph:{Settings:{Hands:1b},Name:"blockbuster.fred"},id:"minecraft:blockbuster_model_tile_entity"}')
-     * );
-     *   }</pre>
-     *
-     * @param x X coordinate
-     * @param y Y coordinate
-     * @param z Z coordinate
-     */
-    public void setTileEntity(int x, int y, int z, IScriptBlockState blockState, INBTCompound tileData);
+    IScriptEntity makeBlockFall(int x, int y, int z);
+
+    IScriptEntity makeBlockFall(ScriptVector pos);
+
+    void setTileEntity(IScriptBlockState block, int x, int y, int z, INBTCompound tileData);
+
+    void setTileEntity(IScriptBlockState block, ScriptVector pos, INBTCompound tileData);
 
     /**
      * Fills a range with tile entities.
@@ -787,7 +751,7 @@ public interface IScriptWorld
      * @param y2 Y coordinate
      * @param z2 Z coordinate
      */
-    public void fillTileEntities(int x1, int y1, int z1, int x2, int y2, int z2, IScriptBlockState blockState, INBTCompound tileData);
+    void fillTileEntities(int x1, int y1, int z1, int x2, int y2, int z2, IScriptBlockState blockState, INBTCompound tileData);
 
     /**
      * Clones am area to another area.
@@ -796,17 +760,17 @@ public interface IScriptWorld
      * c.getWorld().clone(0, 100, 0, 3, 100, 3, 0, 101, 0);
      * }</pre>
      *
-     * @param x1 The first x coordinate.
-     * @param y1 The first y coordinate.
-     * @param z1 The first z coordinate.
-     * @param x2 The second x coordinate.
-     * @param y2 The second y coordinate.
-     * @param z2 The second z coordinate.
+     * @param x1   The first x coordinate.
+     * @param y1   The first y coordinate.
+     * @param z1   The first z coordinate.
+     * @param x2   The second x coordinate.
+     * @param y2   The second y coordinate.
+     * @param z2   The second z coordinate.
      * @param xNew The new x coordinate.
      * @param yNew The new y coordinate.
      * @param zNew The new z coordinate.
      */
-    public void clone(int x1, int y1, int z1, int x2, int y2, int z2, int xNew, int yNew, int zNew);
+    void clone(int x1, int y1, int z1, int x2, int y2, int z2, int xNew, int yNew, int zNew);
 
     /**
      * Clones the block to another coordinates.
@@ -818,8 +782,10 @@ public interface IScriptWorld
      * }
      * }</pre>
      */
-    public void clone(int x, int y, int z, int xNew, int yNew, int zNew);
+    void clone(int x, int y, int z, int xNew, int yNew, int zNew);
 
+
+    void clone(ScriptBox box, int xNew, int yNew, int zNew);
 
     /**
      * Gets the block stack at given position, including tile entity data.
@@ -832,7 +798,7 @@ public interface IScriptWorld
      *    world.dropItemStack(blockItemStack, x+0.5, y+0.5, z+0.5);
      * }</pre>
      */
-    public IScriptItemStack getBlockStackWithTile(int x, int y, int z);
+    IScriptItemStack getBlockItem(int x, int y, int z);
 
     /* Mappet stuff */
 
@@ -849,7 +815,7 @@ public interface IScriptWorld
      *
      * @return {@link IMappetSchematic}
      */
-    public MappetSchematic createSchematic();
+    MappetSchematic createSchematic();
 
     /**
      * Display a world morph to all players around 64 blocks away from given point.
@@ -865,8 +831,7 @@ public interface IScriptWorld
      * }
      * }</pre>
      */
-    public default void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z)
-    {
+    default void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z) {
         this.displayMorph(morph, expiration, x, y, z, 0, 0);
     }
 
@@ -883,12 +848,11 @@ public interface IScriptWorld
      *    c.getWorld().displayMorph(morph, 100, pos.x, pos.y + s.getHeight() + 0.5, pos.z, 64);
      * }</pre>
      *
-     * @param morph Morph that will be displayed (if <code>null</code>, then it won't send anything).
+     * @param morph      Morph that will be displayed (if <code>null</code>, then it won't send anything).
      * @param expiration For how many ticks will this displayed morph exist on the client side.
-     * @param range How many blocks far away will this send to players around given point.
+     * @param range      How many blocks far away will this send to players around given point.
      */
-    public default void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, int range)
-    {
+    default void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, int range) {
         this.displayMorph(morph, expiration, x, y, z, 0, 0, range);
     }
 
@@ -906,13 +870,12 @@ public interface IScriptWorld
      *    c.getWorld().displayMorph(morph, 100, pos.x, pos.y + s.getHeight() + 0.5, pos.z, 90, 0);
      * }</pre>
      *
-     * @param morph Morph that will be displayed (if <code>null</code>, then it won't send anything).
+     * @param morph      Morph that will be displayed (if <code>null</code>, then it won't send anything).
      * @param expiration For how many ticks will this displayed morph exist on the client side.
-     * @param yaw Horizontal rotation in degrees.
-     * @param pitch Vertical rotation in degrees.
+     * @param yaw        Horizontal rotation in degrees.
+     * @param pitch      Vertical rotation in degrees.
      */
-    public default void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, float yaw, float pitch)
-    {
+    default void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, float yaw, float pitch) {
         this.displayMorph(morph, expiration, x, y, z, yaw, pitch, 64);
     }
 
@@ -934,14 +897,13 @@ public interface IScriptWorld
      * }
      * }</pre>
      *
-     * @param morph Morph that will be displayed (if <code>null</code>, then it won't send anything).
+     * @param morph      Morph that will be displayed (if <code>null</code>, then it won't send anything).
      * @param expiration For how many ticks will this displayed morph exist on the client side.
-     * @param yaw Horizontal rotation in degrees.
-     * @param pitch Vertical rotation in degrees.
-     * @param range How many blocks far away will this send to players around given point.
+     * @param yaw        Horizontal rotation in degrees.
+     * @param pitch      Vertical rotation in degrees.
+     * @param range      How many blocks far away will this send to players around given point.
      */
-    public default void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, float yaw, float pitch, int range)
-    {
+    default void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, float yaw, float pitch, int range) {
         this.displayMorph(morph, expiration, x, y, z, yaw, pitch, range, null);
     }
 
@@ -967,14 +929,14 @@ public interface IScriptWorld
      * }
      * }</pre>
      *
-     * @param morph Morph that will be displayed (if <code>null</code>, then it won't send anything).
+     * @param morph      Morph that will be displayed (if <code>null</code>, then it won't send anything).
      * @param expiration For how many ticks will this displayed morph exist on the client side.
-     * @param yaw Horizontal rotation in degrees.
-     * @param pitch Vertical rotation in degrees.
-     * @param range How many blocks far away will this send to players around given point.
-     * @param player The player that only should see the morph, or null for everyone.
+     * @param yaw        Horizontal rotation in degrees.
+     * @param pitch      Vertical rotation in degrees.
+     * @param range      How many blocks far away will this send to players around given point.
+     * @param player     The player that only should see the morph, or null for everyone.
      */
-    public void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, float yaw, float pitch, int range, IScriptPlayer player);
+    void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, float yaw, float pitch, int range, IScriptPlayer player);
 
     /* BlockBuster stuff */
 
@@ -991,5 +953,5 @@ public interface IScriptWorld
      *     });
      * }</pre>
      */
-    public IScriptEntity shootBBGunProjectile(IScriptEntity shooter, double x, double y, double z, double yaw, double pitch, String gunPropsNbtString);
+    IScriptEntity shootBBGunProjectile(IScriptEntity shooter, double x, double y, double z, double yaw, double pitch, String gunPropsNbtString);
 }

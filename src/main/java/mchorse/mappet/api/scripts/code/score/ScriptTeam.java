@@ -97,13 +97,13 @@ public class ScriptTeam implements IScriptTeam {
     }
 
     @Override
-    public void setAllowFriendlyFire(boolean allowFriendlyFire) {
-        team.setAllowFriendlyFire(allowFriendlyFire);
+    public void setAllowFriendlyFire(boolean enabled) {
+        team.setAllowFriendlyFire(enabled);
     }
 
     @Override
-    public void setSeeFriendlyInvisibles(boolean seeFriendlyInvisibles) {
-        team.setSeeFriendlyInvisiblesEnabled(seeFriendlyInvisibles);
+    public void setSeeFriendlyInvisibles(boolean enabled) {
+        team.setSeeFriendlyInvisiblesEnabled(enabled);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class ScriptTeam implements IScriptTeam {
 
     @Override
     public void join(List<ScriptPlayer> players) {
-        players.forEach((player) -> scoreboard.addPlayerToTeam(player.getName(), team.getName()));
+        for (ScriptPlayer player : players) scoreboard.addPlayerToTeam(player.getName(), team.getName());
     }
 
     public void join(ScriptPlayer player) {
@@ -122,7 +122,7 @@ public class ScriptTeam implements IScriptTeam {
 
     @Override
     public void kick(List<ScriptPlayer> players) {
-        players.forEach((player) -> scoreboard.removePlayerFromTeam(player.getName(), team));
+        for (ScriptPlayer player : players) scoreboard.removePlayerFromTeam(player.getName(), team);
     }
 
     public void leave(ScriptPlayer player) {

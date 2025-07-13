@@ -55,7 +55,7 @@ public class ScriptBox implements IScriptBox {
 
     @Override
     public List<ScriptVector> getBlocksPositions(ScriptWorld world, ScriptBlockState state) {
-        World minecraftWorldworld = world.getMinecraftWorld();
+        World minecraftWorldworld = world.asMinecraft();
         IBlockState blockState = state.asMinecraft();
 
         List<ScriptVector> blocks = new ArrayList<>();

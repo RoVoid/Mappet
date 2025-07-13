@@ -14,8 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ScriptItemStack implements IScriptItemStack
-{
+public class ScriptItemStack implements IScriptItemStack {
     public static final ScriptItemStack EMPTY = new ScriptItemStack(ItemStack.EMPTY);
 
     private static final String CAN_DESTROY = "CanDestroy";
@@ -24,141 +23,112 @@ public class ScriptItemStack implements IScriptItemStack
     private final ItemStack stack;
     private IScriptItem item;
 
-    public static IScriptItemStack create(ItemStack stack)
-    {
-        if (stack == null || stack.isEmpty())
-        {
+    public static IScriptItemStack create(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
             return EMPTY;
         }
 
         return new ScriptItemStack(stack);
     }
 
-    private ScriptItemStack(ItemStack stack)
-    {
+    private ScriptItemStack(ItemStack stack) {
         this.stack = stack;
     }
 
     @Override
     @Deprecated
-    public ItemStack getMinecraftItemStack()
-    {
+    public ItemStack getMinecraftItemStack() {
         return stack;
     }
 
     @Override
-    public ItemStack asMinecraft()
-    {
+    public ItemStack asMinecraft() {
         return stack;
     }
 
     @Override
-    public boolean isEmpty()
-    {
-        return this.stack.isEmpty();
+    public boolean isEmpty() {
+        return stack.isEmpty();
     }
 
     @Override
-    public IScriptItemStack copy()
-    {
-        return new ScriptItemStack(this.getMinecraftItemStack().copy());
+    public IScriptItemStack copy() {
+        return new ScriptItemStack(asMinecraft().copy());
     }
 
     @Override
-    public IScriptItem getItem()
-    {
-        if (this.item == null)
-        {
-            this.item = new ScriptItem(this.stack.getItem());
-        }
-
-        return this.item;
+    public IScriptItem getItem() {
+        if (item == null) item = new ScriptItem(stack.getItem());
+        return item;
     }
 
     @Override
-    public int getMaxCount()
-    {
-        return this.stack.getMaxStackSize();
+    public int getMaxCount() {
+        return stack.getMaxStackSize();
     }
 
     @Override
-    public int getCount()
-    {
-        return this.stack.getCount();
+    public int getCount() {
+        return stack.getCount();
     }
 
     @Override
-    public void setCount(int count)
-    {
-        this.stack.setCount(count);
+    public void setCount(int count) {
+        stack.setCount(count);
     }
 
     @Override
-    public int getMeta()
-    {
-        return this.stack.getMetadata();
+    public int getMeta() {
+        return stack.getMetadata();
     }
 
     @Override
-    public void setMeta(int meta)
-    {
-        this.stack.setItemDamage(meta);
+    public void setMeta(int meta) {
+        stack.setItemDamage(meta);
     }
 
     @Override
-    public boolean hasData()
-    {
-        return this.stack.hasTagCompound();
+    public boolean hasData() {
+        return stack.hasTagCompound();
     }
 
     @Override
-    public INBTCompound getData()
-    {
-        return new ScriptNBTCompound(this.stack.getTagCompound());
+    public INBTCompound getData() {
+        return new ScriptNBTCompound(stack.getTagCompound());
     }
 
     @Override
-    public void setData(INBTCompound tag)
-    {
-        this.stack.setTagCompound(tag.getNBTTagCompound());
+    public void setData(INBTCompound tag) {
+        stack.setTagCompound(tag.getNBTTagCompound());
     }
 
     @Override
-    public INBTCompound serialize()
-    {
-        return new ScriptNBTCompound(this.stack.serializeNBT());
+    public INBTCompound serialize() {
+        return new ScriptNBTCompound(stack.serializeNBT());
     }
 
     @Override
-    public String getDisplayName()
-    {
-        return this.stack.getDisplayName();
+    public String getDisplayName() {
+        return stack.getDisplayName();
     }
 
     @Override
-    public void setDisplayName(String name)
-    {
-        this.stack.setStackDisplayName(name);
+    public void setDisplayName(String name) {
+        stack.setStackDisplayName(name);
     }
 
-    private NBTTagList getLoreNBTList()
-    {
-        NBTTagCompound tag = this.stack.getTagCompound();
+    private NBTTagList getLoreNBTList() {
+        NBTTagCompound tag = stack.getTagCompound();
+        if (tag == null) return null;
 
-        if (tag == null)
-        {
-            return null;
-        }
 
-        if (!tag.hasKey("display", Constants.NBT.TAG_COMPOUND))
-        {
+        if (!tag.hasKey("display", Constants.NBT.TAG_COMPOUND)) {
             tag.setTag("display", new NBTTagCompound());
         }
 
         NBTTagCompound display = tag.getCompoundTag("display");
 
-        if (!display.hasKey("Lore", Constants.NBT.TAG_LIST))
-        {
+        if (!display.hasKey("Lore", Constants.NBT.TAG_LIST)) {
             display.setTag("Lore", new NBTTagList());
         }
 
@@ -166,12 +136,10 @@ public class ScriptItemStack implements IScriptItemStack
     }
 
     @Override
-    public String getLore(int index)
-    {
-        NBTTagList list = this.getLoreNBTList();
+    public String getLore(int index) {
+        NBTTagList list = getLoreNBTList();
 
-        if (list != null && index < list.tagCount())
-        {
+        if (list != null && index < list.tagCount()) {
             return list.getStringTagAt(index);
         }
 
@@ -179,19 +147,13 @@ public class ScriptItemStack implements IScriptItemStack
     }
 
     @Override
-    public List<String> getLoreList()
-    {
-        NBTTagList lore = this.getLoreNBTList();
+    public List<String> getLoreList() {
+        NBTTagList lore = getLoreNBTList();
+        if (lore == null) return Collections.emptyList();
 
-        if (lore == null)
-        {
-            return Collections.emptyList();
-        }
+        List<String> loreList = new ArrayList<>();
 
-        List<String> loreList = new ArrayList<String>();
-
-        for (int i = 0; i < lore.tagCount(); i++)
-        {
+        for (int i = 0; i < lore.tagCount(); i++) {
             loreList.add(lore.getStringTagAt(i));
         }
 
@@ -199,86 +161,61 @@ public class ScriptItemStack implements IScriptItemStack
     }
 
     @Override
-    public void setLore(int index, String string)
-    {
-        NBTTagList lore = this.getLoreNBTList();
+    public void setLore(int index, String string) {
+        NBTTagList lore = getLoreNBTList();
 
-        if (lore != null && index >= 0 && index < lore.tagCount())
-        {
+        if (lore != null && index >= 0 && index < lore.tagCount()) {
             lore.set(index, new NBTTagString(string));
-        }
-        else
-        {
+        } else {
             throw new IllegalStateException("Lore index out of bounds, or no lore exists.");
         }
     }
 
     @Override
-    public void addLore(String string)
-    {
-        NBTTagList lore = this.getLoreNBTList();
+    public void addLore(String string) {
+        NBTTagList lore = getLoreNBTList();
+        if (lore != null) lore.appendTag(new NBTTagString(string));
+    }
 
-        if (lore != null)
-        {
-            lore.appendTag(new NBTTagString(string));
+    @Override
+    public void clearAllLores() {
+        NBTTagList lore = getLoreNBTList();
+
+        if (lore == null) return;
+        while (lore.tagCount() > 0) {
+            lore.removeTag(lore.tagCount() - 1);
         }
     }
 
     @Override
-    public void clearAllLores()
-    {
-        NBTTagList lore = this.getLoreNBTList();
+    public void clearLore(int index) {
+        NBTTagList lore = getLoreNBTList();
 
-        if (lore != null)
-        {
-            while (lore.tagCount() > 0)
-            {
-                lore.removeTag(lore.tagCount() - 1);
-            }
-        }
-    }
-
-    @Override
-    public void clearLore(int index)
-    {
-        NBTTagList lore = this.getLoreNBTList();
-
-        if (lore != null && index >= 0 && index < lore.tagCount())
-        {
+        if (lore != null && index >= 0 && index < lore.tagCount()) {
             lore.removeTag(index);
-        }
-        else
-        {
+        } else {
             throw new IllegalStateException("Lore index out of bounds, or no lore exists.");
         }
     }
 
     @Override
-    public void clearAllEnchantments()
-    {
-        NBTTagCompound tag = this.stack.getTagCompound();
-
-        if (tag != null)
-        {
-            tag.removeTag("ench");
-        }
+    public void clearAllEnchantments() {
+        NBTTagCompound tag = stack.getTagCompound();
+        if (tag != null) tag.removeTag("ench");
     }
 
     @Override
-    public List<String> getCanDestroyBlocks()
-    {
-        NBTTagCompound tag = this.stack.getTagCompound();
+    public List<String> getCanDestroyBlocks() {
+        NBTTagCompound tag = stack.getTagCompound();
 
-        if (tag == null || !tag.hasKey(CAN_DESTROY, Constants.NBT.TAG_LIST))
-        {
+        if (tag == null || !tag.hasKey(CAN_DESTROY, Constants.NBT.TAG_LIST)) {
             return Collections.emptyList();
         }
 
-        List<String> canDestroyBlocks = new ArrayList<String>();
+        List<String> canDestroyBlocks = new ArrayList<>();
         NBTTagList list = tag.getTagList(CAN_DESTROY, Constants.NBT.TAG_STRING);
 
-        for (int i = 0; i < list.tagCount(); i++)
-        {
+        for (int i = 0; i < list.tagCount(); i++) {
             canDestroyBlocks.add(list.getStringTagAt(i));
         }
 
@@ -286,31 +223,24 @@ public class ScriptItemStack implements IScriptItemStack
     }
 
     @Override
-    public void addCanDestroyBlock(String block)
-    {
-        NBTTagCompound tag = this.stack.getTagCompound();
+    public void addCanDestroyBlock(String block) {
+        NBTTagCompound tag = stack.getTagCompound();
 
-        if (tag == null)
-        {
+        if (tag == null) {
             tag = new NBTTagCompound();
-            this.stack.setTagCompound(tag);
+            stack.setTagCompound(tag);
         }
 
         NBTTagList canDestroyList;
-        if (!tag.hasKey(CAN_DESTROY, Constants.NBT.TAG_LIST))
-        {
+        if (tag.hasKey(CAN_DESTROY, Constants.NBT.TAG_LIST)) {
+            canDestroyList = tag.getTagList(CAN_DESTROY, Constants.NBT.TAG_STRING);
+        } else {
             canDestroyList = new NBTTagList();
             tag.setTag(CAN_DESTROY, canDestroyList);
         }
-        else
-        {
-            canDestroyList = tag.getTagList(CAN_DESTROY, Constants.NBT.TAG_STRING);
-        }
 
-        for (int i = 0; i < canDestroyList.tagCount(); i++)
-        {
-            if (canDestroyList.getStringTagAt(i).equals(block))
-            {
+        for (int i = 0; i < canDestroyList.tagCount(); i++) {
+            if (canDestroyList.getStringTagAt(i).equals(block)) {
                 return; // If the block is already in the list, do not add it again.
             }
         }
@@ -319,71 +249,55 @@ public class ScriptItemStack implements IScriptItemStack
     }
 
     @Override
-    public void clearAllCanDestroyBlocks()
-    {
-        NBTTagCompound tag = this.stack.getTagCompound();
-
-        if (tag != null)
-        {
-            tag.removeTag(CAN_DESTROY);
-        }
+    public void clearAllCanDestroyBlocks() {
+        NBTTagCompound tag = stack.getTagCompound();
+        if (tag != null) tag.removeTag(CAN_DESTROY);
     }
 
     @Override
-    public void clearCanDestroyBlock(String block)
-    {
-        NBTTagCompound tag = this.stack.getTagCompound();
+    public void clearCanDestroyBlock(String block) {
+        NBTTagCompound tag = stack.getTagCompound();
 
-        if (tag != null)
-        {
-            NBTTagList canPlaceOn = tag.getTagList(CAN_DESTROY, Constants.NBT.TAG_STRING);
-            NBTTagList newCanPlaceOn = new NBTTagList();
+        if (tag == null) return;
 
-            for (int i = 0; i < canPlaceOn.tagCount(); i++)
-            {
-                if (!canPlaceOn.getStringTagAt(i).equals(block))
-                {
-                    newCanPlaceOn.appendTag(canPlaceOn.get(i));
-                }
+        NBTTagList canPlaceOn = tag.getTagList(CAN_DESTROY, Constants.NBT.TAG_STRING);
+        NBTTagList newCanPlaceOn = new NBTTagList();
+
+        for (int i = 0; i < canPlaceOn.tagCount(); i++) {
+            if (!canPlaceOn.getStringTagAt(i).equals(block)) {
+                newCanPlaceOn.appendTag(canPlaceOn.get(i));
             }
-
-            tag.setTag(CAN_DESTROY, newCanPlaceOn);
         }
+
+        tag.setTag(CAN_DESTROY, newCanPlaceOn);
     }
 
     @Override
-    public List<String> getCanPlaceOnBlocks()
-    {
-        NBTTagCompound tag = this.stack.getTagCompound();
+    public List<String> getCanPlaceOnBlocks() {
+        NBTTagCompound tag = stack.getTagCompound();
 
-        if (tag == null || !tag.hasKey(CAN_PLACE_ON, Constants.NBT.TAG_LIST))
-        {
+        if (tag == null || !tag.hasKey(CAN_PLACE_ON, Constants.NBT.TAG_LIST)) {
             return Collections.emptyList();
         }
 
-        List<String> canPlaceOn = new ArrayList<String>();
+        List<String> canPlaceOn = new ArrayList<>();
         NBTTagList list = tag.getTagList(CAN_PLACE_ON, Constants.NBT.TAG_STRING);
 
-        for (int i = 0; i < list.tagCount(); i++)
-        {
-            canPlaceOn.add(list.getStringTagAt(i));
-        }
+        for (int i = 0; i < list.tagCount(); i++) canPlaceOn.add(list.getStringTagAt(i));
 
         return canPlaceOn;
     }
 
     @Override
-    public void addCanPlaceOnBlock(String block)
-    {
-        NBTTagCompound tag = this.stack.getTagCompound();
+    public void addCanPlaceOnBlock(String block) {
+        NBTTagCompound tag = stack.getTagCompound();
 
-        if (tag == null)
-        {
-            this.stack.setTagCompound(new NBTTagCompound());
+        if (tag == null) {
+            tag = new NBTTagCompound();
+            stack.setTagCompound(tag);
         }
 
-        if (!tag.hasKey(CAN_PLACE_ON, Constants.NBT.TAG_LIST))
-        {
+        if (!tag.hasKey(CAN_PLACE_ON, Constants.NBT.TAG_LIST)) {
             tag.setTag(CAN_PLACE_ON, new NBTTagList());
         }
 
@@ -391,85 +305,59 @@ public class ScriptItemStack implements IScriptItemStack
     }
 
     @Override
-    public void clearAllCanPlaceOnBlocks()
-    {
-        NBTTagCompound tag = this.stack.getTagCompound();
-
-        if (tag != null)
-        {
-            tag.removeTag(CAN_PLACE_ON);
-        }
+    public void clearAllCanPlaceOnBlocks() {
+        NBTTagCompound tag = stack.getTagCompound();
+        if (tag != null) tag.removeTag(CAN_PLACE_ON);
     }
 
     @Override
-    public void clearCanPlaceOnBlock(String block)
-    {
-        NBTTagCompound tag = this.stack.getTagCompound();
+    public void clearCanPlaceOnBlock(String block) {
+        NBTTagCompound tag = stack.getTagCompound();
+        if (tag == null) return;
 
-        if (tag != null)
-        {
-            NBTTagList canPlaceOn = tag.getTagList(CAN_PLACE_ON, Constants.NBT.TAG_STRING);
-            NBTTagList newCanPlaceOn = new NBTTagList();
+        NBTTagList canPlaceOn = tag.getTagList(CAN_PLACE_ON, Constants.NBT.TAG_STRING);
+        NBTTagList newCanPlaceOn = new NBTTagList();
 
-            for (int i = 0; i < canPlaceOn.tagCount(); i++)
-            {
-                if (!canPlaceOn.getStringTagAt(i).equals(block))
-                {
-                    newCanPlaceOn.appendTag(canPlaceOn.get(i));
-                }
+        for (int i = 0; i < canPlaceOn.tagCount(); i++) {
+            if (!canPlaceOn.getStringTagAt(i).equals(block)) {
+                newCanPlaceOn.appendTag(canPlaceOn.get(i));
             }
-
-            tag.setTag(CAN_PLACE_ON, newCanPlaceOn);
         }
+
+        tag.setTag(CAN_PLACE_ON, newCanPlaceOn);
     }
 
     @Override
-    public int getRepairCost()
-    {
-        return this.stack.getRepairCost();
+    public int getRepairCost() {
+        return stack.getRepairCost();
     }
 
     @Override
-    public void setRepairCost(int cost)
-    {
-        this.stack.setRepairCost(cost);
+    public void setRepairCost(int cost) {
+        stack.setRepairCost(cost);
     }
 
     @Override
-    public boolean isUnbreakable()
-    {
-        return !this.stack.isItemStackDamageable();
+    public boolean isUnbreakable() {
+        return !stack.isItemStackDamageable();
     }
 
     @Override
-    public void setUnbreakable(boolean unbreakable)
-    {
-        NBTTagCompound tag = this.stack.getTagCompound();
-
-        if (tag != null)
-        {
-            tag.setBoolean("Unbreakable", unbreakable);
-        }
+    public void setUnbreakable(boolean unbreakable) {
+        NBTTagCompound tag = stack.getTagCompound();
+        if (tag != null) tag.setBoolean("Unbreakable", unbreakable);
     }
 
     @Override
-    public void add(int amount)
-    {
-        int newCount = this.stack.getCount() + amount;
+    public void add(int amount) {
+        int newCount = stack.getCount() + amount;
 
-        if (newCount <= 0)
-        {
-            this.stack.shrink(this.stack.getCount());
-        }
-        else
-        {
-            this.stack.setCount(newCount);
-        }
+        if (newCount <= 0) stack.shrink(stack.getCount());
+        else stack.setCount(newCount);
     }
 
     @Override
-    public boolean equals(ScriptItemStack other)
-    {
-        return this.stack.isItemEqual(other.stack) && ItemStack.areItemStackTagsEqual(this.stack, other.stack);
+    public boolean equals(ScriptItemStack other) {
+        return stack.isItemEqual(other.stack) && ItemStack.areItemStackTagsEqual(stack, other.stack);
     }
 }

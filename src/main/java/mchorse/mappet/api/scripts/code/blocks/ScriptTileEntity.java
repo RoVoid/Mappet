@@ -38,25 +38,25 @@ public class ScriptTileEntity implements IScriptTileEntity
     @Override
     public boolean isInvalid()
     {
-        return this.tile.isInvalid();
+        return tile.isInvalid();
     }
 
     @Override
     public INBTCompound getData()
     {
-        return new ScriptNBTCompound(this.tile.serializeNBT());
+        return new ScriptNBTCompound(tile.serializeNBT());
     }
 
     @Override
     public void setData(INBTCompound compound)
     {
-        this.tile.readFromNBT(compound.getNBTTagCompound());
-        this.tile.markDirty();
+        tile.readFromNBT(compound.asMinecraft());
+        tile.markDirty();
     }
 
     @Override
     public INBTCompound getTileData()
     {
-        return new ScriptNBTCompound(this.tile.getTileData());
+        return new ScriptNBTCompound(tile.getTileData());
     }
 }

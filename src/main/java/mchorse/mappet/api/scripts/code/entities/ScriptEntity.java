@@ -131,7 +131,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         }
 
         this.entity.setPositionAndUpdate(x, y, z);
-        //fix if multiple players were teleported to same position, they appear bugged to each other:
+        //fix if multiple players were teleported to the same position, they appear bugged to each other:
         if (this.entity instanceof EntityPlayerMP) {
             ((EntityPlayerMP) entity).connection.setPlayerLocation(x, y, z, entity.rotationYaw, entity.rotationPitch);
         }
@@ -382,7 +382,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         }
 
         if (this.isLivingBase()) {
-            ((EntityLivingBase) this.entity).setHeldItem(hand, stack.getMinecraftItemStack().copy());
+            ((EntityLivingBase) this.entity).setHeldItem(hand, stack.asMinecraft().copy());
         }
     }
 
@@ -397,7 +397,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
         if (this.isPlayer()) {
             EntityPlayer player = (EntityPlayer) this.entity;
-            ItemStack itemStack = stack.getMinecraftItemStack().copy();
+            ItemStack itemStack = stack.asMinecraft().copy();
             boolean flag = player.inventory.addItemStackToInventory(itemStack);
 
             if (flag) {
@@ -419,11 +419,11 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             EntityLivingBase living = (EntityLivingBase) entity;
 
             if (living.getHeldItemMainhand().isEmpty()) {
-                living.setHeldItem(EnumHand.MAIN_HAND, stack.getMinecraftItemStack().copy());
+                living.setHeldItem(EnumHand.MAIN_HAND, stack.asMinecraft().copy());
             } else if (living.getHeldItemOffhand().isEmpty()) {
-                living.setHeldItem(EnumHand.OFF_HAND, stack.getMinecraftItemStack().copy());
+                living.setHeldItem(EnumHand.OFF_HAND, stack.asMinecraft().copy());
             } else {
-                living.entityDropItem(stack.getMinecraftItemStack().copy(), getEyeHeight());
+                living.entityDropItem(stack.asMinecraft().copy(), getEyeHeight());
             }
         }
     }
@@ -436,7 +436,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     @Override
     public int removeItem(IScriptItemStack stack, int count) {
         if (stack == null || stack.isEmpty() || count == 0) return 0;
-        ItemStack itemStack = stack.getMinecraftItemStack().copy();
+        ItemStack itemStack = stack.asMinecraft().copy();
         int deleteCount = 0;
         if (this.isPlayer()) {
             EntityPlayer player = (EntityPlayer) this.entity;
@@ -487,7 +487,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     @Override
     public int findItem(IScriptItemStack stack, int startIndex) {
         if (stack == null || stack.isEmpty() || startIndex < 0) return -1;
-        ItemStack itemStack = stack.getMinecraftItemStack().copy();
+        ItemStack itemStack = stack.asMinecraft().copy();
         if (this.isPlayer()) {
             EntityPlayer player = (EntityPlayer) this.entity;
             for (int i = startIndex; i < player.inventory.getSizeInventory(); i++) {
@@ -542,22 +542,22 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public void setHelmet(IScriptItemStack itemStack) {
-        this.entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, itemStack.getMinecraftItemStack());
+        this.entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, itemStack.asMinecraft());
     }
 
     @Override
     public void setChestplate(IScriptItemStack itemStack) {
-        this.entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, itemStack.getMinecraftItemStack());
+        this.entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, itemStack.asMinecraft());
     }
 
     @Override
     public void setLeggings(IScriptItemStack itemStack) {
-        this.entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, itemStack.getMinecraftItemStack());
+        this.entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, itemStack.asMinecraft());
     }
 
     @Override
     public void setBoots(IScriptItemStack itemStack) {
-        this.entity.setItemStackToSlot(EntityEquipmentSlot.FEET, itemStack.getMinecraftItemStack());
+        this.entity.setItemStackToSlot(EntityEquipmentSlot.FEET, itemStack.asMinecraft());
     }
 
     @Override
@@ -577,7 +577,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     public void setOwner(IScriptPlayer player) {
         if (!(entity instanceof EntityTameable)) return;
         if (player == null) ((EntityTameable) entity).setTamed(false);
-        else ((EntityTameable) entity).setTamedBy(player.getMinecraftPlayer());
+        else ((EntityTameable) entity).setTamedBy(player.asMinecraft());
     }
 
     @Override
@@ -617,7 +617,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             livingBase.setAttackTarget(null);
             livingBase.setRevengeTarget(null);
 
-            /* So I solved it by spawning an armor stand and making the entity target it and removing it after 1 tick. */
+            /* So I solved it by spawning an armor stand and making the entity focus on it and removing it after 1 tick. */
             String id = "minecraft:armor_stand";
             double x = this.entity.getPosition().getX();
             double y = this.entity.getPosition().getY() - 1;
@@ -792,7 +792,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public void damageWithItemsAs(IScriptPlayer player) {
-        player.getMinecraftPlayer().attackTargetEntityWithCurrentItem(this.entity);
+        player.asMinecraft().attackTargetEntityWithCurrentItem(this.entity);
     }
 
     @Override
@@ -844,7 +844,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public ScriptEntityItem dropItem(int amount) {
-        ItemStack heldItemStack = this.getMainItem().getMinecraftItemStack();
+        ItemStack heldItemStack = this.getMainItem().asMinecraft();
 
         if (heldItemStack.isEmpty()) {
             return null;
@@ -871,7 +871,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public ScriptEntityItem dropItem(IScriptItemStack scriptItemStack) {
-        return dropItemInternal(scriptItemStack.getMinecraftItemStack());
+        return dropItemInternal(scriptItemStack.asMinecraft());
     }
 
     @Override
@@ -1127,7 +1127,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
                 Dispatcher.sendTo(message, (EntityPlayerMP) entity);
             }
         } else {
-            Dispatcher.sendTo(message, player.getMinecraftPlayer());
+            Dispatcher.sendTo(message, player.asMinecraft());
         }
     }
 

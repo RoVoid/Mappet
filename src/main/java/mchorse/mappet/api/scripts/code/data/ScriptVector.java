@@ -15,20 +15,15 @@ public class ScriptVector implements IScriptVector {
     }
 
     public ScriptVector(Vec3d vector) {
-        this.x = vector.x;
-        this.y = vector.y;
-        this.z = vector.z;
+        x = vector.x;
+        y = vector.y;
+        z = vector.z;
     }
 
     public ScriptVector(BlockPos pos) {
-        this.x = pos.getX();
-        this.y = pos.getY();
-        this.z = pos.getZ();
-    }
-
-    @Override
-    public ScriptVector add(ScriptVector other) {
-        return add(other.x, other.y, other.z);
+        x = pos.getX();
+        y = pos.getY();
+        z = pos.getZ();
     }
 
     @Override
@@ -37,8 +32,8 @@ public class ScriptVector implements IScriptVector {
     }
 
     @Override
-    public ScriptVector subtract(ScriptVector other) {
-        return subtract(other.x, other.y, other.z);
+    public ScriptVector add(ScriptVector other) {
+        return add(other.x, other.y, other.z);
     }
 
     @Override
@@ -47,23 +42,48 @@ public class ScriptVector implements IScriptVector {
     }
 
     @Override
+    public ScriptVector subtract(ScriptVector other) {
+        return subtract(other.x, other.y, other.z);
+    }
+
+    @Override
     public ScriptVector multiply(double scalar) {
-        return new ScriptVector(this.x * scalar, this.y * scalar, this.z * scalar);
+        return new ScriptVector(x * scalar, y * scalar, z * scalar);
     }
 
     @Override
     public ScriptVector multiply(ScriptVector other) {
-        return new ScriptVector(this.x * other.x, this.y * other.y, this.z * other.z);
+        return new ScriptVector(x * other.x, y * other.y, z * other.z);
     }
 
     @Override
     public ScriptVector divide(double scalar) {
-        return new ScriptVector(this.x / scalar, this.y / scalar, this.z / scalar);
+        return new ScriptVector(x / scalar, y / scalar, z / scalar);
     }
 
     @Override
     public ScriptVector divide(ScriptVector other) {
-        return new ScriptVector(this.x / other.x, this.y / other.y, this.z / other.z);
+        return new ScriptVector(x / other.x, y / other.y, z / other.z);
+    }
+
+    @Override
+    public ScriptVector floor() {
+        return new ScriptVector(floorX(), floorY(), floorZ());
+    }
+
+    @Override
+    public int floorX() {
+        return (int) Math.floor(x);
+    }
+
+    @Override
+    public int floorY() {
+        return (int) Math.floor(y);
+    }
+
+    @Override
+    public int floorZ() {
+        return (int) Math.floor(z);
     }
 
     // Скалярная произведение
@@ -76,15 +96,15 @@ public class ScriptVector implements IScriptVector {
     @Override
     public ScriptVector crossProduct(ScriptVector other) {
         return new ScriptVector(
-                this.y * other.z - this.z * other.y,
-                this.z * other.x - this.x * other.z,
-                this.x * other.y - this.y * other.x
+                y * other.z - z * other.y,
+                z * other.x - x * other.z,
+                x * other.y - y * other.x
         );
     }
 
     @Override
     public double length() {
-        return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+        return Math.sqrt(x * x + y * y + z * z);
     }
 
     @Override
@@ -132,6 +152,6 @@ public class ScriptVector implements IScriptVector {
 
     @Override
     public String toString() {
-        return "ScriptVector(" + this.x + ", " + this.y + ", " + this.z + ")";
+        return "ScriptVector(" + x + ", " + y + ", " + z + ")";
     }
 }

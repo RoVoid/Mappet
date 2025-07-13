@@ -94,7 +94,6 @@ public class ScriptStructure implements IScriptStructure {
         structure.writeToNBT(nbt);
         try {
             CompressedStreamTools.write(nbt, file);
-            System.out.println("Save " + name);
         } catch (IOException e) {
             Mappet.logger.error(e.getMessage());
         }

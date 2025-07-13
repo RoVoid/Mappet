@@ -24,6 +24,14 @@ public interface IScriptVector {
 
     ScriptVector divide(ScriptVector other);
 
+    ScriptVector floor();
+
+    int floorX();
+
+    int floorY();
+
+    int floorZ();
+
     // Скалярная произведение
     double dotProduct(ScriptVector other);
 
