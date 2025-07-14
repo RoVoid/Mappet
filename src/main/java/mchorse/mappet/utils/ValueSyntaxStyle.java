@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import mchorse.mappet.client.gui.scripts.themes.GuiThemeEditorOverlayPanel;
 import mchorse.mappet.client.gui.scripts.themes.Themes;
-import mchorse.mappet.client.gui.scripts.utils.SyntaxStyle;
+import mchorse.mappet.client.gui.scripts.style.SyntaxStyle;
 import mchorse.mappet.client.gui.utils.overlays.GuiOverlay;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -66,7 +66,7 @@ public class ValueSyntaxStyle extends Value implements IConfigGuiProvider
     public void valueFromJSON(JsonElement element)
     {
         String file = element.getAsString();
-        SyntaxStyle style = Themes.readTheme(Themes.themeFile(file));
+        SyntaxStyle style = Themes.readTheme(Themes.getThemeFile(file));
 
         if (style != null)
         {

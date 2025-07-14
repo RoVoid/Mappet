@@ -8,11 +8,10 @@ import mchorse.mappet.client.gui.scripts.GuiDocumentationOverlayPanel;
 import mchorse.mappet.client.gui.scripts.GuiLibrariesOverlayPanel;
 import mchorse.mappet.client.gui.scripts.GuiRepl;
 import mchorse.mappet.client.gui.scripts.GuiTextEditor;
-import mchorse.mappet.client.gui.scripts.highlights.Highlighters;
+import mchorse.mappet.client.gui.scripts.style.SyntaxStyle;
 import mchorse.mappet.client.gui.scripts.utils.GuiItemStackOverlayPanel;
 import mchorse.mappet.client.gui.scripts.utils.GuiMorphOverlayPanel;
 import mchorse.mappet.client.gui.scripts.utils.GuiScriptSoundOverlayPanel;
-import mchorse.mappet.client.gui.scripts.utils.SyntaxStyle;
 import mchorse.mappet.client.gui.scripts.utils.documentation.DocClass;
 import mchorse.mappet.client.gui.scripts.utils.documentation.DocMethod;
 import mchorse.mappet.client.gui.utils.Beautifier;
@@ -344,7 +343,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         this.updateButtons();
 
         if (data != null) {
-            this.code.setHighlighter(Highlighters.readHighlighter(Highlighters.highlighterFile(data.getScriptExtension())));
+//            this.code.setHighlighter(Highlighters.readHighlighter(Highlighters.highlighterFile(data.getScriptExtension())));
 
             updateStyle();
 

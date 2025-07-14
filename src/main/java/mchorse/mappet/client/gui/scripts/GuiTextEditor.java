@@ -1,8 +1,7 @@
 package mchorse.mappet.client.gui.scripts;
 
-import mchorse.mappet.client.gui.scripts.highlights.Highlighters;
+import mchorse.mappet.client.gui.scripts.style.SyntaxHighlighter;
 import mchorse.mappet.client.gui.scripts.utils.HighlightedTextLine;
-import mchorse.mappet.client.gui.scripts.utils.SyntaxHighlighter;
 import mchorse.mappet.client.gui.scripts.utils.TextLineNumber;
 import mchorse.mappet.client.gui.scripts.utils.TextSegment;
 import mchorse.mappet.client.gui.utils.text.GuiMultiTextElement;
@@ -31,7 +30,7 @@ public class GuiTextEditor extends GuiMultiTextElement<HighlightedTextLine> {
     public GuiTextEditor(Minecraft mc, Consumer<String> callback) {
         super(mc, callback);
 
-        this.highlighter = Highlighters.readHighlighter(Highlighters.highlighterFile("js.json"));
+        this.highlighter = new SyntaxHighlighter();
     }
 
     @Override
@@ -277,11 +276,16 @@ public class GuiTextEditor extends GuiMultiTextElement<HighlightedTextLine> {
         /* Draw  */
         HighlightedTextLine textLine = this.text.get(i);
         if (textLine.segments == null) {
-            textLine.setSegments(this.highlighter.parse(this.font, this.text, textLine.text, i));
+            List<TextSegment> lastSegments = null;
+            if (i > 0 && this.text.get(i - 1) != null) lastSegments = this.text.get(i - 1).segments;
 
-            if (textLine.wrappedLines != null) {
-                textLine.calculateWrappedSegments(this.font);
-            }
+            TextSegment lastSegment = null;
+            if (lastSegments != null && !lastSegments.isEmpty())
+                lastSegment = lastSegments.get(lastSegments.size() - 1);
+
+            textLine.setSegments(highlighter.parse(font, textLine.text, lastSegment));
+
+            if (textLine.wrappedLines != null) textLine.calculateWrappedSegments(this.font);
         }
 
         List<TextSegment> segments = textLine.segments;

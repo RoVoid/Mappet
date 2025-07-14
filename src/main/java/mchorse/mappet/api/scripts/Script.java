@@ -45,87 +45,87 @@ public class Script extends AbstractData {
     }
 
     public void start(ScriptManager manager) throws ScriptException {
-        if (this.engine == null) {
-            initializeEngine();
-            configureEngineContext();
-            registerScriptVariables();
+        if (engine != null) return;
 
-            Set<String> uniqueImports = new HashSet<>();
-            StringBuilder finalCode = new StringBuilder();
-            Set<String> alreadyLoaded = new HashSet<>();
-            int total = 0;
+        initializeEngine();
+        configureEngineContext();
+        registerScriptVariables();
 
-            boolean isKotlin = isKotlinEngine();
+        Set<String> uniqueImports = new HashSet<>();
+        StringBuilder finalCode = new StringBuilder();
+        Set<String> alreadyLoaded = new HashSet<>();
+        int total = 0;
 
-            List<String> allLibraries = new ArrayList<>();
-            allLibraries.addAll(manager.globalLibraries.keySet());
-            allLibraries.addAll(this.libraries);
+        List<String> allLibraries = new ArrayList<>();
+        allLibraries.addAll(manager.globalLibraries.keySet());
+        allLibraries.addAll(libraries);
 
-            String[] lines = code.split("\n");
-            int pos = 0;
-            for (String line : lines) {
-                String trimmed = line.trim();
-                if (!trimmed.startsWith("import ")) break;
-                String lib = trimmed.substring(7).trim();
-                if (lib.isEmpty()) continue;
-                allLibraries.add(lib);
-                pos += line.length() + 1;
-            }
-            code = pos < code.length() ? code.substring(pos) : "";
+        // import "module.js"
+        String[] lines = code.split("\n");
+        int pos = 0;
+        for (String line : lines) {
+            String trimmed = line.trim();
+            if (!trimmed.startsWith("import ")) break;
 
+            String lib = trimmed.substring(7).trim();
+            if (lib.isEmpty()) continue;
 
-            for (String library : allLibraries) {
-                if (library.equals(this.getId()) || alreadyLoaded.contains(library)) continue;
-                total = processLibrary(manager, library, isKotlin, uniqueImports, finalCode, total);
-                alreadyLoaded.add(library);
-            }
-            processScriptCode(isKotlin, uniqueImports, finalCode);
+            if (lib.endsWith(";")) lib = lib.substring(0, lib.length() - 1).trim();
 
-            if (this.ranges != null) this.ranges.add(new ScriptRange(total, this.getId()));
+            char quote = lib.charAt(0);
+            if ((quote != '"' && quote != '\'') || lib.charAt(lib.length() - 1) != quote) continue;
 
-            this.engine.put("mappet", new ScriptFactory());
-            this.engine.put("math", new ScriptMath());
-
-            evalEngineCode(isKotlin, uniqueImports, finalCode);
+            allLibraries.add(lib.substring(1, lib.length() - 1));
+            pos += line.length() + 1;
         }
+        code = pos < code.length() ? code.substring(pos) : "";
+
+
+
+        for (String library : allLibraries) {
+            if (library.equals(getId()) || alreadyLoaded.contains(library)) continue;
+            total = processLibrary(manager, library, uniqueImports, finalCode, total);
+            alreadyLoaded.add(library);
+        }
+
+        finalCode.append(code);
+
+        if (ranges != null) ranges.add(new ScriptRange(total, getId()));
+
+        engine.put("mappet", new ScriptFactory());
+        engine.put("math", new ScriptMath());
+
+        engine.eval(finalCode.toString());
     }
 
     private void initializeEngine() throws ScriptException {
-        String extension = this.getScriptExtension();
+        String extension = getScriptExtension();
 
-        if (extension.equals("kts")) {
-            System.setProperty("kotlin.jsr223.experimental.resolve.dependencies.from.context.classloader", "true");
+        engine = ScriptUtils.getEngineByExtension(extension);
+
+        if (engine == null) {
+            String message = "Looks like Mappet can't find script engine for a \"" + getScriptExtension() + "\" file extension.";
+            throw new ScriptException(message, getId(), -1);
         }
 
-        this.engine = ScriptUtils.getEngineByExtension(extension);
-
-        if (this.engine == null) {
-            String message = "Looks like Mappet can't find script engine for a \"" + this.getScriptExtension() + "\" file extension.";
-            throw new ScriptException(message, this.getId(), -1);
-        }
-
-        ScriptUtils.sanitize(this.engine);
+        ScriptUtils.sanitize(engine);
     }
 
     private void configureEngineContext() {
-        String extension = this.getScriptExtension();
+        String extension = getScriptExtension();
         if (extension.equals("js")) {
             NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
-            this.engine = factory.getScriptEngine("--language=es6", "-scripting");
+            engine = factory.getScriptEngine("--language=es6", "-scripting");
         }
-        this.engine.getContext().setAttribute("javax.script.filename", this.getId(), ScriptContext.ENGINE_SCOPE);
-        this.engine.getContext().setAttribute("polyglot.js.allowHostAccess", true, ScriptContext.ENGINE_SCOPE);
+        engine.getContext().setAttribute("javax.script.filename", getId(), ScriptContext.ENGINE_SCOPE);
+        engine.getContext().setAttribute("polyglot.js.allowHostAccess", true, ScriptContext.ENGINE_SCOPE);
     }
 
     private void registerScriptVariables() {
-        Mappet.EVENT_BUS.post(new RegisterScriptVariablesEvent(this.engine));
+        Mappet.EVENT_BUS.post(new RegisterScriptVariablesEvent(engine));
     }
 
-    private boolean isKotlinEngine() {
-        return this.engine.getFactory().getLanguageName().equals("kotlin");
-    }
-
-    private int processLibrary(ScriptManager manager, String library, boolean isKotlin, Set<String> uniqueImports, StringBuilder finalCode, int total) {
+    private int processLibrary(ScriptManager manager, String library, Set<String> uniqueImports, StringBuilder finalCode, int total) {
         try {
             File scriptFile = manager.getScriptFile(library);
             if (scriptFile == null) {
@@ -134,14 +134,12 @@ public class Script extends AbstractData {
             }
             String code = FileUtils.readFileToString(scriptFile, Utils.getCharset());
 
-            if (isKotlin) code = processKotlinCode(code, uniqueImports);
-
             finalCode.append(code);
             finalCode.append("\n");
 
-            if (this.ranges == null) this.ranges = new ArrayList<>();
+            if (ranges == null) ranges = new ArrayList<>();
 
-            this.ranges.add(new ScriptRange(total, library));
+            ranges.add(new ScriptRange(total, library));
 
             total += StringUtils.countMatches(code, "\n") + 1;
         } catch (Exception e) {
@@ -152,154 +150,79 @@ public class Script extends AbstractData {
         return total;
     }
 
-    private String processKotlinCode(String code, Set<String> uniqueImports) {
-        String[] lines = code.split("\n");
-        StringBuilder currentCode = new StringBuilder();
-
-        for (String line : lines) {
-            if (line.trim().startsWith("import")) {
-                uniqueImports.add(line.trim());
-            } else {
-                currentCode.append(line);
-                currentCode.append("\n");
-            }
-        }
-
-        return currentCode.toString();
-    }
-
-    private void processScriptCode(boolean isKotlin, Set<String> uniqueImports, StringBuilder finalCode) {
-        if (isKotlin) {
-            String processedCode = processKotlinCode(this.code, uniqueImports);
-            finalCode.insert(0, processedCode);
-        } else {
-            finalCode.append(this.code);
-        }
-    }
-
-
-    private void evalEngineCode(boolean isKotlin, Set<String> uniqueImports, StringBuilder finalCode) throws ScriptException {
-        if (isKotlin) {
-            String DEFAULT_KOTLIN_IMPORTS = "import mchorse.metamorph.api.morphs.AbstractMorph" + "\n" +
-                    "import mchorse.mappet.entities.EntityNpc" + "\n" +
-                    "import net.minecraft.potion.Potion" + "\n" +
-                    "import net.minecraft.entity.Entity" + "\n" +
-                    "import net.minecraft.inventory.IInventory" + "\n" +
-                    "import net.minecraft.entity.player.EntityPlayerMP" + "\n" +
-                    "import net.minecraft.item.Item" + "\n" +
-                    "import net.minecraft.item.ItemStack" + "\n" +
-                    "import net.minecraft.tileentity.TileEntity" + "\n" +
-                    "import net.minecraft.block.state.IBlockState" + "\n" +
-                    "import net.minecraft.util.EnumParticleTypes" + "\n" +
-
-                    "import javax.vecmath.*" + "\n" +
-                    "import java.lang.Math.*" + "\n" +
-
-                    "import mchorse.mappet.api.scripts.user.*" + "\n" +
-                    "import mchorse.mappet.api.scripts.user.blocks.*" + "\n" +
-                    "import mchorse.mappet.api.scripts.user.data.*" + "\n" +
-                    "import mchorse.mappet.api.scripts.user.entities.*" + "\n" +
-                    "import mchorse.mappet.api.scripts.user.items.*" + "\n" +
-                    "import mchorse.mappet.api.scripts.user.mappet.*" + "\n" +
-                    "import mchorse.mappet.api.scripts.user.nbt.*" + "\n" +
-
-                    "import mchorse.mappet.api.scripts.code.*" + "\n" +
-                    "import mchorse.mappet.api.scripts.code.blocks.*" + "\n" +
-                    "import mchorse.mappet.api.scripts.code.entities.*" + "\n" +
-                    "import mchorse.mappet.api.scripts.code.items.*" + "\n" +
-                    "import mchorse.mappet.api.scripts.code.mappet.*" + "\n" +
-                    "import mchorse.mappet.api.scripts.code.nbt.*" + "\n";
-            String allCode = DEFAULT_KOTLIN_IMPORTS + "\n" + String.join("\n", uniqueImports) + "\n" + finalCode.toString();
-            this.engine.eval(allCode);
-        } else {
-            this.engine.eval(finalCode.toString());
-        }
-    }
-
     public String getScriptExtension() {
-        String id = this.getId();
+        String id = getId();
         int index = id.lastIndexOf('.');
-
         return index >= 0 ? id.substring(index + 1) : "js";
     }
 
     public Object execute(String function, DataContext context, Object... args) throws ScriptException, NoSuchMethodException {
-        if (function.isEmpty()) {
-            function = "main";
-        }
+        if (function.isEmpty()) function = "main";
 
-        this.engine.put("context", context);
+        engine.put("context", context);
 
         try {
-            return ((Invocable) this.engine).invokeFunction(function, args);
+            return ((Invocable) engine).invokeFunction(function, args);
         } catch (ScriptException e) {
             ScriptException exception = processScriptException(e);
-
             Mappet.logger.error(e.getMessage());
-
             throw exception == null ? e : exception;
         }
     }
 
     public Object execute(String function, DataContext context) throws ScriptException, NoSuchMethodException {
-        return this.execute(function, context, new ScriptEvent(context, this.getId(), function));
+        return execute(function, context, new ScriptEvent(context, getId(), function));
     }
 
     private ScriptException processScriptException(ScriptException e) {
-        if (this.ranges == null) return null;
+        if (ranges == null) return null;
         ScriptRange range = null;
-        for (int i = this.ranges.size() - 1; i >= 0; i--) {
-            ScriptRange possibleRange = this.ranges.get(i);
+
+        for (int i = ranges.size() - 1; i >= 0; i--) {
+            ScriptRange possibleRange = ranges.get(i);
             if (possibleRange.lineOffset <= e.getLineNumber() - 1) {
                 range = possibleRange;
                 break;
             }
         }
-        if (range != null) {
-            String message = e.getMessage();
-            int lineNumber = e.getLineNumber() - range.lineOffset;
-            message = message.replaceFirst(this.getId(), range.script + " (in " + this.getId() + ")");
-            message = message.replaceFirst("at line number \\d+", "at line number " + lineNumber);
-            return new ScriptException(message, range.script, lineNumber, e.getColumnNumber());
-        }
-        return null;
+
+        if (range == null) return null;
+
+        String message = e.getMessage();
+        int lineNumber = e.getLineNumber() - range.lineOffset;
+        message = message.replaceFirst(getId(), range.script + " (in " + getId() + ")");
+        message = message.replaceFirst("at line number \\d+", "at line number " + lineNumber);
+        return new ScriptException(message, range.script, lineNumber, e.getColumnNumber());
     }
 
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
-        NBTTagList libraries = new NBTTagList();
+        NBTTagList librariesNBT = new NBTTagList();
 
-        for (String library : this.libraries) {
-            libraries.appendTag(new NBTTagString(library));
+        for (String library : libraries) {
+            librariesNBT.appendTag(new NBTTagString(library));
         }
 
-        tag.setBoolean("Unique", this.unique);
-        tag.setBoolean("GlobalLibrary", this.globalLibrary);
-        tag.setTag("Libraries", libraries);
-        tag.setByteArray("Code", this.code.getBytes(StandardCharsets.UTF_8));
+        tag.setBoolean("Unique", unique);
+        tag.setBoolean("GlobalLibrary", globalLibrary);
+        tag.setTag("Libraries", librariesNBT);
+        tag.setByteArray("Code", code.getBytes(StandardCharsets.UTF_8));
 
         return tag;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound tag) {
-        this.unique = tag.getBoolean("Unique");
-
+        unique = tag.getBoolean("Unique");
         if (tag.hasKey("Libraries", Constants.NBT.TAG_LIST)) {
-            NBTTagList libraries = tag.getTagList("Libraries", Constants.NBT.TAG_STRING);
-
-            this.libraries.clear();
-
-            for (int i = 0, c = libraries.tagCount(); i < c; i++) {
-                this.libraries.add(libraries.getStringTagAt(i));
+            NBTTagList librariesNBT = tag.getTagList("Libraries", Constants.NBT.TAG_STRING);
+            libraries.clear();
+            for (int i = 0, c = librariesNBT.tagCount(); i < c; i++) {
+                libraries.add(librariesNBT.getStringTagAt(i));
             }
         }
-
-        if (tag.hasKey("GlobalLibrary")) {
-            this.globalLibrary = tag.getBoolean("GlobalLibrary");
-        }
-
-        this.code = new String(tag.getByteArray("Code"), StandardCharsets.UTF_8);
+        if (tag.hasKey("GlobalLibrary")) globalLibrary = tag.getBoolean("GlobalLibrary");
+        code = new String(tag.getByteArray("Code"), StandardCharsets.UTF_8);
     }
 }

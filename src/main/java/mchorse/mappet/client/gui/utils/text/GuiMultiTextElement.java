@@ -1266,12 +1266,19 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
         String left = line.substring(0, index);
         String right = "";
 
-        int index1 = line.indexOf('.', cursor.offset);
-        int index2 = line.indexOf('(', cursor.offset);
-        if (index1 != -1 && index2 != -1) right = line.substring(Math.min(index1, index2));
-        else if (index1 != -1 || index2 != -1) right = line.substring(Math.max(index1, index2));
+        int index1 = -1;
+        for (int i = cursor.offset; i < line.length(); i++) {
+            char ch = line.charAt(i);
+            if (".,;:!?(){}[]+-*/=%&|^<>".indexOf(ch) >= 0) {
+                index1 = i;
+                break;
+            }
+        }
 
-        if (!right.startsWith("(")) selectedMethod += "()";
+        if (index1 != -1) right = line.substring(index1);
+
+        if (!right.startsWith(")")) selectedMethod += "(";
+        else if (!right.startsWith("(")) selectedMethod += "()";
 
         cursor.offset = left.length() + selectedMethod.length();
 

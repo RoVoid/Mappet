@@ -32,6 +32,8 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,42 +66,29 @@ public class ScriptFactory implements IScriptFactory {
     }
 
     private NBTBase convertToNBT(Object object) {
-        if (object instanceof String) {
-            return new NBTTagString((String) object);
-        } else if (object instanceof Double) {
-            return new NBTTagDouble((Double) object);
-        } else if (object instanceof Integer) {
-            return new NBTTagInt((Integer) object);
-        } else if (object instanceof Boolean) {
+        if (object instanceof String) return new NBTTagString((String) object);
+        else if (object instanceof Double) return new NBTTagDouble((Double) object);
+        else if (object instanceof Integer) return new NBTTagInt((Integer) object);
+        else if (object instanceof Boolean)
             return new NBTTagByte((Boolean) object ? Byte.valueOf("1") : Byte.valueOf("0"));
-        } else if (object instanceof ScriptObjectMirror) {
+        else if (object instanceof ScriptObjectMirror) {
             ScriptObjectMirror mirror = (ScriptObjectMirror) object;
 
             if (mirror.isArray()) {
                 NBTTagList list = new NBTTagList();
-
                 for (int i = 0, c = mirror.size(); i < c; i++) {
                     NBTBase base = this.convertToNBT(mirror.getSlot(i));
-
-                    if (base != null) {
-                        list.appendTag(base);
-                    }
+                    if (base != null) list.appendTag(base);
                 }
-
                 return list;
-            } else {
-                NBTTagCompound tag = new NBTTagCompound();
-
-                for (String key : mirror.keySet()) {
-                    NBTBase base = this.convertToNBT(mirror.get(key));
-
-                    if (base != null) {
-                        tag.setTag(key, base);
-                    }
-                }
-
-                return tag;
             }
+
+            NBTTagCompound tag = new NBTTagCompound();
+            for (String key : mirror.keySet()) {
+                NBTBase base = this.convertToNBT(mirror.get(key));
+                if (base != null) tag.setTag(key, base);
+            }
+            return tag;
         }
 
         return null;
@@ -131,11 +120,7 @@ public class ScriptFactory implements IScriptFactory {
     @Override
     public IScriptItemStack createBlockItem(String blockId, int count, int meta) {
         Block item = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blockId));
-
-        if (item != null) {
-            return ScriptItemStack.create(new ItemStack(item, count, meta));
-        }
-        return null;
+        return item == null ? null : ScriptItemStack.create(new ItemStack(item, count, meta));
     }
 
     @Override
@@ -160,21 +145,14 @@ public class ScriptFactory implements IScriptFactory {
 
     @Override
     public IScriptItemStack createItem(INBTCompound compound) {
-        if (compound != null) {
-            return ScriptItemStack.create(new ItemStack(compound.getNBTTagCompound()));
-        }
-
-        return ScriptItemStack.EMPTY;
+        if (compound == null) return ScriptItemStack.EMPTY;
+        return ScriptItemStack.create(new ItemStack(compound.asMinecraft()));
     }
 
     @Override
     public IScriptItemStack createItem(String itemId, int count, int meta) {
         Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId));
-
-        if (item != null) {
-            return ScriptItemStack.create(new ItemStack(item, count, meta));
-        }
-        return null;
+        return item == null ? null : ScriptItemStack.create(new ItemStack(item, count, meta));
     }
 
     @Override
@@ -199,25 +177,36 @@ public class ScriptFactory implements IScriptFactory {
 
     @Override
     public AbstractMorph createMorph(INBTCompound compound) {
-        if (compound == null) return null;
-        return MorphManager.INSTANCE.morphFromNBT(compound.getNBTTagCompound());
+        return compound == null ? null : MorphManager.INSTANCE.morphFromNBT(compound.asMinecraft());
     }
 
     @Override
     public IMappetUIBuilder createUI(String script, String function) {
-        script = script == null ? "" : script;
-        function = function == null ? "" : function;
-
-        return new MappetUIBuilder(new UI(), script, function);
+        return new MappetUIBuilder(new UI(), script == null ? "" : script, function == null ? "" : function);
     }
 
     @Override
-    public String decrypt(String text, String secretKey) {
-        StringBuilder decryptedStr = new StringBuilder();
-        for (int i = 0; i < text.length(); i++) {
-            decryptedStr.append((char) (text.charAt(i) ^ secretKey.charAt(i % secretKey.length())));
-        }
-        return decryptedStr.toString();
+    public String encrypt(String text, String secretKey) {
+        byte[] textBytes = text.getBytes(StandardCharsets.UTF_8);
+        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+        byte[] result = new byte[textBytes.length];
+
+        for (int i = 0; i < textBytes.length; i++)
+            result[i] = (byte) (textBytes[i] ^ keyBytes[i % keyBytes.length]);
+
+        return Base64.getEncoder().encodeToString(result);
+    }
+
+    @Override
+    public String decrypt(String encryptedText, String secretKey) {
+        byte[] encryptedBytes = Base64.getDecoder().decode(encryptedText);
+        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+        byte[] result = new byte[encryptedBytes.length];
+
+        for (int i = 0; i < encryptedBytes.length; i++)
+            result[i] = (byte) (encryptedBytes[i] ^ keyBytes[i % keyBytes.length]);
+
+        return new String(result, StandardCharsets.UTF_8);
     }
 
     @Override
@@ -249,15 +238,11 @@ public class ScriptFactory implements IScriptFactory {
         output.append("\n");
 
         for (Method method : clazz.getDeclaredMethods()) {
-            if (Modifier.isStatic(method.getModifiers())) {
-                continue;
-            }
+            if (Modifier.isStatic(method.getModifiers())) continue;
 
             output.append("    ");
 
-            if (!simple) {
-                output.append(this.getModifier(method.getModifiers()));
-            }
+            if (!simple) output.append(this.getModifier(method.getModifiers()));
 
             output.append(simple ? method.getReturnType().getSimpleName() : method.getReturnType().getTypeName());
             output.append(" ");
@@ -267,12 +252,8 @@ public class ScriptFactory implements IScriptFactory {
 
             for (int i = 0; i < size; i++) {
                 Class<?> arg = method.getParameterTypes()[i];
-
                 output.append(simple ? arg.getSimpleName() : arg.getTypeName());
-
-                if (i < size - 1) {
-                    output.append(", ");
-                }
+                if (i < size - 1) output.append(", ");
             }
 
             output.append(")").append("\n");
@@ -281,15 +262,6 @@ public class ScriptFactory implements IScriptFactory {
         output.append("}");
 
         return output.toString();
-    }
-
-    @Override
-    public String encrypt(String text, String secretKey) {
-        StringBuilder encryptedStr = new StringBuilder();
-        for (int i = 0; i < text.length(); i++) {
-            encryptedStr.append((char) (text.charAt(i) ^ secretKey.charAt(i % secretKey.length())));
-        }
-        return encryptedStr.toString();
     }
 
     @Override
@@ -313,13 +285,9 @@ public class ScriptFactory implements IScriptFactory {
     private String getModifier(int m) {
         String modifier = Modifier.isFinal(m) ? "final " : "";
 
-        if (Modifier.isPublic(m)) {
-            modifier += "public ";
-        } else if (Modifier.isProtected(m)) {
-            modifier += "protected ";
-        } else if (Modifier.isPrivate(m)) {
-            modifier += "private ";
-        }
+        if (Modifier.isPublic(m)) modifier += "public ";
+        else if (Modifier.isProtected(m)) modifier += "protected ";
+        else if (Modifier.isPrivate(m)) modifier += "private ";
 
         return modifier;
     }
@@ -356,18 +324,9 @@ public class ScriptFactory implements IScriptFactory {
 
     @Override
     public INBTCompound toNBT(Object object) {
-        if (object instanceof INBTCompound) {
-            return (INBTCompound) object;
-        }
-
-        if (object instanceof NBTTagCompound) {
-            return new ScriptNBTCompound((NBTTagCompound) object);
-        }
-
-        if (object instanceof AbstractMorph) {
-            return new ScriptNBTCompound(((AbstractMorph) object).toNBT());
-        }
-
+        if (object instanceof INBTCompound) return (INBTCompound) object;
+        if (object instanceof NBTTagCompound) return new ScriptNBTCompound((NBTTagCompound) object);
+        if (object instanceof AbstractMorph) return new ScriptNBTCompound(((AbstractMorph) object).toNBT());
         return null;
     }
 }

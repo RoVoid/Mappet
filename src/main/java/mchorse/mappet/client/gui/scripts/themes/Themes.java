@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.scripts.themes;
 
 import mchorse.mappet.ClientProxy;
-import mchorse.mappet.client.gui.scripts.utils.SyntaxStyle;
+import mchorse.mappet.client.gui.scripts.style.SyntaxStyle;
 import mchorse.mappet.utils.NBTToJsonLike;
 import mchorse.mclib.client.gui.utils.GuiUtils;
 
@@ -11,6 +11,7 @@ import java.util.List;
 
 public class Themes {
     private static File editorThemes;
+    private static SyntaxStyle style;
 
     /**
      * Open editor themes folder
@@ -26,25 +27,18 @@ public class Themes {
         List<File> themes = new ArrayList<>();
         File[] files = editorThemes.listFiles();
 
-        if (files != null) {
-            for (File file : files) {
-                if (file.isFile() && file.getName().endsWith(".json")) {
-                    themes.add(file);
-                }
+        if (files == null) return themes;
+
+        for (File file : files) {
+            if (file.isFile() && file.getName().endsWith(".json")) {
+                themes.add(file);
             }
         }
-
         return themes;
     }
 
-    /**
-     * Get theme file
-     */
-    public static File themeFile(String name) {
-        if (!name.endsWith(".json")) {
-            name += ".json";
-        }
-
+    public static File getThemeFile(String name) {
+        if (!name.endsWith(".json")) name += ".json";
         return new File(editorThemes, name);
     }
 
@@ -75,9 +69,7 @@ public class Themes {
      */
     public static void initiate() {
         /* Just in case */
-        if (editorThemes != null) {
-            return;
-        }
+        if (editorThemes != null) return;
 
         editorThemes = new File(ClientProxy.configFolder, "themes");
         editorThemes.mkdirs();
@@ -91,40 +83,12 @@ public class Themes {
         }
 
         if (!dracula.isFile()) {
-            SyntaxStyle draculaStyle = new SyntaxStyle();
-
-            draculaStyle.title = "Dracula";
-            draculaStyle.shadow = true;
-            draculaStyle.primary = 0xcc7832;
-            draculaStyle.secondary = 0x9876aa;
-            draculaStyle.identifier = 0xffc66d;
-            draculaStyle.special = 0xcc7832;
-            draculaStyle.strings = 0x619554;
-            draculaStyle.comments = 0x808080;
-            draculaStyle.numbers = 0x6694b8;
-            draculaStyle.other = 0xa9b7c6;
-            draculaStyle.lineNumbers = 0x5e6163;
-            draculaStyle.background = 0x2b2b2b;
-
+            SyntaxStyle draculaStyle = new SyntaxStyle("Dracula", true, 0xf92672, 0x66d9ef, 0xffc66d, 0xcc7832, 0x619554, 0x808080, 0x6694b8, 0xcc7832, 0x9876aa, 0xf92672, 0xa9b7c6, 0x5e6163, 0x2b2b2b);
             writeTheme(dracula, draculaStyle);
         }
 
         if (!vscode.isFile()) {
-            SyntaxStyle vscodeStyle = new SyntaxStyle();
-
-            vscodeStyle.title = "VS Code";
-            vscodeStyle.shadow = true;
-            vscodeStyle.primary = 0xe280ff;
-            vscodeStyle.secondary = 0x6ea2f1;
-            vscodeStyle.identifier = 0xdfe78c;
-            vscodeStyle.special = 0xc2a573;
-            vscodeStyle.strings = 0xe6a67f;
-            vscodeStyle.comments = 0x5e9955;
-            vscodeStyle.numbers = 0xb380ff;
-            vscodeStyle.other = 0xededfe;
-            vscodeStyle.lineNumbers = 0x556368;
-            vscodeStyle.background = 0x212121;
-
+            SyntaxStyle vscodeStyle = new SyntaxStyle("VS Code", true, 0xe280ff, 0x66d9ef, 0xdfe78c, 0xc2a573, 0xe6a67f, 0x5e9955, 0xb380ff, 0x61d9fa, 0xa6e22e, 0xf92672, 0xededfe, 0x556368, 0x212121);
             writeTheme(vscode, vscodeStyle);
         }
     }

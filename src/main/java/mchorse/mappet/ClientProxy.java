@@ -4,7 +4,6 @@ import mchorse.mappet.api.utils.IContentType;
 import mchorse.mappet.client.KeyboardHandler;
 import mchorse.mappet.client.RenderingHandler;
 import mchorse.mappet.client.SoundPack;
-import mchorse.mappet.client.gui.scripts.highlights.Highlighters;
 import mchorse.mappet.client.gui.scripts.themes.Themes;
 import mchorse.mappet.client.renders.entity.RenderNpc;
 import mchorse.mappet.client.renders.tile.TileConditionModelRenderer;
@@ -35,7 +34,7 @@ import java.util.function.Consumer;
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
     private static int requestId = 0;
-    private static Map<Integer, Consumer<List<String>>> consumers = new HashMap<Integer, Consumer<List<String>>>();
+    private static final Map<Integer, Consumer<List<String>>> consumers = new HashMap<>();
 
     public static File sounds;
 
@@ -73,7 +72,6 @@ public class ClientProxy extends CommonProxy {
         ReflectionUtils.registerResourcePack(new SoundPack(sounds = new File(CommonProxy.configFolder, "sounds")));
 
         Themes.initiate();
-        Highlighters.initiate();
     }
 
     @Override
