@@ -1235,7 +1235,7 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
         }
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(0, 0, 1);
+        GlStateManager.translate(0, 0, 0.1);
 
         int rectOffset = (this.font.FONT_HEIGHT + 4) * matchingMethods.size();
         if (i < 15)
@@ -1258,7 +1258,7 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
     }
 
     private String completeLine(String line, List<String> matchingMethods) {
-        int index = line.lastIndexOf('.', cursor.offset) + 1;
+        int index = line.lastIndexOf('.', cursor.offset - 1) + 1;
 
         String selectedMethod = matchingMethods.get(0);
         if (selectedMethod == null) return line;
@@ -1275,10 +1275,10 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             }
         }
 
-        if (index1 != -1) right = line.substring(index1);
-
-        if (!right.startsWith(")")) selectedMethod += "(";
-        else if (!right.startsWith("(")) selectedMethod += "()";
+        if (index1 != -1) {
+            if (line.charAt(index1) != '(') selectedMethod += "()";
+            right = line.substring(index1);
+        } else selectedMethod += "()";
 
         cursor.offset = left.length() + selectedMethod.length();
 

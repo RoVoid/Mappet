@@ -14,81 +14,59 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 
-public class ServerHandlerLogs extends ServerMessageHandler<PacketRequestLogs>
-{
+public class ServerHandlerLogs extends ServerMessageHandler<PacketRequestLogs> {
     @Override
-    public void run(EntityPlayerMP player, PacketRequestLogs message)
-    {
-        if (!OpHelper.isPlayerOp(player))
-        {
-            return;
-        }
+    public void run(EntityPlayerMP player, PacketRequestLogs message) {
+        if (!OpHelper.isPlayerOp(player)) return;
 
-        LocalDateTime lastLogTime = LocalDateTime.parse(message.lastLogTime, MappetLogger.dtf);
 
         File mappetWorldFolder = new File(DimensionManager.getCurrentSaveRootDirectory(), Mappet.MOD_ID);
-
         File logFile = new File(mappetWorldFolder, "logs/latest.log");
 
-        try
-        {
+        try {
             BufferedReader reader = new BufferedReader(new FileReader(logFile));
 
             int stringEncodingLimit = 16384; // Because of forge :(
 
-            String stringToSend = "";
+            StringBuilder stringBuilder = new StringBuilder();
 
             String line;
-            boolean isPreviousLineNew = false;
-            while ((line = reader.readLine()) != null)
-            {
-                if (!isNewLine(lastLogTime, line, isPreviousLineNew))
-                {
-                    isPreviousLineNew = false;
-                    continue;
-                }
+            if (!message.lastLogTime.isEmpty()) {
+                LocalDateTime lastLogTime = Instant.parse(message.lastLogTime).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                while ((line = reader.readLine()) != null) if (isNewLine(lastLogTime, line)) break;
+            } else line = reader.readLine();
 
-                isPreviousLineNew = true;
+            int byteCount = 0;
+            while (line != null) {
+                int lineByteCount = line.getBytes(StandardCharsets.UTF_8).length + 1;
+                if (byteCount + lineByteCount >= stringEncodingLimit) break;
 
-                if (stringToSend.getBytes().length + line.getBytes().length < stringEncodingLimit)
-                {
-                    stringToSend = stringToSend.concat(line + "\r");
-                }
-                else
-                {
-                    Dispatcher.sendTo(new PacketLogs(stringToSend), player);
+                stringBuilder.append(line).append("\n");
+                byteCount += lineByteCount;
 
-                    stringToSend = "";
-                }
+                line = reader.readLine();
             }
 
-            if (!stringToSend.equals(""))
-            {
-                Dispatcher.sendTo(new PacketLogs(stringToSend), player);
-            }
+            String str = stringBuilder.toString();
+            if (!str.isEmpty()) Dispatcher.sendTo(new PacketLogs(str), player);
+        } catch (IOException ignored) {
         }
-        catch (IOException e) {}
     }
 
-    public boolean isNewLine(LocalDateTime date, String line, boolean isPreviousLineNew)
-    {
-        if (date.equals(LocalDateTime.of(1, 1, 1, 0, 0, 0)))
-        {
-            return true;
-        }
+    public boolean isNewLine(LocalDateTime date, String line) {
         int bracketIndex = line.indexOf("]");
-
-        if (bracketIndex == -1)
-        {
-            return isPreviousLineNew;
-        }
-
+        if (bracketIndex == -1) return false;
         String logDateString = line.substring(1, bracketIndex);
-
-        LocalDateTime logDate = LocalDateTime.parse(logDateString, MappetLogger.dtf);
-
-        return logDate.isAfter(date);
+        try {
+            return LocalDateTime.parse(logDateString, MappetLogger.dtf).isAfter(date);
+        } catch (DateTimeParseException e) {
+            return false;
+        }
     }
 }

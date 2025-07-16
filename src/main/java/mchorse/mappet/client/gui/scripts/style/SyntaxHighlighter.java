@@ -1,6 +1,7 @@
 package mchorse.mappet.client.gui.scripts.style;
 
 import mchorse.mappet.client.gui.scripts.utils.TextSegment;
+import mchorse.mappet.client.gui.scripts.utils.TextSegment.TOKEN;
 import net.minecraft.client.gui.FontRenderer;
 
 import java.util.ArrayList;
@@ -11,21 +12,6 @@ import java.util.regex.Pattern;
 // Признаю, ничего не смыслю в Lexer-ах ╰(￣ω￣ｏ)
 
 public class SyntaxHighlighter {
-    public enum TOKENS {
-        COMMENT,        // //
-        MULTI_COMMENTS, // /* */
-        STRING,         // '' "" ``
-        FUNCTION,       // function func(); funcInFile()
-        METHOD,         // obj.method()
-        OPERATOR,       // +-><=?!&|^ и другие
-        NUMBER,         // 0.1 0x7 3 -8
-        CONSTANT,       // true false null undefined
-        IDENTIFIER,     // const function var let prototype
-        KEYWORD,        // break continue switch case default try catch delete do while finally if else for each in instanceof new throw typeof with yield return import
-        SPECIAL,        // math mappet this Math JSON
-        OTHER           // всё остальное
-    }
-
     public final String doubleQuoted = "\"(?:\\\\.|[^\"\\\\])*\"";
     public final String singleQuoted = "'(?:\\\\.|[^'\\\\])*'";
     public final String backtickQuoted = "`(?:\\\\.|[^`\\\\])*`";
@@ -35,8 +21,8 @@ public class SyntaxHighlighter {
     public final String constant = "\\b(?:true|false|null|undefined)\\b";
     public final String keyword = "\\b(?:break|continue|switch|case|default|try|catch|delete|do|while|finally|if|else|for|each|in|instanceof|new|throw|typeof|with|yield|return|import)\\b";
     public final String identifier = "\\b(?:const|function|var|let|prototype)\\b";
-    public final String special = "\\b(?:Math|JSON|this|mappet|math)\\b";
-    public final String method = "\\b\\w+\\.\\w+\\s*(?=\\()";
+    public final String special = "\\b(?:Java|Math|JSON|this|mappet|math)\\b";
+    public final String method = "\\.\\s*(\\w+)\\s*(?=\\()";
     public final String function = "\\b\\w+\\s*(?=\\()";
     public final String operator = "[+\\-*/=<>!&|%^~]+";
 
@@ -45,21 +31,21 @@ public class SyntaxHighlighter {
     private SyntaxStyle style;
 
     public SyntaxHighlighter() {
-        this.style = new SyntaxStyle();
+        style = new SyntaxStyle();
 
         // Собираем pattern в правильном порядке
         String combinedPattern =
-                "(" + doubleQuoted + ")" + "|" +                  // group 1  — string
-                        "(" + singleQuoted + ")" + "|" +          // group 2  — string
-                        "(" + backtickQuoted + ")" + "|" +        // group 3  — string
+                "(" + doubleQuoted + ")" + "|" +                  // group 1  — string ""
+                        "(" + singleQuoted + ")" + "|" +          // group 2  — string ''
+                        "(" + backtickQuoted + ")" + "|" +        // group 3  — string ``
                         "(" + comment + ")" + "|" +               // group 4  — comment
                         "(" + multiComments + ")" + "|" +         // group 5  — multiComments
                         "(" + number + ")" + "|" +                // group 6  — number
                         "(" + constant + ")" + "|" +              // group 7  — constant
                         "(" + keyword + ")" + "|" +               // group 8  — keyword
                         "(" + identifier + ")" + "|" +            // group 9  — identifier
-                        "(" + special + ")" + "|" +               // group 10  — special
-                        "(" + method + ")" + "|" +                // group 11  — method
+                        "(" + special + ")" + "|" +               // group 10 — special
+                         method + "|" +                // group 11 — method
                         "(" + function + ")" + "|" +              // group 12 — function
                         "(" + operator + ")";                     // group 13 — operator
 
@@ -67,7 +53,7 @@ public class SyntaxHighlighter {
     }
 
     public SyntaxStyle getStyle() {
-        return this.style;
+        return style;
     }
 
     public void setStyle(SyntaxStyle style) {
@@ -84,19 +70,19 @@ public class SyntaxHighlighter {
 
         if (lastSegment != null) {
             // Продолжение многострочного комментария
-            if (lastSegment.token == TOKENS.MULTI_COMMENTS && !lastSegment.text.trim().endsWith("*/")) {
+            if (lastSegment.token == TOKEN.MULTI_COMMENTS && !lastSegment.text.trim().endsWith("*/")) {
                 inComment = true;
                 if (!line.contains("*/")) {
-                    list.add(new TextSegment(TOKENS.MULTI_COMMENTS, line, style.comments, font.getStringWidth(line)));
+                    list.add(new TextSegment(TOKEN.MULTI_COMMENTS, line, style.comments, font.getStringWidth(line)));
                     return list;
                 }
             }
 
             // Продолжение многострочной строки
-            if (lastSegment.token == TOKENS.STRING && lastSegment.text.trim().endsWith("\\")) {
+            if (lastSegment.token == TOKEN.STRING && lastSegment.text.trim().endsWith("\\")) {
                 inString = lastSegment.text.trim().charAt(0);
                 if (!line.contains("" + inString)) {
-                    list.add(new TextSegment(TOKENS.STRING, line, style.strings, font.getStringWidth(line)));
+                    list.add(new TextSegment(TOKEN.STRING, line, style.strings, font.getStringWidth(line)));
                     return list;
                 }
             }
@@ -106,14 +92,14 @@ public class SyntaxHighlighter {
             int index = line.indexOf("*/");
             String str = line.substring(0, index + 2);
             line = line.substring(index + 2);
-            list.add(new TextSegment(TOKENS.MULTI_COMMENTS, str, style.comments, font.getStringWidth(str)));
+            list.add(new TextSegment(TOKEN.MULTI_COMMENTS, str, style.comments, font.getStringWidth(str)));
         }
 
         if (inString != '\0') {
             int index = line.indexOf(inString);
             String str = line.substring(0, index + 1);
             line = line.substring(index + 1);
-            list.add(new TextSegment(TOKENS.STRING, str, style.strings, font.getStringWidth(str)));
+            list.add(new TextSegment(TOKEN.STRING, str, style.strings, font.getStringWidth(str)));
         }
 
         Matcher matcher = pattern.matcher(line);
@@ -126,54 +112,54 @@ public class SyntaxHighlighter {
             if (start > lastEnd) {
                 String skipped = line.substring(lastEnd, start);
                 int width = font.getStringWidth(skipped);
-                list.add(new TextSegment(TOKENS.OTHER, skipped, style.other, width));
+                list.add(new TextSegment(TOKEN.OTHER, skipped, style.other, width));
             }
 
             String match = matcher.group();
-            TOKENS token;
+            TOKEN token;
             int color;
 
             if (matcher.group(1) != null) {
-                token = TOKENS.STRING;
+                token = TOKEN.STRING;
                 color = style.strings;
             } else if (matcher.group(2) != null) {
-                token = TOKENS.STRING;
+                token = TOKEN.STRING;
                 color = style.strings;
             } else if (matcher.group(3) != null) {
-                token = TOKENS.STRING;
+                token = TOKEN.STRING;
                 color = style.strings;
             } else if (matcher.group(4) != null) {
-                token = TOKENS.COMMENT;
+                token = TOKEN.COMMENT;
                 color = style.comments;
             } else if (matcher.group(5) != null) {
-                token = TOKENS.MULTI_COMMENTS;
+                token = TOKEN.MULTI_COMMENTS;
                 color = style.comments;
             } else if (matcher.group(6) != null) {
-                token = TOKENS.NUMBER;
+                token = TOKEN.NUMBER;
                 color = style.numbers;
             } else if (matcher.group(7) != null) {
-                token = TOKENS.CONSTANT;
+                token = TOKEN.CONSTANT;
                 color = style.constants;
             } else if (matcher.group(8) != null) {
-                token = TOKENS.KEYWORD;
+                token = TOKEN.KEYWORD;
                 color = style.keywords;
             } else if (matcher.group(9) != null) {
-                token = TOKENS.IDENTIFIER;
+                token = TOKEN.IDENTIFIER;
                 color = style.identifiers;
             } else if (matcher.group(10) != null) {
-                token = TOKENS.SPECIAL;
+                token = TOKEN.SPECIAL;
                 color = style.special;
             } else if (matcher.group(11) != null) {
-                token = TOKENS.METHOD;
+                token = TOKEN.METHOD;
                 color = style.methods;
             } else if (matcher.group(12) != null) {
-                token = TOKENS.FUNCTION;
+                token = TOKEN.FUNCTION;
                 color = style.functions;
             } else if (matcher.group(13) != null) {
-                token = TOKENS.OPERATOR;
+                token = TOKEN.OPERATOR;
                 color = style.operators;
             } else {
-                token = TOKENS.OTHER;
+                token = TOKEN.OTHER;
                 color = style.other;
             }
 
@@ -185,7 +171,7 @@ public class SyntaxHighlighter {
         if (lastEnd < line.length()) {
             String tail = line.substring(lastEnd);
             int width = font.getStringWidth(tail);
-            list.add(new TextSegment(TOKENS.OTHER, tail, style.other, width));
+            list.add(new TextSegment(TOKEN.OTHER, tail, style.other, width));
         }
 
         return list;

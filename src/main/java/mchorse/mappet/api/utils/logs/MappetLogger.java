@@ -18,12 +18,12 @@ import java.util.logging.Logger;
 
 public class MappetLogger extends Logger implements IMappetLogger
 {
-    public static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy_MM_dd HH:mm:ss");
+    public static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
     public MappetLogger(String name, File worldFile)
     {
         super(name, null);
-        FileHandler handler = null;
+        FileHandler handler;
         try
         {
             File logsFolder = new File(worldFile, "logs");

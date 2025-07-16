@@ -77,6 +77,7 @@ public class Themes {
         File monokai = new File(editorThemes, "monokai.json");
         File dracula = new File(editorThemes, "dracula.json");
         File vscode = new File(editorThemes, "vscode.json");
+        File jetbrains = new File(editorThemes, "jetbrains.json");
 
         if (!monokai.isFile()) {
             writeTheme(monokai, new SyntaxStyle());
@@ -88,8 +89,13 @@ public class Themes {
         }
 
         if (!vscode.isFile()) {
-            SyntaxStyle vscodeStyle = new SyntaxStyle("VS Code", true, 0xe280ff, 0x66d9ef, 0xdfe78c, 0xc2a573, 0xe6a67f, 0x5e9955, 0xb380ff, 0x61d9fa, 0xa6e22e, 0xf92672, 0xededfe, 0x556368, 0x212121);
+            SyntaxStyle vscodeStyle = new SyntaxStyle("VS Code", true, 0xff82d3, 0xCF84DF, 0x668cd4, 0x82dfdf, 0xddaf86, 0x5e9c6f, 0xCAD578, 0xffff9b, 0xeccc8d, 0xaaaaaa, 0xeaeaea, 0x6e7681, 0x1f1f1f);
             writeTheme(vscode, vscodeStyle);
+        }
+
+        if (!jetbrains.isFile()) {
+            SyntaxStyle jetbrainsStyle = new SyntaxStyle("JetBrains", true, 0xfd971f, 0xc9a638, 0xff7c4c, 0xc052bd, 0x8dd364, 0x7f7f7f, 0x82e6ff, 0x79a0ff, 0xffffda, 0xaaaaaa, 0xeaeaea, 0x626262, 0x222227);
+            writeTheme(jetbrains, jetbrainsStyle);
         }
     }
 }

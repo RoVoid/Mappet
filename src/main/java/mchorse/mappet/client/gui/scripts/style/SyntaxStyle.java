@@ -9,7 +9,7 @@ public class SyntaxStyle {
     public int keywords = 0xf92672;
     public int constants = 0x66d9ef;
     public int identifiers = 0xa6e22e;
-    public int special = 0xfd971f;       // Math, JSON, this, mappet
+    public int special = 0xfd971f;
     public int strings = 0xe6db74;
     public int comments = 0x75715e;
     public int numbers = 0xae81ff;
