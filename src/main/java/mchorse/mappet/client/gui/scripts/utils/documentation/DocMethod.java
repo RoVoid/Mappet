@@ -1,78 +1,52 @@
 package mchorse.mappet.client.gui.scripts.utils.documentation;
 
-import mchorse.mappet.client.gui.utils.text.GuiText;
-import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
+import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 
-public class DocMethod extends DocEntry
-{
-    public DocReturn returns;
-    public List<DocParameter> arguments = new ArrayList<DocParameter>();
-    public List<String> annotations = new ArrayList<String>();
+public class DocMethod extends DocEntry {
+    public DocMethod(String name) {
+        super(name);
+    }
 
-    @Override
-    public String getName()
-    {
-        String args = this.arguments.stream().map(DocParameter::getType).collect(Collectors.joining(", "));
-
-        return super.getName() + "(" + TextFormatting.GRAY + args + TextFormatting.RESET + ")";
+    public String getName() {
+        if (entries.size() == 1) return name;
+        return name + "(" + TextFormatting.GRAY + "..." + TextFormatting.RESET + ")";
     }
 
     @Override
-    public void fillIn(Minecraft mc, GuiScrollElement target)
-    {
-        super.fillIn(mc, target);
+    public void append(Minecraft mc, GuiScrollElement target) {
+        GuiScrollElement panel = new GuiScrollElement(mc);
+        GuiMethodVariantList list = new GuiMethodVariantList(mc, l -> {
+            panel.scroll.scrollTo(0);
+            panel.removeAll();
+            l.get(0).append(mc, panel);
+        });
+    }
 
-        boolean first = true;
-
-        for (DocParameter parameter : this.arguments)
-        {
-            GuiText text = new GuiText(mc).text(TextFormatting.GOLD + parameter.getType() + TextFormatting.RESET + " " + parameter.name);
-
-            if (first)
-            {
-                text.marginTop(8);
-            }
-
-            target.add(text);
-
-            if (!parameter.doc.isEmpty())
-            {
-                DocEntry.process(parameter.doc, mc, target);
-
-                ((GuiElement) target.getChildren().get(target.getChildren().size() - 1)).marginBottom(8);
-            }
-
-            first = false;
-        }
-
-        target.add(new GuiText(mc).text("Returns " + TextFormatting.GOLD + this.returns.getType()).marginTop(8));
-
-        List<String> annotations = this.annotations.stream()
-                .map(annotation -> "@" + annotation.substring(annotation.lastIndexOf(".") + 1))
-                .filter(annotation -> !annotation.equals("@Override"))
-                .collect(Collectors.toList());
-        if (annotations.size() > 0)
-        {
-            String annotationsText = String.join(", ", annotations);
-            target.add(new GuiText(mc).text(String.valueOf(TextFormatting.GRAY) + TextFormatting.BOLD + annotationsText).marginTop(8));
-        }
-
-        if (!this.returns.doc.isEmpty())
-        {
-            DocEntry.process(this.returns.doc, mc, target);
-        }
+    public boolean removeDiscardMethods() {
+        entries.removeIf(variant -> ((DocMethodVariant) variant).annotations.contains("mchorse.mappet.api.ui.utils.DiscardMethod"));
+        return entries.isEmpty();
     }
 
     @Override
-    public List<DocEntry> getEntries()
-    {
-        return this.parent == null ? super.getEntries() : this.parent.getEntries();
+    public List<DocEntry> getEntries() {
+        return parent == null ? null : parent.getEntries();
+    }
+
+    public static class GuiMethodVariantList extends GuiListElement<DocMethodVariant> {
+
+        public GuiMethodVariantList(Minecraft mc, Consumer<List<DocMethodVariant>> callback) {
+            super(mc, callback);
+        }
+
+        @Override
+        protected String elementToString(DocMethodVariant element) {
+            return element.getName();
+        }
     }
 }

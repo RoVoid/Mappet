@@ -1216,7 +1216,7 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
     }
 
     private List<String> findMatchingMethods(String methodName) {
-        List<DocMethod> methods = GuiDocumentationOverlayPanel.getDocs().getAllMethods();
+        List<DocMethod> methods = GuiDocumentationOverlayPanel.getDocs().methods;
         List<String> matchingMethods = new ArrayList<>();
         for (DocMethod method : methods) {
             if (method.name.toLowerCase().startsWith(methodName) && !matchingMethods.contains(method.name)) {

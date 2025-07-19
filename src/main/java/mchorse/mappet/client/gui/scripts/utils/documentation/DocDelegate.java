@@ -1,23 +1,54 @@
 package mchorse.mappet.client.gui.scripts.utils.documentation;
 
-public class DocDelegate extends DocEntry
-{
-    public DocEntry delegate;
+import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
+import net.minecraft.client.Minecraft;
 
-    public DocDelegate(DocEntry delegate)
-    {
-        this.delegate = delegate;
+import java.util.List;
+
+public class DocDelegate extends DocEntry {
+    public DocDelegate() {
+
+    }
+
+    public DocDelegate(String name) {
+
+    }
+
+    public DocDelegate(DocEntry parent) {
+        this.parent = parent;
     }
 
     @Override
-    public String getName()
-    {
+    public void addChildren(DocEntry... children) {
+
+    }
+
+    @Override
+    public void append(Minecraft mc, GuiScrollElement target) {
+    }
+
+    @Override
+    public String appendCode(String code) {
+        return "";
+    }
+
+    @Override
+    public List<DocEntry> getEntries() {
+        return null;
+    }
+
+    @Override
+    public DocEntry getEntry() {
+        return parent;
+    }
+
+    @Override
+    public String getName() {
         return "../";
     }
 
     @Override
-    public DocEntry getEntry()
-    {
-        return this.delegate;
+    public void render(Minecraft mc, GuiScrollElement target) {
+
     }
 }

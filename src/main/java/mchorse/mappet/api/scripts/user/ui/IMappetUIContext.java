@@ -1,4 +1,4 @@
-package mchorse.mappet.api.scripts.user.mappet;
+package mchorse.mappet.api.scripts.user.ui;
 
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.nbt.INBTCompound;

@@ -1,6 +1,6 @@
 package mchorse.mappet.api.ui.components;
 
-import mchorse.mappet.api.scripts.user.mappet.IMappetUIBuilder;
+import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import mchorse.mappet.client.gui.utils.text.GuiMultiTextElement;

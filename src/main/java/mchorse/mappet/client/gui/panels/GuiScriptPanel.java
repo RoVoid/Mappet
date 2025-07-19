@@ -12,7 +12,6 @@ import mchorse.mappet.client.gui.scripts.style.SyntaxStyle;
 import mchorse.mappet.client.gui.scripts.utils.GuiItemStackOverlayPanel;
 import mchorse.mappet.client.gui.scripts.utils.GuiMorphOverlayPanel;
 import mchorse.mappet.client.gui.scripts.utils.GuiScriptSoundOverlayPanel;
-import mchorse.mappet.client.gui.scripts.utils.documentation.DocClass;
 import mchorse.mappet.client.gui.scripts.utils.documentation.DocMethod;
 import mchorse.mappet.client.gui.utils.Beautifier;
 import mchorse.mappet.client.gui.utils.overlays.GuiOverlay;
@@ -93,13 +92,11 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
     private static void setupDocumentation(GuiTextEditor editor, GuiSimpleContextMenu menu) {
         String text = editor.getSelectedText().replaceAll("[^\\w_]+", "");
-        List<DocClass> searched = GuiDocumentationOverlayPanel.search(text);
-
+        List<DocMethod> searched = GuiDocumentationOverlayPanel.searchMethod(text);
         if (searched.isEmpty()) return;
-
-        for (DocClass docClass : searched) {
-            menu.action(Icons.SEARCH, IKey.format("mappet.gui.scripts.context.docs", docClass.getName()), () ->
-                    searchDocumentation(docClass.getMethod(text)));
+        for (DocMethod docMethod : searched) {
+            menu.action(Icons.SEARCH, IKey.format("mappet.gui.scripts.context.docs", docMethod.parent.getName()), () ->
+                    searchDocumentation(docMethod));
         }
     }
 
@@ -197,7 +194,6 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
     private static void searchDocumentation(DocMethod method) {
         GuiDocumentationOverlayPanel panel = new GuiDocumentationOverlayPanel(Minecraft.getMinecraft(), method);
-
         GuiOverlay.addOverlay(GuiBase.getCurrent(), panel, 0.9F, 0.9F);
     }
 

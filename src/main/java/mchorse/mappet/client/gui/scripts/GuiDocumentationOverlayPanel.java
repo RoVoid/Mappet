@@ -1,7 +1,9 @@
 package mchorse.mappet.client.gui.scripts;
 
-import mchorse.mappet.Mappet;
-import mchorse.mappet.client.gui.scripts.utils.documentation.*;
+import mchorse.mappet.client.gui.scripts.utils.documentation.DocDelegate;
+import mchorse.mappet.client.gui.scripts.utils.documentation.DocEntry;
+import mchorse.mappet.client.gui.scripts.utils.documentation.DocMethod;
+import mchorse.mappet.client.gui.scripts.utils.documentation.Docs;
 import mchorse.mappet.client.gui.utils.overlays.GuiOverlayPanel;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
@@ -13,280 +15,120 @@ import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.launchwrapper.Launch;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
-    public static Docs docs;
+    private static Docs docs;
     private static DocEntry top;
-    private static DocEntry entry;
+    private static DocEntry pickedEntry;
 
     public GuiDocEntrySearchList searchList;
     public GuiScrollElement documentation;
     public GuiIconElement javadocs;
     public GuiIconElement copy;
 
-    public static List<DocClass> search(String text) {
-        List<DocClass> list = new ArrayList<>();
-
-        for (DocClass docClass : getDocs().classes) {
-            if (docClass.getMethod(text) != null) {
-                list.add(docClass);
-            }
+    public static List<DocMethod> searchMethod(String text) {
+        List<DocMethod> list = new ArrayList<>();
+        for (DocMethod docMethod : getDocs().methods) {
+            if (docMethod.name.equals(text)) list.add(docMethod);
         }
-
         return list;
     }
 
     public static Docs getDocs() {
-        parseDocs();
-
+        initDocs();
         return docs;
     }
 
-    private static void parseDocs() {
-        /* Update the docs data only if it's in dev environment */
-        final boolean dev = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
+    private static void initDocs() {
+        if (docs != null) return;
 
-        if (dev || docs == null) {
-            docs = DocMerger.getMergedDocs();
-            entry = null;
+        docs = new Docs();
+        top = new DocEntry();
+        pickedEntry = null;
 
-            docs.copyMethods("UILabelBaseComponent", "UIButtonComponent", "UILabelComponent", "UITextComponent", "UITextareaComponent", "UITextboxComponent", "UIToggleComponent");
-            docs.remove("UIParentComponent");
-            docs.remove("UILabelBaseComponent");
-            Map<String, DocList> docLists = new HashMap<>();
-            DocList topPackage = new DocList();
-            DocList scripting = new DocList();
-            DocList entities = new DocList();
-            DocList nbt = new DocList();
-            DocList items = new DocList();
-            DocList blocks = new DocList();
-            DocList ui = new DocList();
-            DocList score = new DocList();
-            DocList world = new DocList();
-            docLists.put("topPackage", topPackage);
-            docLists.put("scripting", scripting);
-            docLists.put("entities", entities);
-            docLists.put("nbt", nbt);
-            docLists.put("items", items);
-            docLists.put("blocks", blocks);
-            docLists.put("score", score);
-            docLists.put("world", world);
-            docLists.put("ui", ui);
-            mixinsHook();
-            /* Place for mixins */
+        docs.copyMethods("UILabelBaseComponent", "UIButtonComponent", "UILabelComponent", "UITextComponent", "UITextareaComponent", "UITextboxComponent", "UIToggleComponent");
+        docs.remove("UIParentComponent");
+        docs.remove("UILabelBaseComponent");
 
-            topPackage.doc = docs.getPackage("mchorse.mappet.api.scripts.user.mappet").doc;
-            scripting.name = "Scripting API";
-            scripting.doc = docs.getPackage("mchorse.mappet.api.scripts.user").doc;
-            scripting.parent = topPackage;
+        DocEntry entities = new DocEntry("/ Entities");
+        DocEntry nbt = new DocEntry("/ NBT");
+        DocEntry items = new DocEntry("/ Items");
+        DocEntry blocks = new DocEntry("/ Blocks");
+        DocEntry ui = new DocEntry("/ UI");
+        DocEntry score = new DocEntry("/ Score");
+        DocEntry world = new DocEntry("/ World");
 
-            ui.name = "UI API";
-            ui.doc = docs.getPackage("mchorse.mappet.api.ui.components").doc;
-            ui.parent = topPackage;
-
-            boolean useNewStructure = Mappet.scriptDocsNewStructure.get();
-
-            List<DocPackage> extraPackages = docs.packages.stream()
-                    .filter(docPackage -> docPackage.name.startsWith("extra"))
-                    .collect(Collectors.toList());
-
-            List<DocList> extraDocLists = new ArrayList<>();
-
-            for (DocPackage docPackage : extraPackages) {
-                String firstPackage = docPackage.name.substring(0, docPackage.name.indexOf("."));
-                DocList extra = new DocList();
-                extra.name = docPackage.name.substring(docPackage.name.lastIndexOf(".") + 1);
-                extra.doc = docPackage.doc;
-                extra.parent = firstPackage.equals("extraScripting") ? scripting : firstPackage.equals("extraUI") ? ui : topPackage;
-                extra.source = docPackage.source;
-                ((DocList) extra.parent).entries.add(extra);
-                extraDocLists.add(extra);
-            }
-
-            if (useNewStructure) {
-                entities.name = "/ Entities";
-                entities.doc = docs.getPackage("mchorse.mappet.api.scripts.user.entities").doc;
-                entities.parent = scripting;
-                scripting.entries.add(entities);
-
-                nbt.name = "/ NBT";
-                nbt.doc = docs.getPackage("mchorse.mappet.api.scripts.user.nbt").doc;
-                nbt.parent = scripting;
-                scripting.entries.add(nbt);
-
-                items.name = "/ Items";
-                items.doc = docs.getPackage("mchorse.mappet.api.scripts.user.items").doc;
-                items.parent = scripting;
-                scripting.entries.add(items);
-
-                blocks.name = "/ Blocks";
-                blocks.doc = docs.getPackage("mchorse.mappet.api.scripts.user.blocks").doc;
-                blocks.parent = scripting;
-                scripting.entries.add(blocks);
-
-                score.name = "/ Score";
-                score.doc = docs.getPackage("mchorse.mappet.api.scripts.user.score").doc;
-                score.parent = scripting;
-                scripting.entries.add(score);
-
-                world.name = "/ World";
-                world.doc = docs.getPackage("mchorse.mappet.api.scripts.user.world").doc;
-                world.parent = scripting;
-                scripting.entries.add(world);
-            }
-
-            for (DocClass docClass : docs.classes) {
-                docClass.setup();
-                if (docClass.name.startsWith("extra")) {
-                    String packages = docClass.name.substring(docClass.name.indexOf(".") + 1, docClass.name.lastIndexOf("."));
-                    try {
-                        List<DocList> lists = extraDocLists.stream()
-                                .filter(docList -> docList.name.equals(packages))
-                                .collect(Collectors.toList());
-
-                        DocList list = lists.get(0);
-                        if (list != null) {
-                            list.entries.add(docClass);
-                            docClass.parent = list;
-                        }
-                    } catch (Exception ignored) {
-                    }
-                } else if (docClass.name.contains("ui.components") || docClass.name.endsWith(".Graphic")) {
-                    ui.entries.add(docClass);
-                    docClass.parent = ui;
-                } else if (useNewStructure) {
-                    List<Callable<Boolean>> functions = new ArrayList<>();
-                    boolean added = false;
-                    functions.add(() -> addWithNewStructure(input -> input.name.contains("entities"), docClass, docLists.get("entities")));
-                    functions.add(() -> addWithNewStructure(input -> input.name.contains("nbt"), docClass, docLists.get("nbt")));
-                    functions.add(() -> addWithNewStructure(input -> input.name.contains("items"), docClass, docLists.get("items")));
-                    functions.add(() -> addWithNewStructure(input -> input.name.contains("blocks"), docClass, docLists.get("blocks")));
-                    functions.add(() -> addWithNewStructure(input -> input.name.contains("score"), docClass, docLists.get("score")));
-                    functions.add(() -> addWithNewStructure(input -> input.name.contains("world"), docClass, docLists.get("world")));
-                    mixinsHook();
-                    /* Place for mixins */
-                    functions.add(() -> addWithNewStructure(input -> !input.name.endsWith("Graphic"), docClass, docLists.get("scripting")));
-
-                    for (Callable<Boolean> function : functions) {
-                        if (added) break;
-                        try {
-                            added = function.call();
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                } else if (!docClass.name.endsWith("Graphic")) {
-                    scripting.entries.add(docClass);
-                    docClass.parent = scripting;
-                }
-            }
-
-            topPackage.entries.add(scripting);
-            topPackage.entries.add(ui);
-
-            top = topPackage;
+        for (DocEntry docClass : docs.classes) {
+            if (docClass.name.contains(".ui") || docClass.displayName.equals("Graphic")) docClass.setParent(ui);
+            else if (docClass.name.contains(".entities")) docClass.setParent(entities);
+            else if (docClass.name.contains(".nbt")) docClass.setParent(nbt);
+            else if (docClass.name.contains(".items")) docClass.setParent(items);
+            else if (docClass.name.contains(".blocks")) docClass.setParent(blocks);
+            else if (docClass.name.contains(".score")) docClass.setParent(score);
+            else if (docClass.name.contains(".world")) docClass.setParent(world);
+            else docClass.setParent(top);
         }
-    }
 
-    public static void mixinsHook() {
-    }
-
-    public static boolean addWithNewStructure(Function<DocClass, Boolean> predicate, DocClass docClass, DocList list) {
-        if (!predicate.apply(docClass)) return false;
-
-        list.entries.add(docClass);
-        docClass.parent = list;
-        return true;
+        top.addChildren(entities, nbt, items, blocks, ui, score, world);
+        pickedEntry = top;
     }
 
     public GuiDocumentationOverlayPanel(Minecraft mc) {
         this(mc, null);
     }
 
-    public GuiDocumentationOverlayPanel(Minecraft mc, DocEntry entry) {
+    public GuiDocumentationOverlayPanel(Minecraft mc, DocMethod method) {
         super(mc, IKey.lang("mappet.gui.scripts.documentation.title"));
 
-        this.searchList = new GuiDocEntrySearchList(mc, (l) -> this.pick(l.get(0)));
-        this.searchList.label(IKey.lang("mappet.gui.search"));
-        this.documentation = new GuiScrollElement(mc);
+        searchList = new GuiDocEntrySearchList(mc, (l) -> pick(l.get(0)));
+        searchList.label(IKey.lang("mappet.gui.search"));
+        documentation = new GuiScrollElement(mc);
 
-        this.searchList.flex().relative(this.content).w(240).h(1F);
-        this.documentation.flex().relative(this.content).x(240).w(1F, -240).h(1F).column(4).vertical().stretch().scroll().padding(10);
+        searchList.flex().relative(content).w(240).h(1F);
+        documentation.flex().relative(content).x(240).w(1F, -240).h(1F).column(4).vertical().stretch().scroll().padding(10);
 
-        this.content.add(this.searchList, this.documentation);
-        this.javadocs = new GuiIconElement(mc, Icons.SERVER, (b) -> this.openJavadocs());
-        this.javadocs.tooltip(IKey.lang("mappet.gui.scripts.documentation.javadocs")).flex().wh(16, 16);
-        this.copy = new GuiIconElement(mc, Icons.COPY, (b) -> this.copyMethod());
-        this.copy.tooltip(IKey.lang("mappet.gui.scripts.documentation.copy")).flex().wh(16, 16);
-        this.copy.setVisible(false);
+        content.add(searchList, documentation);
+        javadocs = new GuiIconElement(mc, Icons.SERVER, (b) -> openJavadocs());
+        javadocs.tooltip(IKey.lang("mappet.gui.scripts.documentation.javadocs")).flex().wh(16, 16);
+        copy = new GuiIconElement(mc, Icons.COPY, (b) -> copyMethod());
+        copy.tooltip(IKey.lang("mappet.gui.scripts.documentation.copy")).flex().wh(16, 16);
+        copy.setVisible(false);
 
-        this.icons.flex().row(0).reverse().resize().width(32).height(16);
-        this.icons.addAfter(this.close, this.javadocs);
-        this.icons.addAfter(this.javadocs, this.copy);
-        this.setupDocs(entry);
+        icons.flex().row(0).reverse().resize().width(32).height(16);
+        icons.addAfter(close, javadocs);
+        icons.addAfter(javadocs, copy);
+
+        setupDocs(method);
     }
 
-    private void pick(DocEntry entryIn) {
-        boolean isMethod = entryIn instanceof DocMethod;
-
+    private void pick(DocEntry entry) {
+        boolean isMethod = entry instanceof DocMethod;
         copy.setVisible(isMethod);
 
-        entryIn = entryIn.getEntry();
-        List<DocEntry> entries = entryIn.getEntries();
-        boolean wasSame = this.searchList.list.getList().size() >= 2 && this.searchList.list.getList().get(1).parent == entryIn.parent;
+        entry = entry.getEntry();
 
-        /* If the list isn't the same or if the current item got double-clicked
-         * to enter into the section */
-        if (entry == entryIn || !wasSame) {
-            this.searchList.list.clear();
+        if (pickedEntry == entry || isMethod) {
+            searchList.list.clear();
+            if (entry.parent != null) searchList.list.add(new DocDelegate(entry.parent));
+            searchList.list.add(entry.getEntries());
+            searchList.list.sort();
+            if (isMethod) searchList.list.setCurrentScroll(entry);
+        } else pickedEntry = entry;
 
-            if (entryIn.parent != null) {
-                this.searchList.list.add(new DocDelegate(entryIn.parent));
-            }
+        documentation.scroll.scrollTo(0);
+        documentation.removeAll();
+        entry.render(mc, documentation);
 
-            this.searchList.list.add(entries);
-            this.searchList.list.sort();
-
-            if (isMethod) {
-                this.searchList.list.setCurrentScroll(entryIn);
-            }
-        }
-
-        this.fill(entryIn);
+        resize();
     }
 
-    private void fill(DocEntry entryIn) {
-        if (!(entryIn instanceof DocMethod)) {
-            entry = entryIn;
-        }
-
-        this.documentation.scroll.scrollTo(0);
-        this.documentation.removeAll();
-        entryIn.fillIn(this.mc, this.documentation);
-
-        this.resize();
-    }
-
-    private void setupDocs(DocEntry in) {
-        parseDocs();
-
-        if (in != null) {
-            entry = in;
-        } else if (entry == null) {
-            entry = top;
-        }
-
-        this.pick(entry);
+    private void setupDocs(DocMethod method) {
+        initDocs();
+        pick(method == null ? pickedEntry : method);
     }
 
     private void openJavadocs() {
@@ -294,9 +136,8 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
     }
 
     private void copyMethod() {
-        if (this.searchList.list.getCurrentFirst() != null) {
-            GuiScreen.setClipboardString(this.searchList.list.getCurrentFirst().getName().replaceAll("§.", ""));
-        }
+        if (searchList.list.getCurrentFirst() == null) return;
+        GuiScreen.setClipboardString(searchList.list.getCurrentFirst().getName().replaceAll("§.", ""));
     }
 
     public static class GuiDocEntrySearchList extends GuiSearchListElement<DocEntry> {

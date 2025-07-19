@@ -1,7 +1,7 @@
-package mchorse.mappet.api.scripts.code.mappet;
+package mchorse.mappet.api.scripts.code.ui;
 
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
-import mchorse.mappet.api.scripts.user.mappet.IMappetUIContext;
+import mchorse.mappet.api.scripts.user.ui.IMappetUIContext;
 import mchorse.mappet.api.scripts.user.nbt.INBTCompound;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.components.UIComponent;

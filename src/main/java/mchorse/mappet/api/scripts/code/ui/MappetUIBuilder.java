@@ -1,8 +1,8 @@
-package mchorse.mappet.api.scripts.code.mappet;
+package mchorse.mappet.api.scripts.code.ui;
 
 import mchorse.mappet.CommonProxy;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
-import mchorse.mappet.api.scripts.user.mappet.IMappetUIBuilder;
+import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
 import mchorse.mappet.api.ui.UI;
 import mchorse.mappet.api.ui.components.UIButtonComponent;
 import mchorse.mappet.api.ui.components.UIClickComponent;
