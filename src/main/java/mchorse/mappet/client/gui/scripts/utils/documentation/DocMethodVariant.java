@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DocMethodVariant extends DocEntry {
+    public boolean isDeprecated = false;
+
     public List<DocVariable> params = new ArrayList<>();
     public List<String> annotations = new ArrayList<>();
     public DocVariable returns = new DocVariable();
@@ -21,9 +23,11 @@ public class DocMethodVariant extends DocEntry {
 
     @Override
     public String getName() {
-        StringBuilder str = new StringBuilder(name);
-        str.append('(');
-        for (DocVariable param : params) str.append(param.getType()).append(' ').append(param.getName()).append(", ");
+        String defaultColor = (isDeprecated ? TextFormatting.DARK_GRAY : TextFormatting.RESET).toString();
+        StringBuilder str = new StringBuilder(defaultColor);
+        str.append(name).append('(');
+        for (DocVariable param : params)
+            str.append(TextFormatting.GOLD).append(param.getType()).append(defaultColor).append(' ').append(param.getName()).append(", ");
         if (!params.isEmpty()) str.delete(str.length() - 2, str.length());
         str.append(')');
         return str.toString();
@@ -58,7 +62,7 @@ public class DocMethodVariant extends DocEntry {
                 .collect(Collectors.toList());
         if (!annotations.isEmpty()) {
             String annotationsText = String.join(", ", annotations);
-            target.add(new GuiText(mc).text(String.valueOf(TextFormatting.GRAY) + TextFormatting.BOLD + annotationsText).marginTop(8));
+            target.add(new GuiText(mc).text(TextFormatting.GRAY.toString() + TextFormatting.BOLD + annotationsText).marginTop(8));
         }
 
         target.add(new GuiText(mc).text("Returns " + TextFormatting.GOLD + returns.getType()).marginTop(8));

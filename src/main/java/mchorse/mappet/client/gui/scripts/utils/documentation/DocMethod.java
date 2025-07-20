@@ -9,16 +9,17 @@ import net.minecraft.util.text.TextFormatting;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static net.minecraftforge.fml.common.eventhandler.ListenerList.resize;
-
 public class DocMethod extends DocEntry {
+    public boolean isDeprecated = false;
+
     public DocMethod(String name) {
         super(name);
     }
 
     public String getName() {
         if (entries.size() == 1) return entries.get(0).getName();
-        return name + "(" + TextFormatting.GRAY + "..." + TextFormatting.RESET + ")";
+        String defaultColor = (isDeprecated ? TextFormatting.DARK_GRAY : TextFormatting.RESET).toString();
+        return defaultColor + name + "(" + TextFormatting.GRAY + "..." + defaultColor + ")";
     }
 
     @Override
@@ -37,7 +38,6 @@ public class DocMethod extends DocEntry {
             variantDocs.scroll.scrollTo(0);
             variantDocs.removeAll();
             l.get(0).append(mc, variantDocs);
-            System.out.println(l.get(0).getName());
             GuiDocumentationOverlayPanel.instance.resize();
         });
         list.flex().relative(target).w(1F).h(offset);

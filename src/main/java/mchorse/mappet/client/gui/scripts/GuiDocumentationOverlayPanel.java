@@ -5,6 +5,7 @@ import mchorse.mappet.client.gui.scripts.utils.documentation.DocEntry;
 import mchorse.mappet.client.gui.scripts.utils.documentation.DocMethod;
 import mchorse.mappet.client.gui.scripts.utils.documentation.Docs;
 import mchorse.mappet.client.gui.utils.overlays.GuiOverlayPanel;
+import mchorse.mappet.utils.MPIcons;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
@@ -25,6 +26,7 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
 
     private static Docs docs;
     private static DocEntry pickedEntry;
+    private static boolean updatePanel;
 
     public GuiDocEntrySearchList searchList;
     public GuiScrollElement documentation;
@@ -49,6 +51,7 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
 
         docs = new Docs();
         pickedEntry = null;
+        updatePanel = false;
 
         docs.copyMethods("UILabelBaseComponent", "UIButtonComponent", "UILabelComponent", "UITextComponent", "UITextareaComponent", "UITextboxComponent", "UIToggleComponent");
         docs.remove("UIParentComponent");
@@ -103,12 +106,11 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
         documentation.flex().relative(content).x(240).w(1F, -240).h(1F).column(4).vertical().stretch().scroll().padding(10);
 
         content.add(searchList, documentation);
-        javadocs = new GuiIconElement(mc, Icons.SERVER, (b) -> openJavadocs());
+        javadocs = new GuiIconElement(mc, MPIcons.DEVICE_ANTENNA, (b) -> openJavadocs());
         javadocs.tooltip(IKey.lang("mappet.gui.scripts.documentation.javadocs")).flex().wh(16, 16);
-        copy = new GuiIconElement(mc, Icons.COPY, (b) -> copyMethod());
+        copy = new GuiIconElement(mc, Icons.COPY, (b) -> copyName());
         copy.tooltip(IKey.lang("mappet.gui.scripts.documentation.copy")).flex().wh(16, 16);
         copy.setVisible(false);
-
         icons.flex().row(0).reverse().resize().width(32).height(16);
         icons.addAfter(close, javadocs);
         icons.addAfter(javadocs, copy);
@@ -119,22 +121,27 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
     }
 
     private void pick(DocEntry entry) {
-        boolean isMethod = entry instanceof DocMethod;
-        copy.setVisible(isMethod);
+        copy.setVisible(!entry.name.isEmpty() && !entry.name.equals("../"));
 
+        boolean isMethod = entry instanceof DocMethod;
         entry = entry.getEntry();
 
-        if (pickedEntry == entry || isMethod) {
+        if (updatePanel && pickedEntry == entry) {
+            updatePanel = false;
+
             searchList.list.clear();
             if (entry.parent != null) searchList.list.add(new DocDelegate(entry.parent));
             searchList.list.add(entry.getEntries());
             searchList.list.sort();
 
             if (isMethod) {
-                if (pickedEntry == entry) searchList.list.setCurrentScroll(entry);
+                if (pickedEntry.name.isEmpty()) searchList.list.setCurrentScroll(entry);
                 else searchList.list.setCurrent(entry);
             }
-        } else pickedEntry = entry;
+        } else {
+            pickedEntry = entry;
+            updatePanel = true;
+        }
 
         documentation.scroll.scrollTo(0);
         documentation.removeAll();
@@ -145,6 +152,7 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
 
     private void setupDocs(DocMethod method) {
         initDocs();
+        updatePanel = true;
         pick(method == null ? pickedEntry : method);
     }
 
@@ -152,10 +160,19 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
         GuiUtils.openWebLink(I18n.format("mappet.gui.scripts.documentation.javadocs_url"));
     }
 
-    private void copyMethod() {
-        if (searchList.list.getCurrentFirst() == null) return;
-        GuiScreen.setClipboardString(searchList.list.getCurrentFirst().getName().replaceAll("§.", ""));
+    private void copyName() {
+        String rawName = searchList.list.getCurrentFirst() == null
+                ? pickedEntry.displayName
+                : searchList.list.getCurrentFirst().displayName;
+
+        rawName = rawName.replaceAll(".*/", "");
+//        rawName = rawName.replaceAll("\\(.*?\\)", "");
+        rawName = rawName.trim();
+//        rawName = rawName.replaceAll("§.", "");
+
+        GuiScreen.setClipboardString(rawName);
     }
+
 
     public static class GuiDocEntrySearchList extends GuiSearchListElement<DocEntry> {
         public GuiDocEntrySearchList(Minecraft mc, Consumer<List<DocEntry>> callback) {
@@ -177,9 +194,17 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
 
         @Override
         protected boolean sortElements() {
-            list.sort((a, b) -> a.getName().compareToIgnoreCase(b.getName()));
+            list.sort((a, b) -> {
+                if (a instanceof DocMethod && b instanceof DocMethod) {
+                    boolean aDep = ((DocMethod) a).isDeprecated;
+                    boolean bDep = ((DocMethod) b).isDeprecated;
+                    if (aDep != bDep) return aDep ? 1 : -1;
+                }
+                return a.getName().compareToIgnoreCase(b.getName());
+            });
             return true;
         }
+
 
         @Override
         protected String elementToString(DocEntry element) {

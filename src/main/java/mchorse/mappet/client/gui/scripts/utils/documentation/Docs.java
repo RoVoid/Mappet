@@ -51,6 +51,7 @@ public class Docs {
                             List<RawMethodVariant> variants = m.getValue();
 
                             DocMethod method = new DocMethod(methodName);
+                            method.isDeprecated = true;
 
                             for (RawMethodVariant variantRaw : variants) {
                                 DocMethodVariant variant = new DocMethodVariant(methodName);
@@ -74,12 +75,15 @@ public class Docs {
 
                                 if (variantRaw.annotations != null) {
                                     variant.annotations.addAll(variantRaw.annotations);
+                                    if (variant.annotations.contains("java.lang.Deprecated"))
+                                        variant.isDeprecated = true;
                                 }
+                                if (!variant.isDeprecated) method.isDeprecated = false;
 
                                 variant.setParent(method);
                             }
 
-                            if(method.removeDiscardMethods()) {
+                            if (method.removeDiscardMethods()) {
                                 method.setParent(docEntry);
                                 methods.add(method);
                             }

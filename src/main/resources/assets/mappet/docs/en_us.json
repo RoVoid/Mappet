@@ -8248,6 +8248,9 @@
           "return": {
             "type": "World"
           },
+          "annotations": [
+            "java.lang.Deprecated"
+          ],
           "docs": "Use {@link #asMinecraft()} instead\n\n @deprecated"
         }
       ],
@@ -9781,13 +9784,12 @@
             }
           ],
           "return": {
-            "docs": "The falling block entity.",
             "type": "mchorse.mappet.api.scripts.user.entities.IScriptEntity"
           },
           "annotations": [
             "java.lang.Deprecated"
           ],
-          "docs": "Transform a block to a falling block in specific coordinates.\n\n \u003cpre\u003e{@code\n     c.getWorld().setFallingBlock(0, 100, 0);\n }\u003c/pre\u003e"
+          "docs": "Use {@link #makeBlockFall(int, int, int)} instead"
         }
       ],
       "makeBlockFall": [
@@ -9807,8 +9809,10 @@
             }
           ],
           "return": {
+            "docs": "The falling block entity.",
             "type": "mchorse.mappet.api.scripts.user.entities.IScriptEntity"
-          }
+          },
+          "docs": "Transform a block to a falling block in specific coordinates.\n\n \u003cpre\u003e{@code\n     c.getWorld().makeBlockFall(0, 100, 0);\n }\u003c/pre\u003e"
         },
         {
           "parameters": [

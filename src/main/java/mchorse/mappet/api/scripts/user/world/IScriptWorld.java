@@ -42,6 +42,7 @@ public interface IScriptWorld {
      *
      * @deprecated
      */
+    @Deprecated
     World getMinecraftWorld();
 
     /**
@@ -718,17 +719,20 @@ public interface IScriptWorld {
     IScriptEntity spawnFallingBlock(IScriptBlockState block, ScriptVector pos);
 
     /**
-     * Transform a block to a falling block in specific coordinates.
-     *
-     * <pre>{@code
-     *     c.getWorld().setFallingBlock(0, 100, 0);
-     * }</pre>
-     *
-     * @return The falling block entity.
+     * Use {@link #makeBlockFall(int, int, int)} instead
      */
     @Deprecated
     IScriptEntity setFallingBlock(int x, int y, int z);
 
+    /**
+     * Transform a block to a falling block in specific coordinates.
+     *
+     * <pre>{@code
+     *     c.getWorld().makeBlockFall(0, 100, 0);
+     * }</pre>
+     *
+     * @return The falling block entity.
+     */
     IScriptEntity makeBlockFall(int x, int y, int z);
 
     IScriptEntity makeBlockFall(ScriptVector pos);

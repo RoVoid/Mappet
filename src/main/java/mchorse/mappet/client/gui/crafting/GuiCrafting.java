@@ -93,4 +93,15 @@ public class GuiCrafting extends GuiElement implements ICraftingScreen
             GuiDraw.drawTextBackground(this.font, this.table.getId(), this.area.mx(w), this.craft.area.my(this.font.FONT_HEIGHT - 2), 0xffffff, ColorUtils.HALF_BLACK);
         }
     }
+
+    @Override
+    public boolean mouseClicked(GuiContext context)
+    {
+        if (craft.area.isInside(context) && context.mouseButton == 0)
+        {
+            craft(craft);
+            return true;
+        }
+        return super.mouseClicked(context);
+    }
 }
