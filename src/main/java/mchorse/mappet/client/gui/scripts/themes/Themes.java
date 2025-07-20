@@ -89,7 +89,7 @@ public class Themes {
         }
 
         if (!vscode.isFile()) {
-            SyntaxStyle vscodeStyle = new SyntaxStyle("VS Code", true, 0xff82d3, 0xCF84DF, 0x668cd4, 0x82dfdf, 0xddaf86, 0x5e9c6f, 0xCAD578, 0xffff9b, 0xeccc8d, 0xaaaaaa, 0xeaeaea, 0x6e7681, 0x1f1f1f);
+            SyntaxStyle vscodeStyle = new SyntaxStyle("VS Code", true, 0xff82d3, 0xCF84DF, 0x668cd4, 0x5fcadf, 0xddaf86, 0x5e9c6f, 0xCAD578, 0xffff9b, 0xb8dfec, 0xaaaaaa, 0xeaeaea, 0x6e7681, 0x1f1f1f);
             writeTheme(vscode, vscodeStyle);
         }
 

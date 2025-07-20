@@ -28,7 +28,7 @@ public class DocDelegate extends DocEntry {
     }
 
     @Override
-    public String appendCode(String code) {
+    public String parseCode(String code) {
         return "";
     }
 

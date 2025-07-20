@@ -996,7 +996,7 @@ public class MPIcons {
                         Mappet.logger.error(e.getMessage());
                     }
                 } else {
-                    System.out.println("No matching JSON file found for: " + image.getName());
+                    Mappet.logger.error("No matching JSON file found for: " + image.getName());
                 }
             } catch (IOException e) {
                 Mappet.logger.error(e.getMessage());

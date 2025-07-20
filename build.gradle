@@ -273,7 +273,7 @@ tasks.register('scriptingJavadocsJson', Exec) {
     args "-doclet", "robot.utils.doclets.JsonDoclet", "-docletpath", "./run/jsonDoclet-1.1.jar", "-sourcepath", "./src/main/java/", "-subpackages", "mchorse.mappet.api.scripts.user:mchorse.mappet.api.ui.components:mchorse.mappet.client.gui.utils.graphics"
 
     doLast {
-        file("src/main/resources/assets/mappet/docs/en_US.json").setText(file("docs.json").text)
+        file("src/main/resources/assets/mappet/docs/en_us.json").setText(file("docs.json").text)
     }
 }
 

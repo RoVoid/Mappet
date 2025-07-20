@@ -165,7 +165,6 @@ public class GuiLogPanel extends GuiDashboardPanel<GuiMappetDashboard> {
 
         for (String line : lines) {
             if (line.isEmpty()) continue;
-            System.out.println(line);
             logLines.add(line);
         }
     }

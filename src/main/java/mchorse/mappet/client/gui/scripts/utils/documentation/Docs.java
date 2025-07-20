@@ -43,7 +43,7 @@ public class Docs {
                 for (Map.Entry<String, RawClassEntry> entry : rawDocs.entrySet()) {
                     RawClassEntry raw = entry.getValue();
                     DocEntry docEntry = new DocEntry(entry.getKey());
-                    docEntry.doc = raw.docs != null ? raw.docs : "";
+                    docEntry.doc = raw.docs == null ? "" : raw.docs;
 
                     if (raw.methods != null) {
                         for (Map.Entry<String, List<RawMethodVariant>> m : raw.methods.entrySet()) {
@@ -65,10 +65,9 @@ public class Docs {
 
                                 if (variantRaw.parameters != null) {
                                     for (RawParameter paramRaw : variantRaw.parameters) {
-                                        DocVariable param = new DocVariable();
-                                        param.name = paramRaw.name;
+                                        DocVariable param = new DocVariable(paramRaw.name);
                                         param.type = paramRaw.type;
-                                        param.doc = paramRaw.docs != null ? paramRaw.docs : "";
+                                        param.doc = paramRaw.docs == null ? "" : paramRaw.docs;
                                         variant.params.add(param);
                                     }
                                 }
@@ -77,15 +76,17 @@ public class Docs {
                                     variant.annotations.addAll(variantRaw.annotations);
                                 }
 
-                                method.addChildren(variant);
+                                variant.setParent(method);
                             }
 
-                            docEntry.addChildren(method);
-                            this.methods.add(method);
+                            if(method.removeDiscardMethods()) {
+                                method.setParent(docEntry);
+                                methods.add(method);
+                            }
                         }
                     }
 
-                    this.classes.add(docEntry);
+                    classes.add(docEntry);
                 }
 
             } catch (Exception e) {
@@ -95,7 +96,7 @@ public class Docs {
     }
 
     public DocEntry getClass(String name) {
-        for (DocEntry docClass : this.classes) {
+        for (DocEntry docClass : classes) {
             if (docClass.name.endsWith(name)) {
                 return docClass;
             }
@@ -105,16 +106,14 @@ public class Docs {
     }
 
     public void remove(String name) {
-        this.classes.removeIf(clazz -> clazz.name.endsWith(name));
+        classes.removeIf(clazz -> clazz.name.endsWith(name));
     }
 
     public void copyMethods(String from, String... to) {
-        DocEntry source = this.getClass(from);
-
+        DocEntry source = getClass(from);
         if (source == null) return;
-
         for (String string : to) {
-            DocEntry target = this.getClass(string);
+            DocEntry target = getClass(string);
             if (target != null) {
                 for (DocEntry entry : source.entries) {
                     target.addChildren(entry);

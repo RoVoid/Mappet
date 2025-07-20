@@ -34,7 +34,7 @@ public class DocEntry {
         displayName = index < 0 ? name : name.substring(index + 1);
     }
 
-    public String appendCode(String code) {
+    public String parseCode(String code) {
         List<String> strings = new ArrayList<>(Arrays.asList(code.split("\n")));
         int first = 0;
         for (String string : strings) {
@@ -72,8 +72,21 @@ public class DocEntry {
                 line = line.trim().substring("<pre>{@code".length() + 1);
             }
 
-            if (parsing) code.append("\n\n").append(line);
-            else {
+            if (parsing) {
+                code.append("\n\n").append(line);
+                if (line.trim().endsWith("}</pre>")) {
+                    GuiTextEditor editor = new GuiTextEditor(mc, null);
+                    String text = parseCode(code.toString()).replaceAll("§", "\\\\u00A7");
+
+                    editor.setText(text);
+                    editor.background().flex().h(editor.getLines().size() * 12 + 20);
+                    editor.getHighlighter().setStyle(Mappet.scriptEditorSyntaxStyle.get());
+                    target.add(editor);
+
+                    parsing = false;
+                    code = new StringBuilder();
+                }
+            } else {
                 line = line.replaceAll("\n", "").trim();
                 line = line.replaceAll("<b>", TextFormatting.BOLD.toString());
                 line = line.replaceAll("<i>", TextFormatting.ITALIC.toString());
@@ -92,19 +105,6 @@ public class DocEntry {
                 GuiText text = new GuiText(mc).text(line.trim().replaceAll(" {2,}", " "));
                 if (line.trim().startsWith("<p>")) text.marginTop(12);
                 target.add(text);
-            }
-
-            if (line.trim().endsWith("}</pre>")) {
-                GuiTextEditor editor = new GuiTextEditor(mc, null);
-                String text = appendCode(code.toString()).replaceAll("§", "\\\\u00A7");
-
-                editor.setText(text);
-                editor.background().flex().h(editor.getLines().size() * 12 + 20);
-                editor.getHighlighter().setStyle(Mappet.scriptEditorSyntaxStyle.get());
-                target.add(editor);
-
-                parsing = false;
-                code = new StringBuilder();
             }
         }
     }
@@ -132,6 +132,6 @@ public class DocEntry {
     }
 
     public void addChildren(DocEntry... children) {
-        for(DocEntry child : children) child.setParent(this);
+        for (DocEntry child : children) child.setParent(this);
     }
 }

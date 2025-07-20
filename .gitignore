@@ -25,6 +25,6 @@ run
 .DS_Store
 *.blend1
 /classes/
-docs.json
+*docs.json
 
 exports/

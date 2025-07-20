@@ -21,8 +21,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
+    public static GuiDocumentationOverlayPanel instance;
+
     private static Docs docs;
-    private static DocEntry top;
     private static DocEntry pickedEntry;
 
     public GuiDocEntrySearchList searchList;
@@ -47,13 +48,20 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
         if (docs != null) return;
 
         docs = new Docs();
-        top = new DocEntry();
         pickedEntry = null;
 
         docs.copyMethods("UILabelBaseComponent", "UIButtonComponent", "UILabelComponent", "UITextComponent", "UITextareaComponent", "UITextboxComponent", "UIToggleComponent");
         docs.remove("UIParentComponent");
         docs.remove("UILabelBaseComponent");
 
+        docs.remove("GradientGraphic");
+        docs.remove("IconGraphic");
+        docs.remove("ImageGraphic");
+        docs.remove("RectGraphic");
+        docs.remove("ShadowGraphic");
+        docs.remove("TextGraphic");
+
+        DocEntry top = new DocEntry();
         DocEntry entities = new DocEntry("/ Entities");
         DocEntry nbt = new DocEntry("/ NBT");
         DocEntry items = new DocEntry("/ Items");
@@ -61,9 +69,12 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
         DocEntry ui = new DocEntry("/ UI");
         DocEntry score = new DocEntry("/ Score");
         DocEntry world = new DocEntry("/ World");
+        DocEntry math = new DocEntry("/ Math");
 
         for (DocEntry docClass : docs.classes) {
             if (docClass.name.contains(".ui") || docClass.displayName.equals("Graphic")) docClass.setParent(ui);
+            else if (docClass.displayName.equals("IScriptMath") || docClass.displayName.equals("IScriptVector") || docClass.displayName.equals("IScriptBox"))
+                docClass.setParent(math);
             else if (docClass.name.contains(".entities")) docClass.setParent(entities);
             else if (docClass.name.contains(".nbt")) docClass.setParent(nbt);
             else if (docClass.name.contains(".items")) docClass.setParent(items);
@@ -73,7 +84,7 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
             else docClass.setParent(top);
         }
 
-        top.addChildren(entities, nbt, items, blocks, ui, score, world);
+        top.addChildren(entities, nbt, items, blocks, ui, score, world, math);
         pickedEntry = top;
     }
 
@@ -103,6 +114,8 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
         icons.addAfter(javadocs, copy);
 
         setupDocs(method);
+
+        instance = this;
     }
 
     private void pick(DocEntry entry) {
@@ -116,7 +129,11 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
             if (entry.parent != null) searchList.list.add(new DocDelegate(entry.parent));
             searchList.list.add(entry.getEntries());
             searchList.list.sort();
-            if (isMethod) searchList.list.setCurrentScroll(entry);
+
+            if (isMethod) {
+                if (pickedEntry == entry) searchList.list.setCurrentScroll(entry);
+                else searchList.list.setCurrent(entry);
+            }
         } else pickedEntry = entry;
 
         documentation.scroll.scrollTo(0);
