@@ -89,12 +89,13 @@ public class CommonProxy {
         Mappet.EVENT_BUS.register(eventHandler);
 
         ScriptUtils.initiateScriptEngines();
-        MPIcons.register();
         Beautifier.init();
     }
 
 
     public void postInit(FMLPostInitializationEvent event) {
+        MPIcons.initiate();
+
         /* Register event nodes */
         MapFactory<EventBaseNode> eventNodes = new MapFactory<EventBaseNode>()
                 .register("command", CommandNode.class, Colors.COMMAND)

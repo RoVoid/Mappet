@@ -106,7 +106,7 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
         documentation.flex().relative(content).x(240).w(1F, -240).h(1F).column(4).vertical().stretch().scroll().padding(10);
 
         content.add(searchList, documentation);
-        javadocs = new GuiIconElement(mc, MPIcons.DEVICE_ANTENNA, (b) -> openJavadocs());
+        javadocs = new GuiIconElement(mc, MPIcons.get(MPIcons.PLANET), (b) -> openJavadocs());
         javadocs.tooltip(IKey.lang("mappet.gui.scripts.documentation.javadocs")).flex().wh(16, 16);
         copy = new GuiIconElement(mc, Icons.COPY, (b) -> copyName());
         copy.tooltip(IKey.lang("mappet.gui.scripts.documentation.copy")).flex().wh(16, 16);
@@ -134,18 +134,15 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
             searchList.list.add(entry.getEntries());
             searchList.list.sort();
 
-            if (isMethod) {
-                if (pickedEntry.name.isEmpty()) searchList.list.setCurrentScroll(entry);
-                else searchList.list.setCurrent(entry);
-            }
+            if (isMethod) searchList.list.setCurrentScroll(entry);
         } else {
             pickedEntry = entry;
-            updatePanel = true;
+            updatePanel = !isMethod;
         }
 
         documentation.scroll.scrollTo(0);
         documentation.removeAll();
-        entry.render(mc, documentation);
+        if(!pickedEntry.name.isEmpty()) entry.render(mc, documentation);
 
         resize();
     }
@@ -153,7 +150,8 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
     private void setupDocs(DocMethod method) {
         initDocs();
         updatePanel = true;
-        pick(method == null ? pickedEntry : method);
+        if(method != null) pickedEntry = method;
+        pick(pickedEntry);
     }
 
     private void openJavadocs() {

@@ -5,18 +5,20 @@ import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
-import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTList;
+import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.scripts.user.IScriptFactory;
 import mchorse.mappet.api.scripts.user.blocks.IScriptBlockState;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
 import mchorse.mappet.api.scripts.user.nbt.INBTCompound;
 import mchorse.mappet.api.scripts.user.nbt.INBTList;
+import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
 import mchorse.mappet.api.ui.UI;
+import mchorse.mappet.api.utils.SkinUtils;
 import mchorse.mappet.api.utils.logs.MappetLogger;
+import mchorse.mappet.utils.MPIcons;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.block.Block;
@@ -35,6 +37,7 @@ import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ScriptFactory implements IScriptFactory {
@@ -67,11 +70,11 @@ public class ScriptFactory implements IScriptFactory {
 
     private NBTBase convertToNBT(Object object) {
         if (object instanceof String) return new NBTTagString((String) object);
-        else if (object instanceof Double) return new NBTTagDouble((Double) object);
-        else if (object instanceof Integer) return new NBTTagInt((Integer) object);
-        else if (object instanceof Boolean)
+        if (object instanceof Double) return new NBTTagDouble((Double) object);
+        if (object instanceof Integer) return new NBTTagInt((Integer) object);
+        if (object instanceof Boolean)
             return new NBTTagByte((Boolean) object ? Byte.valueOf("1") : Byte.valueOf("0"));
-        else if (object instanceof ScriptObjectMirror) {
+        if (object instanceof ScriptObjectMirror) {
             ScriptObjectMirror mirror = (ScriptObjectMirror) object;
 
             if (mirror.isArray()) {
@@ -328,5 +331,30 @@ public class ScriptFactory implements IScriptFactory {
         if (object instanceof NBTTagCompound) return new ScriptNBTCompound((NBTTagCompound) object);
         if (object instanceof AbstractMorph) return new ScriptNBTCompound(((AbstractMorph) object).toNBT());
         return null;
+    }
+
+    @Override
+    public String getSkin(String nickname) {
+        return SkinUtils.getSkin(nickname);
+    }
+
+    @Override
+    public String getSkin(String nickname, String source) {
+        return SkinUtils.getSkin(nickname, source);
+    }
+
+    @Override
+    public Object getSkinObject(String nickname) {
+        return SkinUtils.getSkinObject(nickname);
+    }
+
+    @Override
+    public Object getSkinObject(String nickname, String source) {
+        return SkinUtils.getSkinObject(nickname, source);
+    }
+
+    @Override
+    public List<String> getAllIcons() {
+        return MPIcons.getAllNames();
     }
 }

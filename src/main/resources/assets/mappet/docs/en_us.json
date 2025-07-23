@@ -8,6 +8,9 @@
           "return": {
             "type": "TileEntity"
           },
+          "annotations": [
+            "java.lang.Deprecated"
+          ],
           "docs": "@deprecated Use {@link #asMinecraft()} instead"
         }
       ],
@@ -871,10 +874,44 @@
       "getSkin": [
         {
           "return": {
-            "docs": "Resource location in the format of \"minecraft:skins/...\" (which can be used in morphs)",
             "type": "java.lang.String"
           },
-          "docs": "Get player\u0027s skin.\n\n \u003cpre\u003e{@code\n    // Assuming that c.getSubject() is a player\n    var player \u003d c.getSubject();\n    var morph \u003d mappet.createMorph(\u0027{Name:\"blockbuster.fred\",Skin:\"\u0027 + player.getSkin() + \u0027\",Pose:\"dabbing\"}\u0027);\n\n    player.setMorph(morph);\n }\u003c/pre\u003e"
+          "docs": "Get skin texture URL for a player from Mojang\n\n \u003cpre\u003e{@code\n    var player \u003d c.getPlayer()\n    var skinUrl \u003d player.getSkin();\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "source",
+              "type": "java.lang.String",
+              "docs": "Source of skin data"
+            }
+          ],
+          "return": {
+            "type": "java.lang.String"
+          },
+          "docs": "Get skin texture URL for a player from the specific source\n\n \u003cp\u003eSource defines where the skin should be fetched from\u003c/p\u003e\n \u003cp\u003eValid sources: \u003ccode\u003eMinecraft / Mojang\u003c/code\u003e, \u003ccode\u003eElyBy / Ely.By\u003c/code\u003e, \u003ccode\u003eTL / TLauncher\u003c/code\u003e\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var player \u003d c.getPlayer()\n    var skinUrl \u003d player.getSkin(\"elyby\");\n }\u003c/pre\u003e"
+        }
+      ],
+      "getSkinObject": [
+        {
+          "return": {
+            "docs": "\u003ccode\u003eurl\u003c/code\u003e – URL to the player\u0027s skin texture\u003c/li\u003e, \u003ccode\u003eslim\u003c/code\u003e – boolean indicating if the model is Alex\u003c/li\u003e",
+            "type": "java.lang.Object"
+          },
+          "docs": "Get an object containing both the skin texture URL and whether the model is slim (Alex)\n\n \u003cpre\u003e{@code\n    var player \u003d c.getPlayer();\n    var skinObject \u003d player.getSkinObject();\n\n    if (skinObject.slim) {\n        c.send(player.getName(), \"is female or femboy!\");\n        c.send(\"Take fast her skin:\", skinObject.url);\n    }\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "source",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "docs": "\u003ccode\u003eurl\u003c/code\u003e – URL to the player\u0027s skin texture\u003c/li\u003e, \u003ccode\u003eslim\u003c/code\u003e – boolean indicating if the model is Alex\u003c/li\u003e",
+            "type": "java.lang.Object"
+          },
+          "docs": "Get an object containing both the skin texture URL and whether the model is slim (Alex)\n\n \u003cp\u003eSource defines where the skin should be fetched from\u003c/p\u003e\n \u003cp\u003eValid sources: \u003ccode\u003eMinecraft / Mojang\u003c/code\u003e, \u003ccode\u003eElyBy / Ely.By\u003c/code\u003e, \u003ccode\u003eTL / TLauncher\u003c/code\u003e\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var player \u003d c.getPlayer();\n    var skinObject \u003d player.getSkinObject(\"elyby\");\n }\u003c/pre\u003e"
         }
       ],
       "sendTitleDurations": [
@@ -1531,7 +1568,7 @@
       "mchorse.mappet.api.scripts.user.entities.IScriptEntity"
     ],
     "methods": {
-      "getMappetNpc": [
+      "asMinecraft": [
         {
           "return": {
             "type": "mchorse.mappet.entities.EntityNpc"
@@ -1539,12 +1576,31 @@
           "docs": "Get Mappet entity NPC instance. \u003cb\u003eBEWARE:\u003c/b\u003e you need to know the\n MCP mappings in order to directly call methods on this instance!\n\n \u003cp\u003eBut some methods might have human readable method names. Please\n check \u003ca href\u003d\"https://github.com/mchorse/mappet/blob/master/src/main/java/mchorse/mappet/entities/EntityNpc.java\"\u003eEntityNpc\u003c/a\u003e class for methods that\n don\u0027t have {@link Override} annotation!\u003c/p\u003e"
         }
       ],
+      "getMappetNpc": [
+        {
+          "return": {
+            "type": "mchorse.mappet.entities.EntityNpc"
+          },
+          "docs": "Use {@link #asMinecraft()} instead"
+        }
+      ],
       "getId": [
         {
           "return": {
             "type": "java.lang.String"
           },
-          "docs": "Get NPC\u0027s NPC ID.\n\n \u003cpre\u003e{@code\n    var pos \u003d c.getSubject().getPosition();\n    var npc \u003d c.getWorld().spawnNpc(\"test\", pos.x, pos.y + 2, pos.z);\n\n    // This will output \"true\" as long as you have an NPC configured\n    // in Mappet\u0027s NPC dashboard panel\n    c.send(npc.getNpcId() \u003d\u003d\u003d \"test\");\n }\u003c/pre\u003e"
+          "docs": "Get NPC\u0027s NPC ID.\n\n \u003cpre\u003e{@code\n    var pos \u003d c.getSubject().getPosition();\n    var npc \u003d c.getWorld().spawnNpc(\"test\", pos.x, pos.y + 2, pos.z);\n\n    // This will output \"true\" as long as you have an NPC configured\n    // in Mappet\u0027s NPC dashboard panel\n    c.send(npc.getId() \u003d\u003d\u003d \"test\");\n }\u003c/pre\u003e"
+        }
+      ],
+      "getNpcId": [
+        {
+          "return": {
+            "type": "java.lang.String"
+          },
+          "annotations": [
+            "java.lang.Deprecated"
+          ],
+          "docs": "Use {@link #getId()} instead"
         }
       ],
       "getNpcState": [
@@ -4438,7 +4494,7 @@
           "return": {
             "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
           },
-          "docs": "Create a block state that can with the default meta value.\n\n \u003cpre\u003e{@code\n var fence \u003d mappet.createBlock(\"minecraft:fence\");\n\n // minecraft:fence 0\n c.send(fence.getBlockId() + \" \" + fence.getMeta());\n }\u003c/pre\u003e"
+          "docs": "Create a block state that can with the default meta-value.\n\n \u003cpre\u003e{@code\n var fence \u003d mappet.createBlock(\"minecraft:fence\");\n\n // minecraft:fence 0\n c.send(fence.getBlockId() + \" \" + fence.getMeta());\n }\u003c/pre\u003e"
         }
       ],
       "createCompound": [
@@ -4458,7 +4514,7 @@
           "return": {
             "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
           },
-          "docs": "Parse an NBT compound data out of given string, if string NBT was\n invalid then an empty compound will be returned.\n\n \u003cpre\u003e{@code\n    var tag \u003d mappet.createCompound(\"{id:\\\"minecraft:diamond_hoe\\\",Count:1b}\");\n    var item \u003d mappet.createItemNBT(tag);\n\n    // {id:\"minecraft:diamond_hoe\",Count:1b,Damage:0s}\n    c.send(item.serialize());\n }\u003c/pre\u003e"
+          "docs": "Parse an NBT compound date out of given string, if string NBT was\n invalid then an empty compound will be returned.\n\n \u003cpre\u003e{@code\n    var tag \u003d mappet.createCompound(\"{id:\\\"minecraft:diamond_hoe\\\",Count:1b}\");\n    var item \u003d mappet.createItemNBT(tag);\n\n    // {id:\"minecraft:diamond_hoe\",Count:1b,Damage:0s}\n    c.send(item.serialize());\n }\u003c/pre\u003e"
         }
       ],
       "createCompoundFromJS": [
@@ -4472,7 +4528,7 @@
           "return": {
             "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
           },
-          "docs": "Turn a JS object into an NBT compound.\n\n \u003cp\u003e\u003cb\u003eBEWARE\u003c/b\u003e: when converting JS object to NBT keep in mind some\n limitations of the NBT format:\u003c/p\u003e\n\n \u003cul\u003e\n     \u003cli\u003eNBT supports multiple number storage formats (byte, short, int, long, float,\n     double) so the converter will only be able to convert numbers to either\n     integer or double NBT tags, depending on how did you got the number, \u003ccode\u003e42\u003c/code\u003e\n     being an integer, and \u003ccode\u003e42.0\u003c/code\u003e being a double.\u003c/li\u003e\n     \u003cli\u003eNBT lists support only storage of a \u003cb\u003esingle type\u003c/b\u003e at once, so if you\n     provide an JS array like \u003ccode\u003e[0, 1, 2, \"test\", {a:1,b:2}, 4, [0, 0, 0], 5.5]\u003c/code\u003e\n     then \u003cb\u003eonly the the first element\u0027s\u003c/b\u003e type will be taken in account, and the\n     resulted NBT list will turn out like \u003ccode\u003e[0.0d, 1.0d, 2.0d, 4.0d, 5.5d]\u003c/code\u003e.\n     \u003cb\u003eIn case with numbers\u003c/b\u003e if you had first integers, and somewhere in the\n     middle in the list you got a double, then the integer type \u003cb\u003ewill get converted\n     to double\u003c/b\u003e!\u003c/li\u003e\n \u003c/ul\u003e\n\n \u003cpre\u003e{@code\n    var tag \u003d mappet.createCompoundFromJS({id:\"minecraft:diamond_hoe\",Count:1});\n    var item \u003d mappet.createItemNBT(tag);\n\n    // {id:\"minecraft:diamond_hoe\",Count:1b,Damage:0s}\n    c.send(item.serialize());\n }\u003c/pre\u003e"
+          "docs": "Turn a JS object into an NBT compound.\n\n \u003cp\u003e\u003cb\u003eBEWARE\u003c/b\u003e: when converting JS object to NBT keeps in mind some\n limitations of the NBT format:\u003c/p\u003e\n\n \u003cul\u003e\n     \u003cli\u003eNBT supports multiple number storage formats (byte, short, int, long, float,\n     double), so the converter will only be able to convert numbers to either\n     integer or double NBT tags, depending on how did you get the number, \u003ccode\u003e42\u003c/code\u003e\n     being an integer, and \u003ccode\u003e42.0\u003c/code\u003e being a double.\u003c/li\u003e\n     \u003cli\u003eNBT lists support only storage of a \u003cb\u003esingle type\u003c/b\u003e at once, so if you\n     provide an JS array like \u003ccode\u003e[0, 1, 2, \"test\", {a:1,b:2}, 4, [0, 0, 0], 5.5]\u003c/code\u003e\n     then \u003cb\u003eonly the first element\u0027s\u003c/b\u003e type will be taken in the account, and the\n     resulted NBT list will turn out like \u003ccode\u003e[0.0d, 1.0d, 2.0d, 4.0d, 5.5d]\u003c/code\u003e.\n     \u003cb\u003eIn case with numbers\u003c/b\u003e if you had first integers, and somewhere in the\n     middle of the list you got a double, then the integer type \u003cb\u003ewill get converted\n     to double\u003c/b\u003e!\u003c/li\u003e\n \u003c/ul\u003e\n\n \u003cpre\u003e{@code\n    var tag \u003d mappet.createCompoundFromJS({id:\"minecraft:diamond_hoe\",Count:1});\n    var item \u003d mappet.createItemNBT(tag);\n\n    // {id:\"minecraft:diamond_hoe\",Count:1b,Damage:0s}\n    c.send(item.serialize());\n }\u003c/pre\u003e"
         }
       ],
       "createList": [
@@ -4492,7 +4548,7 @@
           "return": {
             "type": "mchorse.mappet.api.scripts.user.nbt.INBTList"
           },
-          "docs": "Parse an NBT list data out of given string, if string NBT was\n invalid then an empty list will be returned.\n\n \u003cpre\u003e{@code\n    var list \u003d mappet.createList(\"[1, 2, 3, 4, 5, 6]\");\n\n    // [1,2,3,4,5,6]\n    c.send(list.stringify());\n }\u003c/pre\u003e"
+          "docs": "Parse an NBT list date out of given string, if string NBT was\n invalid then an empty list will be returned.\n\n \u003cpre\u003e{@code\n    var list \u003d mappet.createList(\"[1, 2, 3, 4, 5, 6]\");\n\n    // [1,2,3,4,5,6]\n    c.send(list.stringify());\n }\u003c/pre\u003e"
         }
       ],
       "createListFromJS": [
@@ -4643,6 +4699,13 @@
           "docs": "Create an item stack with block ID, count and meta.\n\n \u003cpre\u003e{@code\n    var andesite \u003d mappet.createBlockItem(\"minecraft:stone\", 64, 5);\n\n    // {id:\"minecraft:stone\",Count:64b,Damage:5s}\n    c.send(andesite.serialize());\n }\u003c/pre\u003e\n\n stack if the block doesn\u0027t exist"
         }
       ],
+      "getAllIcons": [
+        {
+          "return": {
+            "type": "java.util.List"
+          }
+        }
+      ],
       "getParticleType": [
         {
           "parameters": [
@@ -4654,7 +4717,75 @@
           "return": {
             "type": "EnumParticleTypes"
           },
-          "docs": "Get Minecraft particle type by its name.\n\n \u003cp\u003eYou can find out all of the particle types by typing in \u003ccode\u003e/particle\u003c/code\u003e\n command, and looking up the completion of the first argument (i.e. press tab after\n typing in \u003ccode\u003e/particle\u003c/code\u003e and a space).\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var explode \u003d mappet.getParticleType(\"explode\");\n    var pos \u003d c.getSubject().getPosition();\n\n    c.getWorld().spawnParticles(explode, true, pos.x, pos.y + 1, pos.z, 50, 0.5, 0.5, 0.5, 0.1);\n }\u003c/pre\u003e"
+          "docs": "Get the Minecraft particle type by its name.\n\n \u003cp\u003eYou can find out all the particle types by typing in \u003ccode\u003e/particle\u003c/code\u003e\n command, and looking up the completion of the first argument (i.e., press tab after\n typing in \u003ccode\u003e/particle\u003c/code\u003e and a space).\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var explode \u003d mappet.getParticleType(\"explode\");\n    var pos \u003d c.getSubject().getPosition();\n\n    c.getWorld().spawnParticles(explode, true, pos.x, pos.y + 1, pos.z, 50, 0.5, 0.5, 0.5, 0.1);\n }\u003c/pre\u003e"
+        }
+      ],
+      "getSkin": [
+        {
+          "parameters": [
+            {
+              "name": "nickname",
+              "type": "java.lang.String",
+              "docs": "Player\u0027s Minecraft nickname"
+            }
+          ],
+          "return": {
+            "type": "java.lang.String"
+          },
+          "docs": "Get skin texture URL for a player from Mojang\n\n \u003cpre\u003e{@code\n    var skinUrl \u003d mappet.getSkin(\"McHorseYT\");\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "nickname",
+              "type": "java.lang.String",
+              "docs": "Player\u0027s Minecraft nickname"
+            },
+            {
+              "name": "source",
+              "type": "java.lang.String",
+              "docs": "Source of skin data"
+            }
+          ],
+          "return": {
+            "type": "java.lang.String"
+          },
+          "docs": "Get skin texture URL for a player from the specific source\n\n \u003cp\u003eSource defines where the skin should be fetched from\u003c/p\u003e\n \u003cp\u003eValid sources: \u003ccode\u003eMinecraft / Mojang\u003c/code\u003e, \u003ccode\u003eElyBy / Ely.By\u003c/code\u003e, \u003ccode\u003eTL / TLauncher\u003c/code\u003e\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var skinUrl \u003d mappet.getSkin(\"McHorseYT\", \"mojang\");\n }\u003c/pre\u003e"
+        }
+      ],
+      "getSkinObject": [
+        {
+          "parameters": [
+            {
+              "name": "nickname",
+              "type": "java.lang.String",
+              "docs": "Player\u0027s Minecraft nickname"
+            }
+          ],
+          "return": {
+            "docs": "\u003ccode\u003eurl\u003c/code\u003e – URL to the player\u0027s skin texture\u003c/li\u003e, \u003ccode\u003eslim\u003c/code\u003e – boolean indicating if the model is Alex\u003c/li\u003e",
+            "type": "java.lang.Object"
+          },
+          "docs": "Get an object containing both the skin texture URL and whether the model is slim (Alex)\n\n \u003cpre\u003e{@code\n    var player \u003d c.getPlayer();\n    var skinObject \u003d mappet.getSkinObject(\"McHorseYT\");\n\n    var skin \u003d skinObject.url;\n    var type \u003d skinObject.slim ? \"slim\" : \"fred\";\n\n    var morph \u003d mappet.createMorph(\u0027{Name:\"blockbuster.\u0027 + type + \u0027\",Skin:\"\u0027 + skin  + \u0027\"}\u0027);\n    player.setMorph(morph);\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "nickname",
+              "type": "java.lang.String",
+              "docs": "Player\u0027s Minecraft nickname"
+            },
+            {
+              "name": "source",
+              "type": "java.lang.String",
+              "docs": "Source of skin data"
+            }
+          ],
+          "return": {
+            "docs": "\u003ccode\u003eurl\u003c/code\u003e – URL to the player\u0027s skin texture\u003c/li\u003e, \u003ccode\u003eslim\u003c/code\u003e – boolean indicating if the model is Alex\u003c/li\u003e",
+            "type": "java.lang.Object"
+          },
+          "docs": "Get an object containing both the skin texture URL and whether the model is slim (Alex)\n\n \u003cp\u003eSource defines where the skin should be fetched from\u003c/p\u003e\n \u003cp\u003eValid sources: \u003ccode\u003eMinecraft / Mojang\u003c/code\u003e, \u003ccode\u003eElyBy / Ely.By\u003c/code\u003e, \u003ccode\u003eTL / TLauncher\u003c/code\u003e\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var player \u003d c.getPlayer();\n    var skinObject \u003d mappet.getSkinObject(\"McHorseYT\", \"Mojang\");\n\n    var skin \u003d skinObject.url;\n    var type \u003d skinObject.slim ? \"slim\" : \"fred\";\n\n    var morph \u003d mappet.createMorph(\u0027{Name:\"blockbuster.\u0027 + type + \u0027\",Skin:\"\u0027 + skin  + \u0027\"}\u0027);\n    player.setMorph(morph);\n }\u003c/pre\u003e"
         }
       ],
       "getPotion": [
@@ -4668,7 +4799,7 @@
           "return": {
             "type": "Potion"
           },
-          "docs": "Get Minecraft potion effect by its name.\n\n \u003cp\u003eYou can find out all of the particle types by typing in \u003ccode\u003e/effect\u003c/code\u003e\n command, and looking up the completion of the second argument (i.e. press tab after\n typing in \u003ccode\u003e/particle Player\u003c/code\u003e and a space).\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var slowness \u003d mappet.getPotion(\"slowness\");\n\n    c.getSubject().applyPotion(slowness, 200, 1, false);\n }\u003c/pre\u003e"
+          "docs": "Get Minecraft potion effect by its name.\n\n \u003cp\u003eYou can find out all the particle types by typing in \u003ccode\u003e/effect\u003c/code\u003e\n command, and looking up the completion of the second argument (i.e., press tab after\n typing in \u003ccode\u003e/particle Player\u003c/code\u003e and a space).\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var slowness \u003d mappet.getPotion(\"slowness\");\n    c.getSubject().applyPotion(slowness, 200, 1, false);\n }\u003c/pre\u003e"
         }
       ],
       "createMorph": [
@@ -4738,7 +4869,7 @@
           "return": {
             "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
           },
-          "docs": "Create a UI with a script handler. You can send it to the\n player by using {@link IScriptPlayer#openUI(IMappetUIBuilder)} method.\n\n \u003cp\u003eScript and function arguments allow to point to the function in some\n script, which it will be responsible for handling the user input from\n scripted UI.\u003c/p\u003e\n\n \u003cp\u003eIn the UI handler, you can access subject\u0027s UI context ({@link IMappetUIContext})\n which has all the necessary methods to handle user\u0027s input.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    // ui.js\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(\"handler\", \"main\").background();\n        var label \u003d ui.label(\"Hello, world!\").background(0x88000000);\n        var button \u003d ui.button(\"Push me!\").id(\"button\");\n\n        label.rxy(0.5, 0.5).wh(80, 20).anchor(0.5).labelAnchor(0.5);\n        label.rx(0.5).ry(0.5, 25).wh(80, 20).anchor(0.5);\n\n        c.getSubject().openUI(ui);\n    }\n\n    // handler.js\n    function main(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"button\")\n        {\n            // Button was pressed\n        }\n    }\n }\u003c/pre\u003e"
+          "docs": "Create a UI with a script handler. You can send it to the\n player by using {@link IScriptPlayer#openUI(IMappetUIBuilder)} method.\n\n \u003cp\u003eScript and function arguments allow pointing to the function in some\n script, which it will be responsible for handling the user input from\n scripted UI.\u003c/p\u003e\n\n \u003cp\u003eIn the UI handler, you can access subject\u0027s UI context ({@link IMappetUIContext})\n which has all the necessary methods to handle user\u0027s input.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    // ui.js\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(\"handler\", \"main\").background();\n        var label \u003d ui.label(\"Hello, world!\").background(0x88000000);\n        var button \u003d ui.button(\"Push me!\").id(\"button\");\n\n        label.rxy(0.5, 0.5).wh(80, 20).anchor(0.5).labelAnchor(0.5);\n        label.rx(0.5).ry(0.5, 25).wh(80, 20).anchor(0.5);\n\n        c.getSubject().openUI(ui);\n    }\n\n    // handler.js\n    function main(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"button\")\n        {\n            // Button was pressed\n        }\n    }\n }\u003c/pre\u003e"
         }
       ],
       "get": [
@@ -4781,7 +4912,7 @@
           "return": {
             "type": "java.lang.String"
           },
-          "docs": "Dump the simple representation of given non-JS object into the string (to see\n what fields and methods are available for use).\n\n \u003cpre\u003e{@code\n    var morph \u003d mappet.createMorph(\"{Name:\\\"blockbuster.alex\\\"}\");\n\n    c.send(mappet.dump(morph));\n }\u003c/pre\u003e"
+          "docs": "Dump the simple representation of a given non-JS object into the string (to see\n what fields and methods are available for use).\n\n \u003cpre\u003e{@code\n    var morph \u003d mappet.createMorph(\"{Name:\\\"blockbuster.alex\\\"}\");\n\n    c.send(mappet.dump(morph));\n }\u003c/pre\u003e"
         },
         {
           "parameters": [
@@ -4798,7 +4929,7 @@
           "return": {
             "type": "java.lang.String"
           },
-          "docs": "Dump given non-JS object into the string (to see what fields and methods are\n available for use).\n\n \u003cpre\u003e{@code\n    var morph \u003d mappet.createMorph(\"{Name:\\\"blockbuster.alex\\\"}\");\n\n    c.send(mappet.dump(morph, true));\n }\u003c/pre\u003e\n\n               the object."
+          "docs": "Dump given a non-JS object into the string (to see what fields and methods are\n available for use).\n\n \u003cpre\u003e{@code\n    var morph \u003d mappet.createMorph(\"{Name:\\\"blockbuster.alex\\\"}\");\n\n    c.send(mappet.dump(morph, true));\n }\u003c/pre\u003e\n\n               the object."
         }
       ],
       "style": [
@@ -4813,7 +4944,7 @@
           "return": {
             "type": "java.lang.String"
           },
-          "docs": "Return Minecraft\u0027s formatting code.\n\n \u003cp\u003eFollowing colors are supported: black, dark_blue, dark_green, dark_aqua,\n dark_red, dark_purple, gold, gray, dark_gray, blue, green, aqua, red,\n light_purple, yellow, white\u003c/p\u003e\n\n \u003cp\u003eFollowing styles are supported: obfuscated, bold, strikethrough, underline,\n italic, reset.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var style \u003d mappet.style(\"dark_blue\", \"bold\", \"underline\");\n\n    c.send(style + \"This text is in blue!\");\n }\u003c/pre\u003e"
+          "docs": "Return Minecraft\u0027s formatting code.\n\n \u003cp\u003eThe Following colors are supported: black, dark_blue, dark_green, dark_aqua,\n dark_red, dark_purple, gold, gray, dark_gray, blue, green, aqua, red,\n light_purple, yellow, white\u003c/p\u003e\n\n \u003cp\u003eThe following styles are supported: obfuscated, bold, strikethrough, underline,\n italic, reset.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var style \u003d mappet.style(\"dark_blue\", \"bold\", \"underline\");\n\n    c.send(style + \"This text is in blue!\");\n }\u003c/pre\u003e"
         }
       ],
       "getLogger": [
@@ -12251,7 +12382,7 @@
           "return": {
             "type": "mchorse.mappet.api.ui.components.UIIconButtonComponent"
           },
-          "docs": "Change icon component\u0027s icon.\n\n \u003cp\u003eYou can find out all available icons by entering following line into\n Mappet\u0027s REPL (it returns a Java Set):\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    Java.type(\"mchorse.mclib.client.gui.utils.IconRegistry\").icons.keySet()\n }\u003c/pre\u003e\n\n \u003cp\u003eSo using that piece of code, you can get create a GUI that shows\n every icon with a tooltip:\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var icons \u003d Java.type(\"mchorse.mclib.client.gui.utils.IconRegistry\").icons.keySet();\n\n        var grid \u003d ui.grid(5);\n\n        grid.getCurrent().width(20).rxy(0.5, 0.5).w(245).anchor(0.5);\n\n        for each (var icon in icons)\n        {\n            grid.icon(icon).wh(20, 20).tooltip(\"Icon\u0027s ID: \" + icon);\n        }\n\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e\n\n \u003cp\u003eA basic example:\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n    uiContext.get(\"icon\").icon(\"gear\");\n }\u003c/pre\u003e"
+          "docs": "Change icon component\u0027s icon.\n\n \u003cp\u003eSo using that piece of code, you can get create a GUI that shows\n every icon with a tooltip:\u003c/p\u003e\n\n \u003cpre\u003e{@code\n function main(c) {\n     var ui \u003d mappet.createUI(c, \"handler\").background();\n\n     var grid \u003d ui.grid(10);\n     grid.getCurrent().width(20).rxy(0.5, 0.5).w(845).anchor(0.5);\n\n     var icons \u003d mappet.getAllIcons()\n     icons.sort(function(a, b) {\n         return a \u003e b ? 1 : -1\n     })\n     for each(var icon in icons) {\n         grid.icon(icon).wh(20, 20).tooltip(icon).id(icon);\n     }\n\n     var textbox \u003d ui.textbox().id(\"textbox\")\n     var invert \u003d ui.toggle(\u0027\u0027, true).id(\"toggle\")\n\n     textbox.rxy(0.875, 0.925).wh(160, 20).anchor(0.5).updateDelay(500);\n     invert.rxy(0.775, 0.925).wh(20, 20).anchor(0.5)\n\n     c.getSubject().openUI(ui);\n }\n\n function handler(c) {\n     var ui \u003d c.getSubject().getUIContext();\n     if (ui.getLast() \u003d\u003d\u003d \"textbox\" || ui.getLast() \u003d\u003d\u003d \"toggle\") {\n         var data \u003d ui.getData();\n         var request \u003d data.getString(\"textbox\")\n         var state \u003d data.getBoolean(\"toggle\")\n         for each(var icon in mappet.getAllIcons()) {\n             ui.get(icon).visible((request.length \u003c\u003d 0 || icon.indexOf(request) \u003e -1) \u003d\u003d\u003d state)\n         }\n     } else if (ui.getLast().length \u003e 0) {\n         c.getSubject().setClipboard(ui.getLast())\n     }\n }\n }\u003c/pre\u003e\n\n \u003cp\u003eA basic example:\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n    uiContext.get(\"icon\").icon(\"gear\");\n }\u003c/pre\u003e"
         }
       ],
       "color": [

@@ -72,33 +72,46 @@ public class UIIconButtonComponent extends UIComponent {
     /**
      * Change icon component's icon.
      *
-     * <p>You can find out all available icons by entering following line into
-     * Mappet's REPL (it returns a Java Set):</p>
-     *
-     * <pre>{@code
-     *    Java.type("mchorse.mclib.client.gui.utils.IconRegistry").icons.keySet()
-     * }</pre>
-     *
      * <p>So using that piece of code, you can get create a GUI that shows
      * every icon with a tooltip:</p>
      *
      * <pre>{@code
-     *    function main(c)
-     *    {
-     *        var ui = mappet.createUI(c, "handler").background();
-     *        var icons = Java.type("mchorse.mclib.client.gui.utils.IconRegistry").icons.keySet();
+     * function main(c) {
+     *     var ui = mappet.createUI(c, "handler").background();
      *
-     *        var grid = ui.grid(5);
+     *     var grid = ui.grid(10);
+     *     grid.getCurrent().width(20).rxy(0.5, 0.5).w(845).anchor(0.5);
      *
-     *        grid.getCurrent().width(20).rxy(0.5, 0.5).w(245).anchor(0.5);
+     *     var icons = mappet.getAllIcons()
+     *     icons.sort(function(a, b) {
+     *         return a > b ? 1 : -1
+     *     })
+     *     for each(var icon in icons) {
+     *         grid.icon(icon).wh(20, 20).tooltip(icon).id(icon);
+     *     }
      *
-     *        for each (var icon in icons)
-     *        {
-     *            grid.icon(icon).wh(20, 20).tooltip("Icon's ID: " + icon);
-     *        }
+     *     var textbox = ui.textbox().id("textbox")
+     *     var invert = ui.toggle('', true).id("toggle")
      *
-     *        c.getSubject().openUI(ui);
-     *    }
+     *     textbox.rxy(0.875, 0.925).wh(160, 20).anchor(0.5).updateDelay(500);
+     *     invert.rxy(0.775, 0.925).wh(20, 20).anchor(0.5)
+     *
+     *     c.getSubject().openUI(ui);
+     * }
+     *
+     * function handler(c) {
+     *     var ui = c.getSubject().getUIContext();
+     *     if (ui.getLast() === "textbox" || ui.getLast() === "toggle") {
+     *         var data = ui.getData();
+     *         var request = data.getString("textbox")
+     *         var state = data.getBoolean("toggle")
+     *         for each(var icon in mappet.getAllIcons()) {
+     *             ui.get(icon).visible((request.length <= 0 || icon.indexOf(request) > -1) === state)
+     *         }
+     *     } else if (ui.getLast().length > 0) {
+     *         c.getSubject().setClipboard(ui.getLast())
+     *     }
+     * }
      * }</pre>
      *
      * <p>A basic example:</p>

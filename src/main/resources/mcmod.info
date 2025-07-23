@@ -7,8 +7,9 @@
         "mcversion": "${mcversion}",
         "authorList": ["RoVoid"],
         "url": "https://github.com/RoVoid/Mappet",
+        "updateUrl": "https://raw.githubusercontent.com/rovoid/mappet/master/version.json",
         "credits": "McHorse & OtakuGamerAds for mod, Demon for icons",
-        "logoFile": "",
+        "logoFile": "assets/mappet/textures/banner.png",
         "screenshots": [],
         "dependencies": []
     }

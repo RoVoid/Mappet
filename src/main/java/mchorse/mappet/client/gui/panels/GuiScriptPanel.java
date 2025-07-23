@@ -77,7 +77,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
                 .action(Icons.BLOCK, IKey.lang("mappet.gui.scripts.context.paste_block_pos"), () -> pasteBlockPosition(editor))
                 .action(Icons.POSE, IKey.lang("mappet.gui.scripts.context.paste_player_pos"), () -> pastePlayerPosition(editor))
                 .action(Icons.REVERSE, IKey.lang("mappet.gui.scripts.context.paste_player_rot"), () -> pastePlayerRotation(editor))
-                .action(MPIcons.TOOLS_KATANA, IKey.lang("mappet.gui.scripts.context.paste_item"), () -> openItemPicker(editor))
+                .action(Icons.WRENCH, IKey.lang("mappet.gui.scripts.context.paste_item"), () -> openItemPicker(editor))
                 .action(Icons.SOUND, IKey.lang("mappet.gui.scripts.context.paste_sound"), () -> openSoundPicker(editor))
                 .action(Icons.VISIBLE, IKey.lang("mappet.gui.scripts.context.paste_morph"), () -> openMorphPicker(editor))
                 .action(Icons.STOP, IKey.lang("mappet.gui.scripts.context.paste_colorRGB"), () -> openColorPicker(editor, false))
@@ -202,7 +202,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
         this.namesList.setFileIcon(MMIcons.PROPERTIES);
 
-        this.toggleRepl = new GuiIconElement(mc, MPIcons.REPL, (b) -> this.setRepl(!this.repl.isVisible()));
+        this.toggleRepl = new GuiIconElement(mc, MPIcons.get(MPIcons.CONSOLE), (b) -> this.setRepl(!this.repl.isVisible()));
         this.toggleRepl.tooltip(IKey.lang("mappet.gui.scripts.repl.title"), Direction.LEFT);
         this.docs = new GuiIconElement(mc, Icons.HELP, this::openDocumentation);
         this.docs.tooltip(IKey.lang("mappet.gui.scripts.documentation.title"), Direction.LEFT);
@@ -210,7 +210,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         this.libraries.tooltip(IKey.lang("mappet.gui.scripts.libraries.tooltip"), Direction.LEFT);
         this.run = new GuiIconElement(mc, Icons.PLAY, this::runScript);
         this.run.tooltip(IKey.lang("mappet.gui.scripts.run"), Direction.LEFT);
-        this.beautifier = new GuiIconElement(mc, MPIcons.PAINT_BRUSH, (b) -> beautifierScript(code));
+        this.beautifier = new GuiIconElement(mc, MPIcons.get(MPIcons.BRUSH), (b) -> beautifierScript(code));
         this.beautifier.tooltip(IKey.lang("mappet.gui.scripts.beautifier"), Direction.LEFT);
 
         this.iconBar.add(this.toggleRepl, this.docs, this.libraries, this.run, this.beautifier);

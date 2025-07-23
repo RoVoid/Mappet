@@ -19,8 +19,8 @@ import net.minecraft.util.NonNullList;
 
 public class GuiCraftingRecipe extends GuiElement
 {
-    private CraftingRecipe recipe;
-    private GuiCraftingRecipes recipes;
+    private final CraftingRecipe recipe;
+    private final GuiCraftingRecipes recipes;
 
     public GuiCraftingRecipe(Minecraft mc, GuiCraftingRecipes recipes, CraftingRecipe recipe)
     {
@@ -29,8 +29,8 @@ public class GuiCraftingRecipe extends GuiElement
         this.recipe = recipe;
         this.recipes = recipes;
 
-        GuiIconElement in = new GuiIconElement(mc, MPIcons.IN, null);
-        GuiIconElement out = new GuiIconElement(mc, MPIcons.OUT, null);
+        GuiIconElement in = new GuiIconElement(mc, MPIcons.get(MPIcons.CRAFT_IN), null);
+        GuiIconElement out = new GuiIconElement(mc, MPIcons.get(MPIcons.CRAFT_OUT), null);
 
         in.setEnabled(false);
         in.disabledColor = 0xffffffff;

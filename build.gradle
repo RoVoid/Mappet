@@ -269,6 +269,8 @@ tasks.register('openBuiltJarsDir', Exec) {
 }
 
 tasks.register('scriptingJavadocsJson', Exec) {
+    group = "build"
+
     executable "javadoc"
     args "-doclet", "robot.utils.doclets.JsonDoclet", "-docletpath", "./run/jsonDoclet-1.1.jar", "-sourcepath", "./src/main/java/", "-subpackages", "mchorse.mappet.api.scripts.user:mchorse.mappet.api.ui.components:mchorse.mappet.client.gui.utils.graphics"
 
@@ -278,3 +280,40 @@ tasks.register('scriptingJavadocsJson', Exec) {
 }
 
 tasks.processResources.dependsOn(scriptingJavadocsJson)
+
+
+import groovy.json.JsonOutput
+
+def iconsDir = file("src/main/resources/assets/mappet/textures/gui/icons")
+def iconsJson = file("src/main/resources/assets/mappet/icons.json")
+
+tasks.register('generateIconsJson') {
+    group = "build"
+
+    inputs.dir(iconsDir)
+    outputs.file(iconsJson)
+
+    doLast {
+        def iconsList = []
+
+        if (iconsDir.exists()) {
+            iconsDir.eachFileRecurse { file ->
+                if (file.isFile() && file.name.endsWith(".png")) {
+                    def relativePath = iconsDir.toPath().relativize(file.toPath()).toString().replace('\\', '/')
+                    iconsList << relativePath.substring(0, relativePath.length() - 4)
+                }
+            }
+        }
+
+        iconsList.sort()
+        def json = JsonOutput.prettyPrint(JsonOutput.toJson(iconsList))
+
+        iconsJson.parentFile.mkdirs()
+        iconsJson.text = json
+
+        println "Generated icons.json with ${iconsList.size()} entries"
+    }
+}
+
+tasks.processResources.dependsOn(tasks.generateIconsJson)
+

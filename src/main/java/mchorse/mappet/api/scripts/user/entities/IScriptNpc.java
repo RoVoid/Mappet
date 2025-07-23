@@ -28,7 +28,12 @@ public interface IScriptNpc extends IScriptEntity
      * check <a href="https://github.com/mchorse/mappet/blob/master/src/main/java/mchorse/mappet/entities/EntityNpc.java">EntityNpc</a> class for methods that
      * don't have {@link Override} annotation!</p>
      */
-    public EntityNpc getMappetNpc();
+    EntityNpc asMinecraft();
+
+    /**
+     * Use {@link #asMinecraft()} instead
+     */
+    EntityNpc getMappetNpc();
 
     /**
      * Get NPC's NPC ID.
@@ -39,10 +44,16 @@ public interface IScriptNpc extends IScriptEntity
      *
      *    // This will output "true" as long as you have an NPC configured
      *    // in Mappet's NPC dashboard panel
-     *    c.send(npc.getNpcId() === "test");
+     *    c.send(npc.getId() === "test");
      * }</pre>
      */
-    public String getId();
+    String getId();
+
+    /**
+     * Use {@link #getId()} instead
+     */
+    @Deprecated
+    String getNpcId();
 
     /**
      * Get NPC's state.
@@ -51,7 +62,7 @@ public interface IScriptNpc extends IScriptEntity
      *    c.send(c.getSubject().getNpcState());
      * }</pre>
      */
-    public String getNpcState();
+    String getNpcState();
 
     /**
      * Set NPC's state.
@@ -62,7 +73,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @param stateId state ID
      */
-    public void setNpcState(String stateId);
+    void setNpcState(String stateId);
 
     /**
      * Make NPC can pick up stuff.
@@ -73,7 +84,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @param canPickUpLoot true if NPC can pick up stuff, false otherwise
      */
-    public void canPickUpLoot(boolean canPickUpLoot);
+    void canPickUpLoot(boolean canPickUpLoot);
 
     /**
      * Make NPC follow a target.
@@ -84,7 +95,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @param target Target to follow (can be a player name, @r)
      */
-    public void follow(String target);
+    void follow(String target);
 
     /**
      * Returns the faction of the NPC as a string
@@ -93,7 +104,7 @@ public interface IScriptNpc extends IScriptEntity
      * c.send(c.getSubject().getFaction())
      * }</pre>
      */
-    public String getFaction();
+    String getFaction();
 
     /**
      * Sets whether the NPC can be steered.
@@ -102,7 +113,7 @@ public interface IScriptNpc extends IScriptEntity
      * c.getSubject().setCanBeSteered(true);
      * }</pre>
      */
-    public void setCanBeSteered(boolean enabled);
+    void setCanBeSteered(boolean enabled);
 
     /**
      * Checks if the NPC can be steered.
@@ -111,7 +122,7 @@ public interface IScriptNpc extends IScriptEntity
      * c.getSubject().canBeSteered();
      * }</pre>
      */
-    public boolean canBeSteered();
+    boolean canBeSteered();
 
     /**
      * Sets the steering offset for the NPC.
@@ -120,7 +131,7 @@ public interface IScriptNpc extends IScriptEntity
      * c.getSubject().setSteeringOffset(index, x, y, z);
      * }</pre>
      */
-    public void setSteeringOffset(int index, float x, float y, float z);
+    void setSteeringOffset(int index, float x, float y, float z);
 
     /**
      * Gets the steering offset of the NPC.
@@ -129,7 +140,7 @@ public interface IScriptNpc extends IScriptEntity
      * c.getSubject().addSteeringOffset(x, y, z);
      * }</pre>
      */
-    public void addSteeringOffset(float x, float y, float z);
+    void addSteeringOffset(float x, float y, float z);
 
     /**
      * Gets the steering offset of the NPC.
@@ -140,7 +151,7 @@ public interface IScriptNpc extends IScriptEntity
      * });
      * }</pre>
      */
-    public List<ScriptVector> getSteeringOffsets();
+    List<ScriptVector> getSteeringOffsets();
 
     /**
      * Sets the speed of the NPC.
@@ -158,7 +169,7 @@ public interface IScriptNpc extends IScriptEntity
      * c.getSubject().getNpcSpeed();
      * }</pre>
      */
-    public float getNpcSpeed();
+    float getNpcSpeed();
 
     /**
      * Sets the jump power of the NPC.
@@ -167,7 +178,7 @@ public interface IScriptNpc extends IScriptEntity
      * c.getSubject().setJumpPower(jumpHeight);
      * }</pre>
      */
-    public void setJumpPower(float jumpHeight);
+    void setJumpPower(float jumpHeight);
 
     /**
      * Gets the jump power of the NPC.
@@ -176,7 +187,7 @@ public interface IScriptNpc extends IScriptEntity
      * c.getSubject().getjumpPower();
      * }</pre>
      */
-    public float getJumpPower();
+    float getJumpPower();
 
     /**
      * Sets whether the NPC is invincible.
@@ -185,7 +196,7 @@ public interface IScriptNpc extends IScriptEntity
      * c.getSubject().setInvincible(true);
      * }</pre>
      */
-    public void setInvincible(boolean invincible);
+    void setInvincible(boolean invincible);
 
     /**
      * Checks if the NPC is invincible.
@@ -194,7 +205,7 @@ public interface IScriptNpc extends IScriptEntity
      * c.getSubject().isInvincible();
      * }</pre>
      */
-    public boolean isInvincible();
+    boolean isInvincible();
 
     /**
      * Sets whether the NPC can swim.
@@ -203,7 +214,7 @@ public interface IScriptNpc extends IScriptEntity
      * c.getSubject().setCanSwim(true);
      * }</pre>
      */
-    public void setCanSwim(boolean canSwim);
+    void setCanSwim(boolean canSwim);
 
     /**
      * Checks if the NPC can swim.
@@ -212,7 +223,7 @@ public interface IScriptNpc extends IScriptEntity
      * c.getSubject().canSwim();
      * }</pre>
      */
-    public boolean canSwim();
+    boolean canSwim();
 
     /**
      * Sets whether the NPC is immovable.
@@ -221,7 +232,7 @@ public interface IScriptNpc extends IScriptEntity
      * c.getSubject().setImmovable(true);
      * }</pre>
      */
-    public void setImmovable(boolean immovable);
+    void setImmovable(boolean immovable);
 
     /**
      * Checks if the NPC is immovable.
@@ -230,7 +241,7 @@ public interface IScriptNpc extends IScriptEntity
      * c.getSubject().isImmovable();
      * }</pre>
      */
-    public boolean isImmovable();
+    boolean isImmovable();
 
     /**
      * Sets the shadow size of the NPC.
@@ -241,7 +252,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @param size the new shadow size for the NPC.
      */
-    public void setShadowSize(float size);
+    void setShadowSize(float size);
 
     /**
      * Gets the shadow size of the NPC.
@@ -252,7 +263,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @return the shadow size of the NPC.
      */
-    public float getShadowSize();
+    float getShadowSize();
 
     /**
      * Sets the XP value of the NPC.
@@ -264,7 +275,7 @@ public interface IScriptNpc extends IScriptEntity
      * @param xp the new XP value for the NPC.
      * @return the new XP value.
      */
-    public float setXpValue(int xp);
+    float setXpValue(int xp);
 
     /**
      * Gets the XP value of the NPC.
@@ -275,7 +286,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @return the XP value of the NPC.
      */
-    public int getXpValue();
+    int getXpValue();
 
     /**
      * Gets the path distance of the NPC. Also determines the NPC's sight radius of "look at player" option.
@@ -286,7 +297,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @return the path distance of the NPC.
      */
-    public float getPathDistance();
+    float getPathDistance();
 
     /**
      * Sets the path distance of the NPC. Also determines the NPC's sight radius of "look at player" option.
@@ -297,7 +308,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @param sightRadius the new path distance for the NPC.
      */
-    public void setPathDistance(float sightRadius);
+    void setPathDistance(float sightRadius);
 
     /**
      * Sets the attack range of the NPC.
@@ -308,7 +319,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @param sightDistance the new attack range for the NPC.
      */
-    public void setAttackRange(float sightDistance);
+    void setAttackRange(float sightDistance);
 
     /**
      * Gets the attack range of the NPC.
@@ -319,7 +330,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @return the attack range of the NPC.
      */
-    public float getAttackRange();
+    float getAttackRange();
 
     /**
      * Sets the killable status of the NPC.
@@ -333,7 +344,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @param killable the new killable status for the NPC.
      */
-    public void setKillable(boolean killable);
+    void setKillable(boolean killable);
 
     /**
      * Gets the killable status of the NPC.
@@ -347,7 +358,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @return true if the NPC is killable, false otherwise.
      */
-    public boolean isKillable();
+    boolean isKillable();
 
     /**
      * Gets the burnable status of the NPC.
@@ -358,7 +369,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @return true if the NPC can get burned, false otherwise.
      */
-    public boolean canGetBurned();
+    boolean canGetBurned();
 
     /**
      * Sets the burnable status of the NPC.
@@ -369,7 +380,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @param canGetBurned the new burnable status for the NPC.
      */
-    public void canGetBurned(boolean canGetBurned);
+    void canGetBurned(boolean canGetBurned);
 
     /**
      * Gets the status if the NPC can take fall damage.
@@ -380,7 +391,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @return true if the NPC can take fall damage, false otherwise.
      */
-    public boolean canFallDamage();
+    boolean canFallDamage();
 
     /**
      * Sets the status if the NPC can take fall damage.
@@ -391,7 +402,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @param canFallDamage the new status for the NPC's fall damage.
      */
-    public void canFallDamage(boolean canFallDamage);
+    void canFallDamage(boolean canFallDamage);
 
     /**
      * Gets the damage strength points of the NPC.
@@ -402,7 +413,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @return the damage of the NPC.
      */
-    public float getDamage();
+    float getDamage();
 
     /**
      * Sets the damage strength points of the NPC.
@@ -413,7 +424,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @param damage the new damage for the NPC.
      */
-    public void setDamage(float damage);
+    void setDamage(float damage);
 
     /**
      * Gets the damage delay of the NPC.
@@ -424,7 +435,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @return the damage delay of the NPC.
      */
-    public int getDamageDelay();
+    int getDamageDelay();
 
     /**
      * Sets the damage delay of the NPC.
@@ -435,7 +446,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @param damageDelay the new damage delay for the NPC.
      */
-    public void setDamageDelay(int damageDelay);
+    void setDamageDelay(int damageDelay);
 
     /**
      * Gets the wandering status of the NPC.
@@ -446,7 +457,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @return true if the NPC wanders, false otherwise.
      */
-    public boolean doesWander();
+    boolean doesWander();
 
     /**
      * Sets the wandering status of the NPC.
@@ -457,7 +468,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @param wander the new wandering status for the NPC.
      */
-    public void setWander(boolean wander);
+    void setWander(boolean wander);
 
     /**
      * Gets the status of the NPC's idle look around behavior.
@@ -468,7 +479,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @return true if the NPC looks around while idle, false otherwise.
      */
-    public boolean doesLookAround();
+    boolean doesLookAround();
 
     /**
      * Sets the status of the NPC's idle look around behavior.
@@ -479,7 +490,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @param lookAround the new idle look around status for the NPC.
      */
-    public void setLookAround(boolean lookAround);
+    void setLookAround(boolean lookAround);
 
     /**
      * Gets the status of the NPC's behavior to look at the player.
@@ -490,7 +501,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @return true if the NPC looks at the player, false otherwise.
      */
-    public boolean doesLookAtPlayer();
+    boolean doesLookAtPlayer();
 
     /**
      * Sets the status of the NPC's behavior to look at the player.
@@ -501,7 +512,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @param lookAtPlayer the new status for the NPC's behavior to look at the player.
      */
-    public void setLookAtPlayer(boolean lookAtPlayer);
+    void setLookAtPlayer(boolean lookAtPlayer);
 
     /* Triggers */
 
@@ -514,7 +525,7 @@ public interface IScriptNpc extends IScriptEntity
      *
      * @param index index of the patrol point to be removed
      */
-    public void removePatrolPoint(int index);
+    void removePatrolPoint(int index);
 
     /**
      * Removes a patrol point at a certain position from the NPC.
@@ -529,7 +540,7 @@ public interface IScriptNpc extends IScriptEntity
      * @param y y coordinate
      * @param z z coordinate
      */
-    public void removePatrolPoint(int x, int y, int z);
+    void removePatrolPoint(int x, int y, int z);
 
     /**
      * Removes all NPC's patrol points.
@@ -538,5 +549,5 @@ public interface IScriptNpc extends IScriptEntity
      * c.getSubject().clearPatrolPoints();
      * }</pre>
      */
-    public void clearPatrolPoints();
+    void clearPatrolPoints();
 }

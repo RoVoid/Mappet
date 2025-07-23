@@ -29,6 +29,7 @@ public interface IScriptTileEntity {
     /**
      * @deprecated Use {@link #asMinecraft()} instead
      */
+    @Deprecated
     TileEntity getMinecraftTileEntity();
 
     /**

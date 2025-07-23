@@ -6,15 +6,17 @@ import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
 import mchorse.mappet.api.scripts.user.logs.IMappetLogger;
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
-import mchorse.mappet.api.scripts.user.ui.IMappetUIContext;
 import mchorse.mappet.api.scripts.user.nbt.INBTCompound;
 import mchorse.mappet.api.scripts.user.nbt.INBTList;
+import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
+import mchorse.mappet.api.scripts.user.ui.IMappetUIContext;
 import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.Entity;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.EnumParticleTypes;
+
+import java.util.List;
 
 /**
  * Scripting API factory that allows to initialize/create different stuff.
@@ -53,7 +55,7 @@ public interface IScriptFactory {
 
 
     /**
-     * Create a block state that can with the default meta value.
+     * Create a block state that can with the default meta-value.
      *
      * <pre>{@code
      * var fence = mappet.createBlock("minecraft:fence");
@@ -84,7 +86,7 @@ public interface IScriptFactory {
     }
 
     /**
-     * Parse an NBT compound data out of given string, if string NBT was
+     * Parse an NBT compound date out of given string, if string NBT was
      * invalid then an empty compound will be returned.
      *
      * <pre>{@code
@@ -100,20 +102,20 @@ public interface IScriptFactory {
     /**
      * Turn a JS object into an NBT compound.
      *
-     * <p><b>BEWARE</b>: when converting JS object to NBT keep in mind some
+     * <p><b>BEWARE</b>: when converting JS object to NBT keeps in mind some
      * limitations of the NBT format:</p>
      *
      * <ul>
      *     <li>NBT supports multiple number storage formats (byte, short, int, long, float,
-     *     double) so the converter will only be able to convert numbers to either
-     *     integer or double NBT tags, depending on how did you got the number, <code>42</code>
+     *     double), so the converter will only be able to convert numbers to either
+     *     integer or double NBT tags, depending on how did you get the number, <code>42</code>
      *     being an integer, and <code>42.0</code> being a double.</li>
      *     <li>NBT lists support only storage of a <b>single type</b> at once, so if you
      *     provide an JS array like <code>[0, 1, 2, "test", {a:1,b:2}, 4, [0, 0, 0], 5.5]</code>
-     *     then <b>only the the first element's</b> type will be taken in account, and the
+     *     then <b>only the first element's</b> type will be taken in the account, and the
      *     resulted NBT list will turn out like <code>[0.0d, 1.0d, 2.0d, 4.0d, 5.5d]</code>.
      *     <b>In case with numbers</b> if you had first integers, and somewhere in the
-     *     middle in the list you got a double, then the integer type <b>will get converted
+     *     middle of the list you got a double, then the integer type <b>will get converted
      *     to double</b>!</li>
      * </ul>
      *
@@ -149,7 +151,7 @@ public interface IScriptFactory {
     }
 
     /**
-     * Parse an NBT list data out of given string, if string NBT was
+     * Parse an NBT list date out of given string, if string NBT was
      * invalid then an empty list will be returned.
      *
      * <pre>{@code
@@ -307,11 +309,13 @@ public interface IScriptFactory {
      */
     IScriptItemStack createBlockItem(String blockId, int count, int meta);
 
+    List<String> getAllIcons();
+
     /**
-     * Get Minecraft particle type by its name.
+     * Get the Minecraft particle type by its name.
      *
-     * <p>You can find out all of the particle types by typing in <code>/particle</code>
-     * command, and looking up the completion of the first argument (i.e. press tab after
+     * <p>You can find out all the particle types by typing in <code>/particle</code>
+     * command, and looking up the completion of the first argument (i.e., press tab after
      * typing in <code>/particle</code> and a space).</p>
      *
      * <pre>{@code
@@ -324,15 +328,82 @@ public interface IScriptFactory {
     EnumParticleTypes getParticleType(String type);
 
     /**
+     * Get skin texture URL for a player from Mojang
+     *
+     * <pre>{@code
+     *    var skinUrl = mappet.getSkin("McHorseYT");
+     * }</pre>
+     *
+     * @param nickname Player's Minecraft nickname
+     */
+    String getSkin(String nickname);
+
+    /**
+     * Get skin texture URL for a player from the specific source
+     *
+     * <p>Source defines where the skin should be fetched from</p>
+     * <p>Valid sources: <code>Minecraft / Mojang</code>, <code>ElyBy / Ely.By</code>, <code>TL / TLauncher</code></p>
+     *
+     * <pre>{@code
+     *    var skinUrl = mappet.getSkin("McHorseYT", "mojang");
+     * }</pre>
+     *
+     * @param nickname Player's Minecraft nickname
+     * @param source   Source of skin data
+     */
+    String getSkin(String nickname, String source);
+
+    /**
+     * Get an object containing both the skin texture URL and whether the model is slim (Alex)
+     *
+     * <pre>{@code
+     *    var player = c.getPlayer();
+     *    var skinObject = mappet.getSkinObject("McHorseYT");
+     *
+     *    var skin = skinObject.url;
+     *    var type = skinObject.slim ? "slim" : "fred";
+     *
+     *    var morph = mappet.createMorph('{Name:"blockbuster.' + type + '",Skin:"' + skin  + '"}');
+     *    player.setMorph(morph);
+     * }</pre>
+     *
+     * @param nickname Player's Minecraft nickname
+     * @return <code>url</code> – URL to the player's skin texture</li>, <code>slim</code> – boolean indicating if the model is Alex</li>
+     */
+    Object getSkinObject(String nickname);
+
+    /**
+     * Get an object containing both the skin texture URL and whether the model is slim (Alex)
+     *
+     * <p>Source defines where the skin should be fetched from</p>
+     * <p>Valid sources: <code>Minecraft / Mojang</code>, <code>ElyBy / Ely.By</code>, <code>TL / TLauncher</code></p>
+     *
+     * <pre>{@code
+     *    var player = c.getPlayer();
+     *    var skinObject = mappet.getSkinObject("McHorseYT", "Mojang");
+     *
+     *    var skin = skinObject.url;
+     *    var type = skinObject.slim ? "slim" : "fred";
+     *
+     *    var morph = mappet.createMorph('{Name:"blockbuster.' + type + '",Skin:"' + skin  + '"}');
+     *    player.setMorph(morph);
+     * }</pre>
+     *
+     * @param nickname Player's Minecraft nickname
+     * @param source   Source of skin data
+     * @return <code>url</code> – URL to the player's skin texture</li>, <code>slim</code> – boolean indicating if the model is Alex</li>
+     */
+    Object getSkinObject(String nickname, String source);
+
+    /**
      * Get Minecraft potion effect by its name.
      *
-     * <p>You can find out all of the particle types by typing in <code>/effect</code>
-     * command, and looking up the completion of the second argument (i.e. press tab after
+     * <p>You can find out all the particle types by typing in <code>/effect</code>
+     * command, and looking up the completion of the second argument (i.e., press tab after
      * typing in <code>/particle Player</code> and a space).</p>
      *
      * <pre>{@code
      *    var slowness = mappet.getPotion("slowness");
-     *
      *    c.getSubject().applyPotion(slowness, 200, 1, false);
      * }</pre>
      */
@@ -429,7 +500,7 @@ public interface IScriptFactory {
      * Create a UI with a script handler. You can send it to the
      * player by using {@link IScriptPlayer#openUI(IMappetUIBuilder)} method.
      *
-     * <p>Script and function arguments allow to point to the function in some
+     * <p>Script and function arguments allow pointing to the function in some
      * script, which it will be responsible for handling the user input from
      * scripted UI.</p>
      *
@@ -499,7 +570,7 @@ public interface IScriptFactory {
     void set(String key, Object object);
 
     /**
-     * Dump the simple representation of given non-JS object into the string (to see
+     * Dump the simple representation of a given non-JS object into the string (to see
      * what fields and methods are available for use).
      *
      * <pre>{@code
@@ -513,7 +584,7 @@ public interface IScriptFactory {
     }
 
     /**
-     * Dump given non-JS object into the string (to see what fields and methods are
+     * Dump given a non-JS object into the string (to see what fields and methods are
      * available for use).
      *
      * <pre>{@code
@@ -530,11 +601,11 @@ public interface IScriptFactory {
     /**
      * Return Minecraft's formatting code.
      *
-     * <p>Following colors are supported: black, dark_blue, dark_green, dark_aqua,
+     * <p>The Following colors are supported: black, dark_blue, dark_green, dark_aqua,
      * dark_red, dark_purple, gold, gray, dark_gray, blue, green, aqua, red,
      * light_purple, yellow, white</p>
      *
-     * <p>Following styles are supported: obfuscated, bold, strikethrough, underline,
+     * <p>The following styles are supported: obfuscated, bold, strikethrough, underline,
      * italic, reset.</p>
      *
      * <pre>{@code

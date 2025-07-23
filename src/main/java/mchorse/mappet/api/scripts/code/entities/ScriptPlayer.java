@@ -6,22 +6,23 @@ import mchorse.mappet.api.scripts.code.ScriptResourcePack;
 import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import mchorse.mappet.api.scripts.code.items.ScriptInventory;
 import mchorse.mappet.api.scripts.code.mappet.MappetQuests;
-import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
-import mchorse.mappet.api.scripts.code.ui.MappetUIContext;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
 import mchorse.mappet.api.scripts.code.score.ScriptScoreObjective;
 import mchorse.mappet.api.scripts.code.score.ScriptScoreboard;
 import mchorse.mappet.api.scripts.code.score.ScriptTeam;
+import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
+import mchorse.mappet.api.scripts.code.ui.MappetUIContext;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.items.IScriptInventory;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
 import mchorse.mappet.api.scripts.user.mappet.IMappetQuests;
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
-import mchorse.mappet.api.scripts.user.ui.IMappetUIContext;
 import mchorse.mappet.api.scripts.user.nbt.INBT;
 import mchorse.mappet.api.scripts.user.nbt.INBTCompound;
+import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
+import mchorse.mappet.api.scripts.user.ui.IMappetUIContext;
 import mchorse.mappet.api.ui.UI;
 import mchorse.mappet.api.ui.UIContext;
+import mchorse.mappet.api.utils.SkinUtils;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
 import mchorse.mappet.entities.utils.WalkSpeedManager;
@@ -46,7 +47,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.*;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -197,7 +197,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
 
     @Override
     public float getCooldown(IScriptItemStack item) {
-        return this.entity.getCooldownTracker().getCooldown(item.getMinecraftItemStack().getItem(), 0);
+        return this.entity.getCooldownTracker().getCooldown(item.asMinecraft().getItem(), 0);
     }
 
     @Override
@@ -207,7 +207,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
 
     @Override
     public void setCooldown(IScriptItemStack item, int ticks) {
-        this.entity.getCooldownTracker().setCooldown(item.getMinecraftItemStack().getItem(), ticks);
+        this.entity.getCooldownTracker().setCooldown(item.asMinecraft().getItem(), ticks);
     }
 
     @Override
@@ -217,7 +217,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
 
     @Override
     public void resetCooldown(IScriptItemStack item) {
-        this.entity.getCooldownTracker().removeCooldown(item.getMinecraftItemStack().getItem());
+        this.entity.getCooldownTracker().removeCooldown(item.asMinecraft().getItem());
     }
 
     @Override
@@ -248,7 +248,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
 
     @Override
     public void sendRaw(INBT message) {
-        ITextComponent component = ITextComponent.Serializer.fromJsonLenient(message.stringify());
+        ITextComponent component = ITextComponent.Serializer.fromJsonLenient(message.toString());
 
         if (component != null) {
             this.entity.sendMessage(component);
@@ -257,7 +257,22 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
 
     @Override
     public String getSkin() {
-        return "minecraft:skins/" + StringUtils.stripControlCodes(this.getName().toLowerCase());
+        return SkinUtils.getSkin(getName());
+    }
+
+    @Override
+    public String getSkin(String source) {
+        return SkinUtils.getSkin(getName(), source);
+    }
+
+    @Override
+    public Object getSkinObject() {
+        return SkinUtils.getSkinObject(getName());
+    }
+
+    @Override
+    public Object getSkinObject(String source) {
+        return SkinUtils.getSkinObject(getName(), source);
     }
 
     @Override
@@ -590,7 +605,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
 
         Character character = Character.get(this.entity);
         if (character == null) return;
-        character.changeHUDMorph(id, index, morph.getNBTTagCompound());
+        character.changeHUDMorph(id, index, morph.asMinecraft());
     }
 
     @Override

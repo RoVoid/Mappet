@@ -14,124 +14,112 @@ import net.minecraft.util.math.BlockPos;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScriptNpc extends ScriptEntity<EntityNpc> implements IScriptNpc
-{
-    public ScriptNpc(EntityNpc entity)
-    {
+public class ScriptNpc extends ScriptEntity<EntityNpc> implements IScriptNpc {
+    public ScriptNpc(EntityNpc entity) {
         super(entity);
     }
 
     @Override
-    public EntityNpc getMappetNpc()
-    {
-        return this.entity;
+    public EntityNpc asMinecraft() {
+        return entity;
     }
 
     @Override
-    public String getId()
-    {
-        return this.entity.getId();
+    public EntityNpc getMappetNpc() {
+        return asMinecraft();
     }
 
     @Override
-    public boolean setMorph(AbstractMorph morph)
-    {
-        this.entity.getState().morph = MorphUtils.copy(morph);
-        this.entity.setMorph(this.entity.getState().morph);
-        this.entity.sendNpcStateChangePacket();
+    public String getId() {
+        return entity.getId();
+    }
 
+    @Override
+    public String getNpcId() {
+        return getId();
+    }
+
+    @Override
+    public boolean setMorph(AbstractMorph morph) {
+        entity.getState().morph = MorphUtils.copy(morph);
+        entity.setMorph(entity.getState().morph);
+        entity.sendNpcStateChangePacket();
         return true;
     }
 
     @Override
-    public String getNpcState()
-    {
-        return this.entity.getState().stateName.get();
+    public String getNpcState() {
+        return entity.getState().stateName.get();
     }
 
     @Override
-    public void setNpcState(String stateId)
-    {
-        String npcId = this.entity.getId();
+    public void setNpcState(String stateId) {
+        String npcId = entity.getId();
         Npc npc = Mappet.npcs.load(npcId);
         NpcState state = npc == null ? null : npc.states.get(stateId);
 
-        if (npc != null && state == null && npc.states.containsKey("default"))
-        {
+        if (npc != null && state == null && npc.states.containsKey("default")) {
             state = npc.states.get("default");
         }
 
-        if (state != null)
-        {
-            this.entity.setNpc(npc, state);
-
-            if (!npc.serializeNBT().getString("StateName").equals("default"))
-            {
-                this.entity.setStringInData("StateName", stateId);
+        if (state != null) {
+            entity.setNpc(npc, state);
+            if (!npc.serializeNBT().getString("StateName").equals("default")) {
+                entity.setStringInData("StateName", stateId);
             }
         }
 
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
-    public void canPickUpLoot(boolean canPickUpLoot)
-    {
-        this.entity.setCanPickUpLoot(canPickUpLoot);
+    public void canPickUpLoot(boolean canPickUpLoot) {
+        entity.setCanPickUpLoot(canPickUpLoot);
     }
 
     @Override
-    public void follow(String target)
-    {
-        NpcState state = this.entity.getState();
-
+    public void follow(String target) {
+        NpcState state = entity.getState();
         state.follow.set(target);
-
-        this.entity.setState(state, false);
+        entity.setState(state, false);
     }
 
     @Override
-    public String getFaction()
-    {
-        return this.entity.getState().faction.get();
+    public String getFaction() {
+        return entity.getState().faction.get();
     }
 
     @Override
-    public void setCanBeSteered(boolean enabled)
-    {
-        NpcState state = this.entity.getState();
+    public void setCanBeSteered(boolean enabled) {
+        NpcState state = entity.getState();
         state.canBeSteered.set(enabled);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
-    public boolean canBeSteered()
-    {
-        return this.entity.getState().canBeSteered.get();
+    public boolean canBeSteered() {
+        return entity.getState().canBeSteered.get();
     }
 
     @Override
     public void setSteeringOffset(int index, float x, float y, float z) {
-        NpcState state = this.entity.getState();
+        NpcState state = entity.getState();
         if (index >= 0 && index < state.steeringOffset.size()) {
             state.steeringOffset.set(index, new BlockPos(x, y, z));
-        } else {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
-        }
-        this.entity.sendNpcStateChangePacket();
+        } else Mappet.logger.error("Invalid index: " + index);
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
     public void addSteeringOffset(float x, float y, float z) {
-        NpcState state = this.entity.getState();
+        NpcState state = entity.getState();
         state.steeringOffset.add(new BlockPos(x, y, z));
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
-
-
+    
     @Override
     public List<ScriptVector> getSteeringOffsets() {
-        NpcState state = this.entity.getState();
+        NpcState state = entity.getState();
         List<ScriptVector> steeringOffsets = new ArrayList<>();
         for (BlockPos pos : state.steeringOffset) {
             steeringOffsets.add(new ScriptVector(pos.getX(), pos.getY(), pos.getZ()));
@@ -140,280 +128,242 @@ public class ScriptNpc extends ScriptEntity<EntityNpc> implements IScriptNpc
     }
 
     @Override
-    public void setNpcSpeed(float speed)
-    {
-        NpcState state = this.entity.getState();
+    public void setNpcSpeed(float speed) {
+        NpcState state = entity.getState();
         state.speed.set(speed);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
-    public float getNpcSpeed()
-    {
-        return this.entity.getState().speed.get();
+    public float getNpcSpeed() {
+        return entity.getState().speed.get();
     }
 
     @Override
-    public void setJumpPower(float jumpHeight)
-    {
-        NpcState state = this.entity.getState();
+    public void setJumpPower(float jumpHeight) {
+        NpcState state = entity.getState();
         state.jumpPower.set(jumpHeight);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
-    public float getJumpPower()
-    {
-        return this.entity.getState().jumpPower.get();
+    public float getJumpPower() {
+        return entity.getState().jumpPower.get();
     }
 
     @Override
-    public void setInvincible(boolean invincible)
-    {
-        NpcState state = this.entity.getState();
+    public void setInvincible(boolean invincible) {
+        NpcState state = entity.getState();
         state.invincible.set(invincible);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
-    public boolean isInvincible()
-    {
-        return this.entity.getState().invincible.get();
+    public boolean isInvincible() {
+        return entity.getState().invincible.get();
     }
 
     @Override
-    public void setCanSwim(boolean canSwim)
-    {
-        NpcState state = this.entity.getState();
+    public void setCanSwim(boolean canSwim) {
+        NpcState state = entity.getState();
         state.canSwim.set(canSwim);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
-    public boolean canSwim()
-    {
-        return this.entity.getState().canSwim.get();
+    public boolean canSwim() {
+        return entity.getState().canSwim.get();
     }
 
     @Override
-    public void setImmovable(boolean immovable)
-    {
-        NpcState state = this.entity.getState();
+    public void setImmovable(boolean immovable) {
+        NpcState state = entity.getState();
         state.immovable.set(immovable);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
-    public boolean isImmovable()
-    {
-        return this.entity.getState().immovable.get();
+    public boolean isImmovable() {
+        return entity.getState().immovable.get();
     }
 
     @Override
-    public void setShadowSize(float size)
-    {
-        NpcState state = this.entity.getState();
+    public void setShadowSize(float size) {
+        NpcState state = entity.getState();
         state.shadowSize.set(size);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
-    public float getShadowSize()
-    {
-        return this.entity.getState().shadowSize.get();
+    public float getShadowSize() {
+        return entity.getState().shadowSize.get();
     }
 
     @Override
-    public float setXpValue(int xp)
-    {
-        NpcState state = this.entity.getState();
+    public float setXpValue(int xp) {
+        NpcState state = entity.getState();
         state.xp.set(xp);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
         return xp;
     }
 
     @Override
-    public int getXpValue()
-    {
-        return this.entity.getState().xp.get();
+    public int getXpValue() {
+        return entity.getState().xp.get();
     }
 
     @Override
-    public float getPathDistance()
-    {
-        NpcState state = this.entity.getState();
+    public float getPathDistance() {
+        NpcState state = entity.getState();
         return state.pathDistance.get();
     }
 
     @Override
-    public void setPathDistance(float sightRadius)
-    {
-        NpcState state = this.entity.getState();
+    public void setPathDistance(float sightRadius) {
+        NpcState state = entity.getState();
         state.pathDistance.set(sightRadius);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
-    public void setAttackRange(float sightDistance)
-    {
-        NpcState state = this.entity.getState();
+    public void setAttackRange(float sightDistance) {
+        NpcState state = entity.getState();
         state.sightDistance.set(sightDistance);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
-    public float getAttackRange()
-    {
-        return this.entity.getState().sightDistance.get();
+    public float getAttackRange() {
+        return entity.getState().sightDistance.get();
     }
 
     @Override
-    public void setKillable(boolean killable)
-    {
-        NpcState state = this.entity.getState();
+    public void setKillable(boolean killable) {
+        NpcState state = entity.getState();
         state.killable.set(killable);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
-    public boolean isKillable()
-    {
-        return this.entity.getState().killable.get();
+    public boolean isKillable() {
+        return entity.getState().killable.get();
     }
 
     @Override
-    public boolean canGetBurned()
-    {
-        return this.entity.getState().canGetBurned.get();
+    public boolean canGetBurned() {
+        return entity.getState().canGetBurned.get();
     }
 
     @Override
-    public void canGetBurned(boolean canGetBurned)
-    {
-        NpcState state = this.entity.getState();
+    public void canGetBurned(boolean canGetBurned) {
+        NpcState state = entity.getState();
         state.canGetBurned.set(canGetBurned);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
-    public boolean canFallDamage()
-    {
-        return this.entity.getState().canFallDamage.get();
+    public boolean canFallDamage() {
+        return entity.getState().canFallDamage.get();
     }
 
     @Override
-    public void canFallDamage(boolean canFallDamage)
-    {
-        NpcState state = this.entity.getState();
+    public void canFallDamage(boolean canFallDamage) {
+        NpcState state = entity.getState();
         state.canFallDamage.set(canFallDamage);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
-    public float getDamage()
-    {
-        return this.entity.getState().damage.get();
+    public float getDamage() {
+        return entity.getState().damage.get();
     }
 
     @Override
-    public void setDamage(float damage)
-    {
-        NpcState state = this.entity.getState();
+    public void setDamage(float damage) {
+        NpcState state = entity.getState();
         state.damage.set(damage);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
-    public int getDamageDelay()
-    {
-        return this.entity.getState().damageDelay.get();
+    public int getDamageDelay() {
+        return entity.getState().damageDelay.get();
     }
 
     @Override
-    public void setDamageDelay(int damageDelay)
-    {
-        NpcState state = this.entity.getState();
+    public void setDamageDelay(int damageDelay) {
+        NpcState state = entity.getState();
         state.damageDelay.set(damageDelay);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
-    public boolean doesWander()
-    {
-        return this.entity.getState().wander.get();
+    public boolean doesWander() {
+        return entity.getState().wander.get();
     }
 
     @Override
-    public void setWander(boolean wander)
-    {
-        NpcState state = this.entity.getState();
+    public void setWander(boolean wander) {
+        NpcState state = entity.getState();
         state.wander.set(wander);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
-    public boolean doesLookAround()
-    {
-        return this.entity.getState().lookAround.get();
+    public boolean doesLookAround() {
+        return entity.getState().lookAround.get();
     }
 
     @Override
-    public void setLookAround(boolean lookAround)
-    {
-        NpcState state = this.entity.getState();
+    public void setLookAround(boolean lookAround) {
+        NpcState state = entity.getState();
         state.lookAround.set(lookAround);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     @Override
-    public boolean doesLookAtPlayer()
-    {
-        return this.entity.getState().lookAtPlayer.get();
+    public boolean doesLookAtPlayer() {
+        return entity.getState().lookAtPlayer.get();
     }
 
     @Override
-    public void setLookAtPlayer(boolean lookAtPlayer)
-    {
-        NpcState state = this.entity.getState();
+    public void setLookAtPlayer(boolean lookAtPlayer) {
+        NpcState state = entity.getState();
         state.lookAtPlayer.set(lookAtPlayer);
-        this.entity.sendNpcStateChangePacket();
+        entity.sendNpcStateChangePacket();
     }
 
     /* Triggers */
 
     @Override
-    public void clearPatrolPoints()
-    {
-        NpcState state = this.entity.getState();
+    public void clearPatrolPoints() {
+        NpcState state = entity.getState();
         state.patrol.clear();
-        this.entity.setState(state, false);
+        entity.setState(state, false);
     }
 
-    public void addPatrolPoints(float x, float y, float z){
-        NpcState npcState = this.entity.getState();
+    public void addPatrolPoints(float x, float y, float z) {
+        NpcState npcState = entity.getState();
         npcState.patrol.add(new BlockPos(x, y, z));
         npcState.patrolTriggers.add(new Trigger());
-        this.entity.setState(npcState, true);
+        entity.setState(npcState, true);
     }
 
     @Override
-    public void removePatrolPoint(int index)
-    {
-        NpcState state = this.entity.getState();
+    public void removePatrolPoint(int index) {
+        NpcState state = entity.getState();
 
-        if (index < state.patrol.size())
-        {
+        if (index < state.patrol.size()) {
             state.patrol.remove(index);
             state.patrolTriggers.remove(index);
         }
 
-        this.entity.setState(state, false);
+        entity.setState(state, false);
     }
 
     @Override
-    public void removePatrolPoint(int x, int y, int z)
-    {
-        NpcState state = this.entity.getState();
+    public void removePatrolPoint(int x, int y, int z) {
+        NpcState state = entity.getState();
 
         state.patrol.stream().filter(p -> p.getX() == x && p.getY() == y && p.getZ() == z).forEach(p -> {
             int index = state.patrol.indexOf(p);
@@ -422,6 +372,6 @@ public class ScriptNpc extends ScriptEntity<EntityNpc> implements IScriptNpc
             state.patrolTriggers.remove(index);
         });
 
-        this.entity.setState(state, false);
+        entity.setState(state, false);
     }
 }

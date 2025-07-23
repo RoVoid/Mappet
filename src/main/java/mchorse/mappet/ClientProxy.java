@@ -15,8 +15,11 @@ import mchorse.mappet.network.common.content.PacketContentRequestNames;
 import mchorse.mappet.tile.TileConditionModel;
 import mchorse.mappet.tile.TileRegion;
 import mchorse.mappet.tile.TileTrigger;
+import mchorse.mappet.utils.MPIcons;
 import mchorse.mclib.McLib;
 import mchorse.mclib.utils.ReflectionUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -70,6 +73,13 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityNpc.class, new RenderNpc.Factory());
 
         ReflectionUtils.registerResourcePack(new SoundPack(sounds = new File(CommonProxy.configFolder, "sounds")));
+
+        Minecraft mc = Minecraft.getMinecraft();
+        if (mc.getResourceManager() instanceof IReloadableResourceManager) {
+            ((IReloadableResourceManager) mc.getResourceManager()).registerReloadListener(resourceManager -> {
+                System.out.println("MPICONS client");
+                MPIcons.initiate();});
+        }
 
         Themes.initiate();
     }

@@ -379,19 +379,62 @@ public interface IScriptPlayer extends IScriptEntity {
     void sendRaw(INBT message);
 
     /**
-     * Get player's skin.
+     * Get skin texture URL for a player from Mojang
      *
      * <pre>{@code
-     *    // Assuming that c.getSubject() is a player
-     *    var player = c.getSubject();
-     *    var morph = mappet.createMorph('{Name:"blockbuster.fred",Skin:"' + player.getSkin() + '",Pose:"dabbing"}');
-     *
-     *    player.setMorph(morph);
+     *    var player = c.getPlayer()
+     *    var skinUrl = player.getSkin();
      * }</pre>
      *
-     * @return Resource location in the format of "minecraft:skins/..." (which can be used in morphs)
      */
     String getSkin();
+
+    /**
+     * Get skin texture URL for a player from the specific source
+     *
+     * <p>Source defines where the skin should be fetched from</p>
+     * <p>Valid sources: <code>Minecraft / Mojang</code>, <code>ElyBy / Ely.By</code>, <code>TL / TLauncher</code></p>
+     *
+     * <pre>{@code
+     *    var player = c.getPlayer()
+     *    var skinUrl = player.getSkin("elyby");
+     * }</pre>
+     *
+     * @param source   Source of skin data
+     */
+    String getSkin(String source);
+
+    /**
+     * Get an object containing both the skin texture URL and whether the model is slim (Alex)
+     *
+     * <pre>{@code
+     *    var player = c.getPlayer();
+     *    var skinObject = player.getSkinObject();
+     *
+     *    if (skinObject.slim) {
+     *        c.send(player.getName(), "is female or femboy!");
+     *        c.send("Take fast her skin:", skinObject.url);
+     *    }
+     * }</pre>
+     *
+     * @return <code>url</code> – URL to the player's skin texture</li>, <code>slim</code> – boolean indicating if the model is Alex</li>
+     */
+    Object getSkinObject();
+
+    /**
+     * Get an object containing both the skin texture URL and whether the model is slim (Alex)
+     *
+     * <p>Source defines where the skin should be fetched from</p>
+     * <p>Valid sources: <code>Minecraft / Mojang</code>, <code>ElyBy / Ely.By</code>, <code>TL / TLauncher</code></p>
+     *
+     * <pre>{@code
+     *    var player = c.getPlayer();
+     *    var skinObject = player.getSkinObject("elyby");
+     * }</pre>
+     *
+     * @return <code>url</code> – URL to the player's skin texture</li>, <code>slim</code> – boolean indicating if the model is Alex</li>
+     */
+    Object getSkinObject(String source);
 
     /**
      * Send title and subtitle durations (in ticks, <code>20</code> ticks = <code>1</code> second).

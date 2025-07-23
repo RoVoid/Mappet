@@ -100,6 +100,11 @@ public class UIToggleComponent extends UILabelBaseComponent
 
         toggle.toggled(this.state);
 
+        if (!this.id.isEmpty())
+        {
+            context.data.setBoolean(this.id, toggle.isToggled());
+        }
+
         return this.apply(toggle, context);
     }
 
