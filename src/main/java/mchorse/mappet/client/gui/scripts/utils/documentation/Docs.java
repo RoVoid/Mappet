@@ -4,10 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import mchorse.mappet.Mappet;
-import mchorse.mappet.client.gui.scripts.GuiDocumentationOverlayPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.Language;
+import net.minecraft.util.ResourceLocation;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -25,77 +26,83 @@ public class Docs {
         Language language = mc.getLanguageManager().getCurrentLanguage();
         Gson gson = new GsonBuilder().create();
 
-        String path = "/assets/mappet/docs/" + language.getLanguageCode() + ".json";
-        InputStream stream = GuiDocumentationOverlayPanel.class.getResourceAsStream(path);
-
-        if (stream == null) {
-            stream = GuiDocumentationOverlayPanel.class.getResourceAsStream("/assets/mappet/docs/en_US.json");
+        InputStream stream = null;
+        try {
+            stream = mc.getResourceManager().getResource(new ResourceLocation(Mappet.MOD_ID, "docs/" + language.getLanguageCode() + ".json")).getInputStream();
+        } catch (IOException e) {
+            Mappet.logger.warning("Not found docs on your localization!");
+            if (language.getLanguageCode().equalsIgnoreCase("en_us")) return;
+            try {
+                stream = mc.getResourceManager().getResource(new ResourceLocation(Mappet.MOD_ID, "docs/en_us.json")).getInputStream();
+            } catch (IOException e1) {
+                Mappet.logger.warning("Not found docs");
+            }
         }
 
-        if (stream != null) {
-            try (Scanner scanner = new Scanner(stream, "UTF-8")) {
-                String json = scanner.useDelimiter("\\A").next();
+        if (stream == null) return;
 
-                Type type = new TypeToken<Map<String, RawClassEntry>>() {
-                }.getType();
-                Map<String, RawClassEntry> rawDocs = gson.fromJson(json, type);
+        try (Scanner scanner = new Scanner(stream, "UTF-8")) {
+            String json = scanner.useDelimiter("\\A").next();
 
-                for (Map.Entry<String, RawClassEntry> entry : rawDocs.entrySet()) {
-                    RawClassEntry raw = entry.getValue();
-                    DocEntry docEntry = new DocEntry(entry.getKey());
-                    docEntry.doc = raw.docs == null ? "" : raw.docs;
+            Type type = new TypeToken<Map<String, RawClassEntry>>() {
+            }.getType();
+            Map<String, RawClassEntry> rawDocs = gson.fromJson(json, type);
 
-                    if (raw.methods != null) {
-                        for (Map.Entry<String, List<RawMethodVariant>> m : raw.methods.entrySet()) {
-                            String methodName = m.getKey();
-                            List<RawMethodVariant> variants = m.getValue();
+            for (Map.Entry<String, RawClassEntry> entry : rawDocs.entrySet()) {
+                RawClassEntry raw = entry.getValue();
+                DocEntry docEntry = new DocEntry(entry.getKey());
+                docEntry.doc = raw.docs == null ? "" : raw.docs;
 
-                            DocMethod method = new DocMethod(methodName);
-                            method.isDeprecated = true;
+                if (raw.methods != null) {
+                    for (Map.Entry<String, List<RawMethodVariant>> m : raw.methods.entrySet()) {
+                        String methodName = m.getKey();
+                        List<RawMethodVariant> variants = m.getValue();
 
-                            for (RawMethodVariant variantRaw : variants) {
-                                DocMethodVariant variant = new DocMethodVariant(methodName);
-                                variant.doc = variantRaw.docs == null ? "" : variantRaw.docs;
+                        DocMethod method = new DocMethod(methodName);
+                        method.isDeprecated = true;
 
-                                if (variantRaw.returns != null) {
-                                    DocVariable returns = new DocVariable();
-                                    returns.type = variantRaw.returns.type;
-                                    returns.doc = variantRaw.returns.docs == null ? "" : variantRaw.returns.docs;
-                                    variant.returns = returns;
-                                }
+                        for (RawMethodVariant variantRaw : variants) {
+                            DocMethodVariant variant = new DocMethodVariant(methodName);
+                            variant.doc = variantRaw.docs == null ? "" : variantRaw.docs;
 
-                                if (variantRaw.parameters != null) {
-                                    for (RawParameter paramRaw : variantRaw.parameters) {
-                                        DocVariable param = new DocVariable(paramRaw.name);
-                                        param.type = paramRaw.type;
-                                        param.doc = paramRaw.docs == null ? "" : paramRaw.docs;
-                                        variant.params.add(param);
-                                    }
-                                }
-
-                                if (variantRaw.annotations != null) {
-                                    variant.annotations.addAll(variantRaw.annotations);
-                                    if (variant.annotations.contains("java.lang.Deprecated"))
-                                        variant.isDeprecated = true;
-                                }
-                                if (!variant.isDeprecated) method.isDeprecated = false;
-
-                                variant.setParent(method);
+                            if (variantRaw.returns != null) {
+                                DocVariable returns = new DocVariable();
+                                returns.type = variantRaw.returns.type;
+                                returns.doc = variantRaw.returns.docs == null ? "" : variantRaw.returns.docs;
+                                variant.returns = returns;
                             }
 
-                            if (method.removeDiscardMethods()) {
-                                method.setParent(docEntry);
-                                methods.add(method);
+                            if (variantRaw.parameters != null) {
+                                for (RawParameter paramRaw : variantRaw.parameters) {
+                                    DocVariable param = new DocVariable(paramRaw.name);
+                                    param.type = paramRaw.type;
+                                    param.doc = paramRaw.docs == null ? "" : paramRaw.docs;
+                                    variant.params.add(param);
+                                }
                             }
+
+                            if (variantRaw.annotations != null) {
+                                variant.annotations.addAll(variantRaw.annotations);
+                                if (variant.annotations.contains("java.lang.Deprecated"))
+                                    variant.isDeprecated = true;
+                            }
+                            if (!variant.isDeprecated) method.isDeprecated = false;
+
+                            variant.setParent(method);
+                        }
+
+                        if (method.removeDiscardMethods()) {
+                            method.setParent(docEntry);
+                            methods.add(method);
                         }
                     }
-
-                    classes.add(docEntry);
                 }
 
-            } catch (Exception e) {
-                Mappet.logger.error("Failed to load Docs: " + e.getMessage());
+                classes.add(docEntry);
             }
+
+        } catch (Exception e) {
+            Mappet.logger.error("Failed to load Docs: " + e.getMessage());
         }
     }
 

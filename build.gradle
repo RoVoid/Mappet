@@ -260,14 +260,6 @@ tasks.register('copyLangStrings') {
     }
 }
 
-tasks.register('openBuiltJarsDir', Exec) {
-    group = 'build'
-    description = 'Opens the build/libs directory in Explorer'
-
-    commandLine "cmd", "/c", "explorer ${projectDir}\\build\\libs"
-    ignoreExitValue true
-}
-
 tasks.register('scriptingJavadocsJson', Exec) {
     group = "build"
 
@@ -275,7 +267,13 @@ tasks.register('scriptingJavadocsJson', Exec) {
     args "-doclet", "robot.utils.doclets.JsonDoclet", "-docletpath", "./run/jsonDoclet-1.1.jar", "-sourcepath", "./src/main/java/", "-subpackages", "mchorse.mappet.api.scripts.user:mchorse.mappet.api.ui.components:mchorse.mappet.client.gui.utils.graphics"
 
     doLast {
-        file("src/main/resources/assets/mappet/docs/en_us.json").setText(file("docs.json").text)
+        def tempJson = file("docs.json")
+        def targetJson = file("src/main/resources/assets/mappet/docs/en_us.json")
+
+        if (tempJson.exists()) {
+            targetJson.setText(tempJson.text)
+            tempJson.delete()
+        }
     }
 }
 
@@ -310,8 +308,6 @@ tasks.register('generateIconsJson') {
 
         iconsJson.parentFile.mkdirs()
         iconsJson.text = json
-
-        println "Generated icons.json with ${iconsList.size()} entries"
     }
 }
 
