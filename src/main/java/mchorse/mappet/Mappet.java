@@ -135,8 +135,6 @@ public final class Mappet {
 
     public static ValueBoolean loadCustomSoundsOnLogin;
 
-    public static ValueBoolean loadCustomIconsOnLogin;
-
     public static ValueBoolean npcsPeacefulDamage;
 
     public static ValueBoolean npcsToolOnlyOP;
@@ -181,7 +179,6 @@ public final class Mappet {
         generalDataCaching = builder.getBoolean("data_caching", true);
         enableForgeTriggers = builder.getBoolean("enable_forge_triggers", false);
         loadCustomSoundsOnLogin = builder.getBoolean("load_custom_sounds_on_login", true);
-        loadCustomIconsOnLogin = builder.getBoolean("load_custom_icons_on_login", false);
 
         npcsPeacefulDamage = builder.category("npc").getBoolean("peaceful_damage", true);
         npcsToolOnlyOP = builder.getBoolean("tool_only_op", true);
