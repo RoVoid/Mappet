@@ -243,6 +243,10 @@ public interface IScriptNpc extends IScriptEntity
      */
     boolean isImmovable();
 
+    void setCollision(boolean enabled);
+
+    boolean hasCollision();
+
     /**
      * Sets the shadow size of the NPC.
      *

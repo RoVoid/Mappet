@@ -24,6 +24,7 @@ public class GuiNpcMovementPanel extends GuiNpcPanel
     public GuiBlockPosList steeringOffset;
     public GuiToggleElement canSwim;
     public GuiToggleElement immovable;
+    public GuiToggleElement collision;
     public GuiToggleElement hasPost;
     public GuiBlockPosElement postPosition;
     public GuiTrackpadElement postRadius;
@@ -35,49 +36,50 @@ public class GuiNpcMovementPanel extends GuiNpcPanel
     {
         super(mc, IKey.lang("mappet.gui.npcs.movement.title"));
 
-        this.speed = new GuiTrackpadElement(mc, (v) -> this.state.speed.set(v.floatValue()));
-        this.flightMaxHeight = new GuiTrackpadElement(mc, (v) -> this.state.flightMaxHeight.set(v));
-        this.flightMinHeight = new GuiTrackpadElement(mc, (v) -> this.state.flightMinHeight.set(v));
-        this.jumpPower = new GuiTrackpadElement(mc, (v) -> this.state.jumpPower.set(v.floatValue()));
-        this.steeringOffset = new GuiBlockPosList(mc);
+        speed = new GuiTrackpadElement(mc, (v) -> state.speed.set(v.floatValue()));
+        flightMaxHeight = new GuiTrackpadElement(mc, (v) -> state.flightMaxHeight.set(v));
+        flightMinHeight = new GuiTrackpadElement(mc, (v) -> state.flightMinHeight.set(v));
+        jumpPower = new GuiTrackpadElement(mc, (v) -> state.jumpPower.set(v.floatValue()));
+        steeringOffset = new GuiBlockPosList(mc);
 
         GuiLabel steeringOffsetLabel = Elements.label(IKey.lang("mappet.gui.npcs.movement.steering_offset")).background();
-        GuiIconElement addSteeringOffset = new GuiIconElement(mc, Icons.ADD, (b) -> this.steeringOffset.addBlockPos());
+        GuiIconElement addSteeringOffset = new GuiIconElement(mc, Icons.ADD, (b) -> steeringOffset.addBlockPos());
 
         addSteeringOffset.flex().relative(steeringOffsetLabel).xy(1F, 0.5F).w(10).anchor(1F, 0.5F);
         steeringOffsetLabel.add(addSteeringOffset);
 
-        this.canSwim = new GuiToggleElement(mc, IKey.lang("mappet.gui.npcs.movement.can_swim"), (b) -> this.state.canSwim.set(b.isToggled()));
-        this.immovable = new GuiToggleElement(mc, IKey.lang("mappet.gui.npcs.movement.immovable"), (b) -> this.state.immovable.set(b.isToggled()));
-        this.hasPost = new GuiToggleElement(mc, IKey.lang("mappet.gui.npcs.movement.post"), (b) -> this.state.hasPost.set(b.isToggled()));
-        this.postPosition = new GuiBlockPosElement(mc, (pos) -> this.state.postPosition = pos);
-        this.postRadius = new GuiTrackpadElement(mc, (v) -> this.state.postRadius.set(v.floatValue()));
-        this.patrolCirculate = new GuiToggleElement(mc, IKey.lang("mappet.gui.npcs.movement.patrol_circulate"), (b) -> this.state.patrolCirculate.set(b.isToggled()));
-        this.patrol = new GuiBlockPosAndTriggerList(mc);
-        this.follow = new GuiTextElement(mc, 1000, (t) -> this.state.follow.set(t));
+        canSwim = new GuiToggleElement(mc, IKey.lang("mappet.gui.npcs.movement.can_swim"), (b) -> state.canSwim.set(b.isToggled()));
+        immovable = new GuiToggleElement(mc, IKey.lang("mappet.gui.npcs.movement.immovable"), (b) -> state.immovable.set(b.isToggled()));
+        collision = new GuiToggleElement(mc, IKey.lang("mappet.gui.npcs.movement.collision"), (b) -> state.collision.set(b.isToggled()));
+        hasPost = new GuiToggleElement(mc, IKey.lang("mappet.gui.npcs.movement.post"), (b) -> state.hasPost.set(b.isToggled()));
+        postPosition = new GuiBlockPosElement(mc, (pos) -> state.postPosition = pos);
+        postRadius = new GuiTrackpadElement(mc, (v) -> state.postRadius.set(v.floatValue()));
+        patrolCirculate = new GuiToggleElement(mc, IKey.lang("mappet.gui.npcs.movement.patrol_circulate"), (b) -> state.patrolCirculate.set(b.isToggled()));
+        patrol = new GuiBlockPosAndTriggerList(mc);
+        follow = new GuiTextElement(mc, 1000, (t) -> state.follow.set(t));
 
         GuiLabel patrolLabel = Elements.label(IKey.lang("mappet.gui.npcs.movement.patrol_points")).background();
-        GuiIconElement addPatrol = new GuiIconElement(mc, Icons.ADD, (b) -> this.patrol.addBlockPos());
+        GuiIconElement addPatrol = new GuiIconElement(mc, Icons.ADD, (b) -> patrol.addBlockPos());
         addPatrol.flex().relative(patrolLabel).xy(1F, 0.5F).w(10).anchor(1F, 0.5F);
         patrolLabel.add(addPatrol);
 
-        this.add(Elements.label(IKey.lang("mappet.gui.npcs.movement.speed")), this.speed);
-        this.add(Elements.label(IKey.lang("mappet.gui.npcs.movement.flight_max_height")), this.flightMaxHeight);
-        this.add(Elements.label(IKey.lang("mappet.gui.npcs.movement.flight_min_height")), this.flightMinHeight);
-        this.add(Elements.label(IKey.lang("mappet.gui.npcs.movement.jump_power")), this.jumpPower);
-        this.add(this.canSwim, this.immovable);
-        this.add(this.hasPost.marginTop(12), this.postPosition, this.postRadius);
-        this.add(Elements.label(IKey.lang("mappet.gui.npcs.movement.follow")).marginTop(12), this.follow);
+        add(Elements.label(IKey.lang("mappet.gui.npcs.movement.speed")), speed);
+        add(Elements.label(IKey.lang("mappet.gui.npcs.movement.flight_max_height")), flightMaxHeight);
+        add(Elements.label(IKey.lang("mappet.gui.npcs.movement.flight_min_height")), flightMinHeight);
+        add(Elements.label(IKey.lang("mappet.gui.npcs.movement.jump_power")), jumpPower);
+        add(canSwim, immovable, collision);
+        add(hasPost.marginTop(12), postPosition, postRadius);
+        add(Elements.label(IKey.lang("mappet.gui.npcs.movement.follow")).marginTop(12), follow);
 
         GuiElement patrolArea = new GuiElement(mc);
-        patrolArea.add(patrolLabel, this.patrol, this.patrolCirculate);
+        patrolArea.add(patrolLabel, patrol, patrolCirculate);
         patrolArea.flex().column(5).vertical().stretch();
-        this.add(patrolArea.marginTop(12));
+        add(patrolArea.marginTop(12));
 
         GuiElement steeringOffsetArea = new GuiElement(mc);
-        steeringOffsetArea.add(steeringOffsetLabel, this.steeringOffset);
+        steeringOffsetArea.add(steeringOffsetLabel, steeringOffset);
         steeringOffsetArea.flex().column(5).vertical().stretch();
-        this.add(steeringOffsetArea.marginTop(12));
+        add(steeringOffsetArea.marginTop(12));
     }
 
     @Override
@@ -85,18 +87,19 @@ public class GuiNpcMovementPanel extends GuiNpcPanel
     {
         super.set(state);
 
-        this.speed.setValue(state.speed.get());
-        this.flightMaxHeight.setValue(state.flightMaxHeight.get());
-        this.flightMinHeight.setValue(state.flightMinHeight.get());
-        this.jumpPower.setValue(state.jumpPower.get());
-        this.steeringOffset.set(state.steeringOffset);
-        this.canSwim.toggled(state.canSwim.get());
-        this.immovable.toggled(state.immovable.get());
-        this.hasPost.toggled(state.hasPost.get());
-        this.postPosition.set(state.postPosition);
-        this.postRadius.setValue(state.postRadius.get());
-        this.patrolCirculate.toggled(state.patrolCirculate.get());
-        this.patrol.set(state.patrol, state.patrolTriggers);
-        this.follow.setText(state.follow.get());
+        speed.setValue(state.speed.get());
+        flightMaxHeight.setValue(state.flightMaxHeight.get());
+        flightMinHeight.setValue(state.flightMinHeight.get());
+        jumpPower.setValue(state.jumpPower.get());
+        steeringOffset.set(state.steeringOffset);
+        canSwim.toggled(state.canSwim.get());
+        immovable.toggled(state.immovable.get());
+        collision.toggled(state.collision.get());
+        hasPost.toggled(state.hasPost.get());
+        postPosition.set(state.postPosition);
+        postRadius.setValue(state.postRadius.get());
+        patrolCirculate.toggled(state.patrolCirculate.get());
+        patrol.set(state.patrol, state.patrolTriggers);
+        follow.setText(state.follow.get());
     }
 }

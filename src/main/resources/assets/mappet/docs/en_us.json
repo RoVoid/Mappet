@@ -1819,6 +1819,23 @@
           "docs": "Checks if the NPC is immovable.\n\n \u003cpre\u003e{@code\n c.getSubject().isImmovable();\n }\u003c/pre\u003e"
         }
       ],
+      "setCollision": [
+        {
+          "parameters": [
+            {
+              "name": "enabled",
+              "type": "boolean"
+            }
+          ]
+        }
+      ],
+      "hasCollision": [
+        {
+          "return": {
+            "type": "boolean"
+          }
+        }
+      ],
       "setShadowSize": [
         {
           "parameters": [

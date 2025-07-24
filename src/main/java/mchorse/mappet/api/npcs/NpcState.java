@@ -131,6 +131,8 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
      */
     public ValueBoolean immovable = new ValueBoolean("Immovable");
 
+    public ValueBoolean collision = new ValueBoolean("Collision");
+
     /**
      * Whether post options
      */
@@ -162,17 +164,17 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
     /**
      * List of position through which an NPC must patrol through
      */
-    public List<BlockPos> patrol = new ArrayList<BlockPos>(); //TODO make it work with ValueAPI
+    public List<BlockPos> patrol = new ArrayList<>(); //TODO make it work with ValueAPI
 
     /**
      * List of triggers on each patrol point
      */
-    public List<Trigger> patrolTriggers = new ArrayList<Trigger>(); //TODO make it work with ValueAPI
+    public List<Trigger> patrolTriggers = new ArrayList<>(); //TODO make it work with ValueAPI
 
     /**
      * List of NPC's x-offset when steered
      */
-    public List<BlockPos> steeringOffset = new ArrayList<BlockPos>(); //TODO make it work with ValueAPI
+    public List<BlockPos> steeringOffset = new ArrayList<>(); //TODO make it work with ValueAPI
 
     /**
      * The UUID of the player that must be followed
@@ -205,7 +207,7 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
     /**
      * What kind of items will the NPC is going to drop
      */
-    public List<NpcDrop> drops = new ArrayList<NpcDrop>(); //TODO make it work with ValueAPI
+    public List<NpcDrop> drops = new ArrayList<>(); //TODO make it work with ValueAPI
 
     /**
      * How much XP drops an NPC after getting killed
@@ -215,7 +217,7 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
     /**
      * NPC shadow size
      */
-    public ValueFloat shadowSize = new ValueFloat("ShadowSize", 0.6F);;
+    public ValueFloat shadowSize = new ValueFloat("ShadowSize", 0.6F);
 
     /* Behavior */
 
@@ -253,7 +255,7 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
     /**
      * Flight min height
      */
-    public ValueDouble flightMinHeight = new ValueDouble("FlightMinHeight", 4.0D);;
+    public ValueDouble flightMinHeight = new ValueDouble("FlightMinHeight", 4.0D);
 
     /**
      * The health threshold until NPC starts to run away
@@ -355,6 +357,7 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
         this.registerValue(jumpPower);
         this.registerValue(canSwim);
         this.registerValue(immovable);
+        this.registerValue(collision);
         this.registerValue(hasPost);
         this.registerValue(postRadius);
         this.registerValue(fallback);
@@ -494,9 +497,8 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
         {
             NBTTagList offsets = new NBTTagList();
 
-            for (int i = 0; i < this.steeringOffset.size(); i++)
-            {
-                offsets.appendTag(NBTUtils.blockPosTo(this.steeringOffset.get(i)));
+            for (BlockPos blockPos : this.steeringOffset) {
+                offsets.appendTag(NBTUtils.blockPosTo(blockPos));
             }
 
             tag.setTag("SteeringOffsets", offsets);
@@ -510,14 +512,12 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
             NBTTagList points = new NBTTagList();
             NBTTagList triggers = new NBTTagList();
 
-            for (int i = 0; i < this.patrol.size(); i++)
-            {
-                points.appendTag(NBTUtils.blockPosTo(this.patrol.get(i)));
+            for (BlockPos blockPos : this.patrol) {
+                points.appendTag(NBTUtils.blockPosTo(blockPos));
             }
 
-            for (int i = 0; i < this.patrolTriggers.size(); i++)
-            {
-                triggers.appendTag(this.patrolTriggers.get(i).serializeNBT());
+            for (Trigger patrolTrigger : this.patrolTriggers) {
+                triggers.appendTag(patrolTrigger.serializeNBT());
             }
 
             tag.setTag("Patrol", points);

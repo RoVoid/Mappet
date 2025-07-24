@@ -188,6 +188,18 @@ public class ScriptNpc extends ScriptEntity<EntityNpc> implements IScriptNpc {
     }
 
     @Override
+    public void setCollision(boolean enabled) {
+        NpcState state = entity.getState();
+        state.collision.set(enabled);
+        entity.sendNpcStateChangePacket();
+    }
+
+    @Override
+    public boolean hasCollision() {
+        return entity.getState().collision.get();
+    }
+
+    @Override
     public void setShadowSize(float size) {
         NpcState state = entity.getState();
         state.shadowSize.set(size);

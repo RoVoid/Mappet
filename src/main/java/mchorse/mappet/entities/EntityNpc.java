@@ -39,6 +39,7 @@ import net.minecraft.pathfinding.PathNavigateFlying;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -48,6 +49,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
@@ -214,9 +216,8 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     protected PathNavigate createNavigator(World world) {
         if (this.state != null && this.state.canFly.get()) {
             return new PathNavigateFlying(this, world);
-        } else {
-            return new PathNavigateGround(this, world);
         }
+        return new PathNavigateGround(this, world);
     }
 
     @Override
@@ -240,7 +241,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
             } else if (this.state.hasPost.get() && this.state.postPosition != null) {
                 this.tasks.addTask(6, new EntityAIReturnToPost(this, this.state.postPosition, speed, this.state.postRadius.get()));
             } else if (!this.state.patrol.isEmpty()) {
-                this.tasks.addTask(6, new EntityAIPatrol(this, speed));
+                this.tasks.addTask(6, new EntityAIPatrol(this));
             }
 
             if (this.state.lookAround.get()) {
@@ -406,7 +407,9 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
             int index = MathHelper.clamp((int) (Math.random() * players.size() - 1), 0, players.size() - 1);
 
             return players.isEmpty() ? null : players.get(index);
-        } else if (this.state.follow.get().startsWith("@")) {
+        }
+
+        if (this.state.follow.get().startsWith("@")) {
             try {
                 ICommandSender sender = CommandNpc.getCommandSender(this);
                 List<Entity> entities = EntitySelector.matchEntities(sender, this.state.follow.get(), Entity.class);
@@ -723,6 +726,12 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     public void setStringInData(String key, String value) {
         INBTCompound fullData = new ScriptNBTCompound(this.writeToNBT(new NBTTagCompound()));
         fullData.getCompound("State").setString(key, value);
-        this.readFromNBT(fullData.getNBTTagCompound());
+        this.readFromNBT(fullData.asMinecraft());
+    }
+
+    @Nullable
+    public AxisAlignedBB getCollisionBoundingBox()
+    {
+        return isEntityAlive() && state.collision.get() ? getEntityBoundingBox() : null;
     }
 }

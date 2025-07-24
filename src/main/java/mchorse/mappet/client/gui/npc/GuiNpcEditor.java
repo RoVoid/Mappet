@@ -31,16 +31,22 @@ public class GuiNpcEditor extends GuiScrollElement {
         this.triggers = new GuiNpcTriggersPanel(mc);
         this.respawn = new GuiNpcRespawnPanel(mc);
 
+        float width = 0.2f;
+        this.meta.flex().relative(this).w(width).h(1F);
+        this.general.flex().relative(this).w(width).h(0.625F);
+        this.health.flex().relative(this).w(width).h(1F);
+        this.damage.flex().relative(this).w(width).h(0.525F);
+        this.movement.flex().relative(this).w(width).h(1F);
+        this.behavior.flex().relative(this).w(width).h(1F);
+        this.triggers.flex().relative(this).w(width).h(1F);
+        this.respawn.flex().relative(this).w(width).h(0.6F);
+
         this.flex().column(5).scroll().width(180).padding(15);
 
-        add(meta);
-        add(general);
-        add(health);
-        add(damage);
-        add(movement);
-        add(behavior);
-        add(triggers);
-        add(respawn);
+        meta.add(general);
+        health.add(damage);
+        behavior.add(respawn);
+        add(meta, health, movement, behavior, triggers);
     }
 
     public void set(NpcState state) {
