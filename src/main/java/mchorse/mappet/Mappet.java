@@ -44,6 +44,7 @@ import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.logging.Handler;
@@ -82,6 +83,8 @@ public final class Mappet {
     public static final EventBus EVENT_BUS = new EventBus();
 
     public static MappetLogger logger;
+
+    public static Logger loggerClient;
 
     /* Content */
     public static Item npcTool;

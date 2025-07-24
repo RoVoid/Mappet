@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import mchorse.mappet.Mappet;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.Language;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.InputStream;
@@ -22,19 +21,19 @@ public class Docs {
 
     public Docs() {
         Minecraft mc = Minecraft.getMinecraft();
-        Language language = mc.getLanguageManager().getCurrentLanguage();
         Gson gson = new GsonBuilder().create();
 
         InputStream stream = null;
+        String language = mc.getLanguageManager().getCurrentLanguage().getLanguageCode().toLowerCase();
         try {
-            stream = mc.getResourceManager().getResource(new ResourceLocation(Mappet.MOD_ID, "docs/" + language.getLanguageCode() + ".json")).getInputStream();
+            stream = mc.getResourceManager().getResource(new ResourceLocation(Mappet.MOD_ID, "docs/" + language + ".json")).getInputStream();
         } catch (Exception e) {
-            Mappet.logger.warning("Not found docs on your localization!");
-            if (language.getLanguageCode().equalsIgnoreCase("en_us")) return;
+            Mappet.loggerClient.error("Not found docs on your localization!");
+            if (language.equalsIgnoreCase("en_us")) return;
             try {
                 stream = mc.getResourceManager().getResource(new ResourceLocation(Mappet.MOD_ID, "docs/en_us.json")).getInputStream();
             } catch (Exception e1) {
-                Mappet.logger.warning("Not found docs");
+                Mappet.loggerClient.error("Not found docs");
             }
         }
 
@@ -101,15 +100,13 @@ public class Docs {
             }
 
         } catch (Exception e) {
-            Mappet.logger.error("Failed to load Docs: " + e.getMessage());
+            Mappet.loggerClient.error("Failed to load Docs: {}", e.getMessage());
         }
     }
 
     public DocEntry getClass(String name) {
         for (DocEntry docClass : classes) {
-            if (docClass.name.endsWith(name)) {
-                return docClass;
-            }
+            if (docClass.name.endsWith(name)) return docClass;
         }
 
         return null;

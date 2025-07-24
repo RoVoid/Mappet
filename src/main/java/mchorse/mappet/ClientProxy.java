@@ -81,6 +81,8 @@ public class ClientProxy extends CommonProxy {
                 MPIcons.initiate();});
         }
 
+        Mappet.loggerClient = event.getModLog();
+
         Themes.initiate();
     }
 

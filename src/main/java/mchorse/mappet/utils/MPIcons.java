@@ -73,7 +73,7 @@ public class MPIcons {
                 }
             }
         } catch (Exception e) {
-            Mappet.logger.error("Failed to load icons.json: " + e.getMessage());
+            Mappet.loggerClient.error("Failed to load icons.json: {}", e.getMessage());
         }
 
         return paths;
@@ -126,7 +126,8 @@ public class MPIcons {
                 }
             }
         } catch (Exception e) {
-            Mappet.logger.error("Failed to parse icons.json: " + e.getMessage());
+            if(Mappet.logger == null) Mappet.loggerClient.error("Failed to parse icons.json: {}", e.getMessage());
+            else Mappet.logger.error("Failed to parse icons.json: " + e.getMessage());
         }
         return paths;
     }
