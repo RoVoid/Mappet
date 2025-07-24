@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.Language;
 import net.minecraft.util.ResourceLocation;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -29,12 +28,12 @@ public class Docs {
         InputStream stream = null;
         try {
             stream = mc.getResourceManager().getResource(new ResourceLocation(Mappet.MOD_ID, "docs/" + language.getLanguageCode() + ".json")).getInputStream();
-        } catch (IOException e) {
+        } catch (Exception e) {
             Mappet.logger.warning("Not found docs on your localization!");
             if (language.getLanguageCode().equalsIgnoreCase("en_us")) return;
             try {
                 stream = mc.getResourceManager().getResource(new ResourceLocation(Mappet.MOD_ID, "docs/en_us.json")).getInputStream();
-            } catch (IOException e1) {
+            } catch (Exception e1) {
                 Mappet.logger.warning("Not found docs");
             }
         }
