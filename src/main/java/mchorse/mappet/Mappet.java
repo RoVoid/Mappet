@@ -22,6 +22,7 @@ import mchorse.mappet.blocks.BlockRegion;
 import mchorse.mappet.blocks.BlockTrigger;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.commands.CommandMappet;
+import mchorse.mappet.utils.MPIcons;
 import mchorse.mappet.utils.ScriptUtils;
 import mchorse.mappet.utils.ValueButtons;
 import mchorse.mappet.utils.ValueSyntaxStyle;
@@ -278,6 +279,8 @@ public final class Mappet {
         scripts.initiateAllScripts();
 
         EventHandler.getRegisteredEvents();
+
+        if(event.getServer().isDedicatedServer()) MPIcons.initiate();
     }
 
     @Mod.EventHandler

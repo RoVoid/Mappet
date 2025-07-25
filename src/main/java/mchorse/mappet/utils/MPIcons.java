@@ -48,16 +48,22 @@ public class MPIcons {
         Side side = FMLCommonHandler.instance().getEffectiveSide();
         Set<String> paths = side.isClient() ? getPathsClient() : getPathsFromMods();
 
+        System.out.println(defaultIcons.keySet());
+
         IconRegistry.icons.clear();
         IconRegistry.icons.putAll(defaultIcons);
 
         for (String path : paths) {
             String key = toIconKey(path);
 
-            if (!IconRegistry.icons.containsKey(key)) {
-                Icon icon = new Icon(new ResourceLocation(Mappet.MOD_ID, "textures/gui/icons/" + path + ".png"), 0, 0, 16, 16, 16, 16);
-                IconRegistry.register(key, icon);
+            if (IconRegistry.icons.containsKey(key)) {
+                if (side.isClient()) Mappet.loggerClient.warn("[Icons] {} was already registered!", key);
+                else Mappet.logger.warning("[Icons] " + key + " was already registered!");
+                continue;
             }
+
+            Icon icon = new Icon(new ResourceLocation(Mappet.MOD_ID, "textures/gui/icons/" + path + ".png"), 0, 0, 16, 16, 16, 16);
+            IconRegistry.icons.put(key, icon);
         }
     }
 
@@ -126,7 +132,7 @@ public class MPIcons {
                 }
             }
         } catch (Exception e) {
-            if(Mappet.logger == null) Mappet.loggerClient.error("Failed to parse icons.json: {}", e.getMessage());
+            if (Mappet.logger == null) Mappet.loggerClient.error("Failed to parse icons.json: {}", e.getMessage());
             else Mappet.logger.error("Failed to parse icons.json: " + e.getMessage());
         }
         return paths;

@@ -1,6 +1,5 @@
 package mchorse.mappet.client;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -14,15 +13,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.IOUtils;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -32,83 +30,64 @@ import java.util.Set;
  * in Minecraft's system
  */
 @SideOnly(Side.CLIENT)
-public class SoundPack implements IResourcePack
-{
+public class SoundPack implements IResourcePack {
     private final File folder;
 
-    public SoundPack(File folder)
-    {
+    public SoundPack(File folder) {
         this.folder = folder;
         this.folder.mkdirs();
     }
 
     @Override
-    public InputStream getInputStream(ResourceLocation location) throws IOException
-    {
-        if (location.getResourcePath().equals("sounds.json"))
-        {
-            JsonObject object = this.generateJson(this.folder, "", new JsonObject());
+    public InputStream getInputStream(ResourceLocation location) throws IOException {
+        String path = location.getResourcePath();
 
+        if (path.equals("sounds.json")) {
+            JsonObject object = generateJson(folder, new JsonObject());
             return IOUtils.toInputStream(object.toString(), Utils.getCharset());
         }
 
-        File file = this.getFile(location.getResourcePath());
-
-        if (!file.exists())
-        {
-            return null;
-        }
-
-        return Files.newInputStream(file.toPath());
+        File file = new File(folder, path.substring(7));
+        if (!file.exists()) throw new IOException("Sound not found: " + path);
+        return new FileInputStream(file);
     }
 
-    private JsonObject generateJson(File folder, String prefix, JsonObject object)
-    {
-        if (!folder.exists())
-        {
-            return object;
-        }
+    private JsonObject generateJson(File folder, JsonObject object) {
+        return generateJson(folder, object, "");
+    }
+
+    private JsonObject generateJson(File folder, JsonObject object, String parent) {
+        if (!folder.exists()) return object;
 
         File[] files = folder.listFiles();
+        if (files == null) return object;
 
-        if (files == null)
-        {
-            return object;
-        }
-
-        for (File file : files)
-        {
+        for (File file : files) {
             String name = file.getName();
 
-            if (name.endsWith(".ogg"))
-            {
+            if (name.endsWith(".ogg")) {
                 JsonObject sound = new JsonObject();
                 JsonArray elements = new JsonArray();
-                String id = name.substring(0, name.lastIndexOf(".ogg"));
+                String id = parent + name.substring(0, name.length() - 4); // remove ".ogg"
 
+                elements.add("mp.sounds:" + id);
                 sound.add("sounds", elements);
-                elements.add("mp.sounds:" + prefix + id);
-
-                object.add(prefix.replaceAll("/", ".") + id, sound);
-            }
-            else if (file.isDirectory())
-            {
-                this.generateJson(file, prefix + name + "/", object);
+                object.add(id, sound);
+            } else if (file.isDirectory()) {
+                generateJson(file, object, parent + name + ".");
             }
         }
 
         return object;
     }
 
-    public static List<String> getCustomSoundEvents()
-    {
+    public static List<String> getCustomSoundEvents() {
         List<String> soundEvents = new ArrayList<>();
         File soundsFolder = new File(CommonProxy.configFolder, "sounds");
         SoundPack soundPack = new SoundPack(soundsFolder);
-        JsonObject soundJson = soundPack.generateJson(soundsFolder, "", new JsonObject());
+        JsonObject soundJson = soundPack.generateJson(soundsFolder, new JsonObject());
 
-        for (Entry<String, JsonElement> entry : soundJson.entrySet())
-        {
+        for (Entry<String, JsonElement> entry : soundJson.entrySet()) {
             soundEvents.add("mp.sounds:" + entry.getKey());
         }
 
@@ -116,43 +95,30 @@ public class SoundPack implements IResourcePack
     }
 
     @Override
-    public boolean resourceExists(ResourceLocation location)
-    {
-        if (location.getResourcePath().equals("sounds.json"))
-        {
-            return true;
-        }
-
-        return getFile(location.getResourcePath()).exists();
-    }
-
-    private File getFile(String path)
-    {
-        return new File(this.folder, path.substring(7));
+    public boolean resourceExists(ResourceLocation location) {
+        String path = location.getResourcePath();
+        if (path.equals("sounds.json")) return true;
+        return new File(folder, path.substring(7)).exists();
     }
 
     @Override
-    public Set<String> getResourceDomains()
-    {
-        return ImmutableSet.of("mp.sounds");
+    public Set<String> getResourceDomains() {
+        return Collections.singleton("mp.sounds");
     }
 
     @Override
-    public String getPackName()
-    {
+    public String getPackName() {
         return "Mappet's sound pack";
     }
 
     @Nullable
     @Override
-    public <T extends IMetadataSection> T getPackMetadata(MetadataSerializer metadataSerializer, String metadataSectionName) throws IOException
-    {
+    public <T extends IMetadataSection> T getPackMetadata(MetadataSerializer metadataSerializer, String metadataSectionName) {
         return null;
     }
 
     @Override
-    public BufferedImage getPackImage() throws IOException
-    {
-        return null;
+    public BufferedImage getPackImage() {
+        return new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
     }
 }

@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ValueButtons extends ValueGUI
@@ -28,7 +29,7 @@ public class ValueButtons extends ValueGUI
     @SideOnly(Side.CLIENT)
     public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel config)
     {
-        return Arrays.asList(
+        return Collections.singletonList(
                 Elements.column(mc, 5,
                         new GuiText(mc).text(IKey.lang("mappet.translation.credit")),
                         Elements.row(mc, 5,

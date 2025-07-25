@@ -3,6 +3,7 @@ package mchorse.mappet;
 import mchorse.mappet.api.utils.IContentType;
 import mchorse.mappet.client.KeyboardHandler;
 import mchorse.mappet.client.RenderingHandler;
+import mchorse.mappet.client.ResourceReloadHandler;
 import mchorse.mappet.client.SoundPack;
 import mchorse.mappet.client.gui.scripts.themes.Themes;
 import mchorse.mappet.client.renders.entity.RenderNpc;
@@ -15,7 +16,6 @@ import mchorse.mappet.network.common.content.PacketContentRequestNames;
 import mchorse.mappet.tile.TileConditionModel;
 import mchorse.mappet.tile.TileRegion;
 import mchorse.mappet.tile.TileTrigger;
-import mchorse.mappet.utils.MPIcons;
 import mchorse.mclib.McLib;
 import mchorse.mclib.utils.ReflectionUtils;
 import net.minecraft.client.Minecraft;
@@ -76,9 +76,7 @@ public class ClientProxy extends CommonProxy {
 
         Minecraft mc = Minecraft.getMinecraft();
         if (mc.getResourceManager() instanceof IReloadableResourceManager) {
-            ((IReloadableResourceManager) mc.getResourceManager()).registerReloadListener(resourceManager -> {
-                System.out.println("MPICONS client");
-                MPIcons.initiate();});
+            ((IReloadableResourceManager) mc.getResourceManager()).registerReloadListener(new ResourceReloadHandler());
         }
 
         Mappet.loggerClient = event.getModLog();

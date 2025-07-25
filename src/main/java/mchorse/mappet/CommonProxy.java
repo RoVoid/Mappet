@@ -94,8 +94,6 @@ public class CommonProxy {
 
 
     public void postInit(FMLPostInitializationEvent event) {
-        MPIcons.initiate();
-
         /* Register event nodes */
         MapFactory<EventBaseNode> eventNodes = new MapFactory<EventBaseNode>()
                 .register("command", CommandNode.class, Colors.COMMAND)
