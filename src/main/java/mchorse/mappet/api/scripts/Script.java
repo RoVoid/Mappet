@@ -62,25 +62,57 @@ public class Script extends AbstractData {
 
         // import "module.js"
         String[] lines = code.split("\n");
-        int pos = 0;
+        List<String> newLines = new ArrayList<>();
+        boolean isComment = false;
+
         for (String line : lines) {
             String trimmed = line.trim();
-            if (!trimmed.startsWith("import ")) break;
+
+            if (trimmed.startsWith("//")) {
+                newLines.add(line);
+                continue;
+            }
+
+            if (!isComment && trimmed.startsWith("/*")) {
+                isComment = true;
+                newLines.add(line);
+                if (trimmed.endsWith("*/")) isComment = false;
+                continue;
+            }
+
+            if (isComment) {
+                newLines.add(line);
+                if (trimmed.endsWith("*/")) isComment = false;
+                continue;
+            }
+
+            if (!trimmed.startsWith("import ")) {
+                newLines.add(line);
+                continue;
+            }
 
             String lib = trimmed.substring(7).trim();
-            if (lib.isEmpty()) continue;
-
-            if (lib.endsWith(";")) lib = lib.substring(0, lib.length() - 1).trim();
+            if (lib.length() < 3) {
+                newLines.add(line);
+                continue;
+            }
 
             char quote = lib.charAt(0);
-            if ((quote != '"' && quote != '\'') || lib.charAt(lib.length() - 1) != quote) continue;
+            if ((quote != '"' && quote != '\'')) {
+                newLines.add(line);
+                continue;
+            }
 
-            allLibraries.add(lib.substring(1, lib.length() - 1));
-            pos += line.length() + 1;
+            int index = lib.indexOf(quote, 1);
+            if (index == -1) {
+                newLines.add(line);
+                continue;
+            }
+
+            String libName = lib.substring(1, index);
+            allLibraries.add(libName);
         }
-        code = pos < code.length() ? code.substring(pos) : "";
-
-
+        code = String.join("\n", newLines);
 
         for (String library : allLibraries) {
             if (library.equals(getId()) || alreadyLoaded.contains(library)) continue;
