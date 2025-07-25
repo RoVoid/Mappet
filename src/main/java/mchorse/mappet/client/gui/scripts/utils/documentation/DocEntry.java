@@ -110,7 +110,7 @@ public class DocEntry {
     }
 
     public void render(Minecraft mc, GuiScrollElement target) {
-        target.add(new GuiText(mc).text(IKey.format("mappet.gui.scripts.documentation.source", source)));
+        target.add(new GuiText(mc).text(IKey.format("mappet.gui.scripts.documentation.source", source) + "\n"));
         append(mc, target);
     }
 
