@@ -1,0 +1,30 @@
+name: Manual Release Update
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release'
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Show selected tag
+        run: echo "Tag selected for release:${{ github.event.inputs.tag }}"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag }}
+          name: "Release ${{ github.event.inputs.tag }}"
+          body: |
+            📦 Ручной релиз для тега `${{ github.event.inputs.tag }}`
+            🕒 Дата: ${{ github.event.head_commit.timestamp || 'запущен вручную' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
