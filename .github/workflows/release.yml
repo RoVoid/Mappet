@@ -4,27 +4,72 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag to release'
+        description: 'Tag to update (e.g. 0.9.5.3R)'
         required: true
 
 jobs:
-  release:
+  update-release:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Show selected tag
-        run: echo "Tag selected for release:${{ github.event.inputs.tag }}"
+      - name: Save current commit SHA
+        id: sha
+        run: echo "sha=$GITHUB_SHA" >> "$GITHUB_OUTPUT"
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.event.inputs.tag }}
-          name: "Release ${{ github.event.inputs.tag }}"
-          body: |
-            📦 Ручной релиз для тега `${{ github.event.inputs.tag }}`
-            🕒 Дата: ${{ github.event.head_commit.timestamp || 'запущен вручную' }}
+      - name: Fetch existing release info
+        run: |
+          gh api repos/${{ github.repository }}/releases/tags/${{ github.event.inputs.tag }} > release.json
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download and filter release assets
+        run: |
+          mkdir assets
+          cd assets
+          gh release download ${{ github.event.inputs.tag }} --repo ${{ github.repository }}
+          rm -f source.zip source.tar.gz
+          ls -la
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete old release and tag
+        run: |
+          release_id=$(jq -r .id release.json)
+          gh api --method DELETE repos/${{ github.repository }}/releases/$release_id
+          git push origin :refs/tags/${{ github.event.inputs.tag }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Recreate tag on current commit
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag -f ${{ github.event.inputs.tag }} ${{ steps.sha.outputs.sha }}
+          git push origin ${{ github.event.inputs.tag }} --force
+
+      - name: Recreate release with preserved metadata
+        run: |
+          shopt -s nullglob
+          args=(
+            --title "$(jq -r .name release.json)"
+            --notes "$(jq -r .body release.json)"
+          )
+
+          if jq -e '.prerelease' release.json >/dev/null; then
+            args+=(--prerelease)
+          fi
+
+          if jq -e '.draft' release.json >/dev/null; then
+            args+=(--draft)
+          fi
+
+          if compgen -G "assets/*" > /dev/null; then
+            args+=(assets/*)
+          fi
+
+          gh release create ${{ github.event.inputs.tag }} "${args[@]}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
