@@ -21,7 +21,6 @@ public class ClientHandlerSound extends ClientMessageHandler<PacketSound>
         SoundCategory category = SoundCategory.getSoundCategoryNames().contains(message.soundCategory) ? SoundCategory.getByName(message.soundCategory) : SoundCategory.MASTER;
 
         ISound masterRecord = new PositionedSoundRecord(rl, category, message.volume, message.pitch, false, 0, ISound.AttenuationType.NONE, 0, 0, 0);
-        System.out.println("Start sound");
         Minecraft.getMinecraft().getSoundHandler().playSound(masterRecord);
     }
 }

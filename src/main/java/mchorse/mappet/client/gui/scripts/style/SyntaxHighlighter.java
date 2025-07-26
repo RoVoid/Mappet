@@ -12,9 +12,9 @@ import java.util.regex.Pattern;
 // Признаю, ничего не смыслю в Lexer-ах ╰(￣ω￣ｏ)
 
 public class SyntaxHighlighter {
-    public final String doubleQuoted = "\"(?:\\\\.|[^\"\\\\])*\"";
-    public final String singleQuoted = "'(?:\\\\.|[^'\\\\])*'";
-    public final String backtickQuoted = "`(?:\\\\.|[^`\\\\])*`";
+    public final String doubleQuoted = "\"[^\"\\n]*\"";
+    public final String singleQuoted = "'[^'\\n]*'";
+    public final String backtickQuoted = "`[^'\\n]*`";
     public final String comment = "//.*";
     public final String multiComments = "/\\*[^*\\n]*(?:\\*(?!/)[^*\\n]*)*\\*?/?";
     public final String number = "(?<!\\w)-?(?:0x[\\da-fA-F]+|\\d+(?:\\.\\d+)?)(?!\\w)";
