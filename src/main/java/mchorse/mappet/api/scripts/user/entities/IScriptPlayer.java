@@ -491,6 +491,12 @@ public interface IScriptPlayer extends IScriptEntity {
 
     void setClipboard(String text);
 
+    void openLink(String url);
+
+    default void openWebLink(String url){
+        openLink(url);
+    }
+
     /**
      * Set experience level and number of points for that level.
      *

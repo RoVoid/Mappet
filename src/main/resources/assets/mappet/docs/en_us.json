@@ -979,6 +979,26 @@
           ]
         }
       ],
+      "openLink": [
+        {
+          "parameters": [
+            {
+              "name": "url",
+              "type": "java.lang.String"
+            }
+          ]
+        }
+      ],
+      "openWebLink": [
+        {
+          "parameters": [
+            {
+              "name": "url",
+              "type": "java.lang.String"
+            }
+          ]
+        }
+      ],
       "setXp": [
         {
           "parameters": [

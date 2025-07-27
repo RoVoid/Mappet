@@ -136,39 +136,30 @@ public final class Mappet {
 
     /* Configuration */
     public static ValueBoolean generalDataCaching;
-
     public static ValueBoolean loadCustomSoundsOnLogin;
+    public static ValueBoolean immediatelyOpenLink;
 
     public static ValueBoolean npcsPeacefulDamage;
-
     public static ValueBoolean npcsToolOnlyOP;
-
     public static ValueBoolean npcsToolOnlyCreative;
 
     public static ValueBoolean dashboardOnlyCreative;
 
     public static ValueInt eventMaxExecutions;
-
     public static ValueBoolean eventUseServerForCommands;
-
     public static ValueBoolean enableForgeTriggers;
 
     public static ValueInt nodePulseBackgroundColor;
-
     public static ValueBoolean nodePulseBackgroundMcLibPrimary;
-
     public static ValueInt nodeThickness;
 
     public static ValueBoolean questsPreviewRewards;
 
     public static ValueInt journalButtonX;
-
     public static ValueInt journalButtonY;
 
     public static ValueSyntaxStyle scriptEditorSyntaxStyle;
-
     public static ValueBoolean scriptEditorSounds;
-
     public static ValueBoolean scriptUIDebug;
 
     public Mappet() {
@@ -183,6 +174,7 @@ public final class Mappet {
         generalDataCaching = builder.getBoolean("data_caching", true);
         enableForgeTriggers = builder.getBoolean("enable_forge_triggers", false);
         loadCustomSoundsOnLogin = builder.getBoolean("load_custom_sounds_on_login", true);
+        immediatelyOpenLink = builder.getBoolean("immediately_open_link", false);
 
         npcsPeacefulDamage = builder.category("npc").getBoolean("peaceful_damage", true);
         npcsToolOnlyOP = builder.getBoolean("tool_only_op", true);
@@ -280,7 +272,7 @@ public final class Mappet {
 
         EventHandler.getRegisteredEvents();
 
-        if(event.getServer().isDedicatedServer()) MPIcons.initiate();
+        if (event.getServer().isDedicatedServer()) MPIcons.initiate();
     }
 
     @Mod.EventHandler
