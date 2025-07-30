@@ -14,7 +14,10 @@ import mchorse.mappet.capabilities.character.ICharacter;
 import mchorse.mappet.client.gui.utils.Beautifier;
 import mchorse.mappet.events.*;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.utils.*;
+import mchorse.mappet.utils.Colors;
+import mchorse.mappet.utils.MappetNpcSelector;
+import mchorse.mappet.utils.MetamorphHandler;
+import mchorse.mappet.utils.ScriptUtils;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -115,7 +118,6 @@ public class CommonProxy {
         MapFactory<EventBaseNode> dialogueNodes = eventNodes.copy()
                 .register("reply", ReplyNode.class, Colors.REPLY)
                 .register("reaction", ReactionNode.class, Colors.STATE)
-                .register("crafting", CraftingNode.class, Colors.CRAFTING)
                 .register("quest_chain", QuestChainNode.class, Colors.QUEST)
                 .register("quest", QuestDialogueNode.class, Colors.QUEST)
                 .unregister("timer");

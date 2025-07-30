@@ -1,13 +1,12 @@
 package mchorse.mappet;
 
-import mchorse.mappet.api.crafting.CraftingManager;
 import mchorse.mappet.api.data.DataManager;
 import mchorse.mappet.api.dialogues.DialogueManager;
 import mchorse.mappet.api.events.EventManager;
 import mchorse.mappet.api.expressions.ExpressionManager;
 import mchorse.mappet.api.factions.FactionManager;
 import mchorse.mappet.api.huds.HUDManager;
-import mchorse.mappet.api.misc.ServerSettings;
+import mchorse.mappet.api.ServerSettings;
 import mchorse.mappet.api.npcs.NpcManager;
 import mchorse.mappet.api.quests.QuestManager;
 import mchorse.mappet.api.quests.chains.QuestChainManager;
@@ -113,8 +112,6 @@ public final class Mappet {
     public static QuestManager quests;
 
     public static SchematicManager schematics;
-
-    public static CraftingManager crafting;
 
     public static EventManager events;
 
@@ -251,7 +248,6 @@ public final class Mappet {
 
         quests = new QuestManager(new File(mappetWorldFolder, "quests"));
         schematics = new SchematicManager(new File(mappetWorldFolder, "schematics"));
-        crafting = new CraftingManager(new File(mappetWorldFolder, "crafting"));
         events = new EventManager(new File(mappetWorldFolder, "events"));
         dialogues = new DialogueManager(new File(mappetWorldFolder, "dialogues"));
         expressions = new ExpressionManager();
@@ -284,7 +280,6 @@ public final class Mappet {
             states = null;
 
             quests = null;
-            crafting = null;
             events = null;
             dialogues = null;
             expressions = null;

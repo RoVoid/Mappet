@@ -1360,6 +1360,13 @@
           "docs": "Returns array of mods on the client [id:version]"
         }
       ],
+      "getPing": [
+        {
+          "return": {
+            "type": "int"
+          }
+        }
+      ],
       "stopAllSounds": [
         {
           "docs": "Stop all playing sound events for this player.\n\n \u003cpre\u003e{@code\n    c.getWorld().stopAllSounds();\n }\u003c/pre\u003e"

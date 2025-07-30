@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import mchorse.mappet.api.huds.HUDScene;
 import mchorse.mappet.api.quests.Quest;
 import mchorse.mappet.api.quests.Quests;
+import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntityItem;
 import mchorse.mappet.api.scripts.code.entities.ScriptPlayer;
@@ -14,7 +15,6 @@ import mchorse.mappet.api.scripts.code.entities.ai.rotations.EntityAIRotations;
 import mchorse.mappet.api.scripts.code.entities.ai.rotations.RotationDataStorage;
 import mchorse.mappet.api.scripts.code.items.ScriptInventory;
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.triggers.Trigger;
@@ -25,7 +25,6 @@ import mchorse.mappet.blocks.BlockTrigger;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.CharacterProvider;
 import mchorse.mappet.capabilities.character.ICharacter;
-import mchorse.mappet.client.KeyboardHandler;
 import mchorse.mappet.client.RenderingHandler;
 import mchorse.mappet.client.SoundPack;
 import mchorse.mappet.commands.data.CommandDataClear;
@@ -35,7 +34,7 @@ import mchorse.mappet.events.StateChangedEvent;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.client.ClientHandlerBlackAndWhiteShader;
 import mchorse.mappet.network.client.ClientHandlerLockPerspective;
-import mchorse.mappet.network.common.events.PacketEventHotkeys;
+import mchorse.mappet.network.common.events.PacketSyncHotkeys;
 import mchorse.mappet.network.common.huds.PacketHUDScene;
 import mchorse.mappet.network.common.npc.PacketNpcJump;
 import mchorse.mappet.network.common.quests.PacketQuest;
@@ -131,8 +130,8 @@ public class EventHandler {
     private DataContext context;
 
     /**
-     * Set that keeps track of players that just joined (it is needed to avoid
-     * triggering the player respawn trigger when player logs in)
+     * Set that keeps track of players that just joined (it is necessary to avoid
+     * triggering the player respawn trigger when the player logs in)
      */
     private final Set<UUID> loggedInPlayers = new HashSet<>();
 
@@ -231,7 +230,7 @@ public class EventHandler {
 
 
         String name = getEventClassName(event.getClass());
-        Trigger trigger = Mappet.settings.registeredForgeTriggers.get(name);
+        Trigger trigger = Mappet.settings.forgeTriggers.get(name);
 
         if (trigger == null || trigger.isEmpty()) {
             return;
@@ -557,7 +556,7 @@ public class EventHandler {
     }
 
     /**
-     * Copy data from dead player (or player returning from end) to the new player
+     * Copy data from dead player (or player returning from the end) to the new player
      */
     @SubscribeEvent
     public void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone event) {
@@ -592,8 +591,8 @@ public class EventHandler {
             Dispatcher.sendTo(new PacketQuests(character.getQuests()), player);
         }
 
-        if (!Mappet.settings.hotkeys.hotkeys.isEmpty()) {
-            Dispatcher.sendTo(new PacketEventHotkeys(Mappet.settings), player);
+        if (!Mappet.settings.hotkeys.keys.isEmpty()) {
+            Dispatcher.sendTo(new PacketSyncHotkeys(Mappet.settings), player);
         }
     }
 
@@ -656,12 +655,22 @@ public class EventHandler {
         if (event.getEntityLiving().world.isRemote) return;
         if (!(event.getEntityLiving() instanceof EntityPlayer)) return;
         EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-        if(player.isDead || !player.isSprinting()) return;
+        if (player.isDead || !player.isSprinting()) return;
 
         if (!Mappet.settings.playerRun.isEmpty()) {
-            DataContext context = new DataContext(event.getEntityLiving());
+            trigger(event, Mappet.settings.playerRun, new DataContext(event.getEntityLiving()));
+        }
+    }
 
-            this.trigger(event, Mappet.settings.playerRun, context);
+    @SubscribeEvent
+    public void onPlayerMovingEvent(LivingEvent.LivingUpdateEvent event) {
+        if (event.getEntityLiving().world.isRemote) return;
+        if (!(event.getEntityLiving() instanceof EntityPlayer)) return;
+        EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+        if (player.isDead || player.prevDistanceWalkedModified > player.distanceWalkedModified - 0.01) return;
+
+        if (!Mappet.settings.playerMove.isEmpty()) {
+            trigger(event, Mappet.settings.playerMove, new DataContext(event.getEntityLiving()));
         }
     }
 
@@ -799,8 +808,8 @@ public class EventHandler {
 
         this.playersToCheck.clear();
 
-        /* This block of code might be a bit confusing, but essentially
-         * what it does is prevent concurrent modification when timer nodes
+        /* This block of code might be a bit confusing. However, it essentially
+         * what it does is preventing concurrent modification when timer nodes
          * add consequent execution forks, this way I can reliably keep track
          * of order of both the old executions which are not yet executed and
          * of new forks that were added by new timer nodes */
@@ -845,7 +854,6 @@ public class EventHandler {
         if (event.phase == TickEvent.Phase.START) return;
         if (event.player.world.isRemote) {
             RenderingHandler.update();
-            KeyboardHandler.updateHeldKeys();
             return;
         }
         Character character = Character.get(event.player);

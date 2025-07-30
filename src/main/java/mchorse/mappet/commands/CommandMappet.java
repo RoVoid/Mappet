@@ -1,7 +1,6 @@
 package mchorse.mappet.commands;
 
 import mchorse.mappet.api.utils.DataContext;
-import mchorse.mappet.commands.crafting.CommandCrafting;
 import mchorse.mappet.commands.data.CommandData;
 import mchorse.mappet.commands.dialogues.CommandDialogue;
 import mchorse.mappet.commands.events.CommandEvent;
@@ -21,20 +20,16 @@ import net.minecraft.server.MinecraftServer;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CommandMappet extends MappetSubCommandBase
-{
-    public static DataContext createContext(MinecraftServer server, ICommandSender sender, String argument) throws CommandException
-    {
-        if (argument.equals("~"))
-        {
+public class CommandMappet extends MappetSubCommandBase {
+    public static DataContext createContext(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
+        if (argument.equals("~")) {
             return new DataContext(server);
         }
 
         return new DataContext(getEntity(server, sender, argument));
     }
 
-    public static List<String> listOfPlayersAndServer(MinecraftServer server)
-    {
+    public static List<String> listOfPlayersAndServer(MinecraftServer server) {
         List<String> list = listOfPlayers(server);
 
         list.add("~");
@@ -42,14 +37,11 @@ public class CommandMappet extends MappetSubCommandBase
         return list;
     }
 
-    public static List<String> listOfPlayers(MinecraftServer server)
-    {
+    public static List<String> listOfPlayers(MinecraftServer server) {
         return server.getPlayerList().getPlayers().stream().map(EntityPlayer::getName).collect(Collectors.toList());
     }
 
-    public CommandMappet()
-    {
-        this.add(new CommandCrafting());
+    public CommandMappet() {
         this.add(new CommandData());
         this.add(new CommandDialogue());
         this.add(new CommandEvent());
@@ -64,20 +56,17 @@ public class CommandMappet extends MappetSubCommandBase
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "mp";
     }
 
     @Override
-    public String getUsage(ICommandSender sender)
-    {
+    public String getUsage(ICommandSender sender) {
         return "mappet.commands.mp.help";
     }
 
     @Override
-    public int getRequiredPermissionLevel()
-    {
+    public int getRequiredPermissionLevel() {
         return 2;
     }
 }

@@ -1,6 +1,6 @@
 package mchorse.mappet.events;
 
-import mchorse.mappet.api.misc.ServerSettings;
+import mchorse.mappet.api.ServerSettings;
 import mchorse.mappet.api.triggers.Trigger;
 import net.minecraftforge.fml.common.eventhandler.Event;
 

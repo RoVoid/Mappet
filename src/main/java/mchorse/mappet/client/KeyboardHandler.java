@@ -1,14 +1,16 @@
 package mchorse.mappet.client;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.api.misc.hotkeys.TriggerHotkey;
+import mchorse.mappet.api.hotkeys.Hotkey;
+import mchorse.mappet.api.hotkeys.HotkeyState;
 import mchorse.mappet.api.scripts.Script;
 import mchorse.mappet.client.gui.GuiJournalScreen;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
+import mchorse.mappet.client.gui.hotkey.GuiClientHotkeyScreen;
 import mchorse.mappet.client.gui.scripts.scriptedItem.GuiScriptedItemScreen;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.events.PacketEventHotkey;
 import mchorse.mappet.network.common.events.PacketPlayerJournal;
+import mchorse.mappet.network.common.events.PacketTriggeredHotkeys;
 import mchorse.mclib.client.gui.framework.tooltips.styles.TooltipStyle;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -31,22 +33,19 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-/**
- * Keyboard handler
- * <p>
- * This class is responsible for handling keyboard input (i.e. key
- * presses) and storing keybindings associated with this mod.
- */
 @SideOnly(Side.CLIENT)
 public class KeyboardHandler {
-    public static final Set<TriggerHotkey> hotkeys = new HashSet<>();
-    public static final List<TriggerHotkey> held = new ArrayList<>();
+    public static final Map<String, Hotkey> hotkeys = new HashMap<>();
     public static boolean clientPlayerJournal;
 
     public KeyBinding openMappetDashboard;
     public KeyBinding openJournal;
+    public KeyBinding openHotkeysMenu;
     public KeyBinding runCurrentScript;
 
     private final KeyBinding openScriptedItem;
@@ -60,32 +59,18 @@ public class KeyboardHandler {
         }
     }
 
-    public static void updateHeldKeys() {
-        if (held.isEmpty()) return;
-
-        Iterator<TriggerHotkey> it = held.iterator();
-
-        while (it.hasNext()) {
-            int keycode = it.next().keycode;
-
-            if (!Keyboard.isKeyDown(keycode)) {
-                it.remove();
-
-                Dispatcher.sendToServer(new PacketEventHotkey(keycode, false));
-            }
-        }
-    }
-
     public KeyboardHandler() {
         String prefix = "mappet.keys.";
 
         openMappetDashboard = new KeyBinding(prefix + "dashboard", Keyboard.KEY_GRAVE, prefix + "category");
         openJournal = new KeyBinding(prefix + "journal", Keyboard.KEY_NONE, prefix + "category");
-        runCurrentScript = new KeyBinding(prefix + "runCurrentScript", Keyboard.KEY_F6, prefix + "category");
+        openHotkeysMenu = new KeyBinding(prefix + "hotkeys", Keyboard.KEY_NONE, prefix + "category");
+        runCurrentScript = new KeyBinding(prefix + "run_current_script", Keyboard.KEY_F6, prefix + "category");
         openScriptedItem = new KeyBinding(prefix + "scripted_item", Keyboard.KEY_NONE, prefix + "category");
 
         ClientRegistry.registerKeyBinding(openMappetDashboard);
         ClientRegistry.registerKeyBinding(openJournal);
+        ClientRegistry.registerKeyBinding(openHotkeysMenu);
         ClientRegistry.registerKeyBinding(runCurrentScript);
         ClientRegistry.registerKeyBinding(openScriptedItem);
     }
@@ -105,6 +90,9 @@ public class KeyboardHandler {
         if (openJournal.isPressed()) {
             openPlayerJournal();
         }
+        if (openHotkeysMenu.isPressed()) {
+            mc.displayGuiScreen(new GuiClientHotkeyScreen(mc));
+        }
         if (runCurrentScript.isPressed()) {
             Script script = GuiMappetDashboard.get(mc).script.getData();
             if (script == null) return;
@@ -116,19 +104,26 @@ public class KeyboardHandler {
                 mc.displayGuiScreen(new GuiScriptedItemScreen(mc, stack));
             }
         }
-        if (Keyboard.getEventKeyState()) handleKeys();
+
+        handleHotkeys();
     }
 
-    private void handleKeys() {
+    private void handleHotkeys() {
         int key = Keyboard.getEventKey() == 0 ? Keyboard.getEventCharacter() + 256 : Keyboard.getEventKey();
-
-        for (TriggerHotkey hotkey : hotkeys) {
-            if (hotkey.keycode == key) {
-                Dispatcher.sendToServer(new PacketEventHotkey(key, true));
-                if (hotkey.toggle) held.add(hotkey);
-                return;
+        boolean state = Keyboard.getEventKeyState();
+        Set<HotkeyState> hotkeyStates = new HashSet<>();
+        for (Hotkey hotkey : hotkeys.values()) {
+            if (hotkey.keycode == -1 && hotkey.defaultKeycode != key) continue;
+            if (hotkey.keycode != -1 && hotkey.keycode != key) continue;
+            if (state && hotkey.mode == Hotkey.Mode.UP) continue;
+            if (!state && hotkey.mode == Hotkey.Mode.DOWN) continue;
+            if (hotkey.mode == Hotkey.Mode.TOGGLE) {
+                hotkey.state = !hotkey.state;
+                state = hotkey.state;
             }
+            hotkeyStates.add(HotkeyState.of(hotkey.name, state));
         }
+        if (!hotkeyStates.isEmpty()) Dispatcher.sendToServer(new PacketTriggeredHotkeys(hotkeyStates));
     }
 
     @SubscribeEvent

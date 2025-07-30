@@ -24,7 +24,7 @@ public class ServerHandlerPickReply extends ServerMessageHandler<PacketPickReply
 
             Dialogue dialogue = character.getDialogue();
             DialogueContext context = character.getDialogueContext();
-            EventBaseNode node = context.crafting;
+            EventBaseNode node = null;
 
             if (i >= 0 && i < context.replyNodes.size())
             {

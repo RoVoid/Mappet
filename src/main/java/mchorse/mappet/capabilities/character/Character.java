@@ -1,7 +1,6 @@
 package mchorse.mappet.capabilities.character;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.api.crafting.CraftingTable;
 import mchorse.mappet.api.dialogues.Dialogue;
 import mchorse.mappet.api.dialogues.DialogueContext;
 import mchorse.mappet.api.huds.HUDMorph;
@@ -41,8 +40,6 @@ public class Character implements ICharacter {
     private final Quests quests = new Quests();
     private final States states = new States();
 
-    private CraftingTable table;
-
     private Dialogue dialogue;
     private DialogueContext dialogueContext;
 
@@ -63,16 +60,6 @@ public class Character implements ICharacter {
     @Override
     public Quests getQuests() {
         return this.quests;
-    }
-
-    @Override
-    public void setCraftingTable(CraftingTable table) {
-        this.table = table;
-    }
-
-    @Override
-    public CraftingTable getCraftingTable() {
-        return this.table;
     }
 
     @Override
@@ -245,7 +232,7 @@ public class Character implements ICharacter {
     @Override
     public void closeAllHUDs(List<String> ignores) {
         for (Map.Entry<String, List<HUDScene>> entry : getDisplayedHUDs().entrySet()) {
-            if(ignores.contains(entry.getKey())) continue;
+            if (ignores.contains(entry.getKey())) continue;
             if (entry.getValue().get(0).global) {
                 for (EntityPlayer player : this.player.world.playerEntities)
                     Dispatcher.sendTo(new PacketHUDScene(entry.getKey(), null), (EntityPlayerMP) player);

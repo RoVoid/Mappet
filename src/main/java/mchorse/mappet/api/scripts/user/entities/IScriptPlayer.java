@@ -651,6 +651,8 @@ public interface IScriptPlayer extends IScriptEntity {
      */
     ArrayList<String> getModsList();
 
+    int getPing();
+
     /**
      * Play a sound event only to this player with volume and pitch.
      *

@@ -1,6 +1,5 @@
 package mchorse.mappet;
 
-import mchorse.mappet.api.crafting.CraftingManager;
 import mchorse.mappet.api.dialogues.DialogueManager;
 import mchorse.mappet.api.events.EventManager;
 import mchorse.mappet.api.factions.FactionManager;
@@ -40,17 +39,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Calendar;
 
-public class RegisterHandler
-{
+public class RegisterHandler {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public void onClientConnect(FMLNetworkEvent.ClientConnectedToServerEvent event)
-    {
-        if (!event.isLocal())
-        {
+    public void onClientConnect(FMLNetworkEvent.ClientConnectedToServerEvent event) {
+        if (!event.isLocal()) {
             Mappet.quests = new QuestManager(null);
             Mappet.schematics = new SchematicManager(null);
-            Mappet.crafting = new CraftingManager(null);
             Mappet.events = new EventManager(null);
             Mappet.dialogues = new DialogueManager(null);
             Mappet.npcs = new NpcManager(null);
@@ -65,10 +60,8 @@ public class RegisterHandler
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public void onClientDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event)
-    {
+    public void onClientDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         Mappet.quests = null;
-        Mappet.crafting = null;
         Mappet.events = null;
         Mappet.dialogues = null;
         Mappet.npcs = null;
@@ -82,8 +75,7 @@ public class RegisterHandler
     }
 
     @SubscribeEvent
-    public void onBlocksRegister(RegistryEvent.Register<Block> event)
-    {
+    public void onBlocksRegister(RegistryEvent.Register<Block> event) {
         event.getRegistry().register(Mappet.emitterBlock = new BlockEmitter());
         event.getRegistry().register(Mappet.triggerBlock = new BlockTrigger());
         event.getRegistry().register(Mappet.regionBlock = new BlockRegion());
@@ -91,8 +83,7 @@ public class RegisterHandler
     }
 
     @SubscribeEvent
-    public void onItemsRegister(RegistryEvent.Register<Item> event)
-    {
+    public void onItemsRegister(RegistryEvent.Register<Item> event) {
         event.getRegistry().register(Mappet.npcTool = new ItemNpcTool()
                 .setRegistryName(new ResourceLocation(Mappet.MOD_ID, "npc_tool"))
                 .setUnlocalizedName(Mappet.MOD_ID + ".npc_tool"));
@@ -115,8 +106,7 @@ public class RegisterHandler
     }
 
     @SubscribeEvent
-    public void onEntityRegister(RegistryEvent.Register<EntityEntry> event)
-    {
+    public void onEntityRegister(RegistryEvent.Register<EntityEntry> event) {
         event.getRegistry().register(EntityEntryBuilder.create()
                 .entity(EntityNpc.class)
                 .name(Mappet.MOD_ID + ".npc")
@@ -132,8 +122,7 @@ public class RegisterHandler
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public void onModelRegistry(ModelRegistryEvent event)
-    {
+    public void onModelRegistry(ModelRegistryEvent event) {
         ModelLoader.setCustomModelResourceLocation(Mappet.npcTool, 0, getNpcToolTexture());
 
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(Mappet.emitterBlock), 0, new ModelResourceLocation(Mappet.MOD_ID + ":emitter", "inventory"));
@@ -142,67 +131,52 @@ public class RegisterHandler
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(Mappet.conditionModelBlock), 0, new ModelResourceLocation(Mappet.MOD_ID + ":condition_model", "inventory"));
     }
 
-    public ModelResourceLocation getNpcToolTexture()
-    {
+    public ModelResourceLocation getNpcToolTexture() {
         String postfix = "";
         Calendar calendar = Calendar.getInstance();
 
-        if (isWinter(calendar))
-        {
+        if (isWinter(calendar)) {
             postfix = "_winter";
         }
 
-        if (isChristmas(calendar))
-        {
+        if (isChristmas(calendar)) {
             postfix = "_christmas";
-        }
-        else if (isEaster(calendar))
-        {
+        } else if (isEaster(calendar)) {
             postfix = "_easter";
-        }
-        else if (isAprilFoolsDay(calendar))
-        {
+        } else if (isAprilFoolsDay(calendar)) {
             postfix = "_april";
-        }
-        else if (isHalloween(calendar))
-        {
+        } else if (isHalloween(calendar)) {
             postfix = "_halloween";
         }
 
         return new ModelResourceLocation(Mappet.MOD_ID + ":npc_tool" + postfix, "inventory");
     }
 
-    public boolean isChristmas(Calendar calendar)
-    {
+    public boolean isChristmas(Calendar calendar) {
         return calendar.get(Calendar.MONTH) == Calendar.DECEMBER && calendar.get(Calendar.DATE) >= 24 && calendar.get(Calendar.DATE) <= 26;
     }
 
-    public boolean isAprilFoolsDay(Calendar calendar)
-    {
+    public boolean isAprilFoolsDay(Calendar calendar) {
         return calendar.get(Calendar.MONTH) == Calendar.APRIL && calendar.get(Calendar.DATE) <= 2;
     }
 
-    public boolean isWinter(Calendar calendar)
-    {
+    public boolean isWinter(Calendar calendar) {
         int month = calendar.get(Calendar.MONTH);
 
         return month == Calendar.DECEMBER || month == Calendar.JANUARY || month == Calendar.FEBRUARY;
     }
 
-    public boolean isEaster(Calendar calendar)
-    {
+    public boolean isEaster(Calendar calendar) {
         Calendar easterDate = getEasterDate(calendar.get(Calendar.YEAR));
 
         return calendar.get(Calendar.MONTH) == easterDate.get(Calendar.MONTH) && calendar.get(Calendar.DATE) == easterDate.get(Calendar.DATE);
     }
 
-    public boolean isHalloween(Calendar calendar)
-    {
+    public boolean isHalloween(Calendar calendar) {
         return calendar.get(Calendar.MONTH) == Calendar.OCTOBER && calendar.get(Calendar.DATE) >= 24;
     }
 
-    public Calendar getEasterDate(int year)
-    {
+    public Calendar getEasterDate(int year) {
         int a = year % 19;
         int b = year / 100;
         int c = year % 100;

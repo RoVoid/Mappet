@@ -1,19 +1,7 @@
 package mchorse.mappet.client.gui;
 
 import mchorse.mappet.client.RenderingHandler;
-import mchorse.mappet.client.gui.panels.GuiConditionModelPanel;
-import mchorse.mappet.client.gui.panels.GuiCraftingTablePanel;
-import mchorse.mappet.client.gui.panels.GuiDialoguePanel;
-import mchorse.mappet.client.gui.panels.GuiEventPanel;
-import mchorse.mappet.client.gui.panels.GuiFactionPanel;
-import mchorse.mappet.client.gui.panels.GuiHUDScenePanel;
-import mchorse.mappet.client.gui.panels.GuiLogPanel;
-import mchorse.mappet.client.gui.panels.GuiNpcPanel;
-import mchorse.mappet.client.gui.panels.GuiQuestChainPanel;
-import mchorse.mappet.client.gui.panels.GuiQuestPanel;
-import mchorse.mappet.client.gui.panels.GuiRegionPanel;
-import mchorse.mappet.client.gui.panels.GuiScriptPanel;
-import mchorse.mappet.client.gui.panels.GuiServerSettingsPanel;
+import mchorse.mappet.client.gui.panels.*;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.common.content.PacketContentExit;
 import mchorse.mappet.utils.MPIcons;
@@ -30,12 +18,10 @@ import net.minecraft.client.Minecraft;
 
 import java.util.function.Consumer;
 
-public class GuiMappetDashboard extends GuiAbstractDashboard
-{
+public class GuiMappetDashboard extends GuiAbstractDashboard {
     public static GuiMappetDashboard dashboard;
 
     public GuiServerSettingsPanel settings;
-    public GuiCraftingTablePanel crafting;
     public GuiQuestPanel quest;
     public GuiEventPanel event;
     public GuiDialoguePanel dialogue;
@@ -50,39 +36,32 @@ public class GuiMappetDashboard extends GuiAbstractDashboard
 
     public GuiCreativeMorphsMenu morphs;
 
-    public static GuiMappetDashboard get(Minecraft mc)
-    {
-        if (dashboard == null)
-        {
+    public static GuiMappetDashboard get(Minecraft mc) {
+        if (dashboard == null) {
             dashboard = new GuiMappetDashboard(mc);
         }
 
         return dashboard;
     }
 
-    public GuiMappetDashboard(Minecraft mc)
-    {
+    public GuiMappetDashboard(Minecraft mc) {
         super(mc);
     }
 
     @Override
-    protected GuiDashboardPanels createDashboardPanels(Minecraft mc)
-    {
+    protected GuiDashboardPanels createDashboardPanels(Minecraft mc) {
         return new GuiDashboardPanels(mc);
     }
 
-    public GuiCreativeMorphsMenu getMorphMenu()
-    {
-        if (this.morphs == null)
-        {
+    public GuiCreativeMorphsMenu getMorphMenu() {
+        if (this.morphs == null) {
             this.morphs = new GuiCreativeMorphsMenu(Minecraft.getMinecraft(), null).pickUponExit();
         }
 
         return this.morphs;
     }
 
-    public void openMorphMenu(GuiElement parent, boolean editing, AbstractMorph morph, Consumer<AbstractMorph> callback)
-    {
+    public void openMorphMenu(GuiElement parent, boolean editing, AbstractMorph morph, Consumer<AbstractMorph> callback) {
         GuiBase.getCurrent().unfocus();
 
         GuiCreativeMorphsMenu menu = this.getMorphMenu();
@@ -92,8 +71,7 @@ public class GuiMappetDashboard extends GuiAbstractDashboard
         menu.resize();
         menu.setSelected(morph);
 
-        if (editing)
-        {
+        if (editing) {
             menu.enterEditMorph();
         }
 
@@ -102,10 +80,8 @@ public class GuiMappetDashboard extends GuiAbstractDashboard
     }
 
     @Override
-    protected void registerPanels(Minecraft mc)
-    {
+    protected void registerPanels(Minecraft mc) {
         this.settings = new GuiServerSettingsPanel(mc, this);
-        this.crafting = new GuiCraftingTablePanel(mc, this);
         this.quest = new GuiQuestPanel(mc, this);
         this.event = new GuiEventPanel(mc, this);
         this.dialogue = new GuiDialoguePanel(mc, this);
@@ -119,7 +95,6 @@ public class GuiMappetDashboard extends GuiAbstractDashboard
         this.logs = new GuiLogPanel(mc, this);
 
         this.panels.registerPanel(this.settings, IKey.lang("mappet.gui.panels.settings"), Icons.GEAR);
-        this.panels.registerPanel(this.crafting, IKey.lang("mappet.gui.panels.crafting"), Icons.WRENCH);
         this.panels.registerPanel(this.quest, IKey.lang("mappet.gui.panels.quests"), Icons.EXCLAMATION);
         this.panels.registerPanel(this.event, IKey.lang("mappet.gui.panels.events"), Icons.FILE);
         this.panels.registerPanel(this.dialogue, IKey.lang("mappet.gui.panels.dialogues"), Icons.BUBBLE);
@@ -136,8 +111,7 @@ public class GuiMappetDashboard extends GuiAbstractDashboard
     }
 
     @Override
-    protected void closeScreen()
-    {
+    protected void closeScreen() {
         super.closeScreen();
 
         Dispatcher.sendToServer(new PacketContentExit());

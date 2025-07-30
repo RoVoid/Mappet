@@ -40,33 +40,6 @@ public enum ContentType implements IContentType
             return "QUEST";
         }
     },
-    CRAFTING_TABLE()
-    {
-        @Override
-        public IManager<? extends AbstractData> getManager()
-        {
-            return Mappet.crafting;
-        }
-
-        @Override
-        @SideOnly(Side.CLIENT)
-        public GuiMappetDashboardPanel get(GuiMappetDashboard dashboard)
-        {
-            return dashboard.crafting;
-        }
-
-        @Override
-        @SideOnly(Side.CLIENT)
-        public IKey getPickLabel()
-        {
-            return IKey.lang("mappet.gui.overlays.crafting");
-        }
-
-        @Override
-        public String getName() {
-            return "CRAFTING_TABLE";
-        }
-    },
     EVENT()
     {
         @Override

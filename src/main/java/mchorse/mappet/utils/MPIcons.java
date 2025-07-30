@@ -26,8 +26,6 @@ public class MPIcons {
     private static final Map<String, Icon> defaultIcons = new HashMap<>();
 
     public static final String CONSOLE = "console";
-    public static final String CRAFT_IN = "craft_in";
-    public static final String CRAFT_OUT = "craft_out";
     public static final String BRUSH = "brush";
     public static final String PLANET = "planet";
 
