@@ -42,7 +42,6 @@ public class Hotkey implements INBTSerializable<NBTTagCompound> {
 
         tag.setString("Name", name);
         tag.setInteger("DefaultKeycode", defaultKeycode);
-//      tag.setInteger("Keycode", keycode);
         tag.setInteger("Mode", mode.ordinal());
         tag.setTag("Trigger", trigger.serializeNBT());
         tag.setTag("Enabled", enabled.serializeNBT());
@@ -54,7 +53,6 @@ public class Hotkey implements INBTSerializable<NBTTagCompound> {
     public void deserializeNBT(NBTTagCompound tag) {
         name = tag.getString("Name");
         defaultKeycode = tag.getInteger("DefaultKeycode");
-//      keycode = tag.getInteger("Keycode");
         mode = Mode.values()[Math.max(0, Math.min(tag.getInteger("Mode"), Mode.values().length - 1))];
         trigger.deserializeNBT(tag.getCompoundTag("Trigger"));
         enabled.deserializeNBT(tag.getTag("Enabled"));

@@ -36,7 +36,7 @@ public class Hotkeys implements INBTSerializable<NBTTagList> {
     @Override
     public void deserializeNBT(NBTTagList tag) {
         keys.clear();
-        if (tag == null || tag.getTagType() == 10) return;
+        if (tag == null) return;
         for (NBTBase nbt : tag) {
             if (nbt.getId() != 10) continue;
             Hotkey hotkey = new Hotkey();

@@ -1,5 +1,6 @@
 package mchorse.mappet.client;
 
+import mchorse.mappet.CommonProxy;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.hotkeys.Hotkey;
 import mchorse.mappet.api.hotkeys.HotkeyState;
@@ -11,6 +12,7 @@ import mchorse.mappet.client.gui.scripts.scriptedItem.GuiScriptedItemScreen;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.common.events.PacketPlayerJournal;
 import mchorse.mappet.network.common.events.PacketTriggeredHotkeys;
+import mchorse.mappet.utils.NBTToJsonLike;
 import mchorse.mclib.client.gui.framework.tooltips.styles.TooltipStyle;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -24,6 +26,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -33,14 +36,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.io.File;
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class KeyboardHandler {
     public static final Map<String, Hotkey> hotkeys = new HashMap<>();
+    public static boolean hotkeysNeedLoad = true;
+
     public static boolean clientPlayerJournal;
 
     public KeyBinding openMappetDashboard;
@@ -120,6 +123,46 @@ public class KeyboardHandler {
             hotkeyStates.add(HotkeyState.of(hotkey.name, state));
         }
         if (!hotkeyStates.isEmpty()) Dispatcher.sendToServer(new PacketTriggeredHotkeys(hotkeyStates));
+    }
+
+    public static void loadClientKeys(Map<String, Integer> clientKeys, List<Hotkey> hotkeys) {
+        try {
+            hotkeysNeedLoad = false;
+            if (CommonProxy.configFolder == null) return;
+            File keybinds = new File(CommonProxy.configFolder, "keybinds.json");
+            if (!keybinds.isFile()) return;
+
+            NBTTagCompound keysNbt = NBTToJsonLike.read(keybinds);
+
+            for (Hotkey hotkey : hotkeys)
+                if (keysNbt.hasKey(hotkey.name)) clientKeys.put(hotkey.name, keysNbt.getInteger(hotkey.name));
+        } catch (Exception e) {
+            Mappet.logger.error("Failed to load keybinds from file: " + e.getMessage());
+        }
+    }
+
+    public static void saveClientKeys() {
+        try {
+            System.out.println("PreSave");
+
+            if (CommonProxy.configFolder == null) return;
+            File keybinds = new File(CommonProxy.configFolder, "keybinds.json");
+
+            NBTTagCompound keysNbt;
+            if (keybinds.isFile()) keysNbt = NBTToJsonLike.read(keybinds);
+            else keysNbt = new NBTTagCompound();
+
+            for (Hotkey hotkey : hotkeys.values()) {
+                if (hotkey.keycode == -1) keysNbt.removeTag(hotkey.name);
+                else keysNbt.setInteger(hotkey.name, hotkey.keycode);
+            }
+
+            System.out.println("Save: " + keysNbt);
+
+            NBTToJsonLike.write(keybinds, keysNbt);
+        } catch (Exception e) {
+            Mappet.logger.error("Failed to save keybinds from file: " + e.getMessage());
+        }
     }
 
     @SubscribeEvent

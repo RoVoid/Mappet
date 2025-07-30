@@ -5,14 +5,19 @@ import mchorse.mappet.client.KeyboardHandler;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
-import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiKeybindElement;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.ColorUtils;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class GuiClientHotkeyScreen extends GuiBase {
     public GuiScrollElement keybinds;
@@ -22,11 +27,14 @@ public class GuiClientHotkeyScreen extends GuiBase {
 
     public GuiClientHotkeyScreen(Minecraft mc) {
         keybinds = new GuiScrollElement(mc);
-        keybinds.flex().relative(viewport).x(120).w(1F, -120).h(1F).column(5).vertical().stretch().scroll().padding(10);
 
-        for (Hotkey hotkey : KeyboardHandler.hotkeys.values()) {
+        List<Hotkey> list = new ArrayList<>(KeyboardHandler.hotkeys.values());
+        list.sort(Comparator.comparingInt((Hotkey h) -> h.name.length()).thenComparing(h -> h.name, String.CASE_INSENSITIVE_ORDER));
+        for (Hotkey hotkey : list) {
             keybinds.add(new GuiHotkeyElement(mc, hotkey));
         }
+
+        keybinds.flex().relative(root).x(0.3f).y(0.25f).w(0.4F, -40).h(0.5F, 5).column(2).vertical().stretch().scroll().padding(10);
 
         root.add(keybinds);
         root.resize();
@@ -34,19 +42,13 @@ public class GuiClientHotkeyScreen extends GuiBase {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawGradientRect(keybinds.scroll.x, keybinds.scroll.y, keybinds.area.getW(), keybinds.area.getH(), -1072689136, -804253680);
+        keybinds.area.draw(ColorUtils.HALF_BLACK);
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     @Override
     public void onGuiClosed() {
-        for (IGuiElement element : keybinds.getChildren()) {
-            if (element instanceof GuiHotkeyElement) {
-                Hotkey newHotkey = ((GuiHotkeyElement) element).hotkey;
-                KeyboardHandler.hotkeys.get(newHotkey.name).keycode = newHotkey.keycode;
-            }
-        }
-
+        KeyboardHandler.saveClientKeys();
         super.onGuiClosed();
     }
 
@@ -65,16 +67,24 @@ public class GuiClientHotkeyScreen extends GuiBase {
                 if (k == Keyboard.KEY_ESCAPE) {
                     this.hotkey.keycode = 0;
                     key.setKeybind(0);
-                } else {
-                    this.hotkey.keycode = k;
-                }
+                } else this.hotkey.keycode = k;
             });
-            reset = new GuiButtonElement(mc, IKey.lang("mappet.gui.hotkeys.key.reset"), (b) -> {
+            key.setKeybind(hotkey.keycode == -1 ? hotkey.defaultKeycode : hotkey.keycode);
+            reset = new GuiButtonElement(mc, IKey.lang("mappet.gui.hotkeys.reset"), (b) -> {
                 key.setKeybind(this.hotkey.defaultKeycode);
                 this.hotkey.keycode = -1;
             });
+
+            name.flex().relative(this).w(0.4f);
+            key.flex().relative(this).w(0.2f);
+            reset.marginRight(10);
+            flex().h(20).row(10).padding(2);
             add(name, key, reset);
-            resize();
+        }
+
+        @Override
+        public void draw(GuiContext context) {
+            super.draw(context);
         }
     }
 }

@@ -21,7 +21,7 @@ If the version is beta, it looks like: `[fork].a.bR-beta-d`
 #### Notes ⚠️
 
 - Different `a` values **may introduce breaking changes** 💥
-- Don't download beta versions if you didn't watch **Breaking Bad** ☢️
+- Install betas at your own risk ☢️
 - Patches are meant **only** for bugfixes 🛡️
 - *Maybe adjusted in the future if someone suggests a better approach* 🧑‍💻
 
@@ -50,6 +50,6 @@ If the version is beta, it looks like: `[fork].a.bR-beta-d`
 #### Примечания ⚠️
 
 - Между разными значениями `a` возможна **несовместимость** 💥
-- Не устанавливайте беты, если не смотрели **Breaking Bad** ☢️
+- Устанавливайте беты на свой страх и риск ☢️
 - Патчи предназначены **только** для багфиксов 🛡️
 - *Может быть изменено, если кто-нибудь предложит что-то лучше* 🧑‍💻

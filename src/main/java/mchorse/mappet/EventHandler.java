@@ -25,6 +25,7 @@ import mchorse.mappet.blocks.BlockTrigger;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.CharacterProvider;
 import mchorse.mappet.capabilities.character.ICharacter;
+import mchorse.mappet.client.KeyboardHandler;
 import mchorse.mappet.client.RenderingHandler;
 import mchorse.mappet.client.SoundPack;
 import mchorse.mappet.commands.data.CommandDataClear;
@@ -475,6 +476,8 @@ public class EventHandler {
                 CommonProxy.eventHandler.addExecutable(new RunnableExecutionFork(1, () -> scriptPlayer.stopSound(sound)));
             }
         }
+
+        KeyboardHandler.hotkeysNeedLoad = true;
 
         ClientHandlerLockPerspective.setLockedPerspective(-1);
         ClientHandlerBlackAndWhiteShader.enableBlackAndWhiteShader(false);
