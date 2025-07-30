@@ -70,7 +70,7 @@ public class Hotkey implements INBTSerializable<NBTTagCompound> {
     }
 
     public enum Mode {
-        DOWN_AND_UP, DOWN, UP, TOGGLE;
+        DOWN_AND_UP, DOWN, UP;
 
         @Override
         public String toString() {

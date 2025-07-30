@@ -117,10 +117,6 @@ public class KeyboardHandler {
             if (hotkey.keycode != -1 && hotkey.keycode != key) continue;
             if (state && hotkey.mode == Hotkey.Mode.UP) continue;
             if (!state && hotkey.mode == Hotkey.Mode.DOWN) continue;
-            if (hotkey.mode == Hotkey.Mode.TOGGLE) {
-                hotkey.state = !hotkey.state;
-                state = hotkey.state;
-            }
             hotkeyStates.add(HotkeyState.of(hotkey.name, state));
         }
         if (!hotkeyStates.isEmpty()) Dispatcher.sendToServer(new PacketTriggeredHotkeys(hotkeyStates));
