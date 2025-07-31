@@ -8,7 +8,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 public class Hotkey implements INBTSerializable<NBTTagCompound> {
     public String name = "";
-    public int defaultKeycode = -1;
+    public int defaultKeycode = 0;
     public int keycode = -1;
     public Mode mode = Mode.DOWN;
     public boolean state = false;

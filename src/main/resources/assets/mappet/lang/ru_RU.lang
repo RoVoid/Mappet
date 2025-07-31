@@ -904,7 +904,8 @@ mappet.gui.state_trigger.mode.remove=Удалить
 mappet.keys.category=Маппет
 mappet.keys.dashboard=Креативная панель
 mappet.keys.journal=Журнал игрока
-mappet.keys.runCurrentScript=Запустить текущий скрипт
+mappet.keys.hotkeys=Горячие клавиши
+mappet.keys.run_current_script=Запустить текущий скрипт
 mappet.keys.scripted_item=Открыть редактор скриптового предмета
 
 # Items, blocks and entities

@@ -125,17 +125,21 @@ public class KeyboardHandler {
         if (!hotkeyStates.isEmpty()) Dispatcher.sendToServer(new PacketTriggeredHotkeys(hotkeyStates));
     }
 
-    public static void loadClientKeys(Map<String, Integer> clientKeys, List<Hotkey> hotkeys) {
+    public static void loadClientKeys(List<Hotkey> hotkeys) {
         try {
-            hotkeysNeedLoad = false;
-            if (CommonProxy.configFolder == null) return;
-            File keybinds = new File(CommonProxy.configFolder, "keybinds.json");
-            if (!keybinds.isFile()) return;
+            if (hotkeysNeedLoad) {
+                hotkeysNeedLoad = false;
+                if (CommonProxy.configFolder == null) return;
+                File keybinds = new File(CommonProxy.configFolder, "keybinds.json");
+                if (!keybinds.isFile()) return;
 
-            NBTTagCompound keysNbt = NBTToJsonLike.read(keybinds);
+                NBTTagCompound keysNbt = NBTToJsonLike.read(keybinds);
 
-            for (Hotkey hotkey : hotkeys)
-                if (keysNbt.hasKey(hotkey.name)) clientKeys.put(hotkey.name, keysNbt.getInteger(hotkey.name));
+                for (Hotkey hotkey : hotkeys)
+                    if (keysNbt.hasKey(hotkey.name)) hotkey.keycode = keysNbt.getInteger(hotkey.name);
+            } else for (Hotkey hotkey : hotkeys) {
+                hotkey.keycode = KeyboardHandler.hotkeys.getOrDefault(hotkey.name, hotkey).keycode;
+            }
         } catch (Exception e) {
             Mappet.logger.error("Failed to load keybinds from file: " + e.getMessage());
         }
