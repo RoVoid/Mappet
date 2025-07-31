@@ -69,7 +69,7 @@ public class GuiHotkeysOverlayPanel extends GuiOverlayPanel {
         });
         mode = new GuiButtonElement(mc, IKey.EMPTY, (b) -> {
             int newModeIndex = hotkey.mode.ordinal() + 1;
-            if(newModeIndex >= Hotkey.Mode.values().length) newModeIndex = 0;
+            if (newModeIndex >= Hotkey.Mode.values().length) newModeIndex = 0;
             hotkey.mode = Hotkey.Mode.values()[newModeIndex];
             mode.label = IKey.lang("mappet.gui.hotkeys.mode." + hotkey.mode.toString());
         });
@@ -90,15 +90,20 @@ public class GuiHotkeysOverlayPanel extends GuiOverlayPanel {
     }
 
     private void renameHotkey(String newName) {
-        newName = newName.replaceAll("[^0-9a-zA-Z_-]", "");
-        if (!newName.isEmpty() && hotkeys.keys.containsKey(newName) && hotkeys.keys.get(newName) != hotkey) {
-            name.field.setText(newName);
+        newName = newName.trim().replaceAll("[^0-9a-zA-Z_ -]", "");
+        name.field.setText(newName);
+
+        if (hotkey.name.equals(newName)) return;
+        if (newName.isEmpty() || hotkeys.keys.containsKey(newName)) {
+            name.field.setText(hotkey.name);
             return;
         }
-        if (hotkey.name.equals(newName)) return;
+
+        hotkeys.keys.remove(hotkey.name);
         hotkey.name = newName;
-        hotkeys.keys.remove(newName);
         hotkeys.keys.put(newName, hotkey);
+
+        if (name.isVisible()) list.sort();
     }
 
     private void addHotkey() {
@@ -151,9 +156,36 @@ public class GuiHotkeysOverlayPanel extends GuiOverlayPanel {
         }
     }
 
+    @Override
+    public boolean mouseClicked(GuiContext context) {
+        if (hotkey != null && !name.isFocused() && !name.field.getText().equals(hotkey.name))
+            renameHotkey(name.field.getText());
+        return super.mouseClicked(context);
+    }
+
+    @Override
+    public void onClose() {
+        if (hotkey != null) renameHotkey(name.field.getText());
+        super.onClose();
+    }
+
     public static class GuiHotkeyList extends GuiListElement<Hotkey> {
         public GuiHotkeyList(Minecraft mc, Consumer<List<Hotkey>> callback) {
             super(mc, callback);
+        }
+
+        @Override
+        public boolean mouseClicked(GuiContext context) {
+            if (scroll.mouseClicked(context)) return true;
+            if (scroll.isInside(context) && context.mouseButton < 2) {
+                int index = scroll.getIndex(context.mouseX, context.mouseY);
+                setIndex(index);
+                if (exists(index) && callback != null) {
+                    callback.accept(getCurrent());
+                    return context.mouseButton == 0;
+                }
+            }
+            return false;
         }
 
         @Override
