@@ -1,12 +1,12 @@
 package mchorse.mappet;
 
+import mchorse.mappet.api.ServerSettings;
 import mchorse.mappet.api.data.DataManager;
 import mchorse.mappet.api.dialogues.DialogueManager;
 import mchorse.mappet.api.events.EventManager;
 import mchorse.mappet.api.expressions.ExpressionManager;
 import mchorse.mappet.api.factions.FactionManager;
 import mchorse.mappet.api.huds.HUDManager;
-import mchorse.mappet.api.ServerSettings;
 import mchorse.mappet.api.npcs.NpcManager;
 import mchorse.mappet.api.quests.QuestManager;
 import mchorse.mappet.api.quests.chains.QuestChainManager;
@@ -152,15 +152,12 @@ public final class Mappet {
 
     public static ValueBoolean questsPreviewRewards;
 
-    public static ValueInt journalButtonX;
-    public static ValueInt journalButtonY;
-
     public static ValueSyntaxStyle scriptEditorSyntaxStyle;
     public static ValueBoolean scriptEditorSounds;
     public static ValueBoolean scriptUIDebug;
 
     public Mappet() {
-        MinecraftForge.EVENT_BUS.register(new RegisterHandler());
+        MinecraftForge.EVENT_BUS.register(new ModEventHandler());
     }
 
     @SubscribeEvent
@@ -170,14 +167,13 @@ public final class Mappet {
         builder.category("general").register(new ValueButtons("buttons").clientSide());
         generalDataCaching = builder.getBoolean("data_caching", true);
         enableForgeTriggers = builder.getBoolean("enable_forge_triggers", false);
-        loadCustomSoundsOnLogin = builder.getBoolean("load_custom_sounds_on_login", true);
+        loadCustomSoundsOnLogin = builder.getBoolean("load_custom_sounds_on_login", false);
         immediatelyOpenLink = builder.getBoolean("immediately_open_link", false);
 
         npcsPeacefulDamage = builder.category("npc").getBoolean("peaceful_damage", true);
         npcsToolOnlyOP = builder.getBoolean("tool_only_op", true);
         npcsToolOnlyCreative = builder.getBoolean("tool_only_creative", false);
         dashboardOnlyCreative = builder.getBoolean("dashboard_only_creative", false);
-
 
         eventMaxExecutions = builder.category("events").getInt("max_executions", 10000, 100, 1000000);
         eventUseServerForCommands = builder.getBoolean("use_server_for_commands", false);
@@ -186,8 +182,6 @@ public final class Mappet {
         nodePulseBackgroundMcLibPrimary = builder.getBoolean("pulse_background_mclib", false);
         nodeThickness = builder.getInt("node_thickness", 3, 0, 20);
         questsPreviewRewards = builder.getBoolean("quest_preview_rewards", true);
-        journalButtonX = builder.getInt("journal_button_x", 0, 0, 300);
-        journalButtonY = builder.getInt("journal_button_y", 0, 0, 300);
         builder.getCategory().markClientSide();
 
         builder.category("script_editor").register(scriptEditorSyntaxStyle = new ValueSyntaxStyle("syntax_style"));
@@ -266,7 +260,7 @@ public final class Mappet {
         ScriptUtils.initiateScriptEngines();
         scripts.initiateAllScripts();
 
-        EventHandler.getRegisteredEvents();
+        TriggerEventHandler.getRegisteredEvents();
 
         if (event.getServer().isDedicatedServer()) MPIcons.initiate();
     }

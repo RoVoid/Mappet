@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class GuiTextEditor extends GuiMultiTextElement<HighlightedTextLine> {
+public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
     private SyntaxHighlighter highlighter;
     private int placements;
     private boolean lines = true;
@@ -27,7 +27,7 @@ public class GuiTextEditor extends GuiMultiTextElement<HighlightedTextLine> {
     private final List<TextLineNumber> numbers = new ArrayList<>(40);
     private int lineNumber = 0;
 
-    public GuiTextEditor(Minecraft mc, Consumer<String> callback) {
+    public GuiCodeEditor(Minecraft mc, Consumer<String> callback) {
         super(mc, callback);
 
         this.highlighter = new SyntaxHighlighter();
@@ -38,7 +38,7 @@ public class GuiTextEditor extends GuiMultiTextElement<HighlightedTextLine> {
         return new HighlightedTextLine(line);
     }
 
-    public GuiTextEditor disableLines() {
+    public GuiCodeEditor disableLines() {
         this.lines = false;
 
         return this;

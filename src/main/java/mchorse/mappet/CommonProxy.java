@@ -68,6 +68,7 @@ public class CommonProxy {
      */
     public static File configFolder;
 
+    public static TriggerEventHandler triggerEventHandler;
     public static EventHandler eventHandler;
     public static ScriptedItemEventHandler scriptedItemEventHandler;
 
@@ -79,6 +80,7 @@ public class CommonProxy {
 
         Dispatcher.register();
 
+        MinecraftForge.EVENT_BUS.register(triggerEventHandler = new TriggerEventHandler());
         MinecraftForge.EVENT_BUS.register(eventHandler = new EventHandler());
         MinecraftForge.EVENT_BUS.register(scriptedItemEventHandler = new ScriptedItemEventHandler());
 
@@ -89,6 +91,7 @@ public class CommonProxy {
 
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new MetamorphHandler());
+        Mappet.EVENT_BUS.register(triggerEventHandler);
         Mappet.EVENT_BUS.register(eventHandler);
 
         ScriptUtils.initiateScriptEngines();

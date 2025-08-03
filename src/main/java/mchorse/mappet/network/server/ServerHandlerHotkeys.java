@@ -1,7 +1,7 @@
-package mchorse.mappet.network.server.events;
+package mchorse.mappet.network.server;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.network.common.events.PacketTriggeredHotkeys;
+import mchorse.mappet.network.common.hotkey.PacketTriggeredHotkeys;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 

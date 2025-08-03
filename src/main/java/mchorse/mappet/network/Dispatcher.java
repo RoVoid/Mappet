@@ -4,6 +4,7 @@ import mchorse.mappet.Mappet;
 import mchorse.mappet.network.client.ClientHandlerBlackAndWhiteShader;
 import mchorse.mappet.network.client.ClientHandlerLockPerspective;
 import mchorse.mappet.network.client.ClientHandlerPack;
+import mchorse.mappet.network.client.ClientHandlerSyncHotkeys;
 import mchorse.mappet.network.client.blocks.ClientHandlerEditConditionModel;
 import mchorse.mappet.network.client.blocks.ClientHandlerEditEmitter;
 import mchorse.mappet.network.client.blocks.ClientHandlerEditRegion;
@@ -13,9 +14,6 @@ import mchorse.mappet.network.client.content.ClientHandlerContentNames;
 import mchorse.mappet.network.client.content.ClientHandlerServerSettings;
 import mchorse.mappet.network.client.content.ClientHandlerStates;
 import mchorse.mappet.network.client.dialogue.ClientHandlerDialogueFragment;
-import mchorse.mappet.network.client.events.ClientHandlerSyncHotkeys;
-import mchorse.mappet.network.client.events.ClientHandlerPlayerJournal;
-import mchorse.mappet.network.client.factions.ClientHandlerFactions;
 import mchorse.mappet.network.client.huds.ClientHandlerHUDMorph;
 import mchorse.mappet.network.client.huds.ClientHandlerHUDScene;
 import mchorse.mappet.network.client.items.ClientHandlerScriptedItemInfo;
@@ -41,11 +39,9 @@ import mchorse.mappet.network.common.content.*;
 import mchorse.mappet.network.common.dialogue.PacketDialogueFragment;
 import mchorse.mappet.network.common.dialogue.PacketFinishDialogue;
 import mchorse.mappet.network.common.dialogue.PacketPickReply;
-import mchorse.mappet.network.common.events.PacketTriggeredHotkeys;
-import mchorse.mappet.network.common.events.PacketSyncHotkeys;
-import mchorse.mappet.network.common.events.PacketPlayerJournal;
-import mchorse.mappet.network.common.factions.PacketFactions;
 import mchorse.mappet.network.common.factions.PacketRequestFactions;
+import mchorse.mappet.network.common.hotkey.PacketSyncHotkeys;
+import mchorse.mappet.network.common.hotkey.PacketTriggeredHotkeys;
 import mchorse.mappet.network.common.huds.PacketHUDMorph;
 import mchorse.mappet.network.common.huds.PacketHUDScene;
 import mchorse.mappet.network.common.items.PacketScriptedItemInfo;
@@ -61,6 +57,7 @@ import mchorse.mappet.network.common.ui.PacketCloseUI;
 import mchorse.mappet.network.common.ui.PacketUI;
 import mchorse.mappet.network.common.ui.PacketUIData;
 import mchorse.mappet.network.common.utils.PacketChangedBoundingBox;
+import mchorse.mappet.network.server.ServerHandlerHotkeys;
 import mchorse.mappet.network.server.blocks.ServerHandlerEditConditionModel;
 import mchorse.mappet.network.server.blocks.ServerHandlerEditEmitter;
 import mchorse.mappet.network.server.blocks.ServerHandlerEditRegion;
@@ -68,8 +65,6 @@ import mchorse.mappet.network.server.blocks.ServerHandlerEditTrigger;
 import mchorse.mappet.network.server.content.*;
 import mchorse.mappet.network.server.dialogue.ServerHandlerFinishDialogue;
 import mchorse.mappet.network.server.dialogue.ServerHandlerPickReply;
-import mchorse.mappet.network.server.events.ServerHandlerHotkeys;
-import mchorse.mappet.network.server.events.ServerHandlerPlayerJournal;
 import mchorse.mappet.network.server.factions.ServerHandlerRequestFactions;
 import mchorse.mappet.network.server.items.ServerHandlerScriptedItemInfo;
 import mchorse.mappet.network.server.logs.ServerHandlerLogs;
@@ -153,14 +148,11 @@ public class Dispatcher {
             this.register(PacketQuestVisibility.class, ServerHandlerQuestVisibility.class, Side.SERVER);
 
             /* Factions */
-            this.register(PacketFactions.class, ClientHandlerFactions.class, Side.CLIENT);
             this.register(PacketRequestFactions.class, ServerHandlerRequestFactions.class, Side.SERVER);
 
             /* Events */
             this.register(PacketSyncHotkeys.class, ClientHandlerSyncHotkeys.class, Side.CLIENT);
             this.register(PacketTriggeredHotkeys.class, ServerHandlerHotkeys.class, Side.SERVER);
-            this.register(PacketPlayerJournal.class, ClientHandlerPlayerJournal.class, Side.CLIENT);
-            this.register(PacketPlayerJournal.class, ServerHandlerPlayerJournal.class, Side.SERVER);
 
             /* Scripts */
             this.register(PacketEntityRotations.class, ClientHandlerEntityRotations.class, Side.CLIENT);

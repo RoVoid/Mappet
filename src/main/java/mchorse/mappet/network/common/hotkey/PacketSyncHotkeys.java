@@ -1,4 +1,4 @@
-package mchorse.mappet.network.common.events;
+package mchorse.mappet.network.common.hotkey;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.mappet.api.ServerSettings;
@@ -11,14 +11,12 @@ import java.util.List;
 
 public class PacketSyncHotkeys implements IMessage {
     public List<Hotkey> hotkeys = new ArrayList<>();
-    public boolean journalTrigger;
 
     public PacketSyncHotkeys() {
     }
 
     public PacketSyncHotkeys(ServerSettings settings) {
         hotkeys.addAll(settings.hotkeys.keys.values());
-        this.journalTrigger = !settings.playerJournal.isEmpty();
     }
 
     @Override
@@ -26,8 +24,6 @@ public class PacketSyncHotkeys implements IMessage {
         for (int i = 0, c = buf.readInt(); i < c; i++) {
             hotkeys.add(new Hotkey(ByteBufUtils.readUTF8String(buf), buf.readInt(), buf.readInt()));
         }
-
-        this.journalTrigger = buf.readBoolean();
     }
 
     @Override
@@ -38,7 +34,5 @@ public class PacketSyncHotkeys implements IMessage {
             buf.writeInt(hotkey.defaultKeycode);
             buf.writeInt(hotkey.mode.ordinal());
         }
-
-        buf.writeBoolean(this.journalTrigger);
     }
 }

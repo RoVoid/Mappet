@@ -15,17 +15,25 @@ import mchorse.mappet.blocks.BlockRegion;
 import mchorse.mappet.blocks.BlockTrigger;
 import mchorse.mappet.client.KeyboardHandler;
 import mchorse.mappet.client.RenderingHandler;
+import mchorse.mappet.client.SoundPack;
 import mchorse.mappet.entities.EntityNpc;
 import mchorse.mappet.items.ItemNpcTool;
+import mchorse.mappet.network.client.ClientHandlerBlackAndWhiteShader;
+import mchorse.mappet.network.client.ClientHandlerLockPerspective;
 import mchorse.mappet.tile.TileConditionModel;
 import mchorse.mappet.tile.TileEmitter;
 import mchorse.mappet.tile.TileRegion;
 import mchorse.mappet.tile.TileTrigger;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
@@ -39,7 +47,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Calendar;
 
-public class RegisterHandler {
+public class ModEventHandler {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onClientConnect(FMLNetworkEvent.ClientConnectedToServerEvent event) {
@@ -55,7 +63,20 @@ public class RegisterHandler {
             Mappet.huds = new HUDManager(null);
         }
 
-        KeyboardHandler.clientPlayerJournal = true;
+        if (Mappet.loadCustomSoundsOnLogin.get()) {
+            Minecraft mc = Minecraft.getMinecraft();
+            SoundHandler soundHandler = mc.getSoundHandler();
+
+            for (String sound : SoundPack.getCustomSoundEvents()) {
+                ISound soundToPlay = PositionedSoundRecord.getRecord(new SoundEvent(new ResourceLocation(sound)), 1.0f, 0);
+                soundHandler.playSound(soundToPlay);
+            }
+        }
+
+        KeyboardHandler.hotkeysNeedLoad = true;
+
+        ClientHandlerLockPerspective.setLockedPerspective(-1);
+        ClientHandlerBlackAndWhiteShader.enableBlackAndWhiteShader(false);
     }
 
     @SubscribeEvent
@@ -84,35 +105,20 @@ public class RegisterHandler {
 
     @SubscribeEvent
     public void onItemsRegister(RegistryEvent.Register<Item> event) {
-        event.getRegistry().register(Mappet.npcTool = new ItemNpcTool()
-                .setRegistryName(new ResourceLocation(Mappet.MOD_ID, "npc_tool"))
-                .setUnlocalizedName(Mappet.MOD_ID + ".npc_tool"));
+        event.getRegistry().register(Mappet.npcTool = new ItemNpcTool().setRegistryName(new ResourceLocation(Mappet.MOD_ID, "npc_tool")).setUnlocalizedName(Mappet.MOD_ID + ".npc_tool"));
 
-        event.getRegistry().register(new ItemBlock(Mappet.emitterBlock)
-                .setRegistryName(new ResourceLocation(Mappet.MOD_ID, "emitter"))
-                .setUnlocalizedName(Mappet.MOD_ID + ".emitter"));
+        event.getRegistry().register(new ItemBlock(Mappet.emitterBlock).setRegistryName(new ResourceLocation(Mappet.MOD_ID, "emitter")).setUnlocalizedName(Mappet.MOD_ID + ".emitter"));
 
-        event.getRegistry().register(new ItemBlock(Mappet.triggerBlock)
-                .setRegistryName(new ResourceLocation(Mappet.MOD_ID, "trigger"))
-                .setUnlocalizedName(Mappet.MOD_ID + ".trigger"));
+        event.getRegistry().register(new ItemBlock(Mappet.triggerBlock).setRegistryName(new ResourceLocation(Mappet.MOD_ID, "trigger")).setUnlocalizedName(Mappet.MOD_ID + ".trigger"));
 
-        event.getRegistry().register(new ItemBlock(Mappet.regionBlock)
-                .setRegistryName(new ResourceLocation(Mappet.MOD_ID, "region"))
-                .setUnlocalizedName(Mappet.MOD_ID + ".region"));
+        event.getRegistry().register(new ItemBlock(Mappet.regionBlock).setRegistryName(new ResourceLocation(Mappet.MOD_ID, "region")).setUnlocalizedName(Mappet.MOD_ID + ".region"));
 
-        event.getRegistry().register(new ItemBlock(Mappet.conditionModelBlock)
-                .setRegistryName(new ResourceLocation(Mappet.MOD_ID, "condition_model"))
-                .setUnlocalizedName(Mappet.MOD_ID + ".condition_model"));
+        event.getRegistry().register(new ItemBlock(Mappet.conditionModelBlock).setRegistryName(new ResourceLocation(Mappet.MOD_ID, "condition_model")).setUnlocalizedName(Mappet.MOD_ID + ".condition_model"));
     }
 
     @SubscribeEvent
     public void onEntityRegister(RegistryEvent.Register<EntityEntry> event) {
-        event.getRegistry().register(EntityEntryBuilder.create()
-                .entity(EntityNpc.class)
-                .name(Mappet.MOD_ID + ".npc")
-                .id(new ResourceLocation(Mappet.MOD_ID, "npc"), 0)
-                .tracker(EntityNpc.RENDER_DISTANCE, 3, false)
-                .build());
+        event.getRegistry().register(EntityEntryBuilder.create().entity(EntityNpc.class).name(Mappet.MOD_ID + ".npc").id(new ResourceLocation(Mappet.MOD_ID, "npc"), 0).tracker(EntityNpc.RENDER_DISTANCE, 3, false).build());
 
         GameRegistry.registerTileEntity(TileEmitter.class, Mappet.MOD_ID + ":emitter");
         GameRegistry.registerTileEntity(TileTrigger.class, Mappet.MOD_ID + ":trigger");

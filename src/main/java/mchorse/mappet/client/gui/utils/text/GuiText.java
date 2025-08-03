@@ -118,7 +118,7 @@ public class GuiText extends GuiElement implements ITextColoring
         {
             if (this.text == null)
             {
-                List<String> text = this.font.listFormattedStringToWidth(this.temp.get(), this.area.w - this.paddingH * 2);
+                List<String> text = this.font.listFormattedStringToWidth(this.temp.get().replace("\\n", "\n"), this.area.w - this.paddingH * 2);
 
                 this.lines = text.size();
                 this.getParentContainer().resize();

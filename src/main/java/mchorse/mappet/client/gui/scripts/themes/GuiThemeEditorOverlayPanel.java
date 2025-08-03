@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.scripts.themes;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.client.gui.scripts.GuiTextEditor;
+import mchorse.mappet.client.gui.scripts.GuiCodeEditor;
 import mchorse.mappet.client.gui.scripts.style.SyntaxStyle;
 import mchorse.mappet.client.gui.utils.overlays.GuiEditorOverlayPanel;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
@@ -62,7 +62,7 @@ public class GuiThemeEditorOverlayPanel extends GuiEditorOverlayPanel<GuiThemeEd
     public GuiColorElement lineNumbers;
     public GuiColorElement background;
 
-    public GuiTextEditor preview;
+    public GuiCodeEditor preview;
 
     public GuiThemeEditorOverlayPanel(Minecraft mc) {
         super(mc, IKey.lang("mappet.gui.syntax_theme.main"));
@@ -144,7 +144,7 @@ public class GuiThemeEditorOverlayPanel extends GuiEditorOverlayPanel<GuiThemeEd
         background = new GuiColorElement(mc, (c) -> item.style.background = c);
         background.tooltip(IKey.lang("mappet.gui.syntax_theme.background_colors.background"));
 
-        preview = new GuiTextEditor(mc, null);
+        preview = new GuiCodeEditor(mc, null);
 
         editor.add(Elements.label(IKey.lang("mappet.gui.syntax_theme.title")), title, shadow);
         editor.add(Elements.label(IKey.lang("mappet.gui.syntax_theme.colors.title")).marginTop(12));

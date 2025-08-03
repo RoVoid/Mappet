@@ -2,7 +2,7 @@ package mchorse.mappet.client.gui.scripts.utils.documentation;
 
 import joptsimple.internal.Strings;
 import mchorse.mappet.Mappet;
-import mchorse.mappet.client.gui.scripts.GuiTextEditor;
+import mchorse.mappet.client.gui.scripts.GuiCodeEditor;
 import mchorse.mappet.client.gui.utils.text.GuiText;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -75,7 +75,7 @@ public class DocEntry {
             if (parsing) {
                 code.append("\n\n").append(line);
                 if (line.trim().endsWith("}</pre>")) {
-                    GuiTextEditor editor = new GuiTextEditor(mc, null);
+                    GuiCodeEditor editor = new GuiCodeEditor(mc, null);
                     String text = parseCode(code.toString()).replaceAll("§", "\\\\u00A7");
 
                     editor.setText(text);

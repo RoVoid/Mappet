@@ -5887,6 +5887,16 @@
           "docs": "Logging a message with \u003cb\u003eWARNING\u003c/b\u003e level."
         }
       ],
+      "warn": [
+        {
+          "parameters": [
+            {
+              "name": "message",
+              "type": "java.lang.String"
+            }
+          ]
+        }
+      ],
       "info": [
         {
           "parameters": [

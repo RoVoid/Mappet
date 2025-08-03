@@ -13,8 +13,7 @@ import mchorse.mappet.api.scripts.user.IScriptFactory;
  *    logger.info("Hello world!");
  * }</pre>
  */
-public interface IMappetLogger
-{
+public interface IMappetLogger {
     /**
      * Logging a message with <b>ERROR</b> level.
      */
@@ -24,6 +23,10 @@ public interface IMappetLogger
      * Logging a message with <b>WARNING</b> level.
      */
     void warning(String message);
+
+    default void warn(String message) {
+        warning(message);
+    }
 
     /**
      * Logging a message with <b>INFO</b> level.

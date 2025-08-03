@@ -22,7 +22,7 @@ import java.util.List;
 
 public class GuiRepl extends GuiElement
 {
-    public GuiTextEditor repl;
+    public GuiCodeEditor repl;
     public GuiScrollElement log;
 
     private List<String> history = new ArrayList<String>();
@@ -32,7 +32,7 @@ public class GuiRepl extends GuiElement
     {
         super(mc);
 
-        this.repl = new GuiTextEditor(mc, null);
+        this.repl = new GuiCodeEditor(mc, null);
         this.repl.background().flex().relative(this).y(1F).w(1F).h(100).anchorY(1F);
         this.repl.context(() -> GuiScriptPanel.createScriptContextMenu(this.mc, this.repl));
 

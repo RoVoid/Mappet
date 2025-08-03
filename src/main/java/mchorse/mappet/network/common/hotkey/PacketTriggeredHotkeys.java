@@ -1,4 +1,4 @@
-package mchorse.mappet.network.common.events;
+package mchorse.mappet.network.common.hotkey;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.mappet.api.hotkeys.HotkeyState;

@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.scripts.utils;
 
-import mchorse.mappet.client.gui.scripts.GuiTextEditor;
+import mchorse.mappet.client.gui.scripts.GuiCodeEditor;
 import mchorse.mappet.client.gui.utils.overlays.GuiOverlayPanel;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
@@ -16,10 +16,10 @@ public class GuiItemStackOverlayPanel extends GuiOverlayPanel
     public GuiSlotElement pick;
     public GuiButtonElement insert;
 
-    private GuiTextEditor editor;
+    private GuiCodeEditor editor;
     private ItemStack stack;
 
-    public GuiItemStackOverlayPanel(Minecraft mc, IKey title, GuiTextEditor editor, ItemStack stack)
+    public GuiItemStackOverlayPanel(Minecraft mc, IKey title, GuiCodeEditor editor, ItemStack stack)
     {
         super(mc, title);
 

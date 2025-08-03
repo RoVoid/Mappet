@@ -4,10 +4,10 @@ import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.Script;
 import mchorse.mappet.api.utils.ContentType;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
+import mchorse.mappet.client.gui.scripts.GuiCodeEditor;
 import mchorse.mappet.client.gui.scripts.GuiDocumentationOverlayPanel;
 import mchorse.mappet.client.gui.scripts.GuiLibrariesOverlayPanel;
 import mchorse.mappet.client.gui.scripts.GuiRepl;
-import mchorse.mappet.client.gui.scripts.GuiTextEditor;
 import mchorse.mappet.client.gui.scripts.style.SyntaxStyle;
 import mchorse.mappet.client.gui.scripts.utils.GuiItemStackOverlayPanel;
 import mchorse.mappet.client.gui.scripts.utils.GuiMorphOverlayPanel;
@@ -59,7 +59,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
     public GuiIconElement libraries;
     public GuiIconElement run;
     public GuiIconElement beautifier;
-    public GuiTextEditor code;
+    public GuiCodeEditor code;
     public GuiRepl repl;
     public GuiToggleElement unique;
     public GuiToggleElement globalLibrary;
@@ -71,7 +71,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
     /* Context menu stuff */
 
-    public static GuiContextMenu createScriptContextMenu(Minecraft mc, GuiTextEditor editor) {
+    public static GuiContextMenu createScriptContextMenu(Minecraft mc, GuiCodeEditor editor) {
         /* These GUI QoL features are getting out of hand... */
         GuiSimpleContextMenu menu = new GuiSimpleContextMenu(mc)
                 .action(Icons.BLOCK, IKey.lang("mappet.gui.scripts.context.paste_block_pos"), () -> pasteBlockPosition(editor))
@@ -90,7 +90,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         return menu;
     }
 
-    private static void setupDocumentation(GuiTextEditor editor, GuiSimpleContextMenu menu) {
+    private static void setupDocumentation(GuiCodeEditor editor, GuiSimpleContextMenu menu) {
         String text = editor.getSelectedText().replaceAll("[^\\w_]+", "");
         List<DocMethod> searched = GuiDocumentationOverlayPanel.searchMethod(text);
         if (searched.isEmpty()) return;
@@ -100,7 +100,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         }
     }
 
-    private static void openMorphPicker(GuiTextEditor editor) {
+    private static void openMorphPicker(GuiCodeEditor editor) {
         AbstractMorph morph = null;
         NBTTagCompound tag = readFromSelected(editor);
 
@@ -111,7 +111,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         GuiOverlay.addOverlay(GuiBase.getCurrent(), new GuiMorphOverlayPanel(Minecraft.getMinecraft(), IKey.lang("mappet.gui.scripts.overlay.title_morph"), editor, morph), 240, 54);
     }
 
-    private static void openItemPicker(GuiTextEditor editor) {
+    private static void openItemPicker(GuiCodeEditor editor) {
         ItemStack stack = ItemStack.EMPTY;
         NBTTagCompound tag = readFromSelected(editor);
 
@@ -122,7 +122,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         GuiOverlay.addOverlay(GuiBase.getCurrent(), new GuiItemStackOverlayPanel(Minecraft.getMinecraft(), IKey.lang("mappet.gui.scripts.overlay.title_item"), editor, stack), 240, 54);
     }
 
-    private static NBTTagCompound readFromSelected(GuiTextEditor editor) {
+    private static NBTTagCompound readFromSelected(GuiCodeEditor editor) {
         if (editor.isSelected()) {
             NBTTagCompound tag = null;
 
@@ -138,21 +138,21 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         return null;
     }
 
-    private static void pastePlayerPosition(GuiTextEditor editor) {
+    private static void pastePlayerPosition(GuiCodeEditor editor) {
         EntityPlayer player = Minecraft.getMinecraft().player;
         DecimalFormat format = GuiTrackpadElement.FORMAT;
 
         editor.pasteText(format.format(player.posX) + ", " + format.format(player.posY) + ", " + format.format(player.posZ));
     }
 
-    private static void pastePlayerRotation(GuiTextEditor editor) {
+    private static void pastePlayerRotation(GuiCodeEditor editor) {
         EntityPlayer player = Minecraft.getMinecraft().player;
         DecimalFormat format = GuiTrackpadElement.FORMAT;
 
         editor.pasteText(format.format(player.rotationPitch) + ",  " + format.format(player.rotationYaw) + ", " + format.format(player.getRotationYawHead()));
     }
 
-    private static void pasteBlockPosition(GuiTextEditor editor) {
+    private static void pasteBlockPosition(GuiCodeEditor editor) {
         EntityPlayer player = Minecraft.getMinecraft().player;
         DecimalFormat format = GuiTrackpadElement.FORMAT;
         RayTraceResult result = RayTracing.rayTrace(player, 128, 0F);
@@ -164,13 +164,13 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         }
     }
 
-    private static void openSoundPicker(GuiTextEditor editor) {
+    private static void openSoundPicker(GuiCodeEditor editor) {
         GuiSoundOverlayPanel panel = new GuiScriptSoundOverlayPanel(Minecraft.getMinecraft(), editor);
 
         GuiOverlay.addOverlay(GuiBase.getCurrent(), panel, 0.5F, 0.9F);
     }
 
-    private static void openColorPicker(GuiTextEditor editor, boolean isArgb) {
+    private static void openColorPicker(GuiCodeEditor editor, boolean isArgb) {
         ValueInt valueInt = isArgb ? new ValueInt("color_picker", 0).colorAlpha() : new ValueInt("color_picker", 0).color();
         GuiOverlayPanel panel = new GuiOverlayPanel(Minecraft.getMinecraft(), IKey.lang("mappet.gui.scripts.context.paste_color" + (isArgb ? "A" : "") + "RGB")) {
 
@@ -215,7 +215,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
         this.iconBar.add(this.toggleRepl, this.docs, this.libraries, this.run, this.beautifier);
 
-        this.code = new GuiTextEditor(mc, null);
+        this.code = new GuiCodeEditor(mc, null);
         this.code.withHints();
         this.code.background().context(() -> createScriptContextMenu(this.mc, this.code));
         this.code.keys().ignoreFocus().register(IKey.lang("mappet.gui.scripts.keys.word_wrap"), Keyboard.KEY_P, this::toggleWordWrap)
@@ -264,7 +264,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         player.sendChatMessage("/mp script exec " + player.getUniqueID() + " " + this.data.getId());
     }
 
-    private void beautifierScript(GuiTextEditor code) {
+    private void beautifierScript(GuiCodeEditor code) {
         String formattedCode = "";
 
         try {

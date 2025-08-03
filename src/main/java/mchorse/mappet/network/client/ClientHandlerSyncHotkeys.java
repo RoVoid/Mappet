@@ -1,8 +1,8 @@
-package mchorse.mappet.network.client.events;
+package mchorse.mappet.network.client;
 
 import mchorse.mappet.api.hotkeys.Hotkey;
 import mchorse.mappet.client.KeyboardHandler;
-import mchorse.mappet.network.common.events.PacketSyncHotkeys;
+import mchorse.mappet.network.common.hotkey.PacketSyncHotkeys;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;
@@ -18,7 +18,5 @@ public class ClientHandlerSyncHotkeys extends ClientMessageHandler<PacketSyncHot
         for (Hotkey hotkey : message.hotkeys) {
             KeyboardHandler.hotkeys.put(hotkey.name, hotkey);
         }
-
-        KeyboardHandler.clientPlayerJournal = !message.journalTrigger;
     }
 }

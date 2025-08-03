@@ -51,11 +51,27 @@ public class MappetLogger extends Logger implements IMappetLogger {
 
             addHandler(handler);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
 
         setUseParentHandlers(false);
         setLevel(Level.ALL);
+    }
+
+    public void info(String... message) {
+        info(String.join(" ", message));
+    }
+
+    public void warning(String... message) {
+        warning(String.join(" ", message));
+    }
+
+    public void error(String... message) {
+        error(String.join(" ", message));
+    }
+
+    public void debug(String... message) {
+        debug(String.join(" ", message));
     }
 
     @Override
