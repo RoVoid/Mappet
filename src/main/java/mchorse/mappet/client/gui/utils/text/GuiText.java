@@ -8,8 +8,7 @@ import net.minecraft.client.Minecraft;
 
 import java.util.List;
 
-public class GuiText extends GuiElement implements ITextColoring
-{
+public class GuiText extends GuiElement implements ITextColoring {
     private IKey temp = IKey.EMPTY;
     private List<String> text;
     private int lineHeight = 12;
@@ -22,136 +21,122 @@ public class GuiText extends GuiElement implements ITextColoring
 
     private int lines;
 
-    public GuiText(Minecraft mc)
-    {
+    public GuiText(Minecraft mc) {
         super(mc);
-
-        this.flex().h(() -> (float) this.height());
+        flex().h(() -> (float) height());
     }
 
-    private int height()
-    {
-        int height = Math.max(this.lines, 1) * this.lineHeight - (this.lineHeight - this.font.FONT_HEIGHT);
-
-        return height + this.paddingV * 2;
+    private int height() {
+        int height = Math.max(lines, 1) * lineHeight - (lineHeight - font.FONT_HEIGHT);
+        return height + paddingV * 2;
     }
 
-    public IKey getText()
-    {
-        return this.temp;
+    public IKey getText() {
+        return temp;
     }
 
-    public GuiText text(String text)
-    {
-        return this.text(IKey.str(text));
+    public GuiText text(String text) {
+        return text(IKey.str(text));
     }
 
-    public GuiText text(IKey text)
-    {
-        this.temp = text;
+    public GuiText text(IKey text) {
         this.text = null;
-        this.lines = 0;
-
+        temp = text;
+        lines = 0;
         return this;
     }
 
-    public GuiText lineHeight(int lineHeight)
-    {
+    public GuiText lineHeight(int lineHeight) {
         this.lineHeight = lineHeight;
-
         return this;
     }
 
-    public GuiText color(int color, boolean shadow)
-    {
-        this.color = this.hoverColor = color;
+    public GuiText color(int color, boolean shadow) {
+        this.color = hoverColor = color;
         this.shadow = shadow;
+        return this;
+    }
+
+    public void hoverColor(int color) {
+        hoverColor = color;
+    }
+
+    public GuiText padding(int padding) {
+        return padding(padding, padding);
+    }
+
+    public GuiText padding(int horizontal, int vertical) {
+        paddingH = horizontal;
+        paddingV = vertical;
 
         return this;
     }
 
-    public GuiText hoverColor(int color)
-    {
-        this.hoverColor = color;
-
-        return this;
-    }
-
-    public GuiText padding(int padding)
-    {
-        return this.padding(padding, padding);
-    }
-
-    public GuiText padding(int horizontal, int vertical)
-    {
-        this.paddingH = horizontal;
-        this.paddingV = vertical;
-
-        return this;
-    }
-
-    public GuiText anchorX(float anchor)
-    {
-        this.anchorX = anchor;
+    public GuiText anchorX(float anchor) {
+        anchorX = anchor;
 
         return this;
     }
 
     @Override
-    public void setColor(int color, boolean shadow)
-    {
-        this.color(color, shadow);
+    public void setColor(int color, boolean shadow) {
+        color(color, shadow);
     }
 
     @Override
-    public void resize()
-    {
+    public void resize() {
         super.resize();
-
-        this.text = null;
+        text = null;
     }
 
     @Override
-    public void draw(GuiContext context)
-    {
-        if (this.area.w > 0)
-        {
-            if (this.text == null)
-            {
-                List<String> text = this.font.listFormattedStringToWidth(this.temp.get().replace("\\n", "\n"), this.area.w - this.paddingH * 2);
+    public void draw(GuiContext context) {
+        if (area.w <= 0) return;
 
-                this.lines = text.size();
-                this.getParentContainer().resize();
+        int offset = font.getCharWidth('@');
+        if (text == null) {
+            List<String> text = font.listFormattedStringToWidth(temp
+                    .get()
+                    .replace("\\n", "\n"), area.w - paddingH * 2 - offset);
 
-                this.text = text;
-                this.lines = text.size();
-            }
+            lines = text.size();
+            getParentContainer().resize();
 
-            int y = this.paddingV;
-            int color = this.area.isInside(context) ? this.hoverColor : this.color;
+            this.text = text;
+        }
 
-            for (String line : this.text)
-            {
-                int x = this.area.x + this.paddingH;
+        int y = paddingV;
+        int color = area.isInside(context) ? hoverColor : this.color;
 
-                if (this.anchorX != 0)
-                {
-                    x = x + (int) (((this.area.w - this.paddingH * 2) - (this.font.getStringWidth(line))) * this.anchorX);
-                }
+        String prev = null;
+        for (String line : text) {
+            int x = area.x + paddingH;
+            if (needOffset(prev)) x += offset;
 
-                if (this.shadow)
-                {
-                    this.font.drawStringWithShadow(line, x, this.area.y + y, color);
-                }
-                else
-                {
-                    this.font.drawString(line, x, this.area.y + y, color);
-                }
+            if (anchorX != 0) x += (int) ((area.w - paddingH * 2 - font.getStringWidth(line)) * anchorX);
 
-                y += this.lineHeight;
-            }
+            if (shadow) font.drawStringWithShadow(line, x, area.y + y, color);
+            else font.drawString(line, x, area.y + y, color);
+
+            y += lineHeight;
+
+            prev = line;
         }
 
         super.draw(context);
+    }
+
+    private boolean needOffset(String s) {
+        if (s == null || s.isEmpty()) return false;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (Character.isWhitespace(c)) continue;
+            if (c == '§' && i + 1 < s.length()) {
+                i++;
+                continue;
+            }
+            return true;
+        }
+        return false;
     }
 }

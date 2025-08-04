@@ -1,0 +1,469 @@
+{
+  "block_break": {
+    "name": "Block: broken by a player",
+    "description": "Happens when a player breaks a block in the world",
+    "cancelable": true,
+    "variables": {
+      "subject": [
+        "IScriptPlayer",
+        "the player who broke the block"
+      ],
+      "block": [
+        "string",
+        "the ID of the block that was broken §7(like minecraft:stone)§r"
+      ],
+      "meta": [
+        "int",
+        "the block's metadata value from §60§r to §615§r"
+      ],
+      "position": [
+        "IScriptVector",
+        "where the block was in the world §7(x, y, z)§r"
+      ]
+    }
+  },
+  "block_click": {
+    "name": "Block: clicked by a player",
+    "description": "Happens when a player left-clicks §7(with left mouse button)§r a block in the world\n\n§lImportant§r: this trigger only works in survival mode",
+    "cancelable": true,
+    "variables": {
+      "subject": [
+        "IScriptPlayer",
+        "the player who clicked the block"
+      ],
+      "position": [
+        "IScriptVector",
+        "where the clicked block is in the world §7(x, y, z)§r"
+      ],
+      "hand": [
+        "string",
+        "the hand used to click the block §7(main or off)§r"
+      ]
+    }
+  },
+  "block_interact": {
+    "name": "Block: interacted by a player",
+    "description": "Happens when a player interacts with a block §7(by right clicking it)§r in the world",
+    "cancelable": true,
+    "variables": {
+      "subject": [
+        "IScriptPlayer",
+        "the player who interacted with the block"
+      ],
+      "block": [
+        "string",
+        "the ID of the block that was interacted with §7(like minecraft:stone)§r"
+      ],
+      "meta": [
+        "int",
+        "the block's metadata value from §60§r to §615§r"
+      ],
+      "position": [
+        "IScriptVector",
+        "where the interacted block is in the world §7(x, y, z)§r"
+      ],
+      "hand": [
+        "string",
+        "the hand used to interact with the block §7(main or off)§r"
+      ]
+    }
+  },
+  "block_place": {
+    "name": "Block: placed by a player",
+    "description": "Happens when a player places a block in the world",
+    "cancelable": true,
+    "variables": {
+      "subject": [
+        "IScriptPlayer",
+        "the player who placed the block"
+      ],
+      "block": [
+        "string",
+        "the ID of the block that was placed §7(like minecraft:stone)§r"
+      ],
+      "meta": [
+        "int",
+        "the block's metadata value from §60§r to §615§r"
+      ],
+      "position": [
+        "IScriptVector",
+        "where the block was placed in the world §7(x, y, z)§r"
+      ]
+    }
+  },
+  "entity_attacked": {
+    "name": "Entity: attacked",
+    "description": "Happens when an entity is attacked by another entity",
+    "cancelable": true,
+    "variables": {
+      "subject": [
+        "IScriptEntity",
+        "the entity that was attacked"
+      ],
+      "object": [
+        "IScriptEntity",
+        "the attacker who caused the damage"
+      ],
+      "damage": [
+        "double",
+        "how much HP was taken from the entity"
+      ],
+      "type": [
+        "string",
+        "the type of received damage"
+      ],
+      "unblockable": [
+        "boolean",
+        "whether the damage bypass protection"
+      ],
+      "source": [
+        "@Nullable IScriptEntity",
+        "the entity that is the source of the damage"
+      ]
+    }
+  },
+  "entity_damaged": {
+    "name": "Entity: hurt",
+    "description": "Happens when an entity takes damage",
+    "cancelable": true,
+    "variables": {
+      "subject": [
+        "IScriptEntity",
+        "the entity that got hurt"
+      ],
+      "object": [
+        "IScriptEntity",
+        "the attacker who caused the damage"
+      ],
+      "damage": [
+        "double",
+        "how much HP was taken from the entity"
+      ],
+      "type": [
+        "string",
+        "the type of received damage"
+      ],
+      "unblockable": [
+        "boolean",
+        "whether the damage bypass protection"
+      ],
+      "source": [
+        "@Nullable IScriptEntity",
+        "the entity that is the source of the damage"
+      ]
+    }
+  },
+  "entity_death": {
+    "name": "Entity: death",
+    "description": "Happens when an entity §7(ignore players)§r dies",
+    "cancelable": false,
+    "variables": {
+      "subject": [
+        "IScriptEntity",
+        "the entity that died"
+      ],
+      "object": [
+        "IScriptEntity",
+        "who killed it"
+      ],
+      "type": [
+        "string",
+        "what kind of damage killed it"
+      ],
+      "source": [
+        "@Nullable IScriptEntity",
+        "the entity that is the source of the death"
+      ]
+    }
+  },
+  "living_equipment_change": {
+    "name": "Entity: equipment change",
+    "description": "Happens when a living entity's equipment changes",
+    "cancelable": false,
+    "variables": {
+      "item": [
+        "IScriptItem",
+        "the current item"
+      ],
+      "previous": [
+        "IScriptItem",
+        "the previous item"
+      ],
+      "slot": [
+        "int",
+        "the slot where the item was placed or removed"
+      ]
+    }
+  },
+  "living_knockback": {
+    "name": "Entity: knockback",
+    "description": "Happens when a mob or player gets knocked back",
+    "cancelable": true,
+    "variables": {
+      "object": [
+        "IScriptEntity",
+        "who attacked"
+      ],
+      "strength": [
+        "double",
+        "the strength of the knockback"
+      ],
+      "ratioX": [
+        "double",
+        "the knockback ratio on the X axis"
+      ],
+      "ratioZ": [
+        "double",
+        "the knockback ratio on the Z axis"
+      ]
+    }
+  },
+  "player_chat": {
+    "name": "Player: chat message",
+    "description": "Happens when a player sends a chat message\n\nCommands starting with §7/§r don't trigger this event",
+    "cancelable": false,
+    "variables": {
+      "message": [
+        "string",
+        "the message text sent by the player"
+      ]
+    }
+  },
+  "player_close_container": {
+    "name": "Player: closed container",
+    "description": "Happens when a player closes a container screen like chest, ender chest, furnace, crafting table, etc",
+    "cancelable": false,
+    "variables": {
+      "inventory": [
+        "@Nullable IScriptInventory",
+        "instance of the closed inventory §7(useful only in scripts)§r"
+      ],
+      "position": [
+        "@Nullable IScriptVector",
+        "where the block is in the world §7(only if it was a block)§r"
+      ]
+    }
+  },
+  "player_death": {
+    "name": "Player: death",
+    "description": "Happens when a player dies\n\nProTip: if you cancel death, give the player some health or player will get stuck in a death loop",
+    "cancelable": true,
+    "variables": {
+      "subject": [
+        "IScriptPlayer",
+        "the player who died"
+      ],
+      "object": [
+        "IScriptEntity",
+        "who killed the player"
+      ],
+      "type": [
+        "string",
+        "the type of damage received"
+      ],
+      "source": [
+        "@Nullable IScriptEntity",
+        "the entity that caused the death"
+      ]
+    }
+  },
+  "player_entity_interact": {
+    "name": "Player: interact with an entity",
+    "description": "Triggered when a player right-clicks an entity\n\nMay trigger twice, once per hand",
+    "cancelable": true,
+    "variables": {
+      "object": [
+        "IScriptEntity",
+        "the entity being interacted with"
+      ],
+      "hand": [
+        "string",
+        "the hand used §7(main or off)§r"
+      ]
+    }
+  },
+  "player_entity_leash": {
+    "name": "Player: leash an entity",
+    "description": "Happens when a player leashes an entity",
+    "cancelable": true,
+    "variables": {
+      "hand": [
+        "string",
+        "the hand used to leash the entity §7(main or off)§r"
+      ]
+    }
+  },
+  "player_item_interact": {
+    "name": "Player: interact with an item",
+    "description": "Happens when a player right-clicks in the air holding an item",
+    "cancelable": true,
+    "variables": {
+      "position": [
+        "IScriptVector",
+        "the position where the interaction happened §7(x, y, z)§r"
+      ],
+      "hand": [
+        "string",
+        "the hand used to interact with the item §7(main or off)§r"
+      ]
+    }
+  },
+  "player_item_pickup": {
+    "name": "Player: picked up an item",
+    "description": "Happens when a player picks up an item in the world",
+    "cancelable": true,
+    "variables": {
+      "item": [
+        "IScriptItem",
+        "item that the player the picked §7(useful only in scripts)§r"
+      ],
+      "entityItem": [
+        "IScriptEntityItem",
+        "entity item that the player the picked §7(useful only in scripts)§r"
+      ]
+    }
+  },
+  "player_item_toss": {
+    "name": "Player: toss an item",
+    "description": "Happens when a player tosses an item in the world",
+    "cancelable": true,
+    "variables": {
+      "entityItem": [
+        "IScriptEntityItem",
+        "entity item that the player tossed §7(useful only in scripts)§r"
+      ]
+    }
+  },
+  "player_jump": {
+    "name": "Player: jump",
+    "description": "Happens when a player jumps",
+    "cancelable": false,
+    "variables": {}
+  },
+  "player_login": {
+    "name": "Player: logged in",
+    "description": "Happens when a player joins the server",
+    "cancelable": false,
+    "variables": {}
+  },
+  "player_logout": {
+    "name": "Player: logged out",
+    "description": "Happens when a player leaves the server",
+    "cancelable": false,
+    "variables": {}
+  },
+  "player_lmb": {
+    "name": "Player: left click (air)",
+    "description": "Happens when a player left-clicks the air without hitting blocks, entities, or items",
+    "cancelable": false,
+    "variables": {}
+  },
+  "player_move": {
+    "name": "Player: move",
+    "description": "Happens when a player moves",
+    "cancelable": false,
+    "variables": {
+      "distance": [
+        "double",
+        "the total distance the player has walked"
+      ]
+    }
+  },
+  "player_open_container": {
+    "name": "Player: open container",
+    "description": "Happens when a player opens a container screen like chest, ender chest, furnace, crafting table, etc",
+    "cancelable": false,
+    "variables": {
+      "inventory": [
+        "@Nullable IScriptInventory",
+        "instance of the opened inventory §7(useful only in scripts)§r"
+      ],
+      "position": [
+        "@Nullable IScriptVector",
+        "where the block is in the world §7(only if it was a block)§r"
+      ]
+    }
+  },
+  "player_respawn": {
+    "name": "Player: respawn",
+    "description": "Happens when a player respawns",
+    "cancelable": false,
+    "variables": {}
+  },
+  "player_rmb": {
+    "name": "Player: right click (air)",
+    "description": "Happens when a player right-clicks the air without hitting blocks, entities, or items",
+    "cancelable": false,
+    "variables": {}
+  },
+  "player_run": {
+    "name": "Player: run",
+    "description": "Happens when a player runs",
+    "cancelable": false,
+    "variables": {}
+  },
+  "player_tick": {
+    "name": "Player: ticking",
+    "description": "Happens every player tick, about §620§r times per second\n\nProTip: use the frequency option to limit how often your script or event triggers",
+    "cancelable": false,
+    "variables": {}
+  },
+  "projectile_impact": {
+    "name": "Projectile: impact",
+    "description": "Happens when a projectile hits an entity or a block",
+    "cancelable": true,
+    "variables": {
+      "subject": [
+        "@Nullable IScriptEntity",
+        "the entity that was hit"
+      ],
+      "object": [
+        "IScriptEntity",
+        "the projectile that caused the hit"
+      ],
+      "position": [
+        "IScriptVector",
+        "where the projectile hit"
+      ],
+      "thrower": [
+        "@Nullable IScriptEntity",
+        "the entity that threw the projectile"
+      ]
+    }
+  },
+  "server_load": {
+    "name": "Server: loaded",
+    "description": "Happens right after the server starts but before the world loads",
+    "cancelable": false,
+    "variables": {}
+  },
+  "server_tick": {
+    "name": "Server: ticking",
+    "description": "Happens every server tick, about §620§r times per second\n\nProTip: use the frequency option to limit how often your script or event triggers",
+    "cancelable": false,
+    "variables": {}
+  },
+  "state_changed": {
+    "name": "Mappet: state changed",
+    "description": "Happens when a state changes",
+    "cancelable": false,
+    "variables": {
+      "subject": [
+        "@Nullable IScriptEntity",
+        "the player or NPC that changed the state §7(if not global)§r"
+      ],
+      "key": [
+        "string",
+        "the key of the changed state"
+      ],
+      "current": [
+        "string",
+        "the current value of the state"
+      ],
+      "previous": [
+        "string",
+        "the previous value of the state"
+      ]
+    }
+  }
+}

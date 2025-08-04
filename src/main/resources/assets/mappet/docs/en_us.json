@@ -5191,6 +5191,20 @@
           "docs": "Get a value for given key (might be a \u003ccode\u003enull\u003c/code\u003e)."
         }
       ],
+      "get": [
+        {
+          "parameters": [
+            {
+              "name": "key",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "type": "java.lang.Object"
+          },
+          "docs": "Get a value for given key (might be a \u003ccode\u003enull\u003c/code\u003e)."
+        }
+      ],
       "setValue": [
         {
           "parameters": [

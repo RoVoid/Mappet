@@ -90,7 +90,6 @@ public class ScriptEvent implements IScriptEvent {
     @Override
     public IScriptServer getServer() {
         if (server == null && context.server != null) server = new ScriptServer(context.server);
-
         return server;
     }
 

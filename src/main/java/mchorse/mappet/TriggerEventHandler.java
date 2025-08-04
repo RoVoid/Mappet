@@ -30,7 +30,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.CommandEvent;
@@ -158,9 +157,7 @@ public class TriggerEventHandler {
         DataContext context = new DataContext(event.getEntityLiving(), source.getTrueSource())
                 .set("damage", event.getAmount())
                 .set("type", source.getDamageType())
-                .set("unblockable", source.isUnblockable())
-                .set("target", event.getEntityLiving())
-                .set("attacker", source.getTrueSource());
+                .set("unblockable", source.isUnblockable());
         if (source.getImmediateSource() instanceof EntityLivingBase && source.getImmediateSource() != source.getTrueSource())
             context.set("source", source.getImmediateSource());
         trigger(event, Mappet.settings.entityDamaged, context);
@@ -175,9 +172,7 @@ public class TriggerEventHandler {
         DataContext context = new DataContext(event.getEntityLiving(), source.getTrueSource())
                 .set("damage", event.getAmount())
                 .set("type", source.getDamageType())
-                .set("unblockable", source.isUnblockable())
-                .set("target", event.getEntityLiving())
-                .set("attacker", source.getTrueSource());
+                .set("unblockable", source.isUnblockable());
         if (source.getImmediateSource() instanceof EntityLivingBase && source.getImmediateSource() != source.getTrueSource())
             context.set("source", source.getImmediateSource());
         trigger(event, Mappet.settings.entityAttacked, context);
@@ -187,38 +182,36 @@ public class TriggerEventHandler {
     @SideOnly(Side.CLIENT)
     public void onPlayerOpenOrCloseContainer(PlayerContainerEvent event) {
         Trigger trigger = event instanceof PlayerContainerEvent.Close ? Mappet.settings.playerCloseContainer : Mappet.settings.playerOpenContainer;
+
         if (shouldSkipTrigger(trigger)) return;
 
-        DataContext context = new DataContext(event.getEntityPlayer());
-        Container container = event.getContainer();
-        IInventory inventory = null;
+        EntityPlayer player = event.getEntityPlayer();
+        DataContext context = new DataContext(player);
 
-        if (container instanceof ContainerChest) {
-            ContainerChest chest = (ContainerChest) container;
-            if (chest.getLowerChestInventory() instanceof TileEntity) {
-                context.set("position", ((TileEntity) chest.getLowerChestInventory()).getPos());
-            }
-            inventory = chest.getLowerChestInventory();
+        IInventory inventory = resolveInventory(event.getContainer(), player);
+        if (inventory != null) {
+            if (inventory instanceof TileEntity) context.set("position", ((TileEntity) inventory).getPos());
+            context.set("inventory", new ScriptInventory(inventory));
         }
-        else if (container instanceof ContainerPlayer) {
-            inventory = event.getEntityPlayer().inventory;
-        }
-        else {
-            Field[] fields = container.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                if (field.getType().isAssignableFrom(IInventory.class)) {
-                    try {
-                        field.setAccessible(true);
-                        inventory = (IInventory) field.get(container);
-                    } catch (Exception ignored) {
-                    }
+
+        trigger(event, trigger, context);
+    }
+
+    private IInventory resolveInventory(Container container, EntityPlayer player) {
+        if (container instanceof ContainerChest) return ((ContainerChest) container).getLowerChestInventory();
+        if (container instanceof ContainerPlayer) return player.inventory;
+        for (Field field : container.getClass().getDeclaredFields()) {
+            if (IInventory.class.isAssignableFrom(field.getType())) {
+                try {
+                    field.setAccessible(true);
+                    return (IInventory) field.get(container);
+                } catch (Exception ignored) {
                 }
             }
         }
-
-        if (inventory != null) context.set("inventory", new ScriptInventory(inventory));
-        trigger(event, trigger, context);
+        return null;
     }
+
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
@@ -290,8 +283,7 @@ public class TriggerEventHandler {
         if (player.world.isRemote) return;
 
         DataContext context = new DataContext(player, event.getTarget())
-                .set("hand", event.getHand() == EnumHand.MAIN_HAND ? "main" : "off")
-                .set("target", event.getTarget());
+                .set("hand", event.getHand() == EnumHand.MAIN_HAND ? "main" : "off");
         trigger(event, Mappet.settings.playerEntityInteract, context);
     }
 
@@ -347,16 +339,17 @@ public class TriggerEventHandler {
         if (event.getEntityLiving().world.isRemote || !(event.getEntityLiving() instanceof EntityPlayer)) return;
         EntityPlayer player = (EntityPlayer) event.getEntityLiving();
         if (player.isDead || !player.isSprinting()) return;
-        trigger(event, Mappet.settings.playerRun, new DataContext(event.getEntityLiving()));
+        trigger(event, Mappet.settings.playerRun, new DataContext(player));
     }
 
     @SubscribeEvent
-    public void onPlayerMoving(LivingEvent.LivingUpdateEvent event) {
+    public void onPlayerMove(LivingEvent.LivingUpdateEvent event) {
         if (shouldSkipTrigger(Mappet.settings.playerMove)) return;
         if (event.getEntityLiving().world.isRemote || !(event.getEntityLiving() instanceof EntityPlayer)) return;
         EntityPlayer player = (EntityPlayer) event.getEntityLiving();
         if (player.isDead || player.prevDistanceWalkedModified > player.distanceWalkedModified - 0.01) return;
-        trigger(event, Mappet.settings.playerMove, new DataContext(event.getEntityLiving()));
+        DataContext context = new DataContext(player).set("distance", player.distanceWalkedModified);
+        trigger(event, Mappet.settings.playerMove, context);
     }
 
     @SubscribeEvent
@@ -367,15 +360,9 @@ public class TriggerEventHandler {
         if (shouldSkipTrigger(trigger)) return;
 
         DamageSource source = event.getSource();
-        DataContext context = new DataContext(event.getEntityLiving(), source.getTrueSource())
-                .set("type", source.getDamageType())
-                .set("target", event.getEntityLiving())
-                .set("attacker", source.getTrueSource());
+        DataContext context = new DataContext(event.getEntityLiving(), source.getTrueSource()).set("type", source.getDamageType());
         if (source.getTrueSource() != source.getImmediateSource()) {
             context.set("source", source.getImmediateSource());
-        }
-        if (source.getDamageLocation() != null) {
-            context.set("position", new BlockPos(source.getDamageLocation()));
         }
 
         trigger(event, trigger, context);
@@ -451,9 +438,7 @@ public class TriggerEventHandler {
         DataContext context = new DataContext(target, event.getAttacker())
                 .set("strength", event.getStrength())
                 .set("ratioX", event.getRatioX())
-                .set("ratioZ", event.getRatioZ())
-                .set("target", target)
-                .set("attacker", event.getAttacker());
+                .set("ratioZ", event.getRatioZ());
         trigger(event, Mappet.settings.livingKnockBack, context);
     }
 
@@ -462,10 +447,7 @@ public class TriggerEventHandler {
         if (event.getEntity().world.isRemote || shouldSkipTrigger(Mappet.settings.projectileImpact)) return;
 
         Entity hitEntity = event.getRayTraceResult().entityHit;
-        DataContext context = new DataContext(event.getEntity(), hitEntity)
-                .set("position", event.getRayTraceResult().hitVec)
-                .set("projectile", event.getEntity())
-                .set("target", hitEntity);
+        DataContext context = new DataContext(hitEntity, event.getEntity()).set("position", event.getRayTraceResult().hitVec);
 
         if (event.getEntity() instanceof EntityThrowable) {
             Entity thrower = ((EntityThrowable) event.getEntity()).getThrower();
