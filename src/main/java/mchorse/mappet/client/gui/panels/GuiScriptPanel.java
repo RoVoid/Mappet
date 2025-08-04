@@ -185,7 +185,14 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         if (isArgb) {
             picker.editAlpha();
         }
-        picker.markIgnored().flex().relative(panel.content).xy(0.5f, 0.5f).anchor(0.5f, 0.5f).wh(200, 85).bounds(panel.content, 2);
+        picker
+                .markIgnored()
+                .flex()
+                .relative(panel.content)
+                .xy(0.5f, 0.5f)
+                .anchor(0.5f, 0.5f)
+                .wh(200, 85)
+                .bounds(panel.content, 2);
 
         panel.content.add(picker);
 
@@ -200,68 +207,71 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
     public GuiScriptPanel(Minecraft mc, GuiMappetDashboard dashboard) {
         super(mc, dashboard);
 
-        this.namesList.setFileIcon(MMIcons.PROPERTIES);
+        namesList.setFileIcon(MMIcons.PROPERTIES);
 
-        this.toggleRepl = new GuiIconElement(mc, MPIcons.get(MPIcons.CONSOLE), (b) -> this.setRepl(!this.repl.isVisible()));
-        this.toggleRepl.tooltip(IKey.lang("mappet.gui.scripts.repl.title"), Direction.LEFT);
-        this.docs = new GuiIconElement(mc, Icons.HELP, this::openDocumentation);
-        this.docs.tooltip(IKey.lang("mappet.gui.scripts.documentation.title"), Direction.LEFT);
-        this.libraries = new GuiIconElement(mc, Icons.MORE, this::openLibraries);
-        this.libraries.tooltip(IKey.lang("mappet.gui.scripts.libraries.tooltip"), Direction.LEFT);
-        this.run = new GuiIconElement(mc, Icons.PLAY, this::runScript);
-        this.run.tooltip(IKey.lang("mappet.gui.scripts.run"), Direction.LEFT);
-        this.beautifier = new GuiIconElement(mc, MPIcons.get(MPIcons.BRUSH), (b) -> beautifierScript(code));
-        this.beautifier.tooltip(IKey.lang("mappet.gui.scripts.beautifier"), Direction.LEFT);
+        toggleRepl = new GuiIconElement(mc, MPIcons.get(MPIcons.CONSOLE), (b) -> setRepl(!repl.isVisible()));
+        toggleRepl.tooltip(IKey.lang("mappet.gui.scripts.repl.title"), Direction.LEFT);
+        docs = new GuiIconElement(mc, Icons.HELP, this::openDocumentation);
+        docs.tooltip(IKey.lang("mappet.gui.scripts.documentation.title"), Direction.LEFT);
+        libraries = new GuiIconElement(mc, Icons.MORE, this::openLibraries);
+        libraries.tooltip(IKey.lang("mappet.gui.scripts.libraries.tooltip"), Direction.LEFT);
+        run = new GuiIconElement(mc, Icons.PLAY, this::runScript);
+        run.tooltip(IKey.lang("mappet.gui.scripts.run"), Direction.LEFT);
+        beautifier = new GuiIconElement(mc, MPIcons.get(MPIcons.BRUSH), (b) -> beautifierScript(code));
+        beautifier.tooltip(IKey.lang("mappet.gui.scripts.beautifier"), Direction.LEFT);
 
-        this.iconBar.add(this.toggleRepl, this.docs, this.libraries, this.run, this.beautifier);
+        iconBar.add(toggleRepl, docs, libraries, run, beautifier);
 
-        this.code = new GuiCodeEditor(mc, null);
-        this.code.withHints();
-        this.code.background().context(() -> createScriptContextMenu(this.mc, this.code));
-        this.code.keys().ignoreFocus().register(IKey.lang("mappet.gui.scripts.keys.word_wrap"), Keyboard.KEY_P, this::toggleWordWrap)
+        code = new GuiCodeEditor(mc, null);
+        code.withHints();
+        code.background().context(() -> createScriptContextMenu(this.mc, code));
+        code
+                .keys()
+                .ignoreFocus()
+                .register(IKey.lang("mappet.gui.scripts.keys.word_wrap"), Keyboard.KEY_P, this::toggleWordWrap)
                 .category(GuiMappetDashboardPanel.KEYS_CATEGORY)
                 .held(Keyboard.KEY_LCONTROL);
 
-        this.repl = new GuiRepl(mc);
+        repl = new GuiRepl(mc);
 
 
-        this.unique = new GuiToggleElement(mc, IKey.lang("mappet.gui.npcs.meta.unique"), (b) -> this.data.unique = b.isToggled());
-        this.globalLibrary = new GuiToggleElement(mc, IKey.lang("mappet.gui.scripts.global_library"), (b) -> this.data.globalLibrary = b.isToggled());
+        unique = new GuiToggleElement(mc, IKey.lang("mappet.gui.npcs.meta.unique"), (b) -> data.unique = b.isToggled());
+        globalLibrary = new GuiToggleElement(mc, IKey.lang("mappet.gui.scripts.global_library"), (b) -> data.globalLibrary = b.isToggled());
 
-        GuiElement sideBarToggles = Elements.column(mc, 2, this.unique, this.globalLibrary);
-        sideBarToggles.flex().relative(this.sidebar).x(10).y(1F, -10).w(1F, -20).anchorY(1F);
+        GuiElement sideBarToggles = Elements.column(mc, 2, unique, globalLibrary);
+        sideBarToggles.flex().relative(sidebar).x(10).y(1F, -10).w(1F, -20).anchorY(1F);
 
-        this.names.flex().hTo(sideBarToggles.area, -5);
+        names.flex().hTo(sideBarToggles.area, -5);
 
-        this.code.flex().relative(this.editor).wh(1F, 1F);
-        this.repl.flex().relative(this.editor).wh(1F, 1F);
+        code.flex().relative(editor).wh(1F, 1F);
+        repl.flex().relative(editor).wh(1F, 1F);
 
-        this.editor.add(this.code);
-        this.sidebar.prepend(sideBarToggles);
-        this.add(this.repl);
+        editor.add(code);
+        sidebar.prepend(sideBarToggles);
+        add(repl);
 
-        this.fill(null);
+        fill(null);
     }
 
     private void toggleWordWrap() {
-        this.code.wrap();
-        this.code.recalculate();
-        this.code.horizontal.clamp();
-        this.code.vertical.clamp();
+        code.wrap();
+        code.recalculate();
+        code.horizontal.clamp();
+        code.vertical.clamp();
     }
 
     private void openDocumentation(GuiIconElement element) {
-        GuiDocumentationOverlayPanel panel = new GuiDocumentationOverlayPanel(this.mc);
+        GuiDocumentationOverlayPanel panel = new GuiDocumentationOverlayPanel(mc);
         GuiOverlay.addOverlay(GuiBase.getCurrent(), panel, 0.9F, 0.9F);
     }
 
     private void runScript(GuiIconElement element) {
-        EntityPlayerSP player = this.mc.player;
+        EntityPlayerSP player = mc.player;
 
-        this.save();
-        this.save = false;
+        save();
+        save = false;
 
-        player.sendChatMessage("/mp script exec " + player.getUniqueID() + " " + this.data.getId());
+        player.sendChatMessage("/mp script exec " + player.getUniqueID() + " " + data.getId());
     }
 
     private void beautifierScript(GuiCodeEditor code) {
@@ -286,7 +296,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
     }
 
     private void openLibraries(GuiIconElement element) {
-        GuiLibrariesOverlayPanel overlay = new GuiLibrariesOverlayPanel(this.mc, this.data);
+        GuiLibrariesOverlayPanel overlay = new GuiLibrariesOverlayPanel(mc, data);
 
         GuiOverlay.addOverlay(GuiBase.getCurrent(), overlay, 0.4F, 0.6F);
     }
@@ -332,53 +342,53 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
         super.fill(data, allowed);
 
-        this.editor.setVisible(data != null);
-        this.unique.setVisible(data != null && allowed);
-        this.globalLibrary.setVisible(data != null && allowed);
-        this.updateButtons();
+        editor.setVisible(data != null);
+        unique.setVisible(data != null && allowed);
+        globalLibrary.setVisible(data != null && allowed);
+        updateButtons();
 
         if (data != null) {
 //            this.code.setHighlighter(Highlighters.readHighlighter(Highlighters.highlighterFile(data.getScriptExtension())));
 
             updateStyle();
 
-            if (!this.code.getText().equals(data.code)) {
+            if (!code.getText().equals(data.code)) {
                 if (last != null) {
-                    this.lastScrolls.put(last, this.code.vertical.scroll);
+                    lastScrolls.put(last, code.vertical.scroll);
                 }
 
-                this.code.setText(data.code);
-                this.setRepl(false);
+                code.setText(data.code);
+                setRepl(false);
 
                 if (last != null) {
-                    Integer scroll = this.lastScrolls.get(data.getId());
+                    Integer scroll = lastScrolls.get(data.getId());
 
                     if (scroll != null) {
-                        this.code.vertical.scroll = scroll;
+                        code.vertical.scroll = scroll;
                     }
                 }
             }
 
-            this.unique.toggled(data.unique);
-            this.globalLibrary.toggled(data.globalLibrary);
+            unique.toggled(data.unique);
+            globalLibrary.toggled(data.globalLibrary);
         }
     }
 
     private void updateButtons() {
-        this.run.setVisible(this.data != null && this.allowed && this.code.isVisible());
-        this.libraries.setVisible(this.data != null && this.allowed && this.code.isVisible());
-        this.beautifier.setVisible(this.data != null && this.allowed && this.code.isVisible());
+        run.setVisible(data != null && allowed && code.isVisible());
+        libraries.setVisible(data != null && allowed && code.isVisible());
+        beautifier.setVisible(data != null && allowed && code.isVisible());
     }
 
     private void setRepl(boolean showRepl) {
-        this.repl.setVisible(showRepl);
-        this.code.setVisible(!showRepl);
-        this.updateButtons();
+        repl.setVisible(showRepl);
+        code.setVisible(!showRepl);
+        updateButtons();
     }
 
     @Override
     protected void preSave() {
-        this.data.code = this.code.getText();
+        data.code = code.getText();
     }
 
     @Override
@@ -390,17 +400,15 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
     public void updateStyle() {
         SyntaxStyle style = Mappet.scriptEditorSyntaxStyle.get();
-
-        if (this.code.getHighlighter().getStyle() != style) {
-            this.code.getHighlighter().setStyle(style);
-            this.code.resetHighlight();
-
-            this.repl.repl.getHighlighter().setStyle(style);
-            this.repl.repl.resetHighlight();
+        if (code.getHighlighter().getStyle() != style) {
+            code.getHighlighter().setStyle(style);
+            code.resetHighlight();
+            repl.repl.getHighlighter().setStyle(style);
+            repl.repl.resetHighlight();
         }
     }
 
     public Script getData() {
-        return this.data;
+        return data;
     }
 }

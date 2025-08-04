@@ -86,7 +86,8 @@ public class DocEntry {
                     parsing = false;
                     code = new StringBuilder();
                 }
-            } else {
+            }
+            else {
                 line = line.replaceAll("\n", "").trim();
                 line = line.replaceAll("<b>", TextFormatting.BOLD.toString());
                 line = line.replaceAll("<i>", TextFormatting.ITALIC.toString());

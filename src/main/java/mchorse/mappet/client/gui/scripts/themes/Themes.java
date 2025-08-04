@@ -11,7 +11,6 @@ import java.util.List;
 
 public class Themes {
     private static File editorThemes;
-    private static SyntaxStyle style;
 
     /**
      * Open editor themes folder
@@ -68,7 +67,6 @@ public class Themes {
      * Initiate themes system
      */
     public static void initiate() {
-        /* Just in case */
         if (editorThemes != null) return;
 
         editorThemes = new File(ClientProxy.configFolder, "themes");

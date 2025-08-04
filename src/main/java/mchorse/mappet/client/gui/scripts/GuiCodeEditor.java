@@ -29,8 +29,7 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
 
     public GuiCodeEditor(Minecraft mc, Consumer<String> callback) {
         super(mc, callback);
-
-        this.highlighter = new SyntaxHighlighter();
+        highlighter = new SyntaxHighlighter();
     }
 
     @Override
@@ -39,13 +38,13 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
     }
 
     public GuiCodeEditor disableLines() {
-        this.lines = false;
+        lines = false;
 
         return this;
     }
 
     public SyntaxHighlighter getHighlighter() {
-        return this.highlighter;
+        return highlighter;
     }
 
     public void setHighlighter(SyntaxHighlighter highlighter) {
@@ -53,7 +52,7 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
     }
 
     public void resetHighlight() {
-        for (HighlightedTextLine textLine : this.text) {
+        for (HighlightedTextLine textLine : text) {
             textLine.resetSegments();
         }
     }
@@ -63,15 +62,15 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
         super.setText(text);
 
         /* It will be null before when it will get called from parent's constructor */
-        this.resetHighlight();
+        resetHighlight();
     }
 
     @Override
     protected void recalculateSizes() {
         /* Calculate how many pixels will number lines will occupy horizontally */
-        double power = Math.ceil(Math.log10(this.text.size() + 1));
+        double power = Math.ceil(Math.log10(text.size() + 1));
 
-        this.placements = (int) power * 6;
+        placements = (int) power * 6;
 
         super.recalculateSizes();
     }
@@ -90,16 +89,16 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
     @Override
     protected void changedLineAfter(int index) {
         super.changedLineAfter(index);
-        while (index < this.text.size()) this.text.get(index++).resetSegments();
+        while (index < text.size()) text.get(index++).resetSegments();
     }
 
     /* Change input behavior */
 
     @Override
     protected String getFromChar(char typedChar) {
-        if (this.wasDoubleInsert(typedChar, ')', '(') || this.wasDoubleInsert(typedChar, ']', '[') || this.wasDoubleInsert(typedChar, '}', '{') || this.wasDoubleInsert(typedChar, '"', '"') || this.wasDoubleInsert(typedChar, '\'', '\'')) {
-            this.moveCursor(1, 0);
-            this.playSound(SoundEvents.BLOCK_STONE_PLACE);
+        if (wasDoubleInsert(typedChar, ')', '(') || wasDoubleInsert(typedChar, ']', '[') || wasDoubleInsert(typedChar, '}', '{') || wasDoubleInsert(typedChar, '"', '"') || wasDoubleInsert(typedChar, '\'', '\'')) {
+            moveCursor(1, 0);
+            playSound(SoundEvents.BLOCK_STONE_PLACE);
 
             return "";
         }
@@ -125,35 +124,35 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
             return false;
         }
 
-        String line = this.text.get(this.cursor.line).text;
+        String line = text.get(cursor.line).text;
 
-        return line.length() >= 2 && this.cursor.offset > 0 && this.cursor.offset < line.length() && line.charAt(this.cursor.offset) == target && line.charAt(this.cursor.offset - 1) == supplementary;
+        return line.length() >= 2 && cursor.offset > 0 && cursor.offset < line.length() && line.charAt(cursor.offset) == target && line.charAt(cursor.offset - 1) == supplementary;
     }
 
     @Override
     protected void keyNewLine(TextEditUndo undo) {
-        String line = this.text.get(this.cursor.line).text;
-        boolean unwrap = line.length() >= 2 && this.cursor.offset > 0 && this.cursor.offset < line.length() && line.charAt(this.cursor.offset) == '}' && line.charAt(this.cursor.offset - 1) == '{';
+        String line = text.get(cursor.line).text;
+        boolean unwrap = line.length() >= 2 && cursor.offset > 0 && cursor.offset < line.length() && line.charAt(cursor.offset) == '}' && line.charAt(cursor.offset - 1) == '{';
 
-        int indent = this.getIndent(line) + (unwrap ? 4 : 0);
+        int indent = getIndent(line) + (unwrap ? 4 : 0);
 
         super.keyNewLine(undo);
 
-        String margin = this.createIndent(indent);
+        String margin = createIndent(indent);
 
-        this.writeString(margin);
-        this.cursor.offset = indent;
+        writeString(margin);
+        cursor.offset = indent;
 
         undo.postText += margin;
 
         if (unwrap) {
             super.keyNewLine(undo);
 
-            margin = this.createIndent(indent - 4);
+            margin = createIndent(indent - 4);
 
-            this.writeString(margin);
-            this.cursor.line -= 1;
-            this.cursor.offset = indent;
+            writeString(margin);
+            cursor.line -= 1;
+            cursor.offset = indent;
 
             undo.postText += margin;
         }
@@ -161,20 +160,20 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
 
     @Override
     protected void keyBackspace(TextEditUndo undo, boolean ctrl) {
-        String line = this.text.get(this.cursor.line).text;
+        String line = text.get(cursor.line).text;
 
-        line = this.cursor.start(line);
+        line = cursor.start(line);
 
         if (!line.isEmpty() && line.trim().isEmpty()) {
             int offset = 4 - line.length() % 4;
 
-            this.startSelecting();
-            this.cursor.offset -= offset;
+            startSelecting();
+            cursor.offset -= offset;
 
-            String deleted = this.getSelectedText();
+            String deleted = getSelectedText();
 
-            this.deleteSelection();
-            this.deselect();
+            deleteSelection();
+            deselect();
 
             undo.text = deleted;
         } else {
@@ -184,20 +183,20 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
 
     @Override
     protected void keyTab(TextEditUndo undo) {
-        if (this.isSelected()) {
+        if (isSelected()) {
             boolean shift = GuiScreen.isShiftKeyDown();
-            Cursor min = this.getMin();
+            Cursor min = getMin();
 
             if (shift) {
                 min.offset = Math.max(min.offset - 4, 0);
             }
 
             Cursor temp = new Cursor();
-            List<String> splits = GuiMultiTextElement.splitNewlineString(this.getSelectedText());
+            List<String> splits = GuiMultiTextElement.splitNewlineString(getSelectedText());
 
             for (int i = 0; i < splits.size(); i++) {
                 if (shift) {
-                    int indent = this.getIndent(splits.get(i));
+                    int indent = getIndent(splits.get(i));
 
                     splits.set(i, splits.get(i).substring(Math.min(indent, 4)));
                 } else {
@@ -208,9 +207,9 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
             String result = String.join("\n", splits);
 
             temp.copy(min);
-            this.deleteSelection();
-            this.writeString(result);
-            this.getMin().set(min.line, splits.get(splits.size() - 1).length());
+            deleteSelection();
+            writeString(result);
+            getMin().set(min.line, splits.get(splits.size() - 1).length());
             min.copy(temp);
 
             if (!shift) {
@@ -224,8 +223,8 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
     }
 
     public int getIndent(int i) {
-        if (this.hasLine(i)) {
-            return this.getIndent(this.text.get(i).text);
+        if (hasLine(i)) {
+            return getIndent(text.get(i).text);
         }
 
         return 0;
@@ -260,24 +259,24 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
     @Override
     protected void drawTextLine(String line, int i, int j, int nx, int ny) {
         /* Cache line number to be later rendered in drawForeground() */
-        if (this.lines && j == 0) {
+        if (lines && j == 0) {
             String label = String.valueOf(i + 1);
 
-            int x = this.area.x + 5 + this.placements - this.font.getStringWidth(label);
+            int x = area.x + 5 + placements - font.getStringWidth(label);
 
-            if (this.lineNumber >= this.numbers.size()) {
-                this.numbers.add(new TextLineNumber());
+            if (lineNumber >= numbers.size()) {
+                numbers.add(new TextLineNumber());
             }
 
-            this.numbers.get(this.lineNumber).set(label, x, ny);
-            this.lineNumber += 1;
+            numbers.get(lineNumber).set(label, x, ny);
+            lineNumber += 1;
         }
 
         /* Draw  */
-        HighlightedTextLine textLine = this.text.get(i);
+        HighlightedTextLine textLine = text.get(i);
         if (textLine.segments == null) {
             List<TextSegment> lastSegments = null;
-            if (i > 0 && this.text.get(i - 1) != null) lastSegments = this.text.get(i - 1).segments;
+            if (i > 0 && text.get(i - 1) != null) lastSegments = text.get(i - 1).segments;
 
             TextSegment lastSegment = null;
             if (lastSegments != null && !lastSegments.isEmpty())
@@ -285,7 +284,7 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
 
             textLine.setSegments(highlighter.parse(font, textLine.text, lastSegment));
 
-            if (textLine.wrappedLines != null) textLine.calculateWrappedSegments(this.font);
+            if (textLine.wrappedLines != null) textLine.calculateWrappedSegments(font);
         }
 
         List<TextSegment> segments = textLine.segments;
@@ -296,7 +295,7 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
 
         if (segments != null) {
             for (TextSegment segment : segments) {
-                this.font.drawString(segment.text, nx, ny, segment.color, this.highlighter.getStyle().shadow);
+                font.drawString(segment.text, nx, ny, segment.color, highlighter.getStyle().shadow);
 
                 nx += segment.width;
             }
@@ -305,39 +304,39 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
 
     @Override
     protected int getShiftX() {
-        return this.lines ? 10 + this.placements : 0;
+        return lines ? 10 + placements : 0;
     }
 
     @Override
     protected void drawBackground() {
-        this.area.draw(0xff000000 + ColorUtils.multiplyColor(this.highlighter.getStyle().background, 0.8F));
+        area.draw(0xff000000 + ColorUtils.multiplyColor(highlighter.getStyle().background, 0.8F));
     }
 
     @Override
     protected void drawForeground(GuiContext context) {
-        if (this.lines) {
+        if (lines) {
             /* Draw line numbers background */
-            int x = this.area.x + this.getShiftX();
+            int x = area.x + getShiftX();
 
-            Gui.drawRect(this.area.x, this.area.y, x, this.area.ey(), 0xff000000 + this.highlighter.getStyle().background);
+            Gui.drawRect(area.x, area.y, x, area.ey(), 0xff000000 + highlighter.getStyle().background);
 
             /* Draw cached line numbers */
-            for (TextLineNumber number : this.numbers) {
+            for (TextLineNumber number : numbers) {
                 if (!number.draw) {
                     break;
                 }
 
-                this.font.drawString(number.line, number.x, number.y, this.highlighter.getStyle().lineNumbers);
+                font.drawString(number.line, number.x, number.y, highlighter.getStyle().lineNumbers);
                 number.draw = false;
             }
 
-            this.lineNumber = 0;
+            lineNumber = 0;
 
             /* Draw shadow to the right of line numbers when scrolling */
-            int a = (int) (Math.min(this.horizontal.scroll / 10F, 1F) * 0x44);
+            int a = (int) (Math.min(horizontal.scroll / 10F, 1F) * 0x44);
 
             if (a > 0) {
-                GuiDraw.drawHorizontalGradientRect(x, this.area.y, x + 10, this.area.ey(), a << 24, 0);
+                GuiDraw.drawHorizontalGradientRect(x, area.y, x + 10, area.ey(), a << 24, 0);
             }
         }
     }
