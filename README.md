@@ -11,7 +11,7 @@
     Enhance your <b>Minecraft</b> map-making experience with <b>Mappet</b>’s scripting tools and more
   </p>
 
-• • •<br><br>
+• • •<br>
 
   <div>
     <a href="https://github.com/RoVoid/Mappet/stargazers">
@@ -34,19 +34,17 @@
     </a>
   </div>
 
-<br>• • •<br>
+<br>• • •
 
   <h6>
     <b>Mappet</b> for <a href="https://github.com/RoVoid/Mappet">Forge 1.12.2</a> exclusively and also install following mods:
-    <ul
-      align="justify"
-      style="list-style: none; display: flex; gap: 15px; justify-content: center; padding: 0; margin: 10px 0;"
-    >
-      <li><a href="https://www.curseforge.com/minecraft/mc-mods/mchorses-mclib">McLib</a></li>
-      <li><a href="https://www.curseforge.com/minecraft/mc-mods/metamorph">Metamorph</a></li>
-      <li><a href="https://www.curseforge.com/minecraft/mc-mods/blockbuster">Blockbuster</a></li>
-      <li><a href="https://www.curseforge.com/minecraft/mc-mods/project-nashorn">Nashorn</a></li>
-    </ul>
+    <p></p>
+    <p align="center">
+      <a href="https://curseforge.com/minecraft/mc-mods/mchorses-mclib">McLib</a> •
+      <a href="https://curseforge.com/minecraft/mc-mods/metamorph">Metamorph</a> •
+      <a href="https://curseforge.com/minecraft/mc-mods/blockbuster">Blockbuster</a> •
+      <a href="https://curseforge.com/minecraft/mc-mods/project-nashorn">Nashorn</a>
+    </p>
   </h6>
 
 <br><br>
