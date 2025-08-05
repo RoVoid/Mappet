@@ -1,22 +1,26 @@
 package mchorse.mappet.client.gui.panels;
 
-import mchorse.mappet.EventHandler;
 import mchorse.mappet.Mappet;
-import mchorse.mappet.api.misc.ServerSettings;
+import mchorse.mappet.TriggerEventHandler;
+import mchorse.mappet.api.ServerSettings;
 import mchorse.mappet.api.states.States;
 import mchorse.mappet.api.triggers.Trigger;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
-import mchorse.mappet.client.gui.events.GuiTriggerHotkeysOverlayPanel;
+import mchorse.mappet.client.gui.hotkey.GuiHotkeysOverlayPanel;
 import mchorse.mappet.client.gui.states.GuiStatesEditor;
 import mchorse.mappet.client.gui.triggers.GuiTriggerElement;
 import mchorse.mappet.client.gui.utils.overlays.GuiOverlay;
 import mchorse.mappet.client.gui.utils.overlays.GuiStringOverlayPanel;
 import mchorse.mappet.client.gui.utils.text.GuiText;
+import mchorse.mappet.client.gui.utils.triggers.TriggerDoc;
+import mchorse.mappet.client.gui.utils.triggers.TriggerDocs;
+import mchorse.mappet.client.gui.utils.triggers.TriggerVariable;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.common.content.PacketRequestServerSettings;
 import mchorse.mappet.network.common.content.PacketRequestStates;
 import mchorse.mappet.network.common.content.PacketServerSettings;
 import mchorse.mappet.network.common.content.PacketStates;
+import mchorse.mappet.utils.MPIcons;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
@@ -41,8 +45,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard>
-{
+public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard> {
     public GuiElement states;
 
     public GuiStatesEditor statesEditor;
@@ -59,7 +62,7 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
 
     public GuiIconElement hotkeys;
 
-    public GuiIconElement layoutToggleIcon;
+    public GuiIconElement triggersToggle;
 
     public GuiScrollElement editor;
 
@@ -73,326 +76,264 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
 
     private ServerSettings settings;
 
-    private String lastTarget;
+    private static String lastTarget = "~";
 
     private String lastTrigger = "player_chat";
 
     private String lastForgeTrigger = "";
 
-    private String lastStates = "~";
-
-    public GuiServerSettingsPanel(Minecraft mc, GuiMappetDashboard dashboard)
-    {
+    public GuiServerSettingsPanel(Minecraft mc, GuiMappetDashboard dashboard) {
         super(mc, dashboard);
 
-        this.states = new GuiElement(mc);
-        this.states.flex().relative(this).wh(0.5F, 1F);
+        states = new GuiElement(mc);
+        states.flex().relative(this).wh(0.5F, 1F);
 
-        this.statesEditor = new GuiStatesEditor(mc);
-        this.statesEditor.flex().relative(this.states).y(25).w(1F).h(1F, -25);
-        this.statesTitle = Elements.label(IKey.str("")).anchor(0, 0.5F).background();
-        this.statesTitle.flex().relative(this.states).xy(10, 10).wh(120, 20);
-        this.statesSwitch = new GuiIconElement(mc, Icons.SEARCH, this::openSearch);
-        this.statesSwitch.flex().relative(this.states).x(1F, -50).y(10);
-        this.statesAdd = new GuiIconElement(mc, Icons.ADD, this::addState);
-        this.statesAdd.flex().relative(this.states).x(1F, -30).y(10);
+        statesEditor = new GuiStatesEditor(mc);
+        statesEditor.flex().relative(states).y(25).w(1F).h(1F, -25);
+        statesTitle = Elements.label(IKey.str("")).anchor(0, 0.5F).background();
+        statesTitle.flex().relative(states).xy(10, 10).wh(120, 20);
+        statesSwitch = new GuiIconElement(mc, Icons.SEARCH, this::openSearch);
+        statesSwitch.flex().relative(states).x(1F, -50).y(10);
+        statesAdd = new GuiIconElement(mc, Icons.ADD, this::addState);
+        statesAdd.flex().relative(states).x(1F, -30).y(10);
 
-        this.globalTriggersLayout = new GuiElement(mc);
-        this.globalTriggersLayout.flex().relative(this).wh(0.5F, 0.5F);
+        globalTriggersLayout = new GuiElement(mc);
+        globalTriggersLayout.flex().relative(this).wh(0.5F, 0.5F);
 
-        this.triggers = new GuiLabelListElement<>(mc, (l) -> this.fillTrigger(l.get(0), false));
-        this.triggers.background().flex().relative(this).x(0.5F, 10).y(35).w(0.5F, -20).h(246);
+        triggers = new GuiLabelListElement<>(mc, (l) -> fillTrigger(l.get(0), false));
+        triggers.background().flex().relative(this).x(0.5F, 10).y(35).w(0.5F, -20).h(246);
 
-        this.trigger = new GuiTriggerElement(mc).onClose(this::updateCurrentTrigger);
-        this.trigger.flex().relative(this).x(1F, -10).y(1F, -10).wh(120, 20).anchor(1F, 1F);
-        this.editor = new GuiScrollElement(mc);
-        this.editor.flex().relative(this).x(0.5F).y(281).w(0.5F).h(1F, -311).column(5).scroll().stretch().padding(10);
+        trigger = new GuiTriggerElement(mc).onClose(this::updateCurrentTrigger);
+        trigger.flex().relative(this).x(1F, -10).y(1F, -10).wh(120, 20).anchor(1F, 1F);
+        editor = new GuiScrollElement(mc);
+        editor.flex().relative(this).x(0.5F).y(281).w(0.5F).h(1F, -311).column(5).scroll().stretch().padding(10);
 
         GuiLabel triggersLabel = Elements.label(IKey.lang("mappet.gui.settings.title")).anchor(0, 0.5F).background();
 
         triggersLabel.flex().relative(this).x(0.5F, 10).y(10).wh(120, 20);
 
-        this.forgeTriggersLayout = new GuiElement(mc);
-        this.forgeTriggersLayout.flex().relative(this).wh(0.5F, 0.5F);
-        this.forgeTriggersLayout.setVisible(false);
+        forgeTriggersLayout = new GuiElement(mc);
+        forgeTriggersLayout.flex().relative(this).wh(0.5F, 0.5F);
+        forgeTriggersLayout.setVisible(false);
 
-        this.forgeTriggers = new GuiLabelListElement<String>(mc, (l) -> this.fillForgeTrigger(l.get(0), false));
-        this.forgeTriggers.background().flex().relative(this).x(0.5F, 10).y(35).w(0.5F, -20).h(246);
-        this.forgeTriggers.context(() ->
-                new GuiSimpleContextMenu(mc)
-                        .action(Icons.ADD, IKey.lang("mappet.gui.settings.forge.add"), this::addForgeTrigger)
-                        .action(Icons.ADD, IKey.lang("mappet.gui.settings.forge.add_from_list"), this::addForgeTriggerFromList)
-                        .action(Icons.REMOVE, IKey.lang("mappet.gui.settings.forge.remove"), this::removeCurrentForgeTrigger));
+        forgeTriggers = new GuiLabelListElement<>(mc, (l) -> fillForgeTrigger(l.get(0)));
+        forgeTriggers.background().flex().relative(this).x(0.5F, 10).y(35).w(0.5F, -20).h(246);
+        forgeTriggers.context(() -> new GuiSimpleContextMenu(mc)
+                .action(Icons.ADD, IKey.lang("mappet.gui.settings.forge.add"), this::addForgeTrigger)
+                .action(Icons.ADD, IKey.lang("mappet.gui.settings.forge.add_from_list"), this::addForgeTriggerFromList)
+                .action(Icons.REMOVE, IKey.lang("mappet.gui.settings.forge.remove"), this::removeCurrentForgeTrigger));
 
-        this.forgeTrigger = new GuiTriggerElement(mc).onClose(this::updateCurrentForgeTrigger);
-        this.forgeTrigger.flex().relative(this).x(1F, -10).y(1F, -10).wh(120, 20).anchor(1F, 1F);
+        forgeTrigger = new GuiTriggerElement(mc).onClose(this::updateCurrentForgeTrigger);
+        forgeTrigger.flex().relative(this).x(1F, -10).y(1F, -10).wh(120, 20).anchor(1F, 1F);
 
         GuiText forgeAttention = new GuiText(this.mc).text(IKey.lang("mappet.gui.settings.forge.attention"));
         forgeAttention.flex().relative(this).x(0.5F).y(281).w(0.5F).h(1F, -311);
         forgeAttention.padding(10);
 
 
-        GuiLabel forgeTriggersLabel = Elements.label(IKey.lang("mappet.gui.settings.forge_title")).anchor(0, 0.5F).background();
+        GuiLabel forgeTriggersLabel = Elements
+                .label(IKey.lang("mappet.gui.settings.forge_title"))
+                .anchor(0, 0.5F)
+                .background();
 
         forgeTriggersLabel.flex().relative(this).x(0.5F, 10).y(10).wh(120, 20);
 
-        this.hotkeys = new GuiIconElement(mc, Icons.DOWNLOAD, (b) -> this.openHotkeysEditor());
-        this.hotkeys.tooltip(IKey.lang("mappet.gui.settings.hotkeys"), Direction.LEFT);
-        this.hotkeys.flex().relative(this).x(1F, -16).y(20).wh(20, 20).anchor(0.5F, 0.5F);
+        hotkeys = new GuiIconElement(mc, MPIcons.get(MPIcons.KEYBOARD), (b) -> openHotkeysEditor());
+        hotkeys.tooltip(IKey.lang("mappet.gui.settings.hotkeys"), Direction.LEFT);
+        hotkeys.flex().relative(this).x(1F, -16).y(20).wh(20, 20).anchor(0.5F, 0.5F);
 
-        this.layoutToggleIcon = new GuiIconElement(mc, Icons.PROCESSOR, (i) -> this.toggleTriggerLayouts());
+        triggersToggle = new GuiIconElement(mc, Icons.PROCESSOR, (i) -> toggleTriggerLayouts());
         boolean enableForgeTriggers = Mappet.enableForgeTriggers.get();
         IKey tooltip = IKey.lang("mappet.gui.settings.forge." + (enableForgeTriggers ? "toggle_triggers" : "disabled"));
-        this.layoutToggleIcon.tooltip(tooltip, Direction.LEFT).setEnabled(enableForgeTriggers);
-        this.layoutToggleIcon.disabledColor(0xFF880000);
-        this.layoutToggleIcon.flex().relative(this).x(1F, -48).y(20).wh(20, 20).anchor(0.5F, 0.5F);
+        triggersToggle.tooltip(tooltip, Direction.LEFT).setEnabled(enableForgeTriggers);
+        triggersToggle.disabledColor(0xFF880000);
+        triggersToggle.flex().relative(this).x(1F, -48).y(20).wh(20, 20).anchor(0.5F, 0.5F);
 
 
-        this.states.add(this.statesTitle, this.statesSwitch, this.statesAdd, this.statesEditor);
-        this.globalTriggersLayout.add(this.triggers, this.editor, this.trigger, triggersLabel);
-        this.forgeTriggersLayout.add(this.forgeTriggers, this.forgeTrigger, forgeTriggersLabel, forgeAttention);
-        this.add(this.states, this.layoutToggleIcon, this.hotkeys, this.globalTriggersLayout, this.forgeTriggersLayout);
+        states.add(statesTitle, statesSwitch, statesAdd, statesEditor);
+        globalTriggersLayout.add(triggers, editor, trigger, triggersLabel);
+        forgeTriggersLayout.add(forgeTriggers, forgeTrigger, forgeTriggersLabel, forgeAttention);
+        add(states, triggersToggle, hotkeys, globalTriggersLayout, forgeTriggersLayout);
     }
 
-    public void toggleTriggerLayouts()
-    {
-        boolean trigger = this.globalTriggersLayout.isVisible();
-
-        this.layoutToggleIcon.both(trigger ? Icons.COPY : Icons.PROCESSOR);
-        this.globalTriggersLayout.setVisible(!trigger);
-        this.forgeTriggersLayout.setVisible(trigger);
+    public void toggleTriggerLayouts() {
+        boolean trigger = globalTriggersLayout.isVisible();
+        triggersToggle.both(trigger ? MPIcons.get(MPIcons.ANVIL) : Icons.PROCESSOR);
+        globalTriggersLayout.setVisible(!trigger);
+        forgeTriggersLayout.setVisible(trigger);
     }
 
-    public void addForgeTrigger()
-    {
-        GuiModal.addFullModal(this, () -> new GuiPromptModal(this.mc, IKey.lang("mappet.gui.panels.modals.add"), this::addForgeTrigger));
+    public void addForgeTrigger() {
+        GuiModal.addFullModal(this, () -> new GuiPromptModal(mc, IKey.lang("mappet.gui.panels.modals.add"), this::addForgeTrigger));
     }
 
-    public void addForgeTrigger(String name)
-    {
-        if (this.forgeTriggers.getList().contains(name))
-        {
-            return;
+    public void addForgeTrigger(String name) {
+        for (Label<String> l : forgeTriggers.getList()) {
+            if (l.title.get().equals(name)) return;
         }
-        this.forgeTriggers.add(IKey.str(name), name);
-        this.settings.registeredForgeTriggers.put(name, new Trigger());
+        forgeTriggers.add(IKey.str(name), name);
+        settings.forgeTriggers.put(name, new Trigger());
     }
 
-    public void removeCurrentForgeTrigger()
-    {
-        Label<String> current = this.forgeTriggers.getCurrentFirst();
-
-        if (current == null)
-        {
-            return;
-        }
-
+    public void removeCurrentForgeTrigger() {
+        Label<String> current = forgeTriggers.getCurrentFirst();
+        if (current == null) return;
         String name = current.value;
-
-        this.forgeTriggers.remove(current);
-        this.settings.registeredForgeTriggers.remove(name);
-        this.forgeTrigger.setVisible(false);
+        forgeTriggers.remove(current);
+        settings.forgeTriggers.remove(name);
+        forgeTrigger.setVisible(false);
     }
 
-    public void addForgeTriggerFromList()
-    {
-        Set<String> events = EventHandler.getRegisteredEvents().stream()
-                .map(EventHandler::getEventClassName).collect(Collectors.toSet());
-        GuiStringOverlayPanel overlay = new GuiStringOverlayPanel(this.mc, IKey.lang("mappet.gui.forge.pick"), false, events, this::addForgeTrigger);
+    public void addForgeTriggerFromList() {
+        Set<String> events = TriggerEventHandler
+                .getRegisteredEvents()
+                .stream()
+                .map(TriggerEventHandler::getEventClassName)
+                .collect(Collectors.toSet());
+        GuiStringOverlayPanel overlay = new GuiStringOverlayPanel(mc, IKey.lang("mappet.gui.forge.pick"), false, events, this::addForgeTrigger);
 
-        GuiOverlay.addOverlay(GuiBase.getCurrent(), overlay.set(this.lastTarget), 0.5F, 0.6F);
+        GuiOverlay.addOverlay(GuiBase.getCurrent(), overlay.set(lastTarget), 0.5F, 0.6F);
     }
 
-    private void updateCurrentTrigger()
-    {
-        Trigger trigger = this.settings.registered.get(this.lastTrigger);
-
-        this.triggers.getCurrentFirst().title = this.createTooltip(this.lastTrigger, trigger);
+    private void updateCurrentTrigger() {
+        Trigger trigger = settings.triggers.get(lastTrigger);
+        triggers.getCurrentFirst().title = createTooltip(lastTrigger, trigger);
     }
 
-    private void updateCurrentForgeTrigger()
-    {
-        Trigger trigger = this.settings.registeredForgeTriggers.get(this.lastForgeTrigger);
-
-        this.forgeTriggers.getCurrentFirst().title = this.createForgeTooltip(this.lastForgeTrigger, trigger);
+    private void updateCurrentForgeTrigger() {
+        Trigger trigger = settings.forgeTriggers.get(lastForgeTrigger);
+        forgeTriggers.getCurrentFirst().title = createForgeTooltip(lastForgeTrigger, trigger);
     }
 
-    public IKey createTooltip(String key, Trigger trigger)
-    {
-        IKey title = IKey.lang("mappet.gui.settings.triggers." + key);
-
-        if (trigger.blocks.isEmpty())
-        {
-            return title;
-        }
-
+    public IKey createTooltip(String key, Trigger trigger) {
+        IKey title = IKey.str(TriggerDocs.get(key).name);
+        if (trigger.blocks.isEmpty()) return title;
         IKey count = IKey.str(" §7(§6" + trigger.blocks.size() + "§7)§r");
-
         return IKey.comp(title, count);
     }
 
-    public IKey createForgeTooltip(String key, Trigger trigger)
-    {
+    public IKey createForgeTooltip(String key, Trigger trigger) {
         IKey title = IKey.str(key);
-
-        if (trigger.blocks.isEmpty())
-        {
-            return title;
-        }
-
+        if (trigger.blocks.isEmpty()) return title;
         IKey count = IKey.str(" §7(§6" + trigger.blocks.size() + "§7)§r");
-
         return IKey.comp(title, count);
     }
 
-    private void openSearch(GuiIconElement element)
-    {
+    private void openSearch(GuiIconElement element) {
         List<String> targets = new ArrayList<>();
 
         targets.add("~");
 
-        for (EntityPlayer player : this.mc.world.playerEntities)
-        {
+        for (EntityPlayer player : mc.world.playerEntities) {
             targets.add(player.getGameProfile().getName());
         }
 
-        GuiStringOverlayPanel overlay = new GuiStringOverlayPanel(this.mc, IKey.lang("mappet.gui.states.pick"), false, targets, (target) ->
-        {
-            if (target.isEmpty())
-            {
-                return;
-            }
-
-            this.save();
-
+        GuiStringOverlayPanel overlay = new GuiStringOverlayPanel(mc, IKey.lang("mappet.gui.states.pick"), false, targets, (target) -> {
+            if (target.isEmpty()) return;
+            save();
             Dispatcher.sendToServer(new PacketRequestStates(target));
         });
 
-        GuiOverlay.addOverlay(GuiBase.getCurrent(), overlay.set(this.lastTarget), 0.4F, 0.6F);
+        GuiOverlay.addOverlay(GuiBase.getCurrent(), overlay.set(lastTarget), 0.4F, 0.6F);
     }
 
-    private void addState(GuiIconElement element)
-    {
-        this.statesEditor.addNew();
+    private void addState(GuiIconElement element) {
+        statesEditor.addNew();
     }
 
-    private void openHotkeysEditor()
-    {
-        GuiTriggerHotkeysOverlayPanel overlay = new GuiTriggerHotkeysOverlayPanel(this.mc, this.settings.hotkeys);
-
+    private void openHotkeysEditor() {
+        GuiHotkeysOverlayPanel overlay = new GuiHotkeysOverlayPanel(mc, settings.hotkeys);
         GuiOverlay.addOverlay(GuiBase.getCurrent(), overlay, 0.5F, 0.7F);
     }
 
-    public void fill(NBTTagCompound tag)
-    {
-        this.settings = new ServerSettings(null);
-        this.settings.deserializeNBT(tag);
+    public void fill(NBTTagCompound tag) {
+        settings = new ServerSettings(null);
+        settings.deserializeNBT(tag);
 
-        this.triggers.clear();
+        triggers.clear();
+        for (String key : settings.triggers.keySet()) triggers.add(createTooltip(key, settings.triggers.get(key)), key);
+        triggers.sort();
+        triggers.setCurrentValue(lastTrigger);
 
-        for (String key : this.settings.registered.keySet())
-        {
-            this.triggers.add(this.createTooltip(key, this.settings.registered.get(key)), key);
-        }
+        forgeTriggers.clear();
+        for (String key : settings.forgeTriggers.keySet())
+            forgeTriggers.add(createForgeTooltip(key, settings.forgeTriggers.get(key)), key);
+        forgeTriggers.sort();
+        forgeTrigger.setVisible(false);
 
-        this.triggers.sort();
-        this.triggers.setCurrentValue(this.lastTrigger);
+        fillTrigger(triggers.getCurrentFirst(), true);
 
-        this.forgeTriggers.clear();
-
-        for (String key : this.settings.registeredForgeTriggers.keySet())
-        {
-            this.forgeTriggers.add(this.createForgeTooltip(key, this.settings.registeredForgeTriggers.get(key)), key);
-        }
-
-        this.forgeTriggers.sort();
-        this.forgeTrigger.setVisible(false);
-
-        this.fillTrigger(this.triggers.getCurrentFirst(), true);
-
-        this.resize();
+        resize();
     }
 
-    private void fillTrigger(Label<String> trigger, boolean select)
-    {
-        this.editor.removeAll();
-        this.editor.add(new GuiText(this.mc).text(IKey.lang("mappet.gui.settings.triggers.descriptions." + trigger.value))); //THIS
-        this.editor.add(Elements.label(IKey.lang("mappet.gui.settings.variables")).background().marginTop(16).marginBottom(8));
-        this.editor.add(new GuiText(this.mc).text(IKey.lang("mappet.gui.settings.triggers.variables." + trigger.value)));
-
-        this.trigger.set(this.settings.registered.get(trigger.value));
-
-        if (select)
-        {
-            this.triggers.setCurrentScroll(trigger);
+    private void fillTrigger(Label<String> trigger, boolean select) {
+        TriggerDoc triggerDoc = TriggerDocs.get(trigger.value);
+        editor.removeAll();
+        editor.add(new GuiText(mc).text(triggerDoc.description).marginTop(8));
+        if (triggerDoc.cancelable)
+            editor.add(new GuiText(mc).text(IKey.lang("mappet.gui.settings.cancelable")).marginTop(8));
+        if (!triggerDoc.variables.isEmpty()) {
+            editor.add(Elements
+                    .label(IKey.lang("mappet.gui.settings.variables"))
+                    .background()
+                    .marginTop(16)
+                    .marginBottom(8));
+            for (TriggerVariable variable : triggerDoc.variables) {
+                String text = "§6" + variable.type + " §r" + variable.name + "§7: §r" + variable.description;
+                editor.add(new GuiText(mc).text(text));
+            }
         }
 
-        this.lastTrigger = trigger.value;
+        this.trigger.set(settings.triggers.get(trigger.value));
+        if (select) triggers.setCurrentScroll(trigger);
+        lastTrigger = trigger.value;
 
-        this.resize();
+        resize();
     }
 
-    private void fillForgeTrigger(Label<String> trigger, boolean select)
-    {
-        this.forgeTrigger.set(this.settings.registeredForgeTriggers.get(trigger.value));
-        this.forgeTrigger.setVisible(true);
-
-        if (select)
-        {
-            this.forgeTriggers.setCurrentScroll(trigger);
-        }
-
-        this.lastForgeTrigger = trigger.value;
-
-        this.resize();
+    private void fillForgeTrigger(Label<String> trigger) {
+        forgeTrigger.set(settings.forgeTriggers.get(trigger.value));
+        forgeTrigger.setVisible(true);
+        lastForgeTrigger = trigger.value;
+        resize();
     }
 
-    public void fillStates(String target, NBTTagCompound data)
-    {
+    public void fillStates(String target, NBTTagCompound data) {
         States states = new States();
 
-        this.statesTitle.label = target.equals("~") ? IKey.lang("mappet.gui.states.server") : IKey.format("mappet.gui.states.player", target);
+        statesTitle.label = target.equals("~") ? IKey.lang("mappet.gui.states.server") : IKey.format("mappet.gui.states.player", target);
         states.deserializeNBT(data);
-        this.statesEditor.set(states);
-        this.lastTarget = target;
+        statesEditor.set(states);
+        lastTarget = target;
     }
 
-    public void save()
-    {
-        if (this.settings != null)
-        {
-            Dispatcher.sendToServer(new PacketServerSettings(this.settings.serializeNBT()));
-        }
-
-        if (this.statesEditor.get() != null)
-        {
-            Dispatcher.sendToServer(new PacketStates(this.lastTarget, this.statesEditor.get().serializeNBT(), this.statesEditor.getChanges()));
+    public void save() {
+        if (settings != null) Dispatcher.sendToServer(new PacketServerSettings(settings.serializeNBT()));
+        if (statesEditor.get() != null) {
+            Dispatcher.sendToServer(new PacketStates(lastTarget, statesEditor
+                    .get()
+                    .serializeNBT(), statesEditor.getChanges()));
         }
     }
 
     @Override
-    public void appear()
-    {
+    public void appear() {
         super.appear();
-
         Dispatcher.sendToServer(new PacketRequestServerSettings());
-        Dispatcher.sendToServer(new PacketRequestStates(this.lastStates));
+        Dispatcher.sendToServer(new PacketRequestStates(lastTarget));
     }
 
     @Override
-    public void disappear()
-    {
+
+    public void disappear() {
         super.disappear();
-
-        this.save();
+        save();
     }
 
     @Override
-    public void close()
-    {
+    public void close() {
         super.close();
-
-        this.save();
-        this.statesEditor.set(null);
+        save();
+        statesEditor.set(null);
     }
 }

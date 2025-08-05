@@ -10,24 +10,17 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ServerHandlerFinishDialogue extends ServerMessageHandler<PacketFinishDialogue>
-{
+public class ServerHandlerFinishDialogue extends ServerMessageHandler<PacketFinishDialogue> {
     @Override
     @SideOnly(Side.CLIENT)
-    public void run(EntityPlayerMP player, PacketFinishDialogue message)
-    {
+    public void run(EntityPlayerMP player, PacketFinishDialogue message) {
         ICharacter character = Character.get(player);
 
-        if (character != null)
-        {
-            character.setCraftingTable(null);
-
-            if (character.getDialogueContext() != null)
-            {
+        if (character != null) {
+            if (character.getDialogueContext() != null) {
                 ReactionNode node = character.getDialogueContext().reactionNode;
 
-                if (node != null && !node.sound.isEmpty())
-                {
+                if (node != null && !node.sound.isEmpty()) {
                     WorldUtils.stopSound(player, node.sound);
                 }
 

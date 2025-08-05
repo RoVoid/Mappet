@@ -1,5 +1,6 @@
 package mchorse.mappet.client.gui.scripts.style;
 
+import mchorse.mappet.Mappet;
 import mchorse.mappet.client.gui.scripts.utils.TextSegment;
 import mchorse.mappet.client.gui.scripts.utils.TextSegment.TOKEN;
 import net.minecraft.client.gui.FontRenderer;
@@ -31,23 +32,22 @@ public class SyntaxHighlighter {
     private SyntaxStyle style;
 
     public SyntaxHighlighter() {
-        style = new SyntaxStyle();
+        style = Mappet.scriptEditorSyntaxStyle.get();
 
         // Собираем pattern в правильном порядке
-        String combinedPattern =
-                "(" + doubleQuoted + ")" + "|" +                  // group 1  — string ""
-                        "(" + singleQuoted + ")" + "|" +          // group 2  — string ''
-                        "(" + backtickQuoted + ")" + "|" +        // group 3  — string ``
-                        "(" + comment + ")" + "|" +               // group 4  — comment
-                        "(" + multiComments + ")" + "|" +         // group 5  — multiComments
-                        "(" + number + ")" + "|" +                // group 6  — number
-                        "(" + constant + ")" + "|" +              // group 7  — constant
-                        "(" + keyword + ")" + "|" +               // group 8  — keyword
-                        "(" + identifier + ")" + "|" +            // group 9  — identifier
-                        "(" + special + ")" + "|" +               // group 10 — special
-                         method + "|" +                // group 11 — method
-                        "(" + function + ")" + "|" +              // group 12 — function
-                        "(" + operator + ")";                     // group 13 — operator
+        String combinedPattern = "(" + doubleQuoted + ")" + "|" +                  // group 1  — string ""
+                "(" + singleQuoted + ")" + "|" +          // group 2  — string ''
+                "(" + backtickQuoted + ")" + "|" +        // group 3  — string ``
+                "(" + comment + ")" + "|" +               // group 4  — comment
+                "(" + multiComments + ")" + "|" +         // group 5  — multiComments
+                "(" + number + ")" + "|" +                // group 6  — number
+                "(" + constant + ")" + "|" +              // group 7  — constant
+                "(" + keyword + ")" + "|" +               // group 8  — keyword
+                "(" + identifier + ")" + "|" +            // group 9  — identifier
+                "(" + special + ")" + "|" +               // group 10 — special
+                method + "|" +                            // group 11 — method
+                "(" + function + ")" + "|" +              // group 12 — function
+                "(" + operator + ")";                     // group 13 — operator
 
         pattern = Pattern.compile(combinedPattern);
     }
@@ -57,8 +57,7 @@ public class SyntaxHighlighter {
     }
 
     public void setStyle(SyntaxStyle style) {
-        if (style == null) return;
-        this.style = style;
+        this.style = style == null ? Mappet.scriptEditorSyntaxStyle.get() : style;
     }
 
     public List<TextSegment> parse(FontRenderer font, String line, TextSegment lastSegment) {
@@ -122,43 +121,58 @@ public class SyntaxHighlighter {
             if (matcher.group(1) != null) {
                 token = TOKEN.STRING;
                 color = style.strings;
-            } else if (matcher.group(2) != null) {
+            }
+            else if (matcher.group(2) != null) {
                 token = TOKEN.STRING;
                 color = style.strings;
-            } else if (matcher.group(3) != null) {
+            }
+            else if (matcher.group(3) != null) {
                 token = TOKEN.STRING;
                 color = style.strings;
-            } else if (matcher.group(4) != null) {
+            }
+            else if (matcher.group(4) != null) {
                 token = TOKEN.COMMENT;
                 color = style.comments;
-            } else if (matcher.group(5) != null) {
+            }
+            else if (matcher.group(5) != null) {
                 token = TOKEN.MULTI_COMMENTS;
                 color = style.comments;
-            } else if (matcher.group(6) != null) {
+            }
+            else if (matcher.group(6) != null) {
                 token = TOKEN.NUMBER;
                 color = style.numbers;
-            } else if (matcher.group(7) != null) {
+            }
+            else if (matcher.group(7) != null) {
                 token = TOKEN.CONSTANT;
                 color = style.constants;
-            } else if (matcher.group(8) != null) {
+            }
+            else if (matcher.group(8) != null) {
                 token = TOKEN.KEYWORD;
                 color = style.keywords;
-            } else if (matcher.group(9) != null) {
+            }
+            else if (matcher.group(9) != null) {
                 token = TOKEN.IDENTIFIER;
                 color = style.identifiers;
-            } else if (matcher.group(10) != null) {
+            }
+            else if (matcher.group(10) != null) {
                 token = TOKEN.SPECIAL;
                 color = style.special;
-            } else if (matcher.group(11) != null) {
+            }
+            else if (matcher.group(11) != null) {
                 token = TOKEN.METHOD;
                 color = style.methods;
-            } else if (matcher.group(12) != null) {
+                list.add(new TextSegment(token, ".", style.other, font.getCharWidth('.')));
+                match = match.substring(1);
+            }
+            else if (matcher.group(12) != null) {
                 token = TOKEN.FUNCTION;
                 color = style.functions;
-            } else if (matcher.group(13) != null) {
+            }
+            else if (matcher.group(13) != null) {
                 token = TOKEN.OPERATOR;
                 color = style.operators;
-            } else {
+            }
+            else {
                 token = TOKEN.OTHER;
                 color = style.other;
             }

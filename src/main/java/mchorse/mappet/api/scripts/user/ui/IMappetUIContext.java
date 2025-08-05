@@ -2,7 +2,7 @@ package mchorse.mappet.api.scripts.user.ui;
 
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.nbt.INBTCompound;
-import mchorse.mappet.api.ui.components.UIComponent;
+import mchorse.mappet.api.scripts.code.ui.UIComponent;
 
 /**
  * This interface represents an UI context, which is an object that

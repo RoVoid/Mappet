@@ -15,8 +15,8 @@ public class HighlightedTextLine extends TextLine {
     }
 
     public void resetSegments() {
-        this.segments = null;
-        this.wrappedSegments = null;
+        segments = null;
+        wrappedSegments = null;
     }
 
     public void setSegments(List<TextSegment> segments) {
@@ -26,33 +26,28 @@ public class HighlightedTextLine extends TextLine {
     @Override
     public void resetWrapping() {
         super.resetWrapping();
-
-        this.wrappedSegments = null;
+        wrappedSegments = null;
     }
 
     @Override
     public void calculateWrappedLines(FontRenderer font, int w) {
         Object wrappedLines = this.wrappedLines;
-
         super.calculateWrappedLines(font, w);
-
-        if (wrappedLines != this.wrappedLines) {
-            this.resetSegments();
-        }
+        if (wrappedLines != this.wrappedLines) resetSegments();
     }
 
     public void calculateWrappedSegments(FontRenderer font) {
-        if (this.wrappedLines == null) {
-            this.wrappedSegments = null;
+        if (wrappedLines == null) {
+            wrappedSegments = null;
             return;
         }
 
         List<TextSegment> segments = new ArrayList<>();
         int w = 0;
         int i = 0;
-        String line = this.wrappedLines.get(i);
+        String line = wrappedLines.get(i);
 
-        this.wrappedSegments = new ArrayList<>();
+        wrappedSegments = new ArrayList<>();
 
         for (TextSegment segment : this.segments) {
             int sw = segment.text.length();
@@ -69,7 +64,7 @@ public class HighlightedTextLine extends TextLine {
                     segments.add(cutOff);
                 }
 
-                this.wrappedSegments.add(segments);
+                wrappedSegments.add(segments);
 
                 segments = new ArrayList<>();
                 segment = remainder;
@@ -79,8 +74,8 @@ public class HighlightedTextLine extends TextLine {
                 w = 0;
                 i += 1;
 
-                if (i >= this.wrappedLines.size()) break;
-                line = this.wrappedLines.get(i);
+                if (i >= wrappedLines.size()) break;
+                line = wrappedLines.get(i);
                 if (remainder.text.isEmpty()) break;
                 total = w + sw;
             }
@@ -89,6 +84,6 @@ public class HighlightedTextLine extends TextLine {
             segments.add(segment);
         }
 
-        if (!segments.isEmpty()) this.wrappedSegments.add(segments);
+        if (!segments.isEmpty()) wrappedSegments.add(segments);
     }
 }

@@ -1360,6 +1360,13 @@
           "docs": "Returns array of mods on the client [id:version]"
         }
       ],
+      "getPing": [
+        {
+          "return": {
+            "type": "int"
+          }
+        }
+      ],
       "stopAllSounds": [
         {
           "docs": "Stop all playing sound events for this player.\n\n \u003cpre\u003e{@code\n    c.getWorld().stopAllSounds();\n }\u003c/pre\u003e"
@@ -5184,6 +5191,20 @@
           "docs": "Get a value for given key (might be a \u003ccode\u003enull\u003c/code\u003e)."
         }
       ],
+      "get": [
+        {
+          "parameters": [
+            {
+              "name": "key",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "type": "java.lang.Object"
+          },
+          "docs": "Get a value for given key (might be a \u003ccode\u003enull\u003c/code\u003e)."
+        }
+      ],
       "setValue": [
         {
           "parameters": [
@@ -5880,6 +5901,16 @@
           "docs": "Logging a message with \u003cb\u003eWARNING\u003c/b\u003e level."
         }
       ],
+      "warn": [
+        {
+          "parameters": [
+            {
+              "name": "message",
+              "type": "java.lang.String"
+            }
+          ]
+        }
+      ],
       "info": [
         {
           "parameters": [
@@ -5957,6 +5988,20 @@
           "docs": "Set numeric value to existing state by ID.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getServer().getStates();\n\n    states.setNumber(\"total_spending\", 1000000001);\n    c.send(\"Total spending is now \" + states.getNumber(\"total_spending\"));\n }\u003c/pre\u003e"
         }
       ],
+      "setBoolean": [
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "value",
+              "type": "boolean"
+            }
+          ]
+        }
+      ],
       "setString": [
         {
           "parameters": [
@@ -5972,7 +6017,19 @@
           "docs": "Set string value to existing state by ID.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getSubject().getStates();\n\n    states.setString(\"name\", \"Jeff\");\n    c.getSubject().send(\"Your name is \" + states.getString(\"name\"));\n }\u003c/pre\u003e"
         }
       ],
-      "setBoolean": [
+      "set": [
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "value",
+              "type": "double"
+            }
+          ]
+        },
         {
           "parameters": [
             {
@@ -5984,9 +6041,35 @@
               "type": "boolean"
             }
           ]
+        },
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "value",
+              "type": "java.lang.String"
+            }
+          ]
+        },
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "value",
+              "type": "java.lang.Object",
+              "docs": "JsonSerializable\n Experimental"
+            }
+          ],
+          "docs": "Experimental"
         }
       ],
-      "toggleBoolean": [
+      "toggle": [
         {
           "parameters": [
             {
@@ -5997,6 +6080,22 @@
           "return": {
             "type": "boolean"
           }
+        }
+      ],
+      "setJson": [
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "value",
+              "type": "java.lang.Object",
+              "docs": "JsonSerializable\n Experimental"
+            }
+          ],
+          "docs": "Experimental"
         }
       ],
       "getNumber": [
@@ -6012,6 +6111,21 @@
             "type": "double"
           },
           "docs": "Get a numeric value of a state by given ID.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getServer().getStates();\n\n    c.send(\"Total spending is \" + states.getNumber(\"total_spending\"));\n }\u003c/pre\u003e"
+        }
+      ],
+      "getJson": [
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "docs": "JsonSerializable\n Experimental",
+            "type": "java.lang.Object"
+          },
+          "docs": "Experimental"
         }
       ],
       "isNumber": [
@@ -6091,7 +6205,10 @@
               "type": "java.lang.String"
             }
           ],
-          "docs": "Removes a state by given ID.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getServer().getStates();\n\n    // The city has been defaulted\n    states.reset(\"total_spendings\");\n }\u003c/pre\u003e"
+          "return": {
+            "type": "boolean"
+          },
+          "docs": "Removes a state by given ID.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getServer().getStates();\n\n    // The city has been defaulted\n    states.reset(\"total_spending\");\n }\u003c/pre\u003e"
         }
       ],
       "resetMasked": [
@@ -6102,6 +6219,9 @@
               "type": "java.lang.String"
             }
           ],
+          "return": {
+            "type": "boolean"
+          },
           "docs": "Removes multiple states by using mask.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getServer().getStates();\n\n    // Remove all states that start with \"regions.\"\n    states.resetMasked(\"regions.*\");\n }\u003c/pre\u003e"
         }
       ],
@@ -7815,7 +7935,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Returns a UI component by given ID or \u003ccode\u003enull\u003c/code\u003e. You can use this\n in the handler script of the UI to change certain properties.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var button \u003d ui.button(\"Push me\").id(\"button\");\n\n        // Place a button in the middle of the screen\n        button.rxy(0.5, 0.5).wh(80, 20).anchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"button\")\n        {\n            uiContext.get(\"button\").label(\"Push me harder!\");\n        }\n    }\n }\u003c/pre\u003e"
         }
@@ -7834,7 +7954,7 @@
       "getCurrent": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Get current UI component on to which it adds children components.\n\n \u003cp\u003eIt\u0027s useful only after using {@link IMappetUIBuilder#layout()},\n {@link IMappetUIBuilder#column(int)}, {@link IMappetUIBuilder#row(int)}, and\n {@link IMappetUIBuilder#grid(int)} to being able to position layout element.\u003c/p\u003e"
         }
@@ -7895,7 +8015,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Create and insert a UI component based on its ID into UI being built by this builder.\n\n \u003cp\u003eThis method is future proof for in case other modders will be adding their own\n components, and the only way to create 3rd party UI components is using this method by\n providing the ID of 3rd party UI component.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI().background();\n        var label \u003d ui.create(\"label\").label(\"Welcome, [l\" + c.getSubject().getName() + \"[r!\");\n\n        label.rxy(0.5, 0.5).wh(100, 20).anchor(0.5);\n        label.color(0x00ee22).background(0x88000000).labelAnchor(0.5);\n\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e"
         }
@@ -7903,7 +8023,7 @@
       "graphics": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIGraphicsComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIGraphicsComponent"
           },
           "docs": "Create and insert a graphics UI component into UI being built by this builder.\n\n \u003cp\u003eCheck {@link UIGraphicsComponent} for description and examples.\u003c/p\u003e"
         }
@@ -7917,7 +8037,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIButtonComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIButtonComponent"
           },
           "docs": "Create and insert a button UI component into UI being built by this builder.\n\n \u003cp\u003eCheck {@link UIButtonComponent} for description and examples.\u003c/p\u003e"
         }
@@ -7931,7 +8051,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIIconButtonComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIIconButtonComponent"
           },
           "docs": "Create and insert an icon button UI component into UI being built by this builder.\n\n \u003cp\u003eCheck {@link UIIconButtonComponent} for description and examples.\u003c/p\u003e"
         }
@@ -7945,7 +8065,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UILabelComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UILabelComponent"
           },
           "docs": "Create and insert a label UI component into UI being built by this builder.\n\n \u003cp\u003eCheck {@link UILabelComponent} for description and examples.\u003c/p\u003e"
         }
@@ -7959,7 +8079,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITextComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITextComponent"
           },
           "docs": "Create and insert a text UI component into UI being built by this builder.\n\n \u003cp\u003eCheck {@link UILabelComponent} for description and examples.\u003c/p\u003e"
         }
@@ -7967,7 +8087,7 @@
       "textbox": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITextboxComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITextboxComponent"
           },
           "docs": "Create and insert a textbox UI component into UI being built by this builder.\n\n \u003cp\u003eCheck {@link UITextboxComponent} for description and examples.\u003c/p\u003e"
         },
@@ -7979,7 +8099,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITextboxComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITextboxComponent"
           },
           "docs": "Create and insert a textbox UI component into UI, with default value filled,\n being built by this builder.\n\n \u003cp\u003eCheck {@link UITextboxComponent} for description and examples.\u003c/p\u003e"
         },
@@ -7995,7 +8115,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITextboxComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITextboxComponent"
           },
           "docs": "Create and insert a textbox UI component into UI, with default value filled\n and maximum length, being built by this builder.\n\n \u003cp\u003eCheck {@link UITextboxComponent} for description and examples.\u003c/p\u003e"
         }
@@ -8003,7 +8123,7 @@
       "textarea": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITextareaComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITextareaComponent"
           },
           "docs": "Create and insert a textarea UI component into UI being built by this builder.\n\n \u003cp\u003eCheck {@link UITextareaComponent} for description and examples.\u003c/p\u003e"
         },
@@ -8015,7 +8135,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITextareaComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITextareaComponent"
           },
           "docs": "Create and insert a textarea UI component into UI, with default value filled,\n being built by this builder.\n\n \u003cp\u003eCheck {@link UITextareaComponent} for description and examples.\u003c/p\u003e"
         }
@@ -8029,7 +8149,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIToggleComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIToggleComponent"
           },
           "docs": "Create and insert a toggle UI component into UI being built by this builder.\n\n \u003cp\u003eCheck {@link UIToggleComponent} for description and examples.\u003c/p\u003e"
         },
@@ -8045,7 +8165,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIToggleComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIToggleComponent"
           },
           "docs": "Create and insert a toggle UI component into UI, with default toggled state,\n being built by this builder.\n\n \u003cp\u003eCheck {@link UIToggleComponent} for description and examples.\u003c/p\u003e"
         }
@@ -8053,7 +8173,7 @@
       "trackpad": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITrackpadComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent"
           },
           "docs": "Create and insert a trackpad UI component into UI being built by this builder.\n\n \u003cp\u003eCheck {@link UITrackpadComponent} for description and examples.\u003c/p\u003e"
         },
@@ -8065,7 +8185,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITrackpadComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent"
           },
           "docs": "Create and insert a trackpad UI component into UI, with default filled value,\n being built by this builder.\n\n \u003cp\u003eCheck {@link UITrackpadComponent} for description and examples.\u003c/p\u003e"
         }
@@ -8079,7 +8199,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStringListComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStringListComponent"
           },
           "docs": "Create and insert a string list UI component into UI, with list of possible\n values in the list, being built by this builder.\n\n \u003cp\u003eCheck {@link UIStringListComponent} for description and examples.\u003c/p\u003e"
         },
@@ -8095,7 +8215,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStringListComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStringListComponent"
           },
           "docs": "Create and insert a string list UI component into UI, with list of possible\n values in the list and selected index by default, being built by this builder.\n\n \u003cp\u003eCheck {@link UIStringListComponent} for description and examples.\u003c/p\u003e"
         }
@@ -8103,7 +8223,7 @@
       "item": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStackComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
           },
           "docs": "Create and insert an item stack UI component into UI being built by this builder.\n\n \u003cp\u003eCheck {@link UIStackComponent} for description and examples.\u003c/p\u003e"
         },
@@ -8115,7 +8235,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStackComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
           },
           "docs": "Create and insert an item stack UI component into UI, with default item stack\n picked, being built by this builder.\n\n \u003cp\u003eCheck {@link UIStackComponent} for description and examples.\u003c/p\u003e"
         }
@@ -8129,7 +8249,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIMorphComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent"
           },
           "docs": "Create and insert a morph UI component into UI being built by this builder.\n\n \u003cp\u003eCheck {@link UIMorphComponent} for description and examples.\u003c/p\u003e"
         },
@@ -8145,7 +8265,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIMorphComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent"
           },
           "docs": "Create and insert a morph UI component into UI, with a flag whether the player\n can pick or edit the morph, being built by this builder.\n\n \u003cp\u003eCheck {@link UIMorphComponent} for description and examples.\u003c/p\u003e"
         }
@@ -8153,7 +8273,7 @@
       "click": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIClickComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIClickComponent"
           },
           "docs": "Create and insert a click area UI component into UI being built by this builder.\n\n \u003cp\u003eCheck {@link UIClickComponent} for description and examples.\u003c/p\u003e"
         }
@@ -10648,11 +10768,11 @@
       ]
     }
   },
-  "mchorse.mappet.api.ui.components.UITrackpadComponent": {
+  "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent": {
     "name": "UITrackpadComponent",
     "docs": "Trackpad UI component.\n\n \u003cp\u003eThis component allows users to input numerical values (integer and double),\n with optionally a limit range between min and max. Users can also use\n arrow buttons on the side to increment and decrement the value, and\n type in value manually.\u003c/p\u003e\n\n \u003cp\u003eThe value that gets written to UI context\u0027s data (if ID is present) is\n the number displayed in the field, if integer option is enabled, then an\n integer will be written, or double if it\u0027s disabled.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link IMappetUIBuilder#trackpad()} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var trackpad \u003d ui.trackpad(5).id(\"number\").limit(0, 25, true);\n\n        trackpad.rxy(0.5, 0.5).wh(160, 20).anchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var data \u003d uiContext.getData();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"number\")\n        {\n            // If integer wasn\u0027t enabled, you would use:\n            // data.getDouble(\"number\")\n            if (data.getInt(\"number\") \u003d\u003d\u003d 19)\n            {\n                c.getSubject().send(\"21\");\n            }\n        }\n    }\n }\u003c/pre\u003e",
     "superTypes": [
-      "mchorse.mappet.api.ui.components.UIComponent"
+      "mchorse.mappet.api.scripts.code.ui.UIComponent"
     ],
     "methods": {
       "value": [
@@ -10664,7 +10784,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITrackpadComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent"
           },
           "docs": "Set the value that of trackpad component."
         }
@@ -10678,7 +10798,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITrackpadComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent"
           },
           "docs": "Set the minimum that this trackpad component can let the user pick."
         }
@@ -10692,7 +10812,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITrackpadComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent"
           },
           "docs": "Set the maximum that this trackpad component can let the user pick."
         }
@@ -10700,7 +10820,7 @@
       "integer": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITrackpadComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent"
           },
           "docs": "Set this trackpad component to accept only whole numbers."
         },
@@ -10712,7 +10832,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITrackpadComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent"
           },
           "docs": "Toggle integer option, when passed \u003ccode\u003etrue\u003c/code\u003e then this trackpad\n component will accept only whole numbers, and when passed \u003ccode\u003efalse\u003c/code\u003e,\n then both whole and floating point numbers can be accepted by this trackpad."
         }
@@ -10730,7 +10850,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITrackpadComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent"
           },
           "docs": "Convenience method that allows to set minimum and maximum, i.e. value range,\n that this trackpad field can accept."
         },
@@ -10750,7 +10870,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITrackpadComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent"
           },
           "docs": "Convenience method that allows to set minimum, maximum, and integer options\n that this trackpad field can accept."
         }
@@ -10764,7 +10884,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITrackpadComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent"
           },
           "docs": "Changes the amplitudes of this trackpad fields, i.e. how much value changes when\n moving the cursor horizontally. Weak (\u003ccode\u003eAlt\u003c/code\u003e amplitude gets set 5 times\n weaker than input value, and strong (\u003ccode\u003eShift\u003c/code\u003e) amplitude gets set 5 times\n stronger than input value."
         },
@@ -10787,7 +10907,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITrackpadComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent"
           },
           "docs": "Changes the amplitudes of this trackpad fields, i.e. how much value changes when\n moving the cursor horizontally."
         }
@@ -10802,7 +10922,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITrackpadComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent"
           },
           "docs": "Changes the incremental value of this trackpad fields, i.e. how much being added\n or subtracted when user presses \u0026lt; and \u0026gt; buttons on the sides of the\n trackpad value."
         }
@@ -10907,11 +11027,11 @@
       ]
     }
   },
-  "mchorse.mappet.api.ui.components.UIToggleComponent": {
+  "mchorse.mappet.api.scripts.code.ui.UIToggleComponent": {
     "name": "UIToggleComponent",
     "docs": "Toggle UI component.\n\n \u003cp\u003eThis component allows users to input boolean value (yes/no, true/false,\n \u003ccode\u003e1\u003c/code\u003e/\u003ccode\u003e0\u003c/code\u003e). The value that gets written to UI context\u0027s data\n (if ID is present) is boolean.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link IMappetUIBuilder#toggle(String)} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var trackpad \u003d ui.toggle(\"Show\", false).id(\"toggle\");\n        var label \u003d ui.label(\"You can see this label\").id(\"label\");\n\n        trackpad.rxy(0.5, 0.5).wh(160, 20).anchor(0.5);\n        label.rx(0.5).ry(0.5, 25).wh(160, 20).anchor(0.5).labelAnchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var data \u003d uiContext.getData();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"toggle\")\n        {\n            uiContext.get(\"label\").visible(uiContext.getData().getBoolean(\"toggle\"));\n        }\n    }\n }\u003c/pre\u003e",
     "superTypes": [
-      "mchorse.mappet.api.ui.components.UILabelBaseComponent"
+      "mchorse.mappet.api.scripts.code.ui.UILabelBaseComponent"
     ],
     "methods": {
       "state": [
@@ -10923,7 +11043,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIToggleComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIToggleComponent"
           },
           "docs": "Change component\u0027s toggled state.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n    uiContext.get(\"toggle\").state(true);\n }\u003c/pre\u003e"
         }
@@ -11017,11 +11137,11 @@
       ]
     }
   },
-  "mchorse.mappet.api.ui.components.UITextComponent": {
+  "mchorse.mappet.api.scripts.code.ui.UITextComponent": {
     "name": "UITextComponent",
     "docs": "Text UI component.\n\n \u003cp\u003eThis component allows you to input lots of text. This text can have multiple lines\n and Minecraft\u0027s formatting using \"[\" symbol instead of section field. Beside that\n this text component is resizable inside of column and row elements so it should\n work perfectly with layouts.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link IMappetUIBuilder#text(String)} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI().background();\n        var scroll \u003d ui.column(5, 10);\n\n        scroll.getCurrent().scroll().rxy(0.5, 0.5).w(200).rh(0.8).anchor(0.5);\n\n        var text \u003d scroll.text(\"Lorem ipsum dolor sit amet,\\n\\n\" +\n            \"consectetur adipiscing elit. Nullam sit amet luctus tellus. Sed posuere, orci quis vehicula mattis, orci nulla malesuada nunc, in mattis mi urna a quam. Mauris malesuada tempus molestie. Pellentesque in est quam. Sed iaculis dictum bibendum. Cras eleifend varius ligula, id luctus arcu ultricies a. Nam tincidunt mauris eu ligula sodales faucibus sed ut eros. Phasellus consectetur nec magna quis fermentum. Donec quis mauris tristique neque suscipit placerat. Etiam id laoreet ante. Maecenas finibus nec augue vitae convallis.\\n\\n\" +\n            \"Donec at tortor nibh. Nunc quis nulla justo. Vestibulum lacinia quis sapien at euismod. Curabitur sed maximus sapien. Fusce sed dui at lectus venenatis volutpat ac ac sapien. Cras at tortor pellentesque, finibus nulla vitae, tristique ligula. Etiam porta elementum justo. Cras facilisis rutrum mauris ac consectetur. Aliquam ipsum dolor, accumsan et lacus malesuada, volutpat pretium odio. Donec sed purus vulputate, auctor nulla in, sagittis ipsum. Nam dolor tortor, consequat sit amet eleifend at, imperdiet at ligula. Aenean blandit sem sit amet ex vehicula consequat. Etiam feugiat condimentum sem, eget imperdiet augue mattis quis.\");\n\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e",
     "superTypes": [
-      "mchorse.mappet.api.ui.components.UILabelBaseComponent"
+      "mchorse.mappet.api.scripts.code.ui.UILabelBaseComponent"
     ],
     "methods": {
       "textAnchor": [
@@ -11033,7 +11153,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITextComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITextComponent"
           },
           "docs": "Change text\u0027s anchor point which determines where text will\n be rendered relative to component\u0027s frame horizontally.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Position the text\u0027s content in the center of its frame\n    uiContext.get(\"text\").textAnchor(0.5);\n }\u003c/pre\u003e"
         }
@@ -11111,11 +11231,11 @@
       ]
     }
   },
-  "mchorse.mappet.api.ui.components.UITextboxComponent": {
+  "mchorse.mappet.api.scripts.code.ui.UITextboxComponent": {
     "name": "UITextboxComponent",
     "docs": "Textbox UI component.\n\n \u003cp\u003eThis component allows users to input a text line (for multi-line input\n use {@link UITextareaComponent} component). This could be used to request\n the player to input names.\u003c/p\u003e\n\n \u003cp\u003eThe value that gets written to UI context\u0027s data (if ID is present) is\n the string that user typed into the component.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link IMappetUIBuilder#textbox()} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var textbox \u003d ui.textbox().id(\"textbox\").tooltip(\"Enter your name:\");\n\n        textbox.rxy(0.5, 0.5).wh(160, 20).anchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var data \u003d uiContext.getData();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"textbox\")\n        {\n            c.getSubject().send(\"Your name is: \" + data.getString(\"textbox\"));\n        }\n    }\n }\u003c/pre\u003e",
     "superTypes": [
-      "mchorse.mappet.api.ui.components.UILabelBaseComponent"
+      "mchorse.mappet.api.scripts.code.ui.UILabelBaseComponent"
     ],
     "methods": {
       "maxLength": [
@@ -11127,7 +11247,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITextboxComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITextboxComponent"
           },
           "docs": "Change component\u0027s max length (how many character max can be inputted).\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n    uiContext.get(\"textbox\").maxLength(68);\n }\u003c/pre\u003e"
         }
@@ -11135,7 +11255,7 @@
       "noBackground": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITextboxComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITextboxComponent"
           },
           "docs": "Disable textbox\u0027s background.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n    uiContext.get(\"textbox\").noBackground();\n }\u003c/pre\u003e"
         }
@@ -11240,17 +11360,17 @@
       ]
     }
   },
-  "mchorse.mappet.api.ui.components.UITextareaComponent": {
+  "mchorse.mappet.api.scripts.code.ui.UITextareaComponent": {
     "name": "UITextareaComponent",
     "docs": "Text area UI component.\n\n \u003cp\u003eThis component allows users to input multiple lines of text (for single-line\n input use {@link UITextboxComponent} component). This could be used to let players\n input a multi-line description about themselves.\u003c/p\u003e\n\n \u003cp\u003eThe value that gets written to UI context\u0027s data (if ID is present) is\n the multi-line string that user typed into the component.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link IMappetUIBuilder#textarea(String)} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var s \u003d c.getSubject();\n        var story \u003d s.getStates().getString(\"story\");\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var textarea \u003d ui.textarea(story).id(\"textarea\").tooltip(\"Tell us your story...\");\n\n        // Don\u0027t send updates too often, only half a second after the player\n        // stopped typing into a text area\n        textarea.updateDelay(500);\n        textarea.rxy(0.5, 0.5).wh(300, 200).anchor(0.5);\n        s.openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var data \u003d uiContext.getData();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"textarea\")\n        {\n            // Write down the input\n            c.getSubject().getStates().setString(\"story\", data.getString(\"textarea\"));\n        }\n    }\n }\u003c/pre\u003e",
     "superTypes": [
-      "mchorse.mappet.api.ui.components.UILabelBaseComponent"
+      "mchorse.mappet.api.scripts.code.ui.UILabelBaseComponent"
     ],
     "methods": {
       "noBackground": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UITextareaComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UITextareaComponent"
           },
           "docs": "Disable textarea\u0027s background.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n    uiContext.get(\"textarea\").noBackground();\n }\u003c/pre\u003e"
         }
@@ -11327,11 +11447,11 @@
       ]
     }
   },
-  "mchorse.mappet.api.ui.components.UIStringListComponent": {
+  "mchorse.mappet.api.scripts.code.ui.UIStringListComponent": {
     "name": "UIStringListComponent",
     "docs": "String list UI component.\n\n \u003cp\u003eThis component allows users to pick a string out of a list of strings\n that you provided.\u003c/p\u003e\n\n \u003cp\u003eThe value that gets written to UI context\u0027s data (if ID is present) is\n the selected string that picked in the list.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link IMappetUIBuilder#stringList(List)} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var s \u003d c.getSubject();\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var strings \u003d ui.stringList([\"Apple\", \"Orange\", \"Pineapple\", \"Avocado\"]).id(\"strings\").tooltip(\"Pick a fruit...\");\n        var label \u003d ui.label(\"...\").id(\"fruit\").visible(false);\n\n        strings.background(0x88000000).rxy(0.5, 0.5).wh(100, 240).anchor(0.5);\n        label.rx(0.5).ry(0.5, -160).anchor(0.5, 0.5);\n        label.background(0x88000000).labelAnchor(0.5, 0.5);\n        s.openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var data \u003d uiContext.getData();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"strings\")\n        {\n            uiContext.get(\"fruit\").label(data.getString(\"strings\")).visible(true);\n        }\n    }\n }\u003c/pre\u003e",
     "superTypes": [
-      "mchorse.mappet.api.ui.components.UIComponent"
+      "mchorse.mappet.api.scripts.code.ui.UIComponent"
     ],
     "methods": {
       "values": [
@@ -11343,7 +11463,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStringListComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStringListComponent"
           },
           "docs": "Replace values within this string list.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Replace values in strings\n    uiContext.get(\"strings\").values(\"Tomato\", \"Cucumber\", \"Pepper\", \"Cabbage\");\n }\u003c/pre\u003e"
         },
@@ -11355,7 +11475,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStringListComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStringListComponent"
           },
           "docs": "Replace values within this string list.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n    var vegetables \u003d [\"Tomato\", \"Cucumber\", \"Pepper\", \"Cabbage\"];\n\n    // Replace values in strings\n    uiContext.get(\"strings\").values(vegetables);\n }\u003c/pre\u003e"
         }
@@ -11369,7 +11489,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStringListComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStringListComponent"
           },
           "docs": "Replace values within this string list.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n    var vegetables \u003d [\"Tomato\", \"Cucumber\", \"Pepper\", \"Cabbage\"];\n\n    // Replace values in strings\n    uiContext.get(\"strings\").setValues(vegetables);\n }\u003c/pre\u003e"
         }
@@ -11391,7 +11511,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStringListComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStringListComponent"
           },
           "docs": "Set the currently selected element.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Set first string in the list to be selected\n    uiContext.get(\"strings\").selected(0);\n }\u003c/pre\u003e"
         }
@@ -11399,7 +11519,7 @@
       "background": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStringListComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStringListComponent"
           },
           "docs": "Set component\u0027s solid color background.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Set half transparent black background\n    uiContext.get(\"strings\").background();\n }\u003c/pre\u003e"
         },
@@ -11411,7 +11531,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStringListComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStringListComponent"
           },
           "docs": "Set component\u0027s solid color background.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Set half transparent toxic green background\n    uiContext.get(\"strings\").background(0x8800ff00);\n }\u003c/pre\u003e"
         }
@@ -11505,11 +11625,11 @@
       ]
     }
   },
-  "mchorse.mappet.api.ui.components.UIStackComponent": {
+  "mchorse.mappet.api.scripts.code.ui.UIStackComponent": {
     "name": "UIStackComponent",
     "docs": "",
     "superTypes": [
-      "mchorse.mappet.api.ui.components.UIComponent"
+      "mchorse.mappet.api.scripts.code.ui.UIComponent"
     ],
     "methods": {
       "stack": [
@@ -11521,7 +11641,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStackComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
           }
         },
         {
@@ -11532,7 +11652,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStackComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
           }
         }
       ],
@@ -11546,7 +11666,7 @@
       "lock": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStackComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
           }
         }
       ],
@@ -11559,14 +11679,14 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStackComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
           }
         }
       ],
       "withoutFrame": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStackComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
           }
         }
       ],
@@ -11579,14 +11699,14 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStackComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
           }
         }
       ],
       "hideItemTooltip": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStackComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
           }
         }
       ],
@@ -11599,7 +11719,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIStackComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
           }
         }
       ],
@@ -11703,11 +11823,11 @@
       ]
     }
   },
-  "mchorse.mappet.api.ui.components.UIParentComponent": {
+  "mchorse.mappet.api.scripts.code.ui.UIParentComponent": {
     "name": "UIParentComponent",
     "docs": "",
     "superTypes": [
-      "mchorse.mappet.api.ui.components.UIComponent"
+      "mchorse.mappet.api.scripts.code.ui.UIComponent"
     ],
     "methods": {
       "getChildComponents": [
@@ -11751,11 +11871,11 @@
       ]
     }
   },
-  "mchorse.mappet.api.ui.components.UIMorphComponent": {
+  "mchorse.mappet.api.scripts.code.ui.UIMorphComponent": {
     "name": "UIMorphComponent",
     "docs": "Morph UI component.\n\n \u003cp\u003eThis component allows to display a morph. Users can inspect it, but it can also be\n edited, if configured. If you want disable users to turn around the morph by disabling\n user input using {@link UIComponent#enabled(boolean)}.\u003c/p\u003e\n\n \u003cp\u003eIf this component is editable, then the value that gets written to UI context\u0027s data\n (if ID is present) is an NBT compound tag that represents a morph.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link IMappetUIBuilder#morph(AbstractMorph)} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI().background();\n        var layout \u003d ui.layout();\n\n        layout.getCurrent().rx(0.5).ry(1).wh(300, 100).anchor(0.5, 1);\n\n        var steve \u003d mappet.createMorph(\"{CustomPose:{Size:[0.6f,1.8f,0.6f],Poses:{right_arm:{P:[-6.0f,-2.0f,0.0f],R:[-83.0f,41.0f,0.0f]},left_leg:{P:[2.0f,-12.0f,0.0f]},right_armwear:{P:[0.0f,-4.0f,0.0f]},outer:{P:[0.0f,4.0f,0.0f]},left_legwear:{P:[0.0f,-6.0f,0.0f]},body:{P:[0.0f,8.0f,0.0f]},bodywear:{P:[0.0f,-6.0f,0.0f]},head:{P:[0.0f,8.0f,0.0f],R:[18.0f,0.0f,9.0f]},left_arm:{P:[6.0f,-2.0f,0.0f]},right_leg:{P:[-2.0f,-12.0f,0.0f]},right_legwear:{P:[0.0f,-6.0f,0.0f]},anchor:{P:[0.0f,16.0f,0.0f]},left_armwear:{P:[0.0f,-4.0f,0.0f]}}},Settings:{Hands:1b},Name:\\\"blockbuster.fred\\\"}\");\n        var morph \u003d layout.morph(steve);\n\n        morph.position(-0.019, 1.5, 0).rotation(-11, 24).distance(1.6).fov(40);\n        morph.enabled(false).wh(100, 100);\n\n        var label \u003d layout.label(\"Steve\").background(0xaa000000);\n\n        label.xy(0, 80).wh(100, 20).labelAnchor(0.5, 0.5);\n\n        var graphics \u003d layout.graphics();\n        var h \u003d 54;\n        var y \u003d 30;\n\n        // Draw the background bubble\n        graphics.xy(100, y).wh(200, 100);\n        graphics.rect(4, 5, 192, h - 12, 0xff000000);\n        graphics.rect(5, 4, 190, h - 10, 0xff000000);\n        graphics.rect(5, 5, 190, h - 12, 0xffffffff);\n        graphics.rect(4, 11, 1, 4, 0xffffffff);\n        graphics.rect(3, 10, 1, 5, 0xff000000);\n        graphics.rect(3, 11, 1, 3, 0xffffffff);\n        graphics.rect(2, 10, 1, 4, 0xff000000);\n        graphics.rect(2, 11, 1, 2, 0xffffffff);\n        graphics.rect(1, 10, 1, 3, 0xff000000);\n        graphics.rect(1, 11, 1, 1, 0xffffffff);\n        graphics.rect(0, 10, 1, 2, 0xff000000);\n        graphics.rect(-1, 10, 1, 1, 0xff000000);\n\n        var text \u003d layout.text(\"Well, hello there! I expected you...\\n\\nMy name is Steve, and yours?\");\n\n        text.color(0x000000, false).xy(110, y + 10).wh(180, 80);\n\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e",
     "superTypes": [
-      "mchorse.mappet.api.ui.components.UIComponent"
+      "mchorse.mappet.api.scripts.code.ui.UIComponent"
     ],
     "methods": {
       "morph": [
@@ -11767,7 +11887,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIMorphComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent"
           },
           "docs": "Set display morph.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Set Alex morph\n    uiContext.get(\"morph\").morph(mappet.createMorph(\u0027{Name:\"blockbuster.alex\"}\u0027));\n }\u003c/pre\u003e"
         }
@@ -11775,7 +11895,7 @@
       "editing": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIMorphComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent"
           },
           "docs": "Enable an ability for players to pick or edit the morph.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Enable morph editing\n    uiContext.get(\"morph\").editing();\n }\u003c/pre\u003e"
         },
@@ -11787,7 +11907,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIMorphComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent"
           },
           "docs": "Toggle an ability for players to pick or edit the morph.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Disable morph editing\n    uiContext.get(\"morph\").editing(false);\n }\u003c/pre\u003e"
         }
@@ -11809,7 +11929,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIMorphComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent"
           },
           "docs": "Change camera\u0027s orbit position in the morph component. The default camera position (\u003ccode\u003e0\u003c/code\u003e,\n \u003ccode\u003e1\u003c/code\u003e, \u003ccode\u003e0\u003c/code\u003e).\n\n \u003cp\u003eProTip: you can enable UI debug option in Ctrl + 0 \u0026gt; Mappet, you can position the morph\n after running the script, right click somewhere within its frame, and click Copy camera\n information... context menu item. It will copy the configuration of camera, which you can\n paste into the code.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Set camera position\n    uiContext.get(\"morph\").position(0, 1, 0.5);\n }\u003c/pre\u003e"
         }
@@ -11827,7 +11947,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIMorphComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent"
           },
           "docs": "Change camera orbit rotation in the morph component. The default camera rotation (\u003ccode\u003e0\u003c/code\u003e, \u003ccode\u003e0\u003c/code\u003e).\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Set camera rotation\n    uiContext.get(\"morph\").rotation(15, 0);\n }\u003c/pre\u003e"
         }
@@ -11841,7 +11961,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIMorphComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent"
           },
           "docs": "Change camera distance from camera orbit position in the morph component. The default\n camera distance is \u003ccode\u003e2\u003c/code\u003e.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Set camera distance\n    uiContext.get(\"morph\").distance(4);\n }\u003c/pre\u003e"
         }
@@ -11855,7 +11975,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIMorphComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent"
           },
           "docs": "Change camera Field of View in the morph component. The default FOV is \u003ccode\u003e70\u003c/code\u003e.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Set camera FOV\n    uiContext.get(\"morph\").fov(50);\n }\u003c/pre\u003e"
         }
@@ -12000,17 +12120,17 @@
       ]
     }
   },
-  "mchorse.mappet.api.ui.components.UILayoutComponent": {
+  "mchorse.mappet.api.scripts.code.ui.UILayoutComponent": {
     "name": "UILayoutComponent",
     "docs": "Layout UI component.\n\n \u003cp\u003eThis UI component does nothing, beside managing placement of other\n components. Layout UI component have three different modes upon which\n child components can be placed: column, row, and grid.\u003c/p\u003e\n\n \u003cp\u003eAdditionally, column mode supports scrolling when there are too many\n components within its frame.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link IMappetUIBuilder#layout()},\n {@link IMappetUIBuilder#column(int)}, {@link IMappetUIBuilder#row(int)}, and\n {@link IMappetUIBuilder#grid(int)} methods.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI().background();\n        var column \u003d ui.column(4, 10);\n\n        column.getCurrent().scroll().rxy(0.5, 0.5).w(240).rh(0.8).anchor(0.5);\n\n        var row \u003d column.row(5);\n        var name \u003d row.column(4);\n\n        name.label(\"Name\").h(8);\n        name.textbox().id(\"name\").h(20);\n\n        var lastname \u003d row.column(4);\n\n        lastname.label(\"Last name\").h(8);\n        lastname.textbox().id(\"lastname\").h(20);\n\n        column.toggle(\"I agree to ToS\").id(\"toggle\").h(14);\n        column.text(\"The terms of service are following: you agree that your data will be used by an AI to generate funny cat and dog videos based entirely on your name and lastname.\\n\\nYou also agree to give us your time to view those videos, because we said so.\").color(0xaaaaaa, false).marginTop(8);\n        column.button(\"Oh... a button?\").h(20).marginTop(12);\n\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e",
     "superTypes": [
-      "mchorse.mappet.api.ui.components.UIParentComponent"
+      "mchorse.mappet.api.scripts.code.ui.UIParentComponent"
     ],
     "methods": {
       "scroll": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UILayoutComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UILayoutComponent"
           },
           "docs": "Enables scrolling. This option works only with {@link IMappetUIBuilder#column(int)}\n layout component.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI().background();\n        var column \u003d ui.column(4, 10);\n\n        column.getCurrent().scroll().rxy(0.5, 0.5).wh(200, 200).anchor(0.5);\n\n        column.label(\"Name\").h(8);\n        column.textbox().id(\"name\").h(20);\n        column.label(\"Last name\").h(8);\n        column.textbox().id(\"lastname\").h(20);\n\n        column.toggle(\"I agree to ToS\").id(\"toggle\").h(14);\n        column.text(\"The terms of service are following: you agree that your data will be used by an AI to generate funny cat and dog videos based entirely on your name and lastname.\\n\\nYou also agree to give us your time to view those videos, because we said so.\").color(0xaaaaaa, false).marginTop(8);\n\n        for (var i \u003d 0; i \u003c 10; i++)\n        {\n            column.button(\"Button \" + (i + 1)).h(20);\n        }\n\n        column.text(\"These 10 buttons above demonstrate the ability of this layout element to scroll down.\").marginTop(12);\n\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e"
         }
@@ -12024,7 +12144,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UILayoutComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UILayoutComponent"
           },
           "docs": "Set manually scroll size of the layout element. This works only with\n basic {@link IMappetUIBuilder#layout()} component.\n\n \u003cp\u003eIf {@link UILayoutComponent#horizontal()} was enabled earlier,\n then this value will change the max scrollable to width, rather than\n height.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var size \u003d 400;\n\n        var ui \u003d mappet.createUI().background();\n\n        // Demonstration of manual vertical scroll area\n        var vertical \u003d ui.layout();\n\n        vertical.getCurrent().scroll().scrollSize(size).rxy(0.25, 0.5).wh(150, 200).anchor(0.5);\n        vertical.button(\"Top left\").xy(10, 10).wh(100, 20);\n        vertical.button(\"Middle\").rx(0.5, -50).y(size / 2 - 10).wh(100, 20);\n        vertical.button(\"Bottom right\").rx(1, -110).y(size - 30).wh(100, 20);\n\n        ui.label(\"Vertical scroll\").background(0x88000000).rx(0.25).ry(0.5, -120).wh(100, 20).anchorX(0.5).labelAnchor(0.5, 0);\n\n        // Demonstration of manual horizontal scroll area\n        var horizontal \u003d ui.layout();\n\n        horizontal.getCurrent().scroll().horizontal().scrollSize(size).rxy(0.75, 0.5).wh(150, 200).anchor(0.5);\n        horizontal.button(\"Top left\").xy(10, 10).wh(100, 20);\n        horizontal.button(\"Middle\").x(size / 2 - 50).ry(0.5, -10).wh(100, 20);\n        horizontal.button(\"Bottom right\").x(size - 110).ry(1, -30).wh(100, 20);\n\n        ui.label(\"Horizontal scroll\").background(0x88000000).rx(0.75).ry(0.5, -120).wh(100, 20).anchorX(0.5).labelAnchor(0.5, 0);\n\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e"
         }
@@ -12032,7 +12152,7 @@
       "horizontal": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UILayoutComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UILayoutComponent"
           },
           "docs": "Enables horizontal mode. This usable when {@link UILayoutComponent#scroll()}\n is enabled."
         }
@@ -12046,7 +12166,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UILayoutComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UILayoutComponent"
           },
           "docs": "Per component width (in pixels) that should be sustained within\n {@link IMappetUIBuilder#grid(int)} layout type. This doesn\u0027t work with any other\n component than grid."
         }
@@ -12060,7 +12180,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UILayoutComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UILayoutComponent"
           },
           "docs": "How many components per row that should be placed within\n {@link IMappetUIBuilder#grid(int)} layout type. This option doesn\u0027t work with\n any other component than grid."
         }
@@ -12140,11 +12260,11 @@
       ]
     }
   },
-  "mchorse.mappet.api.ui.components.UILabelComponent": {
+  "mchorse.mappet.api.scripts.code.ui.UILabelComponent": {
     "name": "UILabelComponent",
     "docs": "Label UI component.\n\n \u003cp\u003eThis component allows you to input one line of text. You can use Minecraft\u0027s\n formatting using \"[\" symbol instead of section field.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link IMappetUIBuilder#label(String)} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI().background();\n        var label \u003d ui.label(\"Welcome, [l\" + c.getSubject().getName() + \"[r!\");\n\n        label.rxy(0.5, 0.5).wh(100, 20).anchor(0.5);\n        label.color(0x00ee22).background(0x88000000).labelAnchor(0.5);\n\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e",
     "superTypes": [
-      "mchorse.mappet.api.ui.components.UILabelBaseComponent"
+      "mchorse.mappet.api.scripts.code.ui.UILabelBaseComponent"
     ],
     "methods": {
       "background": [
@@ -12156,7 +12276,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UILabelComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UILabelComponent"
           },
           "docs": "Change background color of this label component by providing hex ARGB.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Add a half transparent black background\n    uiContext.get(\"label\").background(0x88000000);\n }\u003c/pre\u003e"
         }
@@ -12170,7 +12290,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UILabelComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UILabelComponent"
           },
           "docs": "Change text\u0027s anchor point which determines where text will be rendered\n relative to component\u0027s frame both vertically and horizontally.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Position the label\u0027s text in the middle of its frame\n    uiContext.get(\"label\").labelAnchor(0.5);\n }\u003c/pre\u003e"
         },
@@ -12186,7 +12306,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UILabelComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UILabelComponent"
           },
           "docs": "Change text\u0027s anchor point which determines where text will be rendered\n relative to component\u0027s frame, with separate vertical and horizontal\n anchors.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Position the label\u0027s text in the middle only vertically\n    uiContext.get(\"label\").labelAnchor(0, 0.5);\n }\u003c/pre\u003e"
         }
@@ -12266,11 +12386,11 @@
       ]
     }
   },
-  "mchorse.mappet.api.ui.components.UILabelBaseComponent": {
+  "mchorse.mappet.api.scripts.code.ui.UILabelBaseComponent": {
     "name": "UILabelBaseComponent",
     "docs": "",
     "superTypes": [
-      "mchorse.mappet.api.ui.components.UIComponent"
+      "mchorse.mappet.api.scripts.code.ui.UIComponent"
     ],
     "methods": {
       "color": [
@@ -12282,7 +12402,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UILabelBaseComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UILabelBaseComponent"
           },
           "docs": "Change text color of this component by providing hex RGB.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Set label\u0027s text color to toxic green\n    uiContext.get(\"component\").color(0x00ff00);\n }\u003c/pre\u003e"
         },
@@ -12298,7 +12418,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UILabelBaseComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UILabelBaseComponent"
           },
           "docs": "Change text color of this component by providing hex RGB.\n Optionally enable text shadow.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Set label\u0027s text color to black (and without text shadow)\n    uiContext.get(\"component\").color(0x000000, false);\n }\u003c/pre\u003e"
         }
@@ -12312,7 +12432,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UILabelBaseComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UILabelBaseComponent"
           },
           "docs": "Set label for label, toggle and text UI components, or change\n the input value for textbox and textarea components.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n\n    // Assuming that title is a label UI component\n    uiContext.get(\"title\").label(\"Application form\");\n\n    // Assuming that prerequisites is a text UI component\n    uiContext.get(\"prerequisites\").label(\"This is an application form for enrolling into H.P. Lovecraft\u0027s book club.\\n\\n* - are required fields\");\n\n    // Assuming that fullname is a textbox UI component\n    uiContext.get(\"fullname\").label(\"John Smith\");\n\n    // Assuming that description is a textarea UI component\n    uiContext.get(\"description\").label(\"I\u0027m John Smith, I\u0027m from Alaska, and I like fishing.\");\n\n    // Assuming that adult is a toggle UI component\n    uiContext.get(\"adult\").label(\"Adult\");\n }\u003c/pre\u003e"
         }
@@ -12400,11 +12520,11 @@
       ]
     }
   },
-  "mchorse.mappet.api.ui.components.UIIconButtonComponent": {
+  "mchorse.mappet.api.scripts.code.ui.UIIconButtonComponent": {
     "name": "UIIconButtonComponent",
     "docs": "Clickable icon button component.\n\n \u003cp\u003eThis component displays an icon, which allows users to trigger the handler\n script. The value that gets written to UI context\u0027s data (if ID is present)\n is how many times the icon button was pressed.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link IMappetUIBuilder#icon(String)} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var button \u003d ui.icon(\"more\").id(\"icon\");\n\n        button.rxy(0.5, 0.5).wh(20, 20).anchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"icon\")\n        {\n            // Get a set of all icons\n            var icons \u003d Java.type(\"mchorse.mclib.client.gui.utils.IconRegistry\").icons.keySet();\n\n            // Set a random icon\n            var index \u003d Math.floor(Math.random() * icons.size());\n            var i \u003d 0;\n\n            for each (var icon in icons)\n            {\n                if (i \u003d\u003d index)\n                {\n                    uiContext.get(\"icon\").icon(icon);\n\n                    break;\n                }\n\n                i +\u003d 1;\n            }\n        }\n    }\n }\u003c/pre\u003e",
     "superTypes": [
-      "mchorse.mappet.api.ui.components.UIComponent"
+      "mchorse.mappet.api.scripts.code.ui.UIComponent"
     ],
     "methods": {
       "icon": [
@@ -12417,7 +12537,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIIconButtonComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIIconButtonComponent"
           },
           "docs": "Change icon component\u0027s icon.\n\n \u003cp\u003eSo using that piece of code, you can get create a GUI that shows\n every icon with a tooltip:\u003c/p\u003e\n\n \u003cpre\u003e{@code\n function main(c) {\n     var ui \u003d mappet.createUI(c, \"handler\").background();\n\n     var grid \u003d ui.grid(10);\n     grid.getCurrent().width(20).rxy(0.5, 0.5).w(845).anchor(0.5);\n\n     var icons \u003d mappet.getAllIcons()\n     icons.sort(function(a, b) {\n         return a \u003e b ? 1 : -1\n     })\n     for each(var icon in icons) {\n         grid.icon(icon).wh(20, 20).tooltip(icon).id(icon);\n     }\n\n     var textbox \u003d ui.textbox().id(\"textbox\")\n     var invert \u003d ui.toggle(\u0027\u0027, true).id(\"toggle\")\n\n     textbox.rxy(0.875, 0.925).wh(160, 20).anchor(0.5).updateDelay(500);\n     invert.rxy(0.775, 0.925).wh(20, 20).anchor(0.5)\n\n     c.getSubject().openUI(ui);\n }\n\n function handler(c) {\n     var ui \u003d c.getSubject().getUIContext();\n     if (ui.getLast() \u003d\u003d\u003d \"textbox\" || ui.getLast() \u003d\u003d\u003d \"toggle\") {\n         var data \u003d ui.getData();\n         var request \u003d data.getString(\"textbox\")\n         var state \u003d data.getBoolean(\"toggle\")\n         for each(var icon in mappet.getAllIcons()) {\n             ui.get(icon).visible((request.length \u003c\u003d 0 || icon.indexOf(request) \u003e -1) \u003d\u003d\u003d state)\n         }\n     } else if (ui.getLast().length \u003e 0) {\n         c.getSubject().setClipboard(ui.getLast())\n     }\n }\n }\u003c/pre\u003e\n\n \u003cp\u003eA basic example:\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n    uiContext.get(\"icon\").icon(\"gear\");\n }\u003c/pre\u003e"
         }
@@ -12431,7 +12551,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIIconButtonComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIIconButtonComponent"
           }
         }
       ],
@@ -12445,7 +12565,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIIconButtonComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIIconButtonComponent"
           }
         }
       ],
@@ -12570,17 +12690,17 @@
       ]
     }
   },
-  "mchorse.mappet.api.ui.components.UIGraphicsComponent": {
+  "mchorse.mappet.api.scripts.code.ui.UIGraphicsComponent": {
     "name": "UIGraphicsComponent",
     "docs": "Graphics UI component.\n\n \u003cp\u003eThis component allows drawing solid colored rectangles, gradient rectangles,\n images loaded through Minecraft\u0027s texture manager, text and McLib icons. Think\n of it as a very primitive canvas implementation.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link IMappetUIBuilder#graphics()} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n\n        // Background rendering\n        var back \u003d ui.graphics().rx(0.5, -150).ry(1, -250).wh(300, 250);\n        var icons \u003d Java.type(\"mchorse.mclib.client.gui.utils.IconRegistry\").icons.keySet();\n\n        back.shadow(80, 80, 300 - 160, 250 - 160, 0x88ff1493, 0x00ff1493, 80);\n        back.shadow(80, 80, 300 - 160, 250 - 160, 0x880088ff, 0x000088ff, 40);\n\n        for each (var icon in icons)\n        {\n            var x \u003d Math.random() * 280 + 10;\n            var y \u003d Math.random() * 230 + 10;\n\n            back.icon(icon, x - 1, y - 1, 0xff000000 + Math.random() * 0xffffff);\n        }\n\n        // Draw my favorite \"me\"\n        var m \u003d mappet.createMorph(\"{Skin:\\\"blockbuster:textures/entity/mchorse/skin.png\\\",CustomPose:{Size:[0.6f,1.8f,0.6f],Poses:{right_arm:{P:[-6.0f,-2.0f,0.0f],R:[-90.0f,-31.0f,0.0f]},left_leg:{P:[2.0f,-12.0f,0.0f]},right_armwear:{P:[0.0f,-4.0f,0.0f]},outer:{P:[0.0f,4.0f,0.0f]},left_legwear:{P:[0.0f,-6.0f,0.0f]},body:{P:[0.0f,8.0f,0.0f],R:[0.0f,-29.0f,0.0f]},bodywear:{P:[0.0f,-6.0f,0.0f]},head:{P:[0.0f,8.0f,0.0f],R:[7.0f,-51.0f,0.0f]},left_arm:{P:[6.0f,-2.0f,0.0f]},right_leg:{P:[-2.0f,-12.0f,0.0f]},right_legwear:{P:[0.0f,-6.0f,0.0f]},anchor:{P:[0.0f,16.0f,0.0f]},left_armwear:{P:[0.0f,-4.0f,0.0f]}}},BodyParts:[{Limb:\\\"head\\\",Morph:{Settings:{Hands:1b},Name:\\\"blockbuster.mchorse/head\\\"}}],Settings:{Hands:1b},Name:\\\"blockbuster.fred_3d\\\"}\");\n        var morph \u003d ui.morph(m).id(\"icon\");\n\n        morph.rx(0.5, -150).ry(1, -250).wh(300, 250).position(-0.017, 1.367, 0).rotation(0, 0).distance(2.2).fov(40).enabled(false);\n\n        // Draw foreground\n        var graphics \u003d ui.graphics().rx(0.5, -150).ry(1, -250).wh(300, 250);\n\n        // Draw small rectangles\n        for (var i \u003d 0; i \u003c 100; i++)\n        {\n            var x \u003d Math.random() * 280 + 10;\n            var y \u003d Math.random() * 230 + 10;\n\n            graphics.rect(x - 1, y - 1, 2, 2, 0x88000000 + Math.random() * 0xffffff);\n        }\n\n        graphics.gradient(0, 210, 300, 40, 0x00ff0000, 0xffff0000);\n        // This is Thanos\u0027 infinity gauntlet. just sayin in case it gets removed xd\n        graphics.image(\"https://i.pinimg.com/originals/6d/5a/99/6d5a99fa0f01dff1dd5de5e3b8244f8d.png\", 0, 75, 55, 100);\n        graphics.text(\"McThanos\", 120, 230, 0xffffff);\n\n        ui.label(\"Graphic Design is my passion\").color(0x00ff00).background(0x88000000).rxy(0.5, 0.25).wh(100, 20).anchor(0.5).labelAnchor(0.5);\n\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e",
     "superTypes": [
-      "mchorse.mappet.api.ui.components.UIComponent"
+      "mchorse.mappet.api.scripts.code.ui.UIComponent"
     ],
     "methods": {
       "removeAll": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIGraphicsComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIGraphicsComponent"
           }
         }
       ],
@@ -13208,7 +13328,7 @@
       ]
     }
   },
-  "mchorse.mappet.api.ui.components.UIComponent": {
+  "mchorse.mappet.api.scripts.code.ui.UIComponent": {
     "name": "UIComponent",
     "docs": "Base UI component.\n\n \u003cp\u003eEvery UI component in UI API is based off this base component, and therefore\n they have all of the methods available for changing ID, margins, frame (x, y,\n width, and height), tooltip, visibility, enabled, keybinds and update delay.\u003c/p\u003e",
     "methods": {
@@ -13221,7 +13341,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set the ID of the component.\n\n \u003cp\u003eWithout ID, the data that can be inputted by players won\u0027t be sent\n into the script handler, so it is \u003cb\u003erequired\u003c/b\u003e to set component\u0027s\n ID if you want to receive the data from the component.\u003c/p\u003e\n\n \u003cp\u003e\u003cb\u003eBEWARE\u003c/b\u003e: multiple components must not share same ID, if they will\n it will certainly cause bugs in the data that you\u0027ll be receiving from the\n client and the way you retrieve components using {@link IMappetUIContext#get(String)}.\u003c/p\u003e"
         }
@@ -13235,7 +13355,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set a tooltip that will be displayed at the bottom of component\u0027s frame."
         },
@@ -13252,7 +13372,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set a tooltip that will be displayed at specified side of component\u0027s frame.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n    uiContext.get(\"component\").tooltip(\"Enter your full name\", 1);\n }\u003c/pre\u003e\n\n \u003ccode\u003e1\u003c/code\u003e is top.\n \u003ccode\u003e2\u003c/code\u003e is right.\n \u003ccode\u003e3\u003c/code\u003e is left."
         }
@@ -13266,7 +13386,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set component\u0027s visibility. Hiding components also disables any user input,\n i.e. despite button being invisible, it can\u0027t be clicked.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n    uiContext.get(\"button\").visible(false);\n }\u003c/pre\u003e"
         }
@@ -13280,7 +13400,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Toggle component\u0027s user input. When the component is disabled, it can\u0027t\n receive any user input: no inputting text into or focusing textbox and\n textareas, no clicking on click area, icon button, or button, etc.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n    uiContext.get(\"button\").enabled(false);\n }\u003c/pre\u003e"
         }
@@ -13294,7 +13414,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set margin to all sides.\n\n \u003cp\u003e\u003cb\u003eIMPORTANT\u003c/b\u003e: margins affect positioning only within layout component.\n They do absolutely nothing outside of column, row and grid layout components.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n    uiContext.get(\"button\").margin(10);\n }\u003c/pre\u003e"
         }
@@ -13308,7 +13428,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set top margin. See {@link #margin(int)} method for more information about\n restrictions."
         }
@@ -13322,7 +13442,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set bottom margin. See {@link #margin(int)} method for more information\n about restrictions."
         }
@@ -13336,7 +13456,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set left margin. See {@link #margin(int)} method for more information about\n restrictions."
         }
@@ -13350,7 +13470,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set right margin. See {@link #margin(int)} method for more information about\n restrictions."
         }
@@ -13372,7 +13492,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Add a keybind with no modifiers. See {@link #keybind(int, String, String, boolean, boolean)} for proper example."
         },
@@ -13396,7 +13516,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Add a keybind with optional Control modifier.\n See {@link #keybind(int, String, String, boolean, boolean)} for proper example."
         },
@@ -13424,7 +13544,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Add a keybind with optional Control and/or Shift modifier(s)."
         },
@@ -13456,7 +13576,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Add a keybind optionally with Control, Shift, and Alt key modifiers (i.e. while holding).\n\n \u003cpre\u003e{@code\n    // For more reference, check this page to find the list of all key codes:\n    // https://minecraft.fandom.com/wiki/Key_codes/Keyboard1\n    //\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var button \u003d ui.icon(\"upload\").id(\"icon\");\n\n        // 203 \u003d Arrow left\n        ui.getCurrent().keybind(203, \"left\", \"Change icon to left\");\n        // 205 \u003d Arrow right\n        ui.getCurrent().keybind(205, \"right\", \"Change icon to right\");\n        button.rxy(0.5, 0.5).wh(20, 20).anchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var key \u003d uiContext.getHotkey();\n\n        if (key \u003d\u003d\u003d \"left\")\n        {\n            uiContext.get(\"icon\").icon(\"leftload\");\n        }\n        else if (key \u003d\u003d\u003d \"right\")\n        {\n            uiContext.get(\"icon\").icon(\"rightload\");\n        }\n    }\n }\u003c/pre\u003e"
         }
@@ -13481,7 +13601,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Add a context menu item."
         },
@@ -13509,7 +13629,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Add a context menu item.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var label \u003d ui.label(\"Hello!\").id(\"label\").tooltip(\"Right click me...\");\n\n        label.rxy(0.5, 0.5).wh(160, 20).anchor(0.5).labelAnchor(0.5);\n        label.context(\"bubble\", \"a\", \"How are you?\");\n        label.context(\"remove\", \"b\", \"...\", 0xff0033);\n\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var data \u003d uiContext.getData();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"textbox\")\n        {\n            c.getSubject().send(\"Your name is: \" + data.getString(\"textbox\"));\n        }\n\n        var item \u003d uiContext.getContext();\n\n        if (item \u003d\u003d\u003d \"a\")\n        {\n            uiContext.get(\"label\").label(\"I\u0027m fine, and you?\");\n        }\n        else if (item \u003d\u003d\u003d \"b\")\n        {\n            uiContext.get(\"label\").label(\"\");\n        }\n    }\n }\u003c/pre\u003e"
         }
@@ -13523,7 +13643,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set X in pixels relative to parent component."
         }
@@ -13537,7 +13657,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set X relative in percents to parent component. Passed value should be\n \u003ccode\u003e0..1\u003c/code\u003e, where \u003ccode\u003e0\u003c/code\u003e is fully left, and \u003ccode\u003e1\u003c/code\u003e is fully right."
         },
@@ -13555,7 +13675,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set X relative in percents to parent component with offset. Passed value should be\n \u003ccode\u003e0..1\u003c/code\u003e, where \u003ccode\u003e0\u003c/code\u003e is fully left, and \u003ccode\u003e1\u003c/code\u003e is fully right."
         }
@@ -13569,7 +13689,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set Y in pixels relative to parent component."
         }
@@ -13583,7 +13703,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set Y relative in percents to parent component. Passed value should be\n \u003ccode\u003e0..1\u003c/code\u003e, where \u003ccode\u003e0\u003c/code\u003e is fully top, and \u003ccode\u003e1\u003c/code\u003e is fully bottom."
         },
@@ -13601,7 +13721,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set Y relative in percents to parent component with offset. Passed value should be\n \u003ccode\u003e0..1\u003c/code\u003e, where \u003ccode\u003e0\u003c/code\u003e is fully top, and \u003ccode\u003e1\u003c/code\u003e is fully bottom."
         }
@@ -13615,7 +13735,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set width in pixels."
         }
@@ -13629,7 +13749,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set width relative in percents to parent component. Passed value should be\n \u003ccode\u003e0..1\u003c/code\u003e, where \u003ccode\u003e0\u003c/code\u003e is element will be \u003ccode\u003e0%\u003c/code\u003e of\n parent component\u0027s width, and \u003ccode\u003e1\u003c/code\u003e is \u003ccode\u003e100%\u003c/code\u003e of parent\u0027s\n component width."
         },
@@ -13647,7 +13767,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set width relative in percents to parent component with offset. Passed value should be\n \u003ccode\u003e0..1\u003c/code\u003e, where \u003ccode\u003e0\u003c/code\u003e is element will be \u003ccode\u003e0%\u003c/code\u003e of\n parent component\u0027s width, and \u003ccode\u003e1\u003c/code\u003e is \u003ccode\u003e100%\u003c/code\u003e of parent\u0027s\n component width."
         }
@@ -13661,7 +13781,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set height in pixels."
         }
@@ -13675,7 +13795,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set height relative in percents to parent component. Passed value should be\n \u003ccode\u003e0..1\u003c/code\u003e, where \u003ccode\u003e0\u003c/code\u003e is element will be \u003ccode\u003e0%\u003c/code\u003e of\n parent component\u0027s height, and \u003ccode\u003e1\u003c/code\u003e is \u003ccode\u003e100%\u003c/code\u003e of parent\u0027s\n component height."
         },
@@ -13693,7 +13813,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set height relative in percents to parent component with offset. Passed value should be\n \u003ccode\u003e0..1\u003c/code\u003e, where \u003ccode\u003e0\u003c/code\u003e is element will be \u003ccode\u003e0%\u003c/code\u003e of\n parent component\u0027s height, and \u003ccode\u003e1\u003c/code\u003e is \u003ccode\u003e100%\u003c/code\u003e of parent\u0027s\n component height."
         }
@@ -13711,7 +13831,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set X and Y in pixels relative to parent component."
         }
@@ -13729,7 +13849,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set X and Y in pixels in percentage relative to parent component."
         }
@@ -13747,7 +13867,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set width and height in pixels."
         }
@@ -13765,7 +13885,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set relative width and height in percentage relative to parent component."
         }
@@ -13780,7 +13900,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set horizontal and vertical alignment anchor."
         },
@@ -13798,7 +13918,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set horizontal and vertical alignment anchor."
         }
@@ -13812,7 +13932,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set horizontal alignment anchor."
         }
@@ -13826,7 +13946,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set vertical alignment anchor."
         }
@@ -13840,7 +13960,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
           },
           "docs": "Set update delay in milliseconds (\u003ccode\u003e1000\u003c/code\u003e \u003d \u003ccode\u003e1\u003c/code\u003e second).\n\n \u003cp\u003eUpdate delay allows to limit how frequently data gets sent from the client\n to the hanlder script.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    // Assuming that ui is a IMappetUIBuilder\n\n    // Change text box\u0027s update delay to 1 second meaning\n    // that a second after user didn\u0027t type anything into\n    // the text box it will send all the data to the handler script\n    ui.textbox().id(\"name\").updateDelay(1000);\n }\u003c/pre\u003e"
         }
@@ -14101,11 +14221,11 @@
       ]
     }
   },
-  "mchorse.mappet.api.ui.components.UIClickComponent": {
+  "mchorse.mappet.api.scripts.code.ui.UIClickComponent": {
     "name": "UIClickComponent",
     "docs": "Click area component.\n\n \u003cp\u003eThis component doesn\u0027t display anything but rather acts as a special\n user input field. When an ID is assigned and users clicks on the component\u0027s\n bounds, this component will be sending a NBT list containing 5 floats:\u003c/p\u003e\n\n \u003cul\u003e\n     \u003cli\u003eIndex \u003ccode\u003e0\u003c/code\u003e \u003d X coordinate relative to click area\u0027s frame.\u003c/li\u003e\n     \u003cli\u003eIndex \u003ccode\u003e1\u003c/code\u003e \u003d Y coordinate relative to click area\u0027s frame.\u003c/li\u003e\n     \u003cli\u003eIndex \u003ccode\u003e2\u003c/code\u003e \u003d X factor (0..1) how far into the click area\u0027s width (\u003ccode\u003e0\u003c/code\u003e being left edge, \u003ccode\u003e1\u003c/code\u003e being the right edge).\u003c/li\u003e\n     \u003cli\u003eIndex \u003ccode\u003e3\u003c/code\u003e \u003d Y factor (0..1) how far into the click area\u0027s height (\u003ccode\u003e0\u003c/code\u003e being top edge, \u003ccode\u003e1\u003c/code\u003e being the bottom edge).\u003c/li\u003e\n     \u003cli\u003eIndex \u003ccode\u003e4\u003c/code\u003e \u003d Mouse button (\u003ccode\u003e0\u003c/code\u003e is left button, \u003ccode\u003e1\u003c/code\u003e is right button, \u003ccode\u003e2\u003c/code\u003e is middle button, etc.).\u003c/li\u003e\n \u003c/ul\u003e\n\n \u003cp\u003eThis component can be created using {@link IMappetUIBuilder#click()} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var click \u003d ui.click().id(\"click\");\n        var backdrop \u003d ui.graphics().id(\"backdrop\");\n\n        backdrop.rxy(0.5, 0.5).wh(300, 150).anchor(0.5);\n        backdrop.rect(0, 0, 300, 150, 0x88000000);\n        click.rxy(0.5, 0.5).wh(300, 150).anchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var data \u003d uiContext.getData();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"click\")\n        {\n            // Math.floor just in case there are precision issues\n            var list \u003d data.getList(\"click\");\n            var x \u003d Math.floor(list.getFloat(0));\n            var y \u003d Math.floor(list.getFloat(1));\n            var fx \u003d list.getFloat(2);\n            var fy \u003d list.getFloat(3);\n            var button \u003d Math.floor(list.getFloat(4));\n\n            // Draw random rectangle on the back drop\n            if (button \u003d\u003d\u003d 0)\n            {\n                var backdrop \u003d uiContext.get(\"backdrop\");\n\n                backdrop.rect(x - 10, y - 10, 20, 20, 0xff000000 + Math.floor(Math.random() * 0xffffff));\n            }\n        }\n    }\n }\u003c/pre\u003e",
     "superTypes": [
-      "mchorse.mappet.api.ui.components.UIComponent"
+      "mchorse.mappet.api.scripts.code.ui.UIComponent"
     ],
     "methods": {
       "create": [
@@ -14146,11 +14266,11 @@
       ]
     }
   },
-  "mchorse.mappet.api.ui.components.UIButtonComponent": {
+  "mchorse.mappet.api.scripts.code.ui.UIButtonComponent": {
     "name": "UIButtonComponent",
     "docs": "Clickable button component.\n\n \u003cp\u003eThis component displays a flat colored box with a label on top, which\n allows users to trigger the handler script. The value that gets written\n to UI context\u0027s data (if ID is present) is how many times the button\n was pressed.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link IMappetUIBuilder#button(String)} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var button \u003d ui.button(\"Start...\").id(\"button\");\n\n        button.rxy(0.5, 0.5).wh(160, 20).anchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"button\")\n        {\n            var data \u003d uiContext.getData();\n            var pressed \u003d data.getInt(\"button\");\n\n            if (pressed \u003e\u003d 100)\n            {\n                c.send(\"We have a winner!\");\n            }\n\n            uiContext.get(\"button\").label(\"You pressed: \" + pressed);\n        }\n    }\n }\u003c/pre\u003e",
     "superTypes": [
-      "mchorse.mappet.api.ui.components.UILabelBaseComponent"
+      "mchorse.mappet.api.scripts.code.ui.UILabelBaseComponent"
     ],
     "methods": {
       "background": [
@@ -14162,7 +14282,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIButtonComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIButtonComponent"
           },
           "docs": "Change button\u0027s background color by providing hex RGB.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n    uiContext.get(\"button\").background(0x00ff00);\n }\u003c/pre\u003e"
         }
@@ -14170,7 +14290,7 @@
       "noBackground": [
         {
           "return": {
-            "type": "mchorse.mappet.api.ui.components.UIButtonComponent"
+            "type": "mchorse.mappet.api.scripts.code.ui.UIButtonComponent"
           },
           "docs": "Disable button\u0027s background.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a IMappetUIContext\n    uiContext.get(\"button\").noBackground();\n }\u003c/pre\u003e"
         }
@@ -14267,6 +14387,483 @@
               "type": "NBTTagCompound"
             }
           ],
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ]
+    }
+  },
+  "mchorse.mappet.api.scripts.code.ui.MappetUIContext": {
+    "name": "MappetUIContext",
+    "docs": "",
+    "superTypes": [
+      "mchorse.mappet.api.scripts.user.ui.IMappetUIContext"
+    ],
+    "methods": {
+      "getData": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "isClosed": [
+        {
+          "return": {
+            "type": "boolean"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "getLast": [
+        {
+          "return": {
+            "type": "java.lang.String"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "getHotkey": [
+        {
+          "return": {
+            "type": "java.lang.String"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "getContext": [
+        {
+          "return": {
+            "type": "java.lang.String"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "get": [
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "sendToPlayer": [
+        {
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ]
+    }
+  },
+  "mchorse.mappet.api.scripts.code.ui.MappetUIBuilder": {
+    "name": "MappetUIBuilder",
+    "docs": "",
+    "superTypes": [
+      "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
+    ],
+    "methods": {
+      "getCurrent": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "getUI": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.ui.UI"
+          }
+        }
+      ],
+      "getScript": [
+        {
+          "return": {
+            "type": "java.lang.String"
+          }
+        }
+      ],
+      "getFunction": [
+        {
+          "return": {
+            "type": "java.lang.String"
+          }
+        }
+      ],
+      "background": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "closable": [
+        {
+          "parameters": [
+            {
+              "name": "closable",
+              "type": "boolean"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "paused": [
+        {
+          "parameters": [
+            {
+              "name": "paused",
+              "type": "boolean"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "create": [
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "graphics": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIGraphicsComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "button": [
+        {
+          "parameters": [
+            {
+              "name": "label",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIButtonComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "icon": [
+        {
+          "parameters": [
+            {
+              "name": "icon",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIIconButtonComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "label": [
+        {
+          "parameters": [
+            {
+              "name": "label",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UILabelComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "text": [
+        {
+          "parameters": [
+            {
+              "name": "text",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UITextComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "textbox": [
+        {
+          "parameters": [
+            {
+              "name": "text",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "maxLength",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UITextboxComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "textarea": [
+        {
+          "parameters": [
+            {
+              "name": "text",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UITextareaComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "toggle": [
+        {
+          "parameters": [
+            {
+              "name": "label",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "state",
+              "type": "boolean"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIToggleComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "trackpad": [
+        {
+          "parameters": [
+            {
+              "name": "value",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "stringList": [
+        {
+          "parameters": [
+            {
+              "name": "values",
+              "type": "java.util.List"
+            },
+            {
+              "name": "selected",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStringListComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "item": [
+        {
+          "parameters": [
+            {
+              "name": "stack",
+              "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "morph": [
+        {
+          "parameters": [
+            {
+              "name": "morph",
+              "type": "AbstractMorph"
+            },
+            {
+              "name": "editing",
+              "type": "boolean"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "click": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIClickComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "layout": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        },
+        {
+          "parameters": [
+            {
+              "name": "margin",
+              "type": "int"
+            },
+            {
+              "name": "padding",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UILayoutComponent"
+          }
+        }
+      ],
+      "column": [
+        {
+          "parameters": [
+            {
+              "name": "margin",
+              "type": "int"
+            },
+            {
+              "name": "padding",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "row": [
+        {
+          "parameters": [
+            {
+              "name": "margin",
+              "type": "int"
+            },
+            {
+              "name": "padding",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "grid": [
+        {
+          "parameters": [
+            {
+              "name": "margin",
+              "type": "int"
+            },
+            {
+              "name": "padding",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
+          },
           "annotations": [
             "java.lang.Override"
           ]

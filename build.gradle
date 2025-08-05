@@ -264,7 +264,7 @@ tasks.register('scriptingJavadocsJson', Exec) {
     group = "build"
 
     executable "javadoc"
-    args "-doclet", "robot.utils.doclets.JsonDoclet", "-docletpath", "./run/jsonDoclet-1.1.jar", "-sourcepath", "./src/main/java/", "-subpackages", "mchorse.mappet.api.scripts.user:mchorse.mappet.api.ui.components:mchorse.mappet.client.gui.utils.graphics"
+    args "-doclet", "robot.utils.doclets.JsonDoclet", "-docletpath", "./run/jsonDoclet-1.1.jar", "-sourcepath", "./src/main/java/", "-subpackages", "mchorse.mappet.api.scripts.user:mchorse.mappet.api.scripts.code.ui:mchorse.mappet.client.gui.utils.graphics"
 
     doLast {
         def tempJson = file("docs.json")

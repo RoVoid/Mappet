@@ -3,7 +3,7 @@ package mchorse.mappet.client.gui.triggers.panels;
 import mchorse.mappet.api.triggers.blocks.ScriptTriggerBlock;
 import mchorse.mappet.api.utils.ContentType;
 import mchorse.mappet.client.gui.panels.GuiScriptPanel;
-import mchorse.mappet.client.gui.scripts.GuiTextEditor;
+import mchorse.mappet.client.gui.scripts.GuiCodeEditor;
 import mchorse.mappet.client.gui.triggers.GuiTriggerOverlayPanel;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
@@ -20,7 +20,7 @@ public class GuiScriptTriggerBlockPanel extends GuiDataTriggerBlockPanel<ScriptT
 
     public GuiToggleElement inline;
 
-    public GuiTextEditor code;
+    public GuiCodeEditor code;
 
     private List<GuiElement> allElements;
 
@@ -37,7 +37,7 @@ public class GuiScriptTriggerBlockPanel extends GuiDataTriggerBlockPanel<ScriptT
             this.updateFields();
         });
 
-        this.code = new GuiTextEditor(mc, (s) -> this.block.code = s);
+        this.code = new GuiCodeEditor(mc, (s) -> this.block.code = s);
         this.code.context(() -> GuiScriptPanel.createScriptContextMenu(this.mc, code));
         this.code.setText(this.block.code);
         this.code.background().flex().h(160);

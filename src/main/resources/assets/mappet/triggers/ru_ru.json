@@ -1,0 +1,469 @@
+{
+  "block_break": {
+    "name": "Блок: разрушен игроком",
+    "description": "Происходит, когда игрок ломает блок в мире",
+    "cancelable": true,
+    "variables": {
+      "subject": [
+        "IScriptPlayer",
+        "игрок, который сломал блок"
+      ],
+      "block": [
+        "string",
+        "ID сломанного блока §7(например, minecraft:stone)§r"
+      ],
+      "meta": [
+        "int",
+        "значение метаданных блока от §60§r до §615§r"
+      ],
+      "position": [
+        "IScriptVector",
+        "место блока в мире §7(x, y, z)§r"
+      ]
+    }
+  },
+  "block_click": {
+    "name": "Блок: клик игрока",
+    "description": "Происходит, когда игрок делает левый клик §7(левой кнопкой мыши)§r по блоку в мире\n\n§lВажно§r: этот триггер работает только в режиме выживания",
+    "cancelable": true,
+    "variables": {
+      "subject": [
+        "IScriptPlayer",
+        "игрок, который кликнул по блоку"
+      ],
+      "position": [
+        "IScriptVector",
+        "место блока, по которому кликнули в мире §7(x, y, z)§r"
+      ],
+      "hand": [
+        "string",
+        "рука, которой был сделан клик по блоку §7(основная или вторая)§r"
+      ]
+    }
+  },
+  "block_interact": {
+    "name": "Блок: взаимодействие игрока",
+    "description": "Происходит, когда игрок взаимодействует с блоком §7(правая кнопка мыши)§r в мире",
+    "cancelable": true,
+    "variables": {
+      "subject": [
+        "IScriptPlayer",
+        "игрок, который взаимодействовал с блоком"
+      ],
+      "block": [
+        "string",
+        "ID блока, с которым взаимодействовали §7(например, minecraft:stone)§r"
+      ],
+      "meta": [
+        "int",
+        "значение метаданных блока от §60§r до §615§r"
+      ],
+      "position": [
+        "IScriptVector",
+        "место блока в мире §7(x, y, z)§r"
+      ],
+      "hand": [
+        "string",
+        "рука, которой происходило взаимодействие §7(основная или вторая)§r"
+      ]
+    }
+  },
+  "block_place": {
+    "name": "Блок: поставлен игроком",
+    "description": "Происходит, когда игрок ставит блок в мире",
+    "cancelable": true,
+    "variables": {
+      "subject": [
+        "IScriptPlayer",
+        "игрок, который поставил блок"
+      ],
+      "block": [
+        "string",
+        "ID поставленного блока §7(например, minecraft:stone)§r"
+      ],
+      "meta": [
+        "int",
+        "значение метаданных блока от §60§r до §615§r"
+      ],
+      "position": [
+        "IScriptVector",
+        "место блока в мире §7(x, y, z)§r"
+      ]
+    }
+  },
+  "entity_attacked": {
+    "name": "Сущность: атакована",
+    "description": "Происходит, когда сущность атакована другой сущностью",
+    "cancelable": true,
+    "variables": {
+      "subject": [
+        "IScriptEntity",
+        "сущность, которая была атакована"
+      ],
+      "object": [
+        "IScriptEntity",
+        "атакующий, причинивший урон"
+      ],
+      "damage": [
+        "double",
+        "количество урона, нанесённого сущности"
+      ],
+      "type": [
+        "string",
+        "тип полученного урона"
+      ],
+      "unblockable": [
+        "boolean",
+        "пробивает ли урон защиту"
+      ],
+      "source": [
+        "@Nullable IScriptEntity",
+        "сущность, являющаяся источником урона"
+      ]
+    }
+  },
+  "entity_damaged": {
+    "name": "Сущность: получила урон",
+    "description": "Происходит, когда сущность получает урон",
+    "cancelable": true,
+    "variables": {
+      "subject": [
+        "IScriptEntity",
+        "сущность, получившая урон"
+      ],
+      "object": [
+        "IScriptEntity",
+        "атакующий, причинивший урон"
+      ],
+      "damage": [
+        "double",
+        "количество урона"
+      ],
+      "type": [
+        "string",
+        "тип полученного урона"
+      ],
+      "unblockable": [
+        "boolean",
+        "пробивает ли урон защиту"
+      ],
+      "source": [
+        "@Nullable IScriptEntity",
+        "сущность, являющаяся источником урона"
+      ]
+    }
+  },
+  "entity_death": {
+    "name": "Сущность: смерть",
+    "description": "Происходит, когда сущность §7(кроме игроков)§r умирает",
+    "cancelable": false,
+    "variables": {
+      "subject": [
+        "IScriptEntity",
+        "умершая сущность"
+      ],
+      "object": [
+        "IScriptEntity",
+        "тот, кто её убил"
+      ],
+      "type": [
+        "string",
+        "тип урона, который её убил"
+      ],
+      "source": [
+        "@Nullable IScriptEntity",
+        "сущность, являющаяся источником смерти"
+      ]
+    }
+  },
+  "living_equipment_change": {
+    "name": "Сущность: смена экипировки",
+    "description": "Происходит при смене экипировки у живой сущности",
+    "cancelable": false,
+    "variables": {
+      "item": [
+        "IScriptItem",
+        "текущий предмет"
+      ],
+      "previous": [
+        "IScriptItem",
+        "предыдущий предмет"
+      ],
+      "slot": [
+        "int",
+        "слот, в который предмет поставлен или откуда убран"
+      ]
+    }
+  },
+  "living_knockback": {
+    "name": "Сущность: отбрасывание",
+    "description": "Происходит, когда моб или игрок получают отбрасывание",
+    "cancelable": true,
+    "variables": {
+      "object": [
+        "IScriptEntity",
+        "тот, кто атаковал"
+      ],
+      "strength": [
+        "double",
+        "сила отбрасывания"
+      ],
+      "ratioX": [
+        "double",
+        "коэффициент отбрасывания по оси X"
+      ],
+      "ratioZ": [
+        "double",
+        "коэффициент отбрасывания по оси Z"
+      ]
+    }
+  },
+  "player_chat": {
+    "name": "Игрок: сообщение в чат",
+    "description": "Происходит, когда игрок отправляет сообщение в чат\n\nКоманды, начинающиеся с §7/§r не вызывают это событие",
+    "cancelable": false,
+    "variables": {
+      "message": [
+        "string",
+        "текст сообщения, отправленного игроком"
+      ]
+    }
+  },
+  "player_close_container": {
+    "name": "Игрок: закрыл контейнер",
+    "description": "Происходит, когда игрок закрывает экран контейнера (сундук, эндерсундук, печь, верстак и т.п.)",
+    "cancelable": false,
+    "variables": {
+      "inventory": [
+        "@Nullable IScriptInventory",
+        "закрытый инвентарь §7(полезно в скриптах)§r"
+      ],
+      "position": [
+        "@Nullable IScriptVector",
+        "место блока §7(если контейнер был блоком)§r"
+      ]
+    }
+  },
+  "player_death": {
+    "name": "Игрок: смерть",
+    "description": "Происходит, когда игрок умирает\n\nСовет: если отменять смерть, дайте игроку здоровье, иначе он зациклится в смерти",
+    "cancelable": true,
+    "variables": {
+      "subject": [
+        "IScriptPlayer",
+        "умерший игрок"
+      ],
+      "object": [
+        "IScriptEntity",
+        "тот, кто убил игрока"
+      ],
+      "type": [
+        "string",
+        "тип полученного урона"
+      ],
+      "source": [
+        "@Nullable IScriptEntity",
+        "сущность, вызвавшая смерть"
+      ]
+    }
+  },
+  "player_entity_interact": {
+    "name": "Игрок: взаимодействие с сущностью",
+    "description": "Происходит, когда игрок кликает правой кнопкой по сущности\n\nМожет срабатывать дважды, по одной на каждую руку",
+    "cancelable": true,
+    "variables": {
+      "object": [
+        "IScriptEntity",
+        "сущность, с которой взаимодействуют"
+      ],
+      "hand": [
+        "string",
+        "рука, которой взаимодействовали §7(основная или вторая)§r"
+      ]
+    }
+  },
+  "player_entity_leash": {
+    "name": "Игрок: приручение сущности",
+    "description": "Происходит, когда игрок надевает поводок на сущность",
+    "cancelable": true,
+    "variables": {
+      "hand": [
+        "string",
+        "рука, которой надевали поводок §7(основная или вторая)§r"
+      ]
+    }
+  },
+  "player_item_interact": {
+    "name": "Игрок: взаимодействие с предметом",
+    "description": "Происходит, когда игрок кликает правой кнопкой в воздухе, держа предмет",
+    "cancelable": true,
+    "variables": {
+      "position": [
+        "IScriptVector",
+        "место взаимодействия §7(x, y, z)§r"
+      ],
+      "hand": [
+        "string",
+        "рука, которой взаимодействовали с предметом §7(основная или вторая)§r"
+      ]
+    }
+  },
+  "player_item_pickup": {
+    "name": "Игрок: подобрал предмет",
+    "description": "Происходит, когда игрок подбирает предмет в мире",
+    "cancelable": true,
+    "variables": {
+      "item": [
+        "IScriptItem",
+        "предмет, который подобрали §7(полезно в скриптах)§r"
+      ],
+      "entityItem": [
+        "IScriptEntityItem",
+        "сущность предмета, который подобрали §7(полезно в скриптах)§r"
+      ]
+    }
+  },
+  "player_item_toss": {
+    "name": "Игрок: выбросил предмет",
+    "description": "Происходит, когда игрок выбрасывает предмет в мире",
+    "cancelable": true,
+    "variables": {
+      "entityItem": [
+        "IScriptEntityItem",
+        "сущность выброшенного предмета §7(полезно в скриптах)§r"
+      ]
+    }
+  },
+  "player_jump": {
+    "name": "Игрок: прыжок",
+    "description": "Происходит, когда игрок прыгает",
+    "cancelable": false,
+    "variables": {}
+  },
+  "player_login": {
+    "name": "Игрок: вошёл в игру",
+    "description": "Происходит, когда игрок заходит на сервер",
+    "cancelable": false,
+    "variables": {}
+  },
+  "player_logout": {
+    "name": "Игрок: вышел из игры",
+    "description": "Происходит, когда игрок уходит с сервера",
+    "cancelable": false,
+    "variables": {}
+  },
+  "player_lmb": {
+    "name": "Игрок: левый клик по воздуху",
+    "description": "Происходит, когда игрок кликает левой кнопкой по воздуху, не попадая в блоки, сущности или предметы",
+    "cancelable": false,
+    "variables": {}
+  },
+  "player_move": {
+    "name": "Игрок: движение",
+    "description": "Происходит, когда игрок движется",
+    "cancelable": false,
+    "variables": {
+      "distance": [
+        "double",
+        "общая пройденная игроком дистанция"
+      ]
+    }
+  },
+  "player_open_container": {
+    "name": "Игрок: открыл контейнер",
+    "description": "Происходит, когда игрок открывает экран контейнера (сундук, эндерсундук, печь, верстак и т.п.)",
+    "cancelable": false,
+    "variables": {
+      "inventory": [
+        "@Nullable IScriptInventory",
+        "открытый инвентарь §7(полезно в скриптах)§r"
+      ],
+      "position": [
+        "@Nullable IScriptVector",
+        "место блока §7(если контейнер был блоком)§r"
+      ]
+    }
+  },
+  "player_respawn": {
+    "name": "Игрок: возрождение",
+    "description": "Происходит, когда игрок возрождается",
+    "cancelable": false,
+    "variables": {}
+  },
+  "player_rmb": {
+    "name": "Игрок: правый клик по воздуху",
+    "description": "Происходит, когда игрок кликает правой кнопкой по воздуху, не попадая в блоки, сущности или предметы",
+    "cancelable": false,
+    "variables": {}
+  },
+  "player_run": {
+    "name": "Игрок: бег",
+    "description": "Происходит, когда игрок бежит",
+    "cancelable": false,
+    "variables": {}
+  },
+  "player_tick": {
+    "name": "Игрок: тикинг",
+    "description": "Происходит каждый тик игрока, примерно §620§r раз в секунду\n\nСовет: используйте опцию частоты, чтобы ограничить, как часто срабатывает скрипт или событие",
+    "cancelable": false,
+    "variables": {}
+  },
+  "projectile_impact": {
+    "name": "Снаряд: попадание",
+    "description": "Происходит, когда снаряд попадает в сущность или блок",
+    "cancelable": true,
+    "variables": {
+      "subject": [
+        "@Nullable IScriptEntity",
+        "сущность, в которую попали"
+      ],
+      "object": [
+        "IScriptEntity",
+        "снаряд, вызвавший попадание"
+      ],
+      "position": [
+        "IScriptVector",
+        "место попадания"
+      ],
+      "thrower": [
+        "@Nullable IScriptEntity",
+        "сущность, которая бросила снаряд"
+      ]
+    }
+  },
+  "server_load": {
+    "name": "Сервер: загрузка",
+    "description": "Происходит при загрузке сервера",
+    "cancelable": false,
+    "variables": {}
+  },
+  "server_tick": {
+    "name": "Сервер: тикинг",
+    "description": "Происходит каждый тик сервера, примерно §620§r раз в секунду",
+    "cancelable": false,
+    "variables": {}
+  },
+  "state_changed": {
+    "name": "Маппет: смена состояния",
+    "description": "Происходит при изменении состояния сущности или сервера",
+    "cancelable": false,
+    "variables": {
+      "subject": [
+        "@Nullable IScriptEntity",
+        "игрок или НПС, у которых было изменение §7(если не у сервера)§r"
+      ],
+      "key": [
+        "string",
+        "имя состояния"
+      ],
+      "current": [
+        "string",
+        "текущее значение"
+      ],
+      "previous": [
+        "string",
+        "предыдущее значение"
+      ]
+    }
+  }
+}

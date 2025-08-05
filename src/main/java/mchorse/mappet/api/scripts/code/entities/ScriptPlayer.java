@@ -459,6 +459,11 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
         return list;
     }
 
+    @Override
+    public int getPing(){
+        return entity.ping;
+    }
+
     /* Sounds */
 
     @Override

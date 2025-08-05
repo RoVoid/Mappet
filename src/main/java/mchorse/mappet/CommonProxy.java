@@ -4,8 +4,8 @@ import mchorse.mappet.api.conditions.blocks.*;
 import mchorse.mappet.api.dialogues.nodes.*;
 import mchorse.mappet.api.events.nodes.*;
 import mchorse.mappet.api.quests.chains.QuestNode;
+import mchorse.mappet.api.scripts.code.ui.*;
 import mchorse.mappet.api.triggers.blocks.*;
-import mchorse.mappet.api.ui.components.*;
 import mchorse.mappet.api.utils.factory.IFactory;
 import mchorse.mappet.api.utils.factory.MapFactory;
 import mchorse.mappet.capabilities.character.Character;
@@ -14,7 +14,10 @@ import mchorse.mappet.capabilities.character.ICharacter;
 import mchorse.mappet.client.gui.utils.Beautifier;
 import mchorse.mappet.events.*;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.utils.*;
+import mchorse.mappet.utils.Colors;
+import mchorse.mappet.utils.MappetNpcSelector;
+import mchorse.mappet.utils.MetamorphHandler;
+import mchorse.mappet.utils.ScriptUtils;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -65,6 +68,7 @@ public class CommonProxy {
      */
     public static File configFolder;
 
+    public static TriggerEventHandler triggerEventHandler;
     public static EventHandler eventHandler;
     public static ScriptedItemEventHandler scriptedItemEventHandler;
 
@@ -76,6 +80,7 @@ public class CommonProxy {
 
         Dispatcher.register();
 
+        MinecraftForge.EVENT_BUS.register(triggerEventHandler = new TriggerEventHandler());
         MinecraftForge.EVENT_BUS.register(eventHandler = new EventHandler());
         MinecraftForge.EVENT_BUS.register(scriptedItemEventHandler = new ScriptedItemEventHandler());
 
@@ -86,6 +91,7 @@ public class CommonProxy {
 
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new MetamorphHandler());
+        Mappet.EVENT_BUS.register(triggerEventHandler);
         Mappet.EVENT_BUS.register(eventHandler);
 
         ScriptUtils.initiateScriptEngines();
@@ -115,7 +121,6 @@ public class CommonProxy {
         MapFactory<EventBaseNode> dialogueNodes = eventNodes.copy()
                 .register("reply", ReplyNode.class, Colors.REPLY)
                 .register("reaction", ReactionNode.class, Colors.STATE)
-                .register("crafting", CraftingNode.class, Colors.CRAFTING)
                 .register("quest_chain", QuestChainNode.class, Colors.QUEST)
                 .register("quest", QuestDialogueNode.class, Colors.QUEST)
                 .unregister("timer");

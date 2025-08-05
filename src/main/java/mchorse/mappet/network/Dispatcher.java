@@ -4,6 +4,7 @@ import mchorse.mappet.Mappet;
 import mchorse.mappet.network.client.ClientHandlerBlackAndWhiteShader;
 import mchorse.mappet.network.client.ClientHandlerLockPerspective;
 import mchorse.mappet.network.client.ClientHandlerPack;
+import mchorse.mappet.network.client.ClientHandlerSyncHotkeys;
 import mchorse.mappet.network.client.blocks.ClientHandlerEditConditionModel;
 import mchorse.mappet.network.client.blocks.ClientHandlerEditEmitter;
 import mchorse.mappet.network.client.blocks.ClientHandlerEditRegion;
@@ -12,12 +13,7 @@ import mchorse.mappet.network.client.content.ClientHandlerContentData;
 import mchorse.mappet.network.client.content.ClientHandlerContentNames;
 import mchorse.mappet.network.client.content.ClientHandlerServerSettings;
 import mchorse.mappet.network.client.content.ClientHandlerStates;
-import mchorse.mappet.network.client.crafting.ClientHandlerCraft;
-import mchorse.mappet.network.client.crafting.ClientHandlerCraftingTable;
 import mchorse.mappet.network.client.dialogue.ClientHandlerDialogueFragment;
-import mchorse.mappet.network.client.events.ClientHandlerEventPlayerHotkeys;
-import mchorse.mappet.network.client.events.ClientHandlerPlayerJournal;
-import mchorse.mappet.network.client.factions.ClientHandlerFactions;
 import mchorse.mappet.network.client.huds.ClientHandlerHUDMorph;
 import mchorse.mappet.network.client.huds.ClientHandlerHUDScene;
 import mchorse.mappet.network.client.items.ClientHandlerScriptedItemInfo;
@@ -40,16 +36,12 @@ import mchorse.mappet.network.common.blocks.PacketEditEmitter;
 import mchorse.mappet.network.common.blocks.PacketEditRegion;
 import mchorse.mappet.network.common.blocks.PacketEditTrigger;
 import mchorse.mappet.network.common.content.*;
-import mchorse.mappet.network.common.crafting.PacketCraft;
-import mchorse.mappet.network.common.crafting.PacketCraftingTable;
 import mchorse.mappet.network.common.dialogue.PacketDialogueFragment;
 import mchorse.mappet.network.common.dialogue.PacketFinishDialogue;
 import mchorse.mappet.network.common.dialogue.PacketPickReply;
-import mchorse.mappet.network.common.events.PacketEventHotkey;
-import mchorse.mappet.network.common.events.PacketEventHotkeys;
-import mchorse.mappet.network.common.events.PacketPlayerJournal;
-import mchorse.mappet.network.common.factions.PacketFactions;
 import mchorse.mappet.network.common.factions.PacketRequestFactions;
+import mchorse.mappet.network.common.hotkey.PacketSyncHotkeys;
+import mchorse.mappet.network.common.hotkey.PacketTriggeredHotkeys;
 import mchorse.mappet.network.common.huds.PacketHUDMorph;
 import mchorse.mappet.network.common.huds.PacketHUDScene;
 import mchorse.mappet.network.common.items.PacketScriptedItemInfo;
@@ -65,17 +57,14 @@ import mchorse.mappet.network.common.ui.PacketCloseUI;
 import mchorse.mappet.network.common.ui.PacketUI;
 import mchorse.mappet.network.common.ui.PacketUIData;
 import mchorse.mappet.network.common.utils.PacketChangedBoundingBox;
+import mchorse.mappet.network.server.ServerHandlerHotkeys;
 import mchorse.mappet.network.server.blocks.ServerHandlerEditConditionModel;
 import mchorse.mappet.network.server.blocks.ServerHandlerEditEmitter;
 import mchorse.mappet.network.server.blocks.ServerHandlerEditRegion;
 import mchorse.mappet.network.server.blocks.ServerHandlerEditTrigger;
 import mchorse.mappet.network.server.content.*;
-import mchorse.mappet.network.server.crafting.ServerHandlerCraft;
-import mchorse.mappet.network.server.crafting.ServerHandlerCraftingTable;
 import mchorse.mappet.network.server.dialogue.ServerHandlerFinishDialogue;
 import mchorse.mappet.network.server.dialogue.ServerHandlerPickReply;
-import mchorse.mappet.network.server.events.ServerHandlerEventHotkey;
-import mchorse.mappet.network.server.events.ServerHandlerPlayerJournal;
 import mchorse.mappet.network.server.factions.ServerHandlerRequestFactions;
 import mchorse.mappet.network.server.items.ServerHandlerScriptedItemInfo;
 import mchorse.mappet.network.server.logs.ServerHandlerLogs;
@@ -105,12 +94,6 @@ public class Dispatcher {
     public static final AbstractDispatcher DISPATCHER = new AbstractDispatcher(Mappet.MOD_ID) {
         @Override
         public void register() {
-            /* Crafting table */
-            this.register(PacketCraftingTable.class, ClientHandlerCraftingTable.class, Side.CLIENT);
-            this.register(PacketCraftingTable.class, ServerHandlerCraftingTable.class, Side.SERVER);
-            this.register(PacketCraft.class, ClientHandlerCraft.class, Side.CLIENT);
-            this.register(PacketCraft.class, ServerHandlerCraft.class, Side.SERVER);
-
             /* Dialogue */
             this.register(PacketDialogueFragment.class, ClientHandlerDialogueFragment.class, Side.CLIENT);
             this.register(PacketPickReply.class, ServerHandlerPickReply.class, Side.SERVER);
@@ -165,14 +148,11 @@ public class Dispatcher {
             this.register(PacketQuestVisibility.class, ServerHandlerQuestVisibility.class, Side.SERVER);
 
             /* Factions */
-            this.register(PacketFactions.class, ClientHandlerFactions.class, Side.CLIENT);
             this.register(PacketRequestFactions.class, ServerHandlerRequestFactions.class, Side.SERVER);
 
             /* Events */
-            this.register(PacketEventHotkeys.class, ClientHandlerEventPlayerHotkeys.class, Side.CLIENT);
-            this.register(PacketEventHotkey.class, ServerHandlerEventHotkey.class, Side.SERVER);
-            this.register(PacketPlayerJournal.class, ClientHandlerPlayerJournal.class, Side.CLIENT);
-            this.register(PacketPlayerJournal.class, ServerHandlerPlayerJournal.class, Side.SERVER);
+            this.register(PacketSyncHotkeys.class, ClientHandlerSyncHotkeys.class, Side.CLIENT);
+            this.register(PacketTriggeredHotkeys.class, ServerHandlerHotkeys.class, Side.SERVER);
 
             /* Scripts */
             this.register(PacketEntityRotations.class, ClientHandlerEntityRotations.class, Side.CLIENT);

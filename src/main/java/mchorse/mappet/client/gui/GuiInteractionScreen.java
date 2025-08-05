@@ -1,11 +1,8 @@
 package mchorse.mappet.client.gui;
 
-import mchorse.mappet.api.crafting.CraftingTable;
 import mchorse.mappet.api.dialogues.DialogueFragment;
 import mchorse.mappet.api.quests.chains.QuestInfo;
 import mchorse.mappet.api.quests.chains.QuestStatus;
-import mchorse.mappet.client.gui.crafting.GuiCrafting;
-import mchorse.mappet.client.gui.crafting.ICraftingScreen;
 import mchorse.mappet.client.gui.quests.GuiQuestCard;
 import mchorse.mappet.client.gui.quests.GuiQuestInfoListElement;
 import mchorse.mappet.client.gui.utils.GuiMorphRenderer;
@@ -31,8 +28,7 @@ import net.minecraft.client.resources.I18n;
 
 import java.util.List;
 
-public class GuiInteractionScreen extends GuiBase implements ICraftingScreen
-{
+public class GuiInteractionScreen extends GuiBase {
     public GuiElement area;
 
     public GuiMorphRenderer morph;
@@ -45,11 +41,6 @@ public class GuiInteractionScreen extends GuiBase implements ICraftingScreen
 
     private PacketDialogueFragment fragment;
 
-    /* Crafting */
-    public GuiCrafting crafting;
-
-    private CraftingTable table;
-
     /* Quests */
     public GuiElement quest;
     public GuiQuestInfoListElement quests;
@@ -58,8 +49,7 @@ public class GuiInteractionScreen extends GuiBase implements ICraftingScreen
 
     private List<QuestInfo> questInfos;
 
-    public GuiInteractionScreen(PacketDialogueFragment fragment)
-    {
+    public GuiInteractionScreen(PacketDialogueFragment fragment) {
         super();
 
         Minecraft mc = Minecraft.getMinecraft();
@@ -88,11 +78,6 @@ public class GuiInteractionScreen extends GuiBase implements ICraftingScreen
         this.reaction.flex().relative(this.area).w(1F).hTo(this.replies.area).column(5).vertical().stretch().scroll().padding(10);
         this.replies.flex().relative(this.area).y(0.75F).w(1F).hTo(this.area.area, 1F).column(10).vertical().stretch().scroll().padding(10);
 
-        /* Crafting */
-        this.crafting = new GuiCrafting(mc);
-        this.crafting.flex().relative(this.area).y(0.45F).w(1F).hTo(this.area.area, 1F);
-        this.crafting.setVisible(false);
-
         /* Quests */
         this.quest = new GuiElement(mc);
         this.quest.setVisible(false);
@@ -113,7 +98,7 @@ public class GuiInteractionScreen extends GuiBase implements ICraftingScreen
             GuiDraw.drawHorizontalGradientRect(this.area.area.x(0.65F), 0, this.area.area.x(1.125F), this.area.area.ey(), 0xaa000000, 0);
         });
 
-        this.area.add(this.quest, this.crafting, this.replies, this.reaction);
+        this.area.add(this.quest, this.replies, this.reaction);
         this.root.add(this.morph, drawable, this.area);
         this.reaction.add(this.reactionText);
 
@@ -121,25 +106,19 @@ public class GuiInteractionScreen extends GuiBase implements ICraftingScreen
     }
 
     @Override
-    public boolean doesGuiPauseGame()
-    {
+    public boolean doesGuiPauseGame() {
         return false;
     }
 
-    public void updateVisibility()
-    {
+    public void updateVisibility() {
         this.back.removeFromParent();
 
-        if (this.questInfos != null)
-        {
+        if (this.questInfos != null) {
             this.quests.setVisible(!this.fragment.singleQuest);
 
-            if (this.fragment.singleQuest)
-            {
+            if (this.fragment.singleQuest) {
                 this.questArea.flex().relative(this.quest).y(0);
-            }
-            else
-            {
+            } else {
                 this.questArea.flex().relative(this.quest).y(66);
             }
 
@@ -147,43 +126,29 @@ public class GuiInteractionScreen extends GuiBase implements ICraftingScreen
 
             this.back.flex().reset().relative(this.quest).x(10).y(1F, -10).wh(80, 20).anchorY(1F);
             this.quest.add(this.back);
-        }
-        else if (this.table != null)
-        {
-            this.reaction.flex().hTo(this.crafting.area);
-
-            this.back.flex().reset().relative(this.crafting).x(10).y(1F, -10).wh(80, 20).anchorY(1F);
-            this.crafting.add(this.back);
-        }
-        else
-        {
+        } else {
             this.reaction.flex().hTo(this.replies.area);
         }
 
         this.quest.setVisible(this.questInfos != null);
-        this.crafting.setVisible(this.table != null);
-        this.replies.setVisible(this.questInfos == null && this.table == null);
+        this.replies.setVisible(this.questInfos == null);
     }
 
     /* Dialogue */
 
-    private void setFragment(PacketDialogueFragment fragment)
-    {
-        if (fragment.morph != null)
-        {
+    private void setFragment(PacketDialogueFragment fragment) {
+        if (fragment.morph != null) {
             this.morph.morph.set(fragment.morph);
         }
 
         this.fragment = fragment;
-        this.table = null;
         this.questInfos = null;
 
         this.reactionText.text(fragment.reaction.getProcessedText());
         this.reactionText.color(fragment.reaction.color, true);
         this.replies.removeAll();
 
-        for (DialogueFragment reply : fragment.replies)
-        {
+        for (DialogueFragment reply : fragment.replies) {
             GuiClickableText replyElement = new GuiClickableText(Minecraft.getMinecraft());
 
             replyElement.callback(this::pickReply);
@@ -196,53 +161,27 @@ public class GuiInteractionScreen extends GuiBase implements ICraftingScreen
         this.root.resize();
     }
 
-    private void pickReply(GuiClickableText text)
-    {
+    private void pickReply(GuiClickableText text) {
         Dispatcher.sendToServer(new PacketPickReply(this.replies.getChildren().indexOf(text)));
     }
 
-    public void pickReply(PacketDialogueFragment fragment)
-    {
+    public void pickReply(PacketDialogueFragment fragment) {
         this.setFragment(fragment);
 
-        if (fragment.reaction.text.isEmpty() && fragment.isEmpty())
-        {
+        if (fragment.reaction.text.isEmpty() && fragment.isEmpty()) {
             this.closeScreen();
 
             return;
         }
 
-        if (fragment.hasQuests)
-        {
+        if (fragment.hasQuests) {
             this.setQuests(fragment.quests);
         }
-        else if (fragment.table != null)
-        {
-            this.setCraftingTable(fragment.table);
-        }
-    }
-
-    /* Crafting */
-
-    public void setCraftingTable(CraftingTable table)
-    {
-        this.table = table;
-
-        this.crafting.set(table);
-        this.updateVisibility();
-        this.root.resize();
-    }
-
-    @Override
-    public void refresh()
-    {
-        this.crafting.refresh();
     }
 
     /* Quests */
 
-    public void setQuests(List<QuestInfo> quests)
-    {
+    public void setQuests(List<QuestInfo> quests) {
         this.questInfos = quests;
 
         this.quests.clear();
@@ -257,13 +196,11 @@ public class GuiInteractionScreen extends GuiBase implements ICraftingScreen
         this.root.resize();
     }
 
-    public void pickQuest(QuestInfo info)
-    {
+    public void pickQuest(QuestInfo info) {
         this.questArea.removeAll();
         this.actionQuest.label.set(info != null && info.status == QuestStatus.COMPLETED ? "mappet.gui.interaction.complete" : "mappet.gui.interaction.accept");
 
-        if (info != null)
-        {
+        if (info != null) {
             GuiQuestCard.fillQuest(this.questArea, info.quest, true, false);
         }
 
@@ -271,27 +208,22 @@ public class GuiInteractionScreen extends GuiBase implements ICraftingScreen
         this.actionQuest.setEnabled(info != null && info.status != QuestStatus.UNAVAILABLE);
     }
 
-    public void actionQuest()
-    {
+    public void actionQuest() {
         QuestInfo info = this.quests.getCurrentFirst();
 
         Dispatcher.sendToServer(new PacketQuestAction(info.quest.getId(), info.status));
 
-        if (this.fragment.singleQuest && info.status == QuestStatus.COMPLETED)
-        {
+        if (this.fragment.singleQuest && info.status == QuestStatus.COMPLETED) {
             this.back.clickItself(GuiBase.getCurrent());
 
             return;
         }
 
-        if (info.status == QuestStatus.AVAILABLE)
-        {
+        if (info.status == QuestStatus.AVAILABLE) {
             info.status = QuestStatus.UNAVAILABLE;
 
             this.actionQuest.setEnabled(false);
-        }
-        else if (info.status == QuestStatus.COMPLETED)
-        {
+        } else if (info.status == QuestStatus.COMPLETED) {
             this.quests.setIndex(0);
 
             info = this.quests.getCurrentFirst();
@@ -301,10 +233,8 @@ public class GuiInteractionScreen extends GuiBase implements ICraftingScreen
     }
 
     @Override
-    protected void closeScreen()
-    {
-        if (this.fragment.closable || this.fragment.isEmpty())
-        {
+    protected void closeScreen() {
+        if (this.fragment.closable || this.fragment.isEmpty()) {
             super.closeScreen();
 
             Dispatcher.sendToServer(new PacketFinishDialogue());
@@ -312,34 +242,28 @@ public class GuiInteractionScreen extends GuiBase implements ICraftingScreen
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks)
-    {
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
 
         super.drawScreen(mouseX, mouseY, partialTicks);
 
-        if (!this.fragment.isEmpty())
-        {
-            int y = this.table != null ? this.crafting.area.y - 1 : (this.questInfos != null ? this.quest.area.y - 1 : this.replies.area.y - 1);
+        if (!this.fragment.isEmpty()) {
+            int y = (this.questInfos != null ? this.quest.area.y - 1 : this.replies.area.y - 1);
 
             GlStateManager.color(1F, 1F, 1F, 1F);
             GuiDraw.drawHorizontalGradientRect(this.replies.area.x - 20, y, this.replies.area.mx(), y + 1, 0, 0x88ffffff);
             GuiDraw.drawHorizontalGradientRect(this.replies.area.mx(), y, this.replies.area.ex() + 20, y + 1, 0x88ffffff, 0);
-        }
-        else
-        {
+        } else {
             this.drawCenteredString(this.fontRenderer, I18n.format("mappet.gui.interaction.info.no_replies"), this.replies.area.mx(), this.replies.area.my(), 0x333333);
         }
 
-        if (this.questInfos != null && this.quests.getList().isEmpty())
-        {
+        if (this.questInfos != null && this.quests.getList().isEmpty()) {
             int w = (int) (this.questArea.area.w / 1.5F);
 
             GuiDraw.drawMultiText(this.fontRenderer, I18n.format("mappet.gui.interaction.info.no_quests"), this.questArea.area.mx() - w / 2, (this.quest.area.y + this.actionQuest.area.y - 10) / 2, 0xffffff, w, 12, 0.5F, 0.5F);
         }
 
-        if (this.fragment != null)
-        {
+        if (this.fragment != null) {
             this.drawCenteredString(this.fontRenderer, this.fragment.title, this.reaction.area.mx(), 10, 0xffffff);
         }
     }

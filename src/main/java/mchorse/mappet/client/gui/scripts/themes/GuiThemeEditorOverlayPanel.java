@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.scripts.themes;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.client.gui.scripts.GuiTextEditor;
+import mchorse.mappet.client.gui.scripts.GuiCodeEditor;
 import mchorse.mappet.client.gui.scripts.style.SyntaxStyle;
 import mchorse.mappet.client.gui.utils.overlays.GuiEditorOverlayPanel;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
@@ -21,26 +21,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class GuiThemeEditorOverlayPanel extends GuiEditorOverlayPanel<GuiThemeEditorOverlayPanel.SyntaxStyleEntry> {
-    public static final String CODE_SAMPLE =
-            "/* Multi-line\n" +
-                    "   comment test */\n" +
-                    "function main(e) {\n" +
-                    "    // This is a single-line comment\n" +
-                    "    const PI = 3.14;\n" +
-                    "    let hex = 0xFF;\n" +
-                    "    var negative = -42;\n" +
-                    "    var str1 = \"double quotes\";\n" +
-                    "    var str2 = 'single quotes';\n" +
-                    "    var isNull = null;\n" +
-                    "    var isTrue = true && false || undefined;\n" +
-                    "    if (e != null && e.subject() != null) {\n" +
-                    "        this.x = Math.max(e.x + 1, 10);\n" +
-                    "        JSON.stringify(e);\n" +
-                    "        return;\n" +
-                    "    }\n" +
-                    "    prototype.call(this);\n" +
-                    "    customFunc(PI);\n" +
-                    "}";
+    public static final String CODE_SAMPLE = "/* Multi-line\n" + "   comment test */\n" + "function main(e) {\n" + "    // This is a single-line comment\n" + "    const PI = 3.14;\n" + "    let hex = 0xFF;\n" + "    var negative = -42;\n" + "    var str1 = \"double quotes\";\n" + "    var str2 = 'single quotes';\n" + "    var isNull = null;\n" + "    var isTrue = true && false || undefined;\n" + "    if (e != null && e.subject() != null) {\n" + "        this.x = Math.max(e.x + 1, 10);\n" + "        JSON.stringify(e);\n" + "        return;\n" + "    }\n" + "    prototype.call(this);\n" + "    customFunc(PI);\n" + "}";
 
     public GuiIconElement open;
 
@@ -62,7 +43,8 @@ public class GuiThemeEditorOverlayPanel extends GuiEditorOverlayPanel<GuiThemeEd
     public GuiColorElement lineNumbers;
     public GuiColorElement background;
 
-    public GuiTextEditor preview;
+    public GuiCodeEditor preview;
+    private SyntaxStyleEntry prevItem = null;
 
     public GuiThemeEditorOverlayPanel(Minecraft mc) {
         super(mc, IKey.lang("mappet.gui.syntax_theme.main"));
@@ -144,7 +126,7 @@ public class GuiThemeEditorOverlayPanel extends GuiEditorOverlayPanel<GuiThemeEd
         background = new GuiColorElement(mc, (c) -> item.style.background = c);
         background.tooltip(IKey.lang("mappet.gui.syntax_theme.background_colors.background"));
 
-        preview = new GuiTextEditor(mc, null);
+        preview = new GuiCodeEditor(mc, null);
 
         editor.add(Elements.label(IKey.lang("mappet.gui.syntax_theme.title")), title, shadow);
         editor.add(Elements.label(IKey.lang("mappet.gui.syntax_theme.colors.title")).marginTop(12));
@@ -154,6 +136,7 @@ public class GuiThemeEditorOverlayPanel extends GuiEditorOverlayPanel<GuiThemeEd
         editor.add(Elements.row(mc, 5, keyword, special));
         editor.add(Elements.row(mc, 5, string, comment));
         editor.add(other);
+
         editor.add(Elements.label(IKey.lang("mappet.gui.syntax_theme.background_colors.title")).marginTop(12));
         editor.add(Elements.row(mc, 5, lineNumbers, background));
 
@@ -182,9 +165,8 @@ public class GuiThemeEditorOverlayPanel extends GuiEditorOverlayPanel<GuiThemeEd
         }
 
         for (SyntaxStyleEntry entry : list.getList()) {
-            if (entry.file.getName().equals(Mappet.scriptEditorSyntaxStyle.getFile())) {
+            if (entry.file.getName().equals(Mappet.scriptEditorSyntaxStyle.getFileName())) {
                 pickItem(entry, true);
-
                 break;
             }
         }
@@ -218,29 +200,30 @@ public class GuiThemeEditorOverlayPanel extends GuiEditorOverlayPanel<GuiThemeEd
 
     private void addNewTheme(String string) {
         File file = Themes.getThemeFile(string);
+        if (file.isFile()) return;
 
-        if (!file.isFile()) {
-            SyntaxStyle style = new SyntaxStyle();
-            SyntaxStyleEntry entry = new SyntaxStyleEntry(file, style);
+        SyntaxStyle style = new SyntaxStyle();
+        SyntaxStyleEntry entry = new SyntaxStyleEntry(file, style);
 
-            style.title = "";
-            list.add(entry);
-            list.update();
-            pickItem(entry, true);
-        }
+        style.title = "";
+        list.add(entry);
+        list.update();
+        pickItem(entry, true);
     }
 
     @Override
     protected void removeItem() {
+        if (list.getList().size() <= 1) return;
         list.getCurrentFirst().file.delete();
-
         super.removeItem();
     }
 
     @Override
     protected void pickItem(SyntaxStyleEntry item, boolean select) {
-        item.save();
-        Mappet.scriptEditorSyntaxStyle.set(item.file.getName(), item.style);
+        if (item == null) return;
+
+        if (prevItem != null) prevItem.save();
+        prevItem = item;
 
         preview.getHighlighter().setStyle(item.style);
         preview.resetHighlight();
@@ -272,26 +255,21 @@ public class GuiThemeEditorOverlayPanel extends GuiEditorOverlayPanel<GuiThemeEd
     @Override
     public void onClose() {
         SyntaxStyleEntry item = list.getCurrentFirst();
-
         item.save();
         Mappet.scriptEditorSyntaxStyle.set(item.file.getName(), item.style);
-
+        Mappet.scriptCodeTemplate.updateStyle();
         super.onClose();
     }
 
     public static class GuiSyntaxStyleListElement extends GuiListElement<SyntaxStyleEntry> {
         public GuiSyntaxStyleListElement(Minecraft mc, Consumer<List<SyntaxStyleEntry>> callback) {
             super(mc, callback);
-
             scroll.scrollItemSize = 16;
         }
 
         @Override
         protected String elementToString(SyntaxStyleEntry element) {
-            if (element.style.title.trim().isEmpty()) {
-                return element.file.getName();
-            }
-
+            if (element.style.title.trim().isEmpty()) return element.file.getName();
             return element.style.title + " (" + element.file.getName() + ")";
         }
     }

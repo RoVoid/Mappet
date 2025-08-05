@@ -1,6 +1,5 @@
 package mchorse.mappet.capabilities.character;
 
-import mchorse.mappet.api.crafting.CraftingTable;
 import mchorse.mappet.api.dialogues.Dialogue;
 import mchorse.mappet.api.dialogues.DialogueContext;
 import mchorse.mappet.api.huds.HUDScene;
@@ -17,17 +16,10 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
-public interface ICharacter extends INBTSerializable<NBTTagCompound>
-{
+public interface ICharacter extends INBTSerializable<NBTTagCompound> {
     public States getStates();
 
     public Quests getQuests();
-
-    /* Crafting table */
-
-    public void setCraftingTable(CraftingTable table);
-
-    public CraftingTable getCraftingTable();
 
     /* Dialogue */
 

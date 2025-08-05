@@ -1,13 +1,13 @@
 package mchorse.mappet.client.gui.scripts.utils;
 
-import mchorse.mappet.client.gui.scripts.GuiTextEditor;
+import mchorse.mappet.client.gui.scripts.GuiCodeEditor;
 import mchorse.mappet.client.gui.utils.overlays.GuiSoundOverlayPanel;
 import net.minecraft.client.Minecraft;
 
 public class GuiScriptSoundOverlayPanel extends GuiSoundOverlayPanel {
-    private final GuiTextEditor editor;
+    private final GuiCodeEditor editor;
 
-    public GuiScriptSoundOverlayPanel(Minecraft mc, GuiTextEditor editor) {
+    public GuiScriptSoundOverlayPanel(Minecraft mc, GuiCodeEditor editor) {
         super(mc, null);
 
         this.editor = editor;

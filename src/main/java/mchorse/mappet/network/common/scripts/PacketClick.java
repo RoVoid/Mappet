@@ -1,30 +1,25 @@
 package mchorse.mappet.network.common.scripts;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class PacketClick implements IMessage
-{
-    public EnumHand hand = EnumHand.MAIN_HAND;
+public class PacketClick implements IMessage {
+    public int button = 0; // left
 
-    public PacketClick()
-    {}
+    public PacketClick() {
+    }
 
-    public PacketClick(EnumHand hand)
-    {
-        this.hand = hand;
+    public PacketClick(int button) {
+        this.button = button;
     }
 
     @Override
-    public void fromBytes(ByteBuf buf)
-    {
-        this.hand = EnumHand.values()[buf.readInt()];
+    public void fromBytes(ByteBuf buf) {
+        button = buf.readInt();
     }
 
     @Override
-    public void toBytes(ByteBuf buf)
-    {
-        buf.writeInt(this.hand.ordinal());
+    public void toBytes(ByteBuf buf) {
+        buf.writeInt(button);
     }
 }

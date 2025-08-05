@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.scripts.utils;
 
 import mchorse.mappet.client.gui.GuiMappetDashboard;
-import mchorse.mappet.client.gui.scripts.GuiTextEditor;
+import mchorse.mappet.client.gui.scripts.GuiCodeEditor;
 import mchorse.mappet.client.gui.utils.overlays.GuiOverlayPanel;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
@@ -17,10 +17,10 @@ public class GuiMorphOverlayPanel extends GuiOverlayPanel
     public GuiButtonElement pick;
     public GuiButtonElement insert;
 
-    private GuiTextEditor editor;
+    private GuiCodeEditor editor;
     private AbstractMorph morph;
 
-    public GuiMorphOverlayPanel(Minecraft mc, IKey title, GuiTextEditor editor, AbstractMorph morph)
+    public GuiMorphOverlayPanel(Minecraft mc, IKey title, GuiCodeEditor editor, AbstractMorph morph)
     {
         super(mc, title);
 

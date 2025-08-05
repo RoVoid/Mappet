@@ -1,6 +1,8 @@
 package mchorse.mappet.api.states;
 
+import jdk.nashorn.internal.objects.NativeJSON;
 import mchorse.mappet.Mappet;
+import mchorse.mappet.api.scripts.user.mappet.IMappetStates;
 import mchorse.mappet.events.StateChangedEvent;
 import mchorse.mappet.utils.NBTToJsonLike;
 import net.minecraft.nbt.*;
@@ -14,17 +16,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-/**
- * States allow to store values of the world that can be
- * used in dialogues, crafting tables, events and etc.
- * to control logic and store arbitrary numerical values
- */
-public class States implements INBTSerializable<NBTTagCompound> {
+public class States implements IMappetStates, INBTSerializable<NBTTagCompound> {
     public static final String QUEST_PREFIX = "quests.";
     public static final String DIALOGUE_PREFIX = "dialogue.";
     public static final String FACTIONS_PREFIX = "factions.";
 
-    public Map<String, Object> values = new HashMap<>();
+    private final Map<String, Object> values = new HashMap<>();
 
     private File file;
 
@@ -35,129 +32,12 @@ public class States implements INBTSerializable<NBTTagCompound> {
         this.file = file;
     }
 
+    public States(States other) {
+        copy(other);
+    }
+
     protected void post(String id, Object previous, Object current) {
         Mappet.EVENT_BUS.post(new StateChangedEvent(this, id, previous, current));
-    }
-
-    /* CRUD */
-
-    public void add(String id, double value) {
-        Object previous = this.values.get(id);
-
-        if (previous == null || previous instanceof Number) {
-            this.values.put(id, (previous == null ? 0 : ((Number) previous).doubleValue()) + value);
-            this.post(id, previous, value);
-        }
-    }
-
-    public void add(String id, String value) {
-        Object previous = this.values.get(id);
-
-        if (previous == null || previous instanceof String) {
-            this.values.put(id, (previous == null ? "" : ((String) previous)) + value);
-            this.post(id, previous, value);
-        }
-    }
-
-    public void setNumber(String id, double value) {
-        if (Double.isNaN(value)) return;
-
-        Object previous = this.values.get(id);
-
-        this.values.put(id, value);
-        this.post(id, previous, value);
-    }
-
-    public void setBoolean(String id, boolean value) {
-        Object previous = this.values.get(id);
-
-        this.values.put(id, value);
-        this.post(id, previous, value);
-    }
-
-    public void setString(String id, String value) {
-        Object previous = this.values.get(id);
-
-        this.values.put(id, value);
-        this.post(id, previous, value);
-    }
-
-    public double getNumber(String id) {
-        Object object = this.values.get(id);
-
-        return object instanceof Number ? ((Number) object).doubleValue() : 0;
-    }
-
-    public boolean isNumber(String id) {
-        Object object = this.values.get(id);
-
-        return object instanceof Number;
-    }
-
-    public boolean getBoolean(String id) {
-        Object object = this.values.get(id);
-
-        return object instanceof Boolean && (Boolean) object;
-    }
-
-    public boolean isBoolean(String id) {
-        return this.values.get(id) instanceof Boolean;
-    }
-
-    public String getString(String id) {
-        Object object = this.values.get(id);
-
-        return object instanceof String ? (String) object : "";
-    }
-
-    public boolean isString(String id) {
-        Object object = this.values.get(id);
-
-        return object instanceof String;
-    }
-
-    public boolean reset(String id) {
-        Object previous = this.values.remove(id);
-
-        this.post(id, previous, null);
-
-        return previous != null;
-    }
-
-    public boolean resetMasked(String id) {
-        if (id.trim().equals("*")) {
-            boolean wasEmpty = this.values.isEmpty();
-
-            if (!wasEmpty) {
-                this.clear();
-            }
-
-            return !wasEmpty;
-        }
-
-        if (id.contains("*")) {
-            id = id.replaceAll("\\*", ".*");
-
-            Pattern pattern = Pattern.compile("^" + id + "$");
-            int size = this.values.size();
-
-            this.values.keySet().removeIf(key -> pattern.matcher(key).matches());
-
-            if (this.values.size() != size) {
-                this.post(null, null, null);
-
-                return true;
-            }
-
-            return false;
-        }
-
-        return this.reset(id);
-    }
-
-    public void clear() {
-        this.values.clear();
-        this.post(null, null, null);
     }
 
     public void copy(States states) {
@@ -165,94 +45,82 @@ public class States implements INBTSerializable<NBTTagCompound> {
     }
 
     public void copy(States states, boolean withoutPost) {
-        if(states == null) return;
-
-        this.values.clear();
-        this.values.putAll(states.values);
-
-        if(!withoutPost) this.post(null, null, null);
+        if (states == null) return;
+        values.clear();
+        values.putAll(states.values);
+        if (!withoutPost) post(null, null, null);
     }
 
-    /* Quest convenience methods */
-
+    /* Quests */
     public void completeQuest(String id) {
-        this.add(QUEST_PREFIX + id, 1);
+        add(QUEST_PREFIX + id, 1);
     }
 
     public int getQuestCompletedTimes(String id) {
-        return (int) this.getNumber(QUEST_PREFIX + id);
+        return (int) getNumber(QUEST_PREFIX + id);
     }
 
     public boolean wasQuestCompleted(String id) {
-        return this.getQuestCompletedTimes(id) > 0;
+        return getQuestCompletedTimes(id) > 0;
     }
 
-    /* Faction convenience methods */
-
+    /* Factions */
     public void addFactionScore(String id, int score, int defaultScore) {
-        if (this.hasFaction(id)) {
-            this.add(FACTIONS_PREFIX + id, score);
-        } else {
-            this.setNumber(FACTIONS_PREFIX + id, defaultScore + score);
-        }
+        if (hasFaction(id)) add(FACTIONS_PREFIX + id, score);
+        else setNumber(FACTIONS_PREFIX + id, defaultScore + score);
     }
 
     public void setFactionScore(String id, int score) {
-        this.setNumber(FACTIONS_PREFIX + id, score);
+        setNumber(FACTIONS_PREFIX + id, score);
     }
 
     public int getFactionScore(String id) {
-        return (int) this.getNumber(FACTIONS_PREFIX + id);
+        return (int) getNumber(FACTIONS_PREFIX + id);
     }
 
     public void clearFactionScore(String id) {
-        this.reset(FACTIONS_PREFIX + id);
+        reset(FACTIONS_PREFIX + id);
     }
 
     public void clearAllFactionScores() {
-        this.values.keySet().removeIf((key) -> key.startsWith(FACTIONS_PREFIX));
+        values.keySet().removeIf((key) -> key.startsWith(FACTIONS_PREFIX));
     }
 
     public boolean hasFaction(String id) {
-        return this.values.containsKey(FACTIONS_PREFIX + id);
+        return values.containsKey(FACTIONS_PREFIX + id);
     }
 
     public Set<String> getFactionNames() {
         Set<String> factionNames = new HashSet<>();
-        for (String key : this.values.keySet()) {
-            if (key.startsWith(FACTIONS_PREFIX)) {
-                factionNames.add(key.replace(FACTIONS_PREFIX, ""));
-            }
+        for (String key : values.keySet()) {
+            if (key.startsWith(FACTIONS_PREFIX)) factionNames.add(key.replace(FACTIONS_PREFIX, ""));
         }
         return factionNames;
     }
 
-    /* Dialogues convenience methods */
-
+    /* Dialogues */
     public void readDialogue(String id, String marker) {
-        this.add(this.getDialogueId(id, marker), 1);
+        add(getDialogueId(id, marker), 1);
     }
 
     public boolean hasReadDialogue(String id, String marker) {
-        return this.getReadDialogueTimes(id, marker) > 0;
+        return getReadDialogueTimes(id, marker) > 0;
     }
 
     public int getReadDialogueTimes(String id, String marker) {
-        return (int) this.getNumber(this.getDialogueId(id, marker));
+        return (int) getNumber(getDialogueId(id, marker));
     }
 
     private String getDialogueId(String id, String marker) {
         id = DIALOGUE_PREFIX + id;
-
         if (marker != null && !marker.isEmpty()) {
             id += ":" + marker;
         }
-
         return id;
     }
 
     public boolean areValuesEqual(String key, Object otherValue) {
-        Object value = this.values.get(key);
+        Object value = values.get(key);
         if (value == null && otherValue == null) return true;
         if (value == null || otherValue == null) return false;
         if (value instanceof Number && otherValue instanceof Number) {
@@ -261,51 +129,11 @@ public class States implements INBTSerializable<NBTTagCompound> {
         return value.equals(otherValue);
     }
 
-    /* NBT */
-
-    @Override
-    public NBTTagCompound serializeNBT() {
-        NBTTagCompound tag = new NBTTagCompound();
-
-        for (Map.Entry<String, Object> entry : this.values.entrySet()) {
-            if (entry.getValue() instanceof Number) {
-                tag.setDouble(entry.getKey(), ((Number) entry.getValue()).doubleValue());
-            } else if (entry.getValue() instanceof String) {
-                tag.setString(entry.getKey(), (String) entry.getValue());
-            } else if (entry.getValue() instanceof Boolean) {
-                tag.setBoolean(entry.getKey(), (Boolean) entry.getValue());
-            }
-        }
-
-        return tag;
-    }
-
-    @Override
-    public void deserializeNBT(NBTTagCompound tag) {
-        this.values.clear();
-
-        for (String key : tag.getKeySet()) {
-            NBTBase base = tag.getTag(key);
-
-            if (base.getId() == Constants.NBT.TAG_STRING) {
-                this.values.put(key, ((NBTTagString) base).getString());
-            } else if (base instanceof NBTTagDouble) {
-                this.values.put(key, ((NBTTagDouble) base).getDouble());
-            } else if (base instanceof NBTTagByte) {
-                this.values.put(key, ((NBTTagByte) base).getByte() == 1);
-            }
-        }
-    }
-
-    /* Deserialization and serialization */
-
+    /* Load/save */
     public void load() {
-        if (!this.file.exists()) {
-            return;
-        }
-
+        if (!file.exists()) return;
         try {
-            this.deserializeNBT(NBTToJsonLike.read(this.file));
+            deserializeNBT(NBTToJsonLike.read(file));
         } catch (Exception e) {
             Mappet.logger.error(e.getMessage());
         }
@@ -313,13 +141,192 @@ public class States implements INBTSerializable<NBTTagCompound> {
 
     public boolean save() {
         try {
-            NBTToJsonLike.write(this.file, this.serializeNBT());
+            NBTToJsonLike.write(file, serializeNBT());
             return true;
         } catch (Exception e) {
             Mappet.logger.error(e.getMessage());
-//            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public Map<String, Object> values() {
+        return values;
+    }
+
+    /* Scripting */
+
+    @Override
+    public double add(String id, double value) {
+        Object prev = values.get(id);
+        if (prev != null && !(prev instanceof Number)) return 0;
+
+        double result = (prev == null ? 0 : ((Number) prev).doubleValue()) + value;
+        post(id, prev, values.put(id, result));
+        return result;
+    }
+
+    @Override
+    public String add(String id, String value) {
+        Object prev = values.get(id);
+        if (prev != null && !(prev instanceof String)) return "";
+
+        String result = (prev == null ? "" : (String) prev) + value;
+        post(id, prev, values.put(id, result));
+        return result;
+    }
+
+    @Override
+    public boolean toggle(String id) {
+        Object prev = values.get(id);
+        if (prev != null && !(prev instanceof Boolean)) return false;
+
+        boolean result = prev == null || !(Boolean) prev;
+        post(id, prev, values.put(id, result));
+        return result;
+    }
+
+    @Override
+    public void setNumber(String id, double value) {
+        if (Double.isNaN(value)) return;
+        post(id, values.put(id, value), value);
+    }
+
+    @Override
+    public void setBoolean(String id, boolean value) {
+        post(id, values.put(id, value), value);
+    }
+
+    @Override
+    public void setString(String id, String value) {
+        if (value == null) return;
+        post(id, values.put(id, value), value);
+    }
+
+    @Override
+    public void setJson(String id, Object value) {
+        if (value == null) return;
+        setString(id, (String) NativeJSON.stringify(null, value, null, null));
+    }
+
+
+    @Override
+    public double getNumber(String id) {
+        Object val = values.get(id);
+        return val instanceof Number ? ((Number) val).doubleValue() : 0;
+    }
+
+    @Override
+    public boolean getBoolean(String id) {
+        return Boolean.TRUE.equals(values.get(id));
+    }
+
+    @Override
+    public String getString(String id) {
+        Object val = values.get(id);
+        return val instanceof String ? (String) val : "";
+    }
+
+    @Override
+    public Object getJson(String id) {
+        return NativeJSON.parse(null, getString(id), null);
+    }
+
+    @Override
+    public boolean isNumber(String id) {
+        return values.get(id) instanceof Number;
+    }
+
+    @Override
+    public boolean isBoolean(String id) {
+        return values.get(id) instanceof Boolean;
+    }
+
+    @Override
+    public boolean isString(String id) {
+        return values.get(id) instanceof String;
+    }
+
+    //@Override
+    public boolean isJson(String id) {
+        return values.get(id) instanceof String;
+    }
+
+    @Override
+    public boolean reset(String id) {
+        Object prev = values.remove(id);
+        post(id, prev, null);
+        return prev != null;
+    }
+
+    @Override
+    public boolean resetMasked(String id) {
+        if (id.trim().equals("*")) {
+            if (values.isEmpty()) return false;
+            clear();
+            return true;
         }
 
-        return false;
+        if (id.contains("*")) {
+            Pattern pattern = Pattern.compile("^" + id.replace("*", ".*") + "$");
+            int before = values.size();
+            values.keySet().removeIf(key -> pattern.matcher(key).matches());
+            boolean changed = values.size() != before;
+            if (changed) post(null, null, null);
+            return changed;
+        }
+
+        return reset(id);
+    }
+
+    @Override
+    public void clear() {
+        values.clear();
+        post(null, null, null);
+    }
+
+    @Override
+    public boolean has(String id) {
+        return values.containsKey(id);
+    }
+
+    @Override
+    public Set<String> keys() {
+        return new HashSet<>(values.keySet());
+    }
+
+
+    /* NBT */
+    @Override
+    public NBTTagCompound serializeNBT() {
+        NBTTagCompound tag = new NBTTagCompound();
+        for (Map.Entry<String, Object> entry : values.entrySet()) {
+            if (entry.getValue() instanceof Number) {
+                tag.setDouble(entry.getKey(), ((Number) entry.getValue()).doubleValue());
+            }
+            else if (entry.getValue() instanceof String) {
+                tag.setString(entry.getKey(), (String) entry.getValue());
+            }
+            else if (entry.getValue() instanceof Boolean) {
+                tag.setBoolean(entry.getKey(), (Boolean) entry.getValue());
+            }
+        }
+        return tag;
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagCompound tag) {
+        values.clear();
+        for (String key : tag.getKeySet()) {
+            NBTBase base = tag.getTag(key);
+            if (base.getId() == Constants.NBT.TAG_STRING) {
+                values.put(key, ((NBTTagString) base).getString());
+            }
+            else if (base instanceof NBTTagDouble) {
+                values.put(key, ((NBTTagDouble) base).getDouble());
+            }
+            else if (base instanceof NBTTagByte) {
+                values.put(key, ((NBTTagByte) base).getByte() != 0);
+            }
+        }
     }
 }

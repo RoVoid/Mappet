@@ -26,10 +26,10 @@ public class MPIcons {
     private static final Map<String, Icon> defaultIcons = new HashMap<>();
 
     public static final String CONSOLE = "console";
-    public static final String CRAFT_IN = "craft_in";
-    public static final String CRAFT_OUT = "craft_out";
     public static final String BRUSH = "brush";
     public static final String PLANET = "planet";
+    public static final String KEYBOARD = "keyboard";
+    public static final String ANVIL = "anvil";
 
     public static List<String> getAllNames() {
         return new ArrayList<>(IconRegistry.icons.keySet());
@@ -71,7 +71,10 @@ public class MPIcons {
         Set<String> paths = new HashSet<>();
 
         try {
-            List<IResource> resources = Minecraft.getMinecraft().getResourceManager().getAllResources(new ResourceLocation(Mappet.MOD_ID, "icons.json"));
+            List<IResource> resources = Minecraft
+                    .getMinecraft()
+                    .getResourceManager()
+                    .getAllResources(new ResourceLocation(Mappet.MOD_ID, "icons.json"));
 
             for (IResource resource : resources) {
                 try (InputStreamReader reader = new InputStreamReader(resource.getInputStream())) {
@@ -102,7 +105,8 @@ public class MPIcons {
                 } catch (Exception e) {
                     Mappet.logger.error(e.getMessage());
                 }
-            } else if (source.isDirectory()) { // dev environment
+            }
+            else if (source.isDirectory()) { // dev environment
                 File iconsFile = new File(source, "assets/mappet/icons.json");
                 if (iconsFile.exists() && iconsFile.isFile()) {
                     try (InputStream input = Files.newInputStream(iconsFile.toPath()); InputStreamReader reader = new InputStreamReader(input)) {

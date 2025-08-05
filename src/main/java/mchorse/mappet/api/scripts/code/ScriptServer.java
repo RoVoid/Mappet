@@ -3,14 +3,13 @@ package mchorse.mappet.api.scripts.code;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.ScriptPlayer;
-import mchorse.mappet.api.scripts.code.mappet.MappetStates;
 import mchorse.mappet.api.scripts.code.score.ScriptScoreboard;
 import mchorse.mappet.api.scripts.code.world.ScriptWorld;
 import mchorse.mappet.api.scripts.user.IScriptServer;
-import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.mappet.IMappetStates;
+import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import mchorse.mappet.api.utils.DataContext;
 import net.minecraft.command.EntitySelector;
 import net.minecraft.entity.Entity;
@@ -35,12 +34,12 @@ public class ScriptServer implements IScriptServer {
     @Override
     @Deprecated
     public MinecraftServer getMinecraftServer() {
-        return this.server;
+        return server;
     }
 
     @Override
     public IScriptWorld getWorld(int dimension) {
-        return new ScriptWorld(this.server.getWorld(dimension));
+        return new ScriptWorld(server.getWorld(dimension));
     }
 
     @Override
@@ -48,9 +47,8 @@ public class ScriptServer implements IScriptServer {
         List<IScriptEntity> entities = new ArrayList<>();
 
         try {
-            for (Entity entity : EntitySelector.matchEntities(this.server, targetSelector, Entity.class)) {
+            for (Entity entity : EntitySelector.matchEntities(server, targetSelector, Entity.class))
                 entities.add(ScriptEntity.create(entity));
-            }
         } catch (Exception ignored) {
         }
 
@@ -59,46 +57,37 @@ public class ScriptServer implements IScriptServer {
 
     @Override
     public IScriptEntity getEntity(String uuid) {
-        return ScriptEntity.create(this.server.getEntityFromUuid(UUID.fromString(uuid)));
+        return ScriptEntity.create(server.getEntityFromUuid(UUID.fromString(uuid)));
     }
 
     @Override
     public List<IScriptPlayer> getAllPlayers() {
         List<IScriptPlayer> entities = new ArrayList<>();
 
-        for (EntityPlayerMP player : this.server.getPlayerList().getPlayers()) {
-            entities.add(new ScriptPlayer(player));
-        }
+        for (EntityPlayerMP player : server.getPlayerList().getPlayers()) entities.add(new ScriptPlayer(player));
 
         return entities;
     }
 
     @Override
     public IScriptPlayer getPlayer(String username) {
-        EntityPlayerMP player = this.server.getPlayerList().getPlayerByUsername(username);
+        EntityPlayerMP player = server.getPlayerList().getPlayerByUsername(username);
 
-        if (player != null) {
-            return new ScriptPlayer(player);
-        }
+        if (player != null) return new ScriptPlayer(player);
 
         return null;
     }
 
     @Override
     public IMappetStates getStates() {
-        if (this.states == null) {
-            this.states = new MappetStates(Mappet.states);
-        }
-
-        return this.states;
+        if (states == null) states = Mappet.states;
+        return states;
     }
 
     @Override
     public boolean entityExists(String uuid) throws IllegalArgumentException {
         try {
-            UUID parsedUuid = UUID.fromString(uuid);
-
-            return this.server.getEntityFromUuid(parsedUuid) != null;
+            return server.getEntityFromUuid(UUID.fromString(uuid)) != null;
         } catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException("Invalid UUID string: " + uuid, ex);
         }
@@ -117,9 +106,10 @@ public class ScriptServer implements IScriptServer {
         } catch (ScriptException e) {
             String fileName = e.getFileName() == null ? scriptName : e.getFileName();
             Mappet.logger.error("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
-            //hrow new RuntimeException("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage(), e);
+            //throw new RuntimeException("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage(), e);
         } catch (Exception e) {
-            throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
+            throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass()
+                                                                                       .getSimpleName() + ": " + e.getMessage(), e);
         }
     }
 
@@ -134,17 +124,18 @@ public class ScriptServer implements IScriptServer {
             Mappet.logger.error("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
             // throw new RuntimeException("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage(), e);
         } catch (Exception e) {
-            throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
+            throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass()
+                                                                                       .getSimpleName() + ": " + e.getMessage(), e);
         }
     }
 
     @Override
     public List<String> getOppedPlayerNames() {
-        return Arrays.asList(this.server.getPlayerList().getOppedPlayerNames());
+        return Arrays.asList(server.getPlayerList().getOppedPlayerNames());
     }
 
     @Override
-    public ScriptScoreboard getScoreboard(){
+    public ScriptScoreboard getScoreboard() {
         return new ScriptScoreboard(server.getEntityWorld().getScoreboard());
     }
 }

@@ -68,6 +68,13 @@ public interface IScriptEvent {
     Object getValue(String key);
 
     /**
+     * Get a value for given key (might be a <code>null</code>).
+     */
+    default Object get(String key) {
+        return getValue(key);
+    }
+
+    /**
      * Set a value for given key in extra data.
      */
     void setValue(String key, Object value);

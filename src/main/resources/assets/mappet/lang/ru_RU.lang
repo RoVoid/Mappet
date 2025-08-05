@@ -244,130 +244,7 @@ mappet.gui.panels.keys.toggle_sidebar=Вкл/Выкл боковое меню
 mappet.gui.settings.title=Глобальные триггеры
 mappet.gui.settings.hotkeys=Редактировать триггеры горячих клавиш...
 mappet.gui.settings.variables=Доступные переменные
-
-mappet.gui.settings.triggers.block_break=Блок: сломан игроком
-mappet.gui.settings.triggers.descriptions.block_break=Этот отменяемый триггер срабатывает когда игрок ломает блок в мире.
-mappet.gui.settings.triggers.variables.block_break=§6block§r, ID сломанного блока (например §7minecraft:stone§r).\n§6meta§r, мета (0..15) значение состояния блока.\n§6x§r, §6y§r, и §6z§r - координаты в мире.
-
-mappet.gui.settings.triggers.block_place=Блок: поставлен игроком
-mappet.gui.settings.triggers.descriptions.block_place=Этот отменяемый триггер срабатывает когда игрок ставит блок в мире.
-mappet.gui.settings.triggers.variables.block_place=§6block§r, ID устанавливаемого блока (например §7minecraft:stone§r).\n§6meta§r, мета (0..15) значение состояния блока.\n§6x§r, §6y§r, и §6z§r - координаты в мире.
-
-mappet.gui.settings.triggers.block_click=Блок: кликнут (ЛКМ) игроком
-mappet.gui.settings.triggers.descriptions.block_click=Этот отменяемый триггер срабатывает когда игрок кликает (левой кнопкой мыши) по блоку в мире.\n\n§lВажно§r: этот триггер работает только в режиме выживания!
-mappet.gui.settings.triggers.variables.block_click=§6x§r, §6y§r, и §6z§r - координаты в мире.\n§6hand§r, рука которая взаимодействовала с блоком: §7main§r или §7off§r.
-
-mappet.gui.settings.triggers.block_interact=Блок: взаимодействие (ПКМ) с игроком
-mappet.gui.settings.triggers.descriptions.block_interact=Этот отменяемый триггер срабатывает когда игрок взаимодействует (правой кнопкой мыши) с блоком в мире.
-mappet.gui.settings.triggers.variables.block_interact=§6block§r, ID блока с которым взаимодействует игрок (например §7minecraft:stone§r).\n§6meta§r, мета (0..15) значение состояния блока.\n§6x§r, §6y§r, и §6z§r - координаты в мире.\n§6hand§r, рука которая взаимодействовала с блоком: §7main§r или §7off§r.
-
-mappet.gui.settings.triggers.entity_damaged=Сущность: при получении урона
-mappet.gui.settings.triggers.descriptions.entity_damaged=Этот отменяемый триггер срабатывает когда сущность (игрок, моб, и тд) получает урон.
-mappet.gui.settings.triggers.variables.entity_damaged=§6damage§r, сколько урона будет нанесено сущности.\n§6damageType§r, тип урона который получает сущность.
-
-mappet.gui.settings.triggers.entity_attacked=Сущность: будучи атакованным
-mappet.gui.settings.triggers.descriptions.entity_attacked=Этот отменяемый триггер вызывается когда сущность (игрок, моб, и тд) атакована другой сущностью.
-mappet.gui.settings.triggers.variables.entity_attacked=§6damage§r, сколько урона будет нанесено сущности.\n§6damageType§r, тип урона который получает сущность.
-
-mappet.gui.settings.triggers.entity_death=Сущность: при смерти
-mappet.gui.settings.triggers.descriptions.entity_death=Этот триггер срабатывает когда сущность умирает.
-mappet.gui.settings.triggers.variables.entity_death=§6damageType§r, тип урона который получает сущность.
-
-mappet.gui.settings.triggers.server_load=Сервер: при загрузке
-mappet.gui.settings.triggers.descriptions.server_load=Этот триггер срабатывает когда сервер запустился, но миры ещё не загрузились.
-mappet.gui.settings.triggers.variables.server_load=§7N/A§r
-
-mappet.gui.settings.triggers.server_tick=Сервер: при тике
-mappet.gui.settings.triggers.descriptions.server_tick=Этот триггер срабатывает когда происходит серверный тик (т.е. §720§r раз в секунду).\n\nСовет от профи: используйте ползунок "частота" чтобы ограничить количество срабатываний триггера.
-mappet.gui.settings.triggers.variables.server_tick=§7N/A§r
-
-mappet.gui.settings.triggers.player_tick=Игрок: при тике
-mappet.gui.settings.triggers.descriptions.player_tick=Этот триггер срабатывает когда происходит тик игрока (т.е. §720§r раз в секунду).\n\nСовет от профи: используйте ползунок "частота" чтобы ограничить количество срабатываний триггера.
-mappet.gui.settings.triggers.variables.player_tick=§7N/A§r
-
-mappet.gui.settings.triggers.player_chat=Игрок: при сообщении в чате
-mappet.gui.settings.triggers.descriptions.player_chat=Этот триггер срабатывает когда игрок пишет сообщение в чат. \n\nКоманды (сообщения начинающиеся с §7/§r) не вызывают этот триггер. Если вы хотите реализовать команды, используйте другой префикс, например §7!§r.
-mappet.gui.settings.triggers.variables.player_chat=§6message§r, сообщение, отправленное игроком.
-
-mappet.gui.settings.triggers.player_login=Игрок: при входе
-mappet.gui.settings.triggers.descriptions.player_login=Этот триггер срабатывает когда игрок заходит на сервер.
-mappet.gui.settings.triggers.variables.player_login=§7N/A§r
-
-mappet.gui.settings.triggers.player_logout=Игрок: при выходе
-mappet.gui.settings.triggers.descriptions.player_logout=Этот триггер срабатывает когда игрок выходит с сервера.\n\n§cРАБОТАЕТ ТОЛЬКО НА ВЫДЕЛЕННОМ СЕРВЕРЕ!§r
-mappet.gui.settings.triggers.variables.player_logout=§7N/A§r
-
-mappet.gui.settings.triggers.player_lmb=Игрок: клик ЛКМ (по воздуху)
-mappet.gui.settings.triggers.descriptions.player_lmb=Этот триггер срабатывает когда игрок кликает левой кнопкой мыши по воздуху (не взаимодействует с блоками сущностями или предметами).
-mappet.gui.settings.triggers.variables.player_lmb=§7N/A§r
-
-mappet.gui.settings.triggers.player_rmb=Игрок: клик ПКМ (по воздуху)
-mappet.gui.settings.triggers.descriptions.player_rmb=Этот триггер срабатывает когда игрок кликает правой кнопкой мыши по воздуху (не взаимодействует с блоками сущностями или предметами).
-mappet.gui.settings.triggers.variables.player_rmb=§7N/A§r
-
-mappet.gui.settings.triggers.player_death=Игрок: при смерти
-mappet.gui.settings.triggers.descriptions.player_death=Этот отменяемый триггер срабатывает когда игрок умирает.\n\nСовет от профи: если вы хотите отменить смерть, выдайте немного здоровья игроку, иначе игрок будет бесконечно умирать.
-mappet.gui.settings.triggers.variables.player_death=§6damageType§r, тип урона который получает сущность.
-
-mappet.gui.settings.triggers.player_respawn=Игрок: при возрождении
-mappet.gui.settings.triggers.descriptions.player_respawn=Этот триггер срабатывает когда игрок возрождается.
-mappet.gui.settings.triggers.variables.player_respawn=§7N/A§r
-
-mappet.gui.settings.triggers.player_item_pickup=Игрок: при подборе предмета
-mappet.gui.settings.triggers.descriptions.player_item_pickup=Этот отменяемый триггер срабатывает когда игрок подбирает предмет.
-mappet.gui.settings.triggers.variables.player_item_pickup=§6item§r, §7IScriptItemStack§r - предмет который подобрал игрок (полезно только в скриптах).\n§6entityItem§r, §7IScriptEntityItem§r сущность предмета который подобрал игрок (полезно только в скриптах).
-
-mappet.gui.settings.triggers.player_item_toss=Игрок: при выбрасывании предмета
-mappet.gui.settings.triggers.descriptions.player_item_toss=Этот отменяемый триггер срабатывает когда игрок выбрасывает предмет.
-mappet.gui.settings.triggers.variables.player_item_toss=§6entityItem§r, §7IScriptEntityItem§r сущность предмета который подобрал игрок (полезно только в скриптах).
-
-mappet.gui.settings.triggers.player_item_interact=Игрок: при взаимодействии с предметом
-mappet.gui.settings.triggers.descriptions.player_item_interact=Этот отменяемый триггер срабатывает когда игрок кликает правой кнопкой мыши по воздуху с предметом в руках.
-mappet.gui.settings.triggers.variables.player_item_interact=§7N/A§r
-
-mappet.gui.settings.triggers.player_entity_interact=Игрок: при взаимодействии с сущностью
-mappet.gui.settings.triggers.descriptions.player_entity_interact=Этот отменяемый триггер срабатывает когда игрок кликает правой кнопкой мыши по сущности. Субъект - игрок, объект - сущность.\n\nВ зависимости от того как сущность обрабатывает взаимодействие, этот триггер §6может быть вызван дважды§r, для каждой руки (см. переменные ниже).
-mappet.gui.settings.triggers.variables.player_entity_interact=§6hand§r, рука которая взаимодействовала с сущностью (§7main§r или §7off§r).
-
-mappet.gui.settings.triggers.player_open_container=Игрок: при открытии контейнера
-mappet.gui.settings.triggers.descriptions.player_open_container=Этот триггер срабатывает когда игрок открывает контейнер, такие как сундук, эндер-сундук, печь, верстак, и т.д.
-mappet.gui.settings.triggers.variables.player_open_container=§6inventory§r, §7IScriptInventory§r открытый инвентарь (полезно только в скриптах).\n§6x§r, §6y§r, и §6z§r - координаты блока с инвентарём в мире (только если это блок).
-
-mappet.gui.settings.triggers.player_close_container=Игрок: при закрытии контейнера
-mappet.gui.settings.triggers.descriptions.player_close_container=Этот триггер срабатывает когда игрок закрывает контейнер, такие как сундук, эндер-сундук, печь, верстак, и т.д.
-mappet.gui.settings.triggers.variables.player_close_container=§6inventory§r, §7IScriptInventory§r закрытый инвентарь (полезно только в скриптах).\n§6x§r, §6y§r, и §6z§r - координаты блока с инвентарём в мире (только если это блок).
-
-mappet.gui.settings.triggers.player_journal=Игрок: при открытии журнала
-mappet.gui.settings.triggers.descriptions.player_journal=Этот отменяемый триггер срабатывает когда игрок открывает журнал.\n\nВы можете использовать этот триггер чтобы реализовать собственный журнал, используя UI API. Когда триггер отменён, стандартный журнал не будет открыт.
-mappet.gui.settings.triggers.variables.player_journal=§7N/A§r
-
-mappet.gui.settings.triggers.player_jump=Игрок: при прыжке
-mappet.gui.settings.triggers.descriptions.player_jump=Этот триггер срабатывает когда игрок прыгает.
-mappet.gui.settings.triggers.variables.player_jump=§7N/A§r
-
-mappet.gui.settings.triggers.player_run=Игрок: при беге
-mappet.gui.settings.triggers.descriptions.player_run=Этот триггер срабатывает когда игрок бегает.
-mappet.gui.settings.triggers.variables.player_run=§7N/A§r
-
-mappet.gui.settings.triggers.projectile_impact=Снаряд: при попадании
-mappet.gui.settings.triggers.descriptions.projectile_impact=Этот отменяемый триггер срабатывает когда снаряд попадает по сущности или блоку.
-mappet.gui.settings.triggers.variables.projectile_impact=§6pos§r, позиция, где попал снаряд.\n§6entity§r, сущность в которую попал снаряд.\n§6projectile§r, сам снаряд, который попал по сущности.\n§6thrower§r, сущность которая бросила снаряд.
-
-mappet.gui.settings.triggers.living_equipment_change=Живое: при смене снаряжения
-mappet.gui.settings.triggers.descriptions.living_equipment_change=Этот триггер срабатывает когда живая сущность меняет снаряжение.
-mappet.gui.settings.triggers.variables.living_equipment_change=§6item§r, текущий предмет.\n§6slot§r, слот, откуда был взят предмет.
-
-mappet.gui.settings.triggers.player_entity_leash=Игрок: привязывает сущность
-mappet.gui.settings.triggers.descriptions.player_entity_leash=Этот отменяемый триггер срабатывает, когда игрок привязывает сущность.
-mappet.gui.settings.triggers.variables.player_entity_leash=§6hand§r, рука, которая держала существо на поводке (§7main§r или §7off§r).
-
-mappet.gui.settings.triggers.state_changed=Маппет: при смене состояния
-mappet.gui.settings.triggers.descriptions.state_changed=Этот триггер срабатывает когда изменяется состояние.
-mappet.gui.settings.triggers.variables.state_changed=§6entity§r, игрок/NPC у которого меняется состояние.(null если меняется глобальное состояние)\n§6key§r, ID состояния которое изменяется.\n§6current§r, текущее значение состояния.\n§6previous§r, предыдущее значение состояния.
-
-mappet.gui.settings.triggers.living_knockback=Живое: при отбрасывании
-mappet.gui.settings.triggers.descriptions.living_knockback=Этот отменяемый триггер срабатывает когда моб/игрок отбрасывается.
-mappet.gui.settings.triggers.variables.living_knockback=§6strength§r, сила отбрасывания (float), §6ratioX§r, коэффициент отбрасывания по оси X (float), §6ratioZ§r, коэффициент отбрасывания по оси Z (float).
+mappet.gui.settings.cancelable=§c§oОтменяемый§r
 
 mappet.gui.settings.forge.add=Добавить произвольный forge триггер
 mappet.gui.settings.forge.add_from_list=Добавить forge триггер из списка событий
@@ -542,13 +419,6 @@ mappet.gui.nodes.event.cancel=Отмена
 mappet.gui.nodes.event.cancel_tooltip=Отменяет ивент если любой из триггеров был отменён
 mappet.gui.nodes.item.take=Забрать %s
 mappet.gui.nodes.item.give=Выдать %s
-mappet.gui.nodes.event.hotkeys.title=Редактор горячей клавиши события
-mappet.gui.nodes.event.hotkeys.key=Клавиша
-mappet.gui.nodes.event.hotkeys.toggle=Режим переключения
-mappet.gui.nodes.event.hotkeys.toggle_tooltip=Когда включен, эти триггеры сработают также когда клавиша была отпущена.\n\nПеременная §7down§r равна §71§r или §70§r в зависимости от того нажата клавиша или отпущена.
-mappet.gui.nodes.event.hotkeys.enabled=Включена
-mappet.gui.nodes.event.hotkeys.context.add=Добавить горячую клавишу события
-mappet.gui.nodes.event.hotkeys.context.remove=Удалить горячую клавишу события
 mappet.gui.nodes.dialogue.read=Обозначить как прочитанный
 mappet.gui.nodes.dialogue.marker=Маркер
 mappet.gui.nodes.dialogue.marker_tooltip=Если эта графа не пуста, то маркер будет записывать состояния игрока под определённым ID, к примеру, если ID диалога это §7test§r, а ID маркера это §7story§r, то данные о прочтении будут записаны в §7dialogue.test:story§r.
@@ -577,6 +447,19 @@ mappet.gui.nodes.info.empty_dialogue=Чтобы начать редактиро�
 mappet.gui.nodes.info.empty_chain=Чтобы начать редактировать, создайте или выберите цепочку квестов из списка справа
 mappet.gui.nodes.info.empty_main=Вам необходимо обозначить вступительный нод!
 mappet.gui.nodes.info.empty_nodes=Чтобы начать работу с нодами, кликните сюда и добавьте нод!
+
+mappet.gui.hotkeys.title=Редактор горячей клавиши события
+mappet.gui.hotkeys.name=ID горячий клавиши
+mappet.gui.hotkeys.key=Клавиша
+mappet.gui.hotkeys.mode=Режим переключения
+mappet.gui.hotkeys.mode.down_and_up=Нажать & Отпустить
+mappet.gui.hotkeys.mode.down=Нажать
+mappet.gui.hotkeys.mode.up=Отпустить
+mappet.gui.hotkeys.mode_tooltip=...?
+mappet.gui.hotkeys.enabled=Включена
+mappet.gui.hotkeys.context.add=Добавить горячую клавишу события
+mappet.gui.hotkeys.context.remove=Удалить горячую клавишу события
+mappet.gui.hotkeys.reset=Сбросить
 
 mappet.gui.npcs.meta.title=Метаданные
 mappet.gui.npcs.meta.id=ID NPC
@@ -898,7 +781,8 @@ mappet.gui.state_trigger.mode.remove=Удалить
 mappet.keys.category=Маппет
 mappet.keys.dashboard=Креативная панель
 mappet.keys.journal=Журнал игрока
-mappet.keys.runCurrentScript=Запустить текущий скрипт
+mappet.keys.hotkeys=Горячие клавиши
+mappet.keys.run_current_script=Запустить текущий скрипт
 mappet.keys.scripted_item=Открыть редактор скриптового предмета
 
 # Items, blocks and entities
