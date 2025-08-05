@@ -6053,6 +6053,20 @@
               "type": "java.lang.String"
             }
           ]
+        },
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "value",
+              "type": "java.lang.Object",
+              "docs": "JsonSerializable\n Experimental"
+            }
+          ],
+          "docs": "Experimental"
         }
       ],
       "toggle": [
@@ -6077,9 +6091,11 @@
             },
             {
               "name": "value",
-              "type": "java.lang.Object"
+              "type": "java.lang.Object",
+              "docs": "JsonSerializable\n Experimental"
             }
-          ]
+          ],
+          "docs": "Experimental"
         }
       ],
       "getNumber": [
@@ -6106,8 +6122,10 @@
             }
           ],
           "return": {
+            "docs": "JsonSerializable\n Experimental",
             "type": "java.lang.Object"
-          }
+          },
+          "docs": "Experimental"
         }
       ],
       "isNumber": [
