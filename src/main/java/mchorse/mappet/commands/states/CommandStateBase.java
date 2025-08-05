@@ -38,9 +38,9 @@ public abstract class CommandStateBase extends MappetCommandBase
             {
                 States states = CommandState.getStates(server, sender, args[0]);
 
-                return getListOfStringsMatchingLastWord(args, states.values.keySet());
+                return getListOfStringsMatchingLastWord(args, states.keys());
             }
-            catch (Exception e)
+            catch (Exception ignored)
             {}
         }
 

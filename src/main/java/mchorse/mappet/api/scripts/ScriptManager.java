@@ -39,9 +39,9 @@ public class ScriptManager extends BaseManager<Script> {
      * Execute a REPL code that came from a player
      */
     public String executeRepl(Object key, String code) throws ScriptException {
-        ScriptEngine engine = this.repls.get(key);
+        ScriptEngine engine = repls.get(key);
 
-        this.replOutput = "";
+        replOutput = "";
 
         if (engine == null) {
             engine = ScriptUtils.sanitize(ScriptUtils.getEngineByExtension("js"));
@@ -50,22 +50,22 @@ public class ScriptManager extends BaseManager<Script> {
             engine.put("mappet", new ScriptFactory());
             engine.put("math", new ScriptMath());
 
-            ScriptEvent event = new ScriptEvent(this.prepareContext(key), "", "");
+            ScriptEvent event = new ScriptEvent(prepareContext(key), "", "");
             engine.put("c", event);
             engine.put("s", event.getSubject());
 
             engine.eval("var __p__ = print; print = function(message) { ____manager____.replPrint(message); __p__(message); };");
 
-            this.repls.put(key, engine);
+            repls.put(key, engine);
         }
 
         Object object = engine.eval(code);
 
-        if (this.replOutput.isEmpty()) {
-            this.replPrint(object);
+        if (replOutput.isEmpty()) {
+            replPrint(object);
         }
 
-        return this.replOutput;
+        return replOutput;
     }
 
     public Object eval(ScriptEngine engine, String code, DataContext context) throws ScriptException {
@@ -99,14 +99,14 @@ public class ScriptManager extends BaseManager<Script> {
             object = TextFormatting.GRAY + "undefined";
         }
 
-        this.replOutput += object + "\n";
+        replOutput += object + "\n";
     }
 
     /**
      * Execute given script
      */
     public Object execute(String id, String function, DataContext context) throws ScriptException, NoSuchMethodException {
-        Script script = this.getScript(id);
+        Script script = getScript(id);
         if (script == null) {
             Mappet.logger.error("Failed to execute script '" + id + "', maybe is not exists");
             return null;
@@ -115,23 +115,23 @@ public class ScriptManager extends BaseManager<Script> {
     }
 
     public Object execute(String id, String function, DataContext context, Object... args) throws ScriptException, NoSuchMethodException {
-        Script script = this.getScript(id);
+        Script script = getScript(id);
 
         return script == null ? null : script.execute(function, context, args);
     }
 
     private Script getScript(String id) throws ScriptException {
-        Script script = this.uniqueScripts.get(id);
+        Script script = uniqueScripts.get(id);
 
         if (script == null) {
-            script = this.load(id);
+            script = load(id);
 
             if (script != null && script.unique) {
-                this.uniqueScripts.put(id, script);
+                uniqueScripts.put(id, script);
             }
 
             if (script != null && script.globalLibrary) {
-                this.globalLibraries.put(id, script);
+                globalLibraries.put(id, script);
             }
         }
 
@@ -146,24 +146,24 @@ public class ScriptManager extends BaseManager<Script> {
 
     @Override
     public Collection<String> getKeys() {
-        if (this.folder == null) {
+        if (folder == null) {
             return Collections.emptySet();
         }
 
         Set<String> set = new HashSet<>();
 
-        this.recursiveFind(set, this.folder, "");
+        recursiveFind(set, folder, "");
 
-        if (this.folder.listFiles() == null) return set;
+        if (folder.listFiles() == null) return set;
 
-        for (File file : Objects.requireNonNull(this.folder.listFiles())) {
+        for (File file : Objects.requireNonNull(folder.listFiles())) {
             String name = file.getName();
 
             if (!name.endsWith(".json")) {
                 continue;
             }
 
-            if (file.isFile() && this.isData(file)) {
+            if (file.isFile() && isData(file)) {
                 set.add(name.replace(".json", ""));
             }
         }
@@ -187,7 +187,7 @@ public class ScriptManager extends BaseManager<Script> {
     @Override
     public Script load(String id) {
         Script script = super.load(id);
-        File scriptFile = this.getScriptFile(id);
+        File scriptFile = getScriptFile(id);
 
         if (scriptFile != null && scriptFile.isFile()) {
             try {
@@ -215,7 +215,7 @@ public class ScriptManager extends BaseManager<Script> {
 
         if (!code.trim().isEmpty()) {
             try {
-                FileUtils.writeStringToFile(this.getScriptFile(id), code, Utils.getCharset());
+                FileUtils.writeStringToFile(getScriptFile(id), code, Utils.getCharset());
 
                 result = true;
             } catch (Exception ignored) {
@@ -223,16 +223,16 @@ public class ScriptManager extends BaseManager<Script> {
         }
 
         if (result) {
-            this.uniqueScripts.remove(id);
+            uniqueScripts.remove(id);
 
-            Script script = this.load(id);
+            Script script = load(id);
 
             if (script != null && script.unique) {
-                this.uniqueScripts.put(id, script);
+                uniqueScripts.put(id, script);
             }
 
             if (script != null && script.globalLibrary) {
-                this.globalLibraries.put(id, script);
+                globalLibraries.put(id, script);
             }
         }
 
@@ -243,18 +243,18 @@ public class ScriptManager extends BaseManager<Script> {
 
     @Override
     public boolean exists(String name) {
-        File scriptFile = this.getScriptFile(name);
+        File scriptFile = getScriptFile(name);
 
         return super.exists(name) || (scriptFile != null && scriptFile.exists());
     }
 
     @Override
     public boolean rename(String id, String newId) {
-        File scriptFile = this.getScriptFile(id);
+        File scriptFile = getScriptFile(id);
         boolean result = super.rename(id, newId);
 
         if (scriptFile != null && scriptFile.exists()) {
-            return scriptFile.renameTo(this.getScriptFile(newId)) || result;
+            return scriptFile.renameTo(getScriptFile(newId)) || result;
         }
 
         return result;
@@ -263,7 +263,7 @@ public class ScriptManager extends BaseManager<Script> {
     @Override
     public boolean delete(String name) {
         boolean result = super.delete(name);
-        File scriptFile = this.getScriptFile(name);
+        File scriptFile = getScriptFile(name);
 
         return (scriptFile != null && scriptFile.delete()) || result;
     }
@@ -274,22 +274,22 @@ public class ScriptManager extends BaseManager<Script> {
     }
 
     public File getScriptFile(String id) {
-        if (this.folder == null) return null;
-        return new File(this.folder, id.lastIndexOf(".") != -1 ? id : id + ".js");
+        if (folder == null) return null;
+        return new File(folder, id.lastIndexOf(".") != -1 ? id : id + ".js");
     }
 
     public void initiateAllScripts() {
-        for (String id : this.getKeys()) {
+        for (String id : getKeys()) {
             try {
-                Script script = this.load(id);
+                Script script = load(id);
 
                 if (script != null && script.unique) {
-                    this.uniqueScripts.put(id, script);
+                    uniqueScripts.put(id, script);
                     script.start(this);
                 }
 
                 if (script != null && script.globalLibrary) {
-                    this.globalLibraries.put(id, script);
+                    globalLibraries.put(id, script);
                 }
             } catch (Exception e) {
                 Mappet.logger.error(e.getMessage());

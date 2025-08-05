@@ -26,96 +26,95 @@ public class GuiState extends GuiElement {
         this.key = key;
         this.states = states;
 
-        this.id = new GuiTextElement(mc, 1000, this::rename);
-        this.id.flex().w(120);
-        this.id.setText(key);
-        this.convert = new GuiIconElement(mc, Icons.REFRESH, this::convert);
-        this.remove = new GuiIconElement(mc, Icons.REMOVE, this::removeState);
+        id = new GuiTextElement(mc, 1000, this::rename);
+        id.flex().w(120);
+        id.setText(key);
+        convert = new GuiIconElement(mc, Icons.REFRESH, this::convert);
+        remove = new GuiIconElement(mc, Icons.REMOVE, this::removeState);
 
-        this.flex().row(0).preferred(2);
-        this.updateValue();
+        flex().row(0).preferred(2);
+        updateValue();
     }
 
     public String getKey() {
-        return this.key;
+        return key;
     }
 
     private void rename(String key) {
-        if (this.states.values.containsKey(key) || key.isEmpty()) {
-            this.id.field.setTextColor(Colors.NEGATIVE);
-
+        if (states.has(key) || key.isEmpty()) {
+            id.field.setTextColor(Colors.NEGATIVE);
             return;
         }
 
-        this.id.field.setTextColor(0xffffff);
+        id.field.setTextColor(0xffffff);
 
-        Object value = this.states.values.remove(this.key);
+        Object value = states.values().remove(this.key);
 
-        this.states.values.put(key, value);
+        states.values().put(key, value);
         this.key = key;
     }
 
     private void convert(GuiIconElement element) {
-        Object object = this.states.values.get(this.key);
+        Object object = states.values().get(key);
 
-        if (object instanceof Number)
-            this.states.values.put(this.key, "");
-        else if (object instanceof String)
-            this.states.values.put(this.key, false);
-        else this.states.values.put(this.key, 0);
+        if (object instanceof Number) states.values().put(key, "");
+        else if (object instanceof String) states.values().put(key, false);
+        else states.values().put(key, 0);
 
-        this.updateValue();
+        updateValue();
     }
 
     private void removeState(GuiIconElement element) {
-        this.states.values.remove(this.key);
+        states.values().remove(key);
 
-        GuiElement parent = this.getParentContainer();
+        GuiElement parent = getParentContainer();
 
-        this.removeFromParent();
+        removeFromParent();
         parent.resize();
     }
 
     private void updateValue() {
-        Object object = this.states.values.get(this.key);
+        Object object = states.values().get(key);
 
         if (object instanceof Number) {
-            GuiTrackpadElement element = new GuiTrackpadElement(this.mc, this::updateNumber);
+            GuiTrackpadElement element = new GuiTrackpadElement(mc, this::updateNumber);
             element.setValue(((Number) object).doubleValue());
-            this.value = element;
+            value = element;
 
-        } else if (object instanceof String) {
-            GuiTextElement element = new GuiTextElement(this.mc, 10000, this::updateString);
+        }
+        else if (object instanceof String) {
+            GuiTextElement element = new GuiTextElement(mc, 10000, this::updateString);
             element.setText((String) object);
-            this.value = element;
-        } else {
+            value = element;
+        }
+        else {
             boolean value = object instanceof Boolean && (Boolean) object;
-            GuiButtonElement element = new GuiButtonElement(this.mc, IKey.str(value ? "true" : "false"), this::updateBoolean);
+            GuiButtonElement element = new GuiButtonElement(mc, IKey.str(value ? "true" : "false"), this::updateBoolean);
             element.setColor(value ? Colors.ACTIVE : Colors.NEGATIVE, false);
             element.color(-16777216);
             this.value = element;
         }
 
-        this.removeAll();
-        this.add(this.id, this.convert, this.value, this.remove);
+        removeAll();
+        add(id, convert, value, remove);
 
-        if (this.hasParent()) {
-            this.getParentContainer().resize();
+        if (hasParent()) {
+            getParentContainer().resize();
         }
     }
 
     private void updateNumber(double v) {
-        this.states.values.put(this.key, v);
+        states.values().put(key, v);
     }
 
     private void updateString(String s) {
-        this.states.values.put(this.key, s);
+        states.values().put(key, s);
     }
 
     private void updateBoolean(GuiButtonElement button) {
-        Object object = this.states.values.get(this.key);
+        Object object = states.values().get(key);
         boolean value = !(object instanceof Boolean && (Boolean) object);
-        this.states.values.put(this.key, value);
+        states.values().put(key, value);
         button.label = IKey.str(value ? "true" : "false");
         button.setColor(value ? Colors.ACTIVE : Colors.NEGATIVE, false);
     }

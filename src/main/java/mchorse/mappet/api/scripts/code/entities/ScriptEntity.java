@@ -16,7 +16,6 @@ import mchorse.mappet.api.scripts.code.entities.ai.repeatingCommand.RepeatingCom
 import mchorse.mappet.api.scripts.code.entities.ai.rotations.EntityAIRotations;
 import mchorse.mappet.api.scripts.code.entities.ai.rotations.RotationDataStorage;
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
-import mchorse.mappet.api.scripts.code.mappet.MappetStates;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
 import mchorse.mappet.api.scripts.code.world.ScriptWorld;
 import mchorse.mappet.api.scripts.user.IScriptRayTrace;
@@ -84,16 +83,10 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     protected IMappetStates states;
 
     public static IScriptEntity create(Entity entity) {
-        if (entity instanceof EntityPlayerMP) {
-            return new ScriptPlayer((EntityPlayerMP) entity);
-        } else if (entity instanceof EntityNpc) {
-            return new ScriptNpc((EntityNpc) entity);
-        } else if (entity instanceof EntityItem) {
-            return new ScriptEntityItem((EntityItem) entity);
-        } else if (entity != null) {
-            return new ScriptEntity<>(entity);
-        }
-
+        if (entity instanceof EntityPlayerMP) return new ScriptPlayer((EntityPlayerMP) entity);
+        if (entity instanceof EntityNpc) return new ScriptNpc((EntityNpc) entity);
+        if (entity instanceof EntityItem) return new ScriptEntityItem((EntityItem) entity);
+        if (entity != null) return new ScriptEntity<>(entity);
         return null;
     }
 
@@ -114,46 +107,40 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public IScriptWorld getWorld() {
-        return new ScriptWorld(this.entity.world);
+        return new ScriptWorld(entity.world);
     }
 
     /* Entity properties */
 
     @Override
     public ScriptVector getPosition() {
-        return new ScriptVector(this.entity.posX, this.entity.posY, this.entity.posZ);
+        return new ScriptVector(entity.posX, entity.posY, entity.posZ);
     }
 
     @Override
     public void setPosition(double x, double y, double z) {
-        if (Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z)) {
-            throw new IllegalArgumentException();
-        }
+        if (Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z)) throw new IllegalArgumentException();
 
-        this.entity.setPositionAndUpdate(x, y, z);
+        entity.setPositionAndUpdate(x, y, z);
         //fix if multiple players were teleported to the same position, they appear bugged to each other:
-        if (this.entity instanceof EntityPlayerMP) {
+        if (entity instanceof EntityPlayerMP)
             ((EntityPlayerMP) entity).connection.setPlayerLocation(x, y, z, entity.rotationYaw, entity.rotationPitch);
-        }
     }
 
     @Override
     public int getDimension() {
-        return this.entity.dimension;
+        return entity.dimension;
     }
 
     @Override
     public void setDimension(int dimension) {
         // Check if the entity is already in the target dimension.
-        if (this.entity.dimension == dimension) {
-            return;
-        }
+        if (entity.dimension == dimension) return;
 
-        if (dimension < -1 || dimension > 1) {
+        if (dimension < -1 || dimension > 1)
             throw new IllegalArgumentException("Dimension must be -1 (Nether), 0 (Overworld), or 1 (End).");
-        }
 
-        MinecraftServer minecraftServer = this.entity.getServer();
+        MinecraftServer minecraftServer = entity.getServer();
         if (minecraftServer == null) return;
         WorldServer worldServer = minecraftServer.getWorld(dimension);
 
@@ -171,260 +158,237 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             }
         };
 
-        if (this.entity instanceof EntityPlayerMP) {
+        if (entity instanceof EntityPlayerMP) {
             EntityPlayerMP player = (EntityPlayerMP) entity;
             minecraftServer.getPlayerList().transferPlayerToDimension(player, dimension, teleporter);
-        } else {
-            this.entity.changeDimension(dimension, teleporter);
         }
+        else entity.changeDimension(dimension, teleporter);
     }
 
     @Override
     public ScriptVector getMotion() {
-        return new ScriptVector(this.entity.motionX, this.entity.motionY, this.entity.motionZ);
+        return new ScriptVector(entity.motionX, entity.motionY, entity.motionZ);
     }
 
     @Override
     public void setMotion(double x, double y, double z) {
-        this.entity.motionX = x;
-        this.entity.motionY = y;
-        this.entity.motionZ = z;
+        entity.motionX = x;
+        entity.motionY = y;
+        entity.motionZ = z;
     }
 
     @Override
     public void addMotion(double x, double y, double z) {
-        this.entity.velocityChanged = true;
-        this.entity.addVelocity(x, y, z);
+        entity.velocityChanged = true;
+        entity.addVelocity(x, y, z);
     }
 
     @Override
     public ScriptVector getRotations() {
-        return new ScriptVector(this.getPitch(), this.getYaw(), this.getYawHead());
+        return new ScriptVector(getPitch(), getYaw(), getYawHead());
     }
 
     @Override
     public void setRotations(float pitch, float yaw, float yawHead) {
-        if (Float.isNaN(pitch) || Float.isNaN(yaw) || Float.isNaN(yawHead)) {
-            throw new IllegalArgumentException();
-        }
+        if (Float.isNaN(pitch) || Float.isNaN(yaw) || Float.isNaN(yawHead)) throw new IllegalArgumentException();
 
-        this.entity.setLocationAndAngles(this.entity.posX, this.entity.posY, this.entity.posZ, yaw, pitch);
-        this.entity.setRotationYawHead(yawHead);
-        this.entity.setRenderYawOffset(yawHead);
+        entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, yaw, pitch);
+        entity.setRotationYawHead(yawHead);
+        entity.setRenderYawOffset(yawHead);
 
-        if (!this.isPlayer()) {
-            EntityTracker tracker = ((WorldServer) this.entity.world).getEntityTracker();
+        if (!isPlayer()) {
+            EntityTracker tracker = ((WorldServer) entity.world).getEntityTracker();
 
-            for (EntityPlayer player : tracker.getTrackingPlayers(this.entity)) {
-                Dispatcher.sendTo(new PacketEntityRotations(this.entity.getEntityId(), yaw, yawHead, pitch), (EntityPlayerMP) player);
-            }
+            for (EntityPlayer player : tracker.getTrackingPlayers(entity))
+                Dispatcher.sendTo(new PacketEntityRotations(entity.getEntityId(), yaw, yawHead, pitch), (EntityPlayerMP) player);
         }
     }
 
     @Override
     public float getPitch() {
-        return this.entity.rotationPitch;
+        return entity.rotationPitch;
     }
 
     @Override
     public float getYaw() {
-        return this.entity.rotationYaw;
+        return entity.rotationYaw;
     }
 
     @Override
     public float getYawHead() {
-        return this.entity.getRotationYawHead();
+        return entity.getRotationYawHead();
     }
 
     @Override
     public ScriptVector getLook() {
         //this.entity.getLookVec() is not used because it does not work on entities that are not moving (but for players)
         //after many tests, this is the best way to get the most accurate look vector for all entities, whether they are moving or not
-        float f1 = -((entity.rotationPitch) * ((float) Math.PI / 180F));
-        float f2 = (entity.getRotationYawHead() * ((float) Math.PI / 180F));
+        float f1 = -(entity.rotationPitch * ((float) Math.PI / 180F));
+        float f2 = entity.getRotationYawHead() * ((float) Math.PI / 180F);
         float f3 = -MathHelper.sin(f2);
         float f4 = MathHelper.cos(f2);
         float f6 = MathHelper.cos(f1);
-        return new ScriptVector(f3 * f6, this.entity.getLookVec().y, f4 * f6);
+        return new ScriptVector(f3 * f6, entity.getLookVec().y, f4 * f6);
     }
 
     @Override
     public float getEyeHeight() {
-        return EntityUtils.getEyeHeight(this.entity);
+        return EntityUtils.getEyeHeight(entity);
     }
 
     @Override
     public float getWidth() {
-        return this.entity.width;
+        return entity.width;
     }
 
     @Override
     public float getHeight() {
-        return this.entity.height;
+        return entity.height;
     }
 
     @Override
     public float getHp() {
-        if (this.isLivingBase()) {
-            return ((EntityLivingBase) this.entity).getHealth();
-        }
+        if (isLivingBase()) return ((EntityLivingBase) entity).getHealth();
 
         return 0;
     }
 
     @Override
     public void setHp(float hp) {
-        if (this.isLivingBase()) {
-            ((EntityLivingBase) this.entity).setHealth(hp);
-        }
+        if (isLivingBase()) ((EntityLivingBase) entity).setHealth(hp);
     }
 
     @Override
     public float getMaxHp() {
-        if (this.isLivingBase()) {
-            return ((EntityLivingBase) this.entity).getMaxHealth();
-        }
+        if (isLivingBase()) return ((EntityLivingBase) entity).getMaxHealth();
 
         return 0;
     }
 
     @Override
     public void setMaxHp(float hp) {
-        if (this.isLivingBase() && hp > 0.0F) {
-            ((EntityLivingBase) this.entity).getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(hp);
-        }
+        if (isLivingBase() && hp > 0.0F)
+            ((EntityLivingBase) entity).getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(hp);
     }
 
     @Override
     public boolean isInWater() {
-        return this.entity.isInWater();
+        return entity.isInWater();
     }
 
     @Override
     public boolean isInLava() {
-        return this.entity.isInLava();
+        return entity.isInLava();
     }
 
     @Override
     public boolean isBurning() {
-        return this.entity.isBurning();
+        return entity.isBurning();
     }
 
     @Override
     public void setBurning(int seconds) {
-        if (seconds <= 0) {
-            this.entity.extinguish();
-        } else {
-            this.entity.setFire(seconds);
-        }
+        if (seconds <= 0) entity.extinguish();
+        else entity.setFire(seconds);
     }
 
     @Override
     public boolean isSneaking() {
-        return this.entity.isSneaking();
+        return entity.isSneaking();
     }
 
     @Override
     public boolean isSprinting() {
-        return this.entity.isSprinting();
+        return entity.isSprinting();
     }
 
     @Override
     public boolean isOnGround() {
-        return this.entity.onGround;
+        return entity.onGround;
     }
 
     /* Ray tracing */
 
     @Override
     public IScriptRayTrace rayTrace(double maxDistance) {
-        return new ScriptRayTrace(RayTracing.rayTraceWithEntity(this.entity, maxDistance));
+        return new ScriptRayTrace(RayTracing.rayTraceWithEntity(entity, maxDistance));
     }
 
     @Override
     public IScriptRayTrace rayTraceBlock(double maxDistance) {
-        return new ScriptRayTrace(RayTracing.rayTrace(this.entity, maxDistance, 0));
+        return new ScriptRayTrace(RayTracing.rayTrace(entity, maxDistance, 0));
     }
 
     /* Items */
 
     @Override
     public IScriptItemStack getMainItem() {
-        if (this.isLivingBase()) {
-            return ScriptItemStack.create(((EntityLivingBase) this.entity).getHeldItemMainhand());
-        }
+        if (isLivingBase()) return ScriptItemStack.create(((EntityLivingBase) entity).getHeldItemMainhand());
 
         return ScriptItemStack.EMPTY;
     }
 
     @Override
     public void setMainItem(IScriptItemStack stack) {
-        this.setItem(EnumHand.MAIN_HAND, stack);
+        setItem(EnumHand.MAIN_HAND, stack);
     }
 
     @Override
     public IScriptItemStack getOffItem() {
-        if (this.isLivingBase()) {
-            return ScriptItemStack.create(((EntityLivingBase) this.entity).getHeldItemOffhand());
-        }
+        if (isLivingBase()) return ScriptItemStack.create(((EntityLivingBase) entity).getHeldItemOffhand());
 
         return ScriptItemStack.EMPTY;
     }
 
     @Override
     public void setOffItem(IScriptItemStack stack) {
-        this.setItem(EnumHand.OFF_HAND, stack);
+        setItem(EnumHand.OFF_HAND, stack);
     }
 
     private void setItem(EnumHand hand, IScriptItemStack stack) {
-        if (stack == null) {
-            stack = ScriptItemStack.EMPTY;
-        }
+        if (stack == null) stack = ScriptItemStack.EMPTY;
 
-        if (this.isLivingBase()) {
-            ((EntityLivingBase) this.entity).setHeldItem(hand, stack.asMinecraft().copy());
-        }
+        if (isLivingBase()) ((EntityLivingBase) entity).setHeldItem(hand, stack.asMinecraft().copy());
     }
 
     @Override
     public void giveItem(IScriptItemStack stack) {
-        this.giveItem(stack, true, true);
+        giveItem(stack, true, true);
     }
 
     @Override
     public void giveItem(IScriptItemStack stack, boolean playSound, boolean dropIfInventoryFull) {
         if (stack == null || stack.isEmpty()) return;
 
-        if (this.isPlayer()) {
-            EntityPlayer player = (EntityPlayer) this.entity;
+        if (isPlayer()) {
+            EntityPlayer player = (EntityPlayer) entity;
             ItemStack itemStack = stack.asMinecraft().copy();
             boolean flag = player.inventory.addItemStackToInventory(itemStack);
 
             if (flag) {
-                if (playSound) {
-                    player.world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                }
+                if (playSound)
+                    player.world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRNG()
+                                                                                                                                                             .nextFloat() - player.getRNG()
+                                                                                                                                                                                  .nextFloat()) * 0.7F + 1.0F) * 2.0F);
 
                 player.inventoryContainer.detectAndSendChanges();
-            } else if (dropIfInventoryFull) {
-                if (!player.world.isRemote) {
-                    EntityItem entityItem = new EntityItem(player.world, player.posX, player.posY, player.posZ, itemStack);
-
-                    entityItem.setNoPickupDelay();
-
-                    player.getEntityWorld().spawnEntity(entityItem);
-                }
             }
-        } else if (isLivingBase()) {
+            else if (dropIfInventoryFull) if (!player.world.isRemote) {
+                EntityItem entityItem = new EntityItem(player.world, player.posX, player.posY, player.posZ, itemStack);
+
+                entityItem.setNoPickupDelay();
+
+                player.getEntityWorld().spawnEntity(entityItem);
+            }
+        }
+        else if (isLivingBase()) {
             EntityLivingBase living = (EntityLivingBase) entity;
 
-            if (living.getHeldItemMainhand().isEmpty()) {
+            if (living.getHeldItemMainhand().isEmpty())
                 living.setHeldItem(EnumHand.MAIN_HAND, stack.asMinecraft().copy());
-            } else if (living.getHeldItemOffhand().isEmpty()) {
+            else if (living.getHeldItemOffhand().isEmpty())
                 living.setHeldItem(EnumHand.OFF_HAND, stack.asMinecraft().copy());
-            } else {
-                living.entityDropItem(stack.asMinecraft().copy(), getEyeHeight());
-            }
+            else living.entityDropItem(stack.asMinecraft().copy(), getEyeHeight());
         }
     }
 
@@ -438,43 +402,46 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         if (stack == null || stack.isEmpty() || count == 0) return 0;
         ItemStack itemStack = stack.asMinecraft().copy();
         int deleteCount = 0;
-        if (this.isPlayer()) {
-            EntityPlayer player = (EntityPlayer) this.entity;
+        if (isPlayer()) {
+            EntityPlayer player = (EntityPlayer) entity;
             for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
                 if (count > 0 && deleteCount >= count) return deleteCount;
                 ItemStack _stack = player.inventory.getStackInSlot(i);
-                if (_stack.isItemEqualIgnoreDurability(itemStack)) {
+                if (_stack.isItemEqualIgnoreDurability(itemStack))
                     if (count > 0 && deleteCount + _stack.getCount() > count) {
                         _stack.setCount(_stack.getCount() - (count - deleteCount));
                         deleteCount = count;
-                    } else {
+                    }
+                    else {
                         deleteCount += _stack.getCount();
                         player.inventory.removeStackFromSlot(i);
                     }
-                }
             }
-        } else if (isLivingBase()) {
-            EntityLivingBase living = (EntityLivingBase) this.entity;
+        }
+        else if (isLivingBase()) {
+            EntityLivingBase living = (EntityLivingBase) entity;
 
-            if (living.getHeldItemMainhand().isItemEqualIgnoreDurability(itemStack)) {
+            if (living.getHeldItemMainhand().isItemEqualIgnoreDurability(itemStack))
                 if (count > 0 && deleteCount + living.getHeldItemMainhand().getCount() > count) {
-                    living.getHeldItemMainhand().setCount(living.getHeldItemMainhand().getCount() - (count - deleteCount));
+                    living.getHeldItemMainhand()
+                          .setCount(living.getHeldItemMainhand().getCount() - (count - deleteCount));
                     deleteCount = count;
-                } else {
+                }
+                else {
                     deleteCount += living.getHeldItemMainhand().getCount();
                     living.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
                 }
-            }
 
-            if (living.getHeldItemOffhand().isItemEqualIgnoreDurability(itemStack)) {
+            if (living.getHeldItemOffhand().isItemEqualIgnoreDurability(itemStack))
                 if (count > 0 && deleteCount + living.getHeldItemOffhand().getCount() > count) {
-                    living.getHeldItemOffhand().setCount(living.getHeldItemOffhand().getCount() - (count - deleteCount));
+                    living.getHeldItemOffhand()
+                          .setCount(living.getHeldItemOffhand().getCount() - (count - deleteCount));
                     deleteCount = count;
-                } else {
+                }
+                else {
                     deleteCount += living.getHeldItemOffhand().getCount();
                     living.setHeldItem(EnumHand.OFF_HAND, ItemStack.EMPTY);
                 }
-            }
         }
         return deleteCount;
     }
@@ -488,76 +455,71 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     public int findItem(IScriptItemStack stack, int startIndex) {
         if (stack == null || stack.isEmpty() || startIndex < 0) return -1;
         ItemStack itemStack = stack.asMinecraft().copy();
-        if (this.isPlayer()) {
-            EntityPlayer player = (EntityPlayer) this.entity;
-            for (int i = startIndex; i < player.inventory.getSizeInventory(); i++) {
-                if (player.inventory.getStackInSlot(i).isItemEqualIgnoreDurability(itemStack)) {
-                    return i;
-                }
-            }
-        } else if (isLivingBase()) {
-            EntityLivingBase living = (EntityLivingBase) this.entity;
-            if (startIndex == 0 && living.getHeldItemMainhand().isItemEqualIgnoreDurability(itemStack)) {
-                return 0;
-            } else if (startIndex <= 1 && living.getHeldItemOffhand().isItemEqualIgnoreDurability(itemStack)) {
-                return 1;
-            }
+        if (isPlayer()) {
+            EntityPlayer player = (EntityPlayer) entity;
+            for (int i = startIndex; i < player.inventory.getSizeInventory(); i++)
+                if (player.inventory.getStackInSlot(i).isItemEqualIgnoreDurability(itemStack)) return i;
+        }
+        else if (isLivingBase()) {
+            EntityLivingBase living = (EntityLivingBase) entity;
+            if (startIndex == 0 && living.getHeldItemMainhand().isItemEqualIgnoreDurability(itemStack)) return 0;
+            if (startIndex <= 1 && living.getHeldItemOffhand().isItemEqualIgnoreDurability(itemStack)) return 1;
         }
         return -1;
     }
 
     @Override
     public IScriptItemStack getHelmet() {
-        if (isLivingBase()) {
-            return ScriptItemStack.create(((EntityLivingBase) this.entity).getItemStackFromSlot(EntityEquipmentSlot.HEAD).copy());
-        }
+        if (isLivingBase())
+            return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.HEAD)
+                                                                     .copy());
 
         return null;
     }
 
     @Override
     public IScriptItemStack getChestplate() {
-        if (isLivingBase()) {
-            return ScriptItemStack.create(((EntityLivingBase) this.entity).getItemStackFromSlot(EntityEquipmentSlot.CHEST).copy());
-        }
+        if (isLivingBase())
+            return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.CHEST)
+                                                                     .copy());
 
         return null;
     }
 
     @Override
     public IScriptItemStack getLeggings() {
-        if (isLivingBase()) {
-            return ScriptItemStack.create(((EntityLivingBase) this.entity).getItemStackFromSlot(EntityEquipmentSlot.LEGS).copy());
-        }
+        if (isLivingBase())
+            return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.LEGS)
+                                                                     .copy());
         return null;
     }
 
     @Override
     public IScriptItemStack getBoots() {
-        if (isLivingBase()) {
-            return ScriptItemStack.create(((EntityLivingBase) this.entity).getItemStackFromSlot(EntityEquipmentSlot.FEET).copy());
-        }
+        if (isLivingBase())
+            return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.FEET)
+                                                                     .copy());
         return null;
     }
 
     @Override
     public void setHelmet(IScriptItemStack itemStack) {
-        this.entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, itemStack.asMinecraft());
+        entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, itemStack.asMinecraft());
     }
 
     @Override
     public void setChestplate(IScriptItemStack itemStack) {
-        this.entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, itemStack.asMinecraft());
+        entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, itemStack.asMinecraft());
     }
 
     @Override
     public void setLeggings(IScriptItemStack itemStack) {
-        this.entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, itemStack.asMinecraft());
+        entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, itemStack.asMinecraft());
     }
 
     @Override
     public void setBoots(IScriptItemStack itemStack) {
-        this.entity.setItemStackToSlot(EntityEquipmentSlot.FEET, itemStack.asMinecraft());
+        entity.setItemStackToSlot(EntityEquipmentSlot.FEET, itemStack.asMinecraft());
     }
 
     @Override
@@ -593,16 +555,13 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public void setSpeed(float speed) {
-        if (this.isLivingBase()) {
-            ((EntityLivingBase) this.entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(speed);
-        }
+        if (isLivingBase())
+            ((EntityLivingBase) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(speed);
     }
 
     @Override
     public IScriptEntity getTarget() {
-        if (this.entity instanceof EntityLiving) {
-            return ScriptEntity.create(((EntityLiving) this.entity).getAttackTarget());
-        }
+        if (entity instanceof EntityLiving) return ScriptEntity.create(((EntityLiving) entity).getAttackTarget());
 
         return null;
     }
@@ -637,7 +596,8 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             livingBase.setAttackTarget((EntityLivingBase) targetCanceller.asMinecraft());
             livingBase.setRevengeTarget((EntityLivingBase) targetCanceller.asMinecraft());
             targetCanceller.remove();
-        } else if (this.entity instanceof EntityLiving && entity.isLivingBase()) {
+        }
+        else if (this.entity instanceof EntityLiving && entity.isLivingBase()) {
             EntityLiving livingBase = (EntityLiving) this.entity;
 
             livingBase.setAttackTarget((EntityLivingBase) entity.asMinecraft());
@@ -646,106 +606,94 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public boolean isAIEnabled() {
-        if (this.isLivingBase()) {
-            return !((EntityLiving) this.entity).isAIDisabled();
-        }
+        if (isLivingBase()) return !((EntityLiving) entity).isAIDisabled();
 
         return false;
     }
 
     @Override
     public void setAIEnabled(boolean enabled) {
-        if (this.isLivingBase()) {
-            ((EntityLiving) this.entity).setNoAI(!enabled);
-        }
+        if (isLivingBase()) ((EntityLiving) entity).setNoAI(!enabled);
     }
 
     @Override
     public String getUniqueId() {
-        return this.entity.getCachedUniqueIdString();
+        return entity.getCachedUniqueIdString();
     }
 
     @Override
     @Deprecated
     public String getEntityId() {
-        ResourceLocation rl = EntityList.getKey(this.entity);
+        ResourceLocation rl = EntityList.getKey(entity);
         return rl == null ? "" : rl.toString();
     }
 
     @Override
     public String getId() {
-        ResourceLocation rl = EntityList.getKey(this.entity);
+        ResourceLocation rl = EntityList.getKey(entity);
         return rl == null ? "" : rl.toString();
     }
 
     @Override
     public int getTicks() {
-        return this.entity.ticksExisted;
+        return entity.ticksExisted;
     }
 
     @Override
     public int getCombinedLight() {
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(MathHelper.floor(this.entity.posX), 0, MathHelper.floor(this.entity.posZ));
-
-        if (this.entity.world.isBlockLoaded(pos)) {
-            pos.setY(MathHelper.floor(this.entity.posY + this.entity.getEyeHeight()));
-
-            return this.entity.world.getCombinedLight(pos, 0);
-        }
-
-        return 0;
+        return EntityUtils.getCombinedLight(entity);
     }
 
     @Override
     public String getName() {
-        return this.entity.getName();
+        return entity.getName();
     }
 
     @Override
     public void setName(String name) {
-        this.entity.setCustomNameTag(name);
-        this.entity.setAlwaysRenderNameTag(!name.isEmpty());
+        entity.setCustomNameTag(name);
+        entity.setAlwaysRenderNameTag(!name.isEmpty());
     }
 
     @Override
     public void setInvisible(boolean invisible) {
-        this.entity.setInvisible(invisible);
+        entity.setInvisible(invisible);
     }
 
     @Override
     public INBTCompound getFullData() {
-        return new ScriptNBTCompound(this.entity.writeToNBT(new NBTTagCompound()));
+        return new ScriptNBTCompound(entity.writeToNBT(new NBTTagCompound()));
     }
 
     @Override
     public void setFullData(INBTCompound data) {
-        this.entity.readFromNBT(data.getNBTTagCompound());
+        entity.readFromNBT(data.asMinecraft());
     }
 
     @Override
     public INBTCompound getEntityData() {
-        return new ScriptNBTCompound(this.entity.getEntityData());
+        return new ScriptNBTCompound(entity.getEntityData());
     }
 
     @Override
     public boolean isPlayer() {
-        return this.entity instanceof EntityPlayer;
+        return entity instanceof EntityPlayer;
     }
 
     @Override
     @Deprecated
     public boolean isNpc() {
-        return this.isNPC();
+        return isNPC();
     }
 
     @Override
     public boolean isNPC() {
-        return this.entity instanceof EntityNpc;
+        return entity instanceof EntityNpc;
     }
 
     @Override
     public boolean isItem() {
-        return this.entity instanceof EntityItem;
+        return entity instanceof EntityItem;
     }
 
     @Override
@@ -770,9 +718,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public void damage(float health) {
-        if (this.isLivingBase()) {
-            this.entity.attackEntityFrom(DamageSource.OUT_OF_WORLD, health);
-        }
+        if (isLivingBase()) entity.attackEntityFrom(DamageSource.OUT_OF_WORLD, health);
     }
 
     @Override
@@ -785,14 +731,14 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         Entity attacker = _attacker.asMinecraft();
         if (!(attacker instanceof EntityLivingBase)) return;
         EntityLivingBase attackerLiving = (EntityLivingBase) attacker;
-        attackerLiving.setLastAttackedEntity(this.entity);
+        attackerLiving.setLastAttackedEntity(entity);
         DamageSource damageSource = DamageSource.causeIndirectDamage(attacker, attackerLiving);
-        this.entity.attackEntityFrom(ignore ? damageSource.setDamageBypassesArmor() : damageSource, damage);
+        entity.attackEntityFrom(ignore ? damageSource.setDamageBypassesArmor() : damageSource, damage);
     }
 
     @Override
     public void damageWithItemsAs(IScriptPlayer player) {
-        player.asMinecraft().attackTargetEntityWithCurrentItem(this.entity);
+        player.asMinecraft().attackTargetEntityWithCurrentItem(entity);
     }
 
     @Override
@@ -802,59 +748,47 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public void dismount() {
-        this.entity.dismountRidingEntity();
+        entity.dismountRidingEntity();
     }
 
     @Override
     public IScriptEntity getMount() {
-        return ScriptEntity.create(this.entity.getRidingEntity());
+        return ScriptEntity.create(entity.getRidingEntity());
     }
 
     @Override
     public ScriptBox getBoundingBox() {
-        AxisAlignedBB aabb = this.entity.getEntityBoundingBox();
+        AxisAlignedBB aabb = entity.getEntityBoundingBox();
 
         return new ScriptBox(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
     }
 
     private ScriptEntityItem dropItemInternal(ItemStack itemStack) {
-        if (itemStack.isEmpty()) {
-            return null;
-        }
+        if (itemStack.isEmpty()) return null;
 
-        EntityItem entityItem = new EntityItem(this.entity.world, this.getPosition().x, this.getPosition().y + this.getEyeHeight(), this.getPosition().z, itemStack);
+        EntityItem entityItem = new EntityItem(entity.world, getPosition().x, getPosition().y + getEyeHeight(), getPosition().z, itemStack);
 
         entityItem.setPickupDelay(40);
-        if (this.isNpc()) {
-            entityItem.setThrower(((EntityNpc) this.entity).getId());
-        } else {
-            entityItem.setThrower(this.entity.getName());
-        }
+        if (isNpc()) entityItem.setThrower(((EntityNpc) entity).getId());
+        else entityItem.setThrower(entity.getName());
 
 
         entityItem.velocityChanged = true;
         entityItem.addVelocity(getLook().x / 3, getLook().y / 3, getLook().z / 3);
 
-        if (this.entity.world.spawnEntity(entityItem)) {
-            return new ScriptEntityItem(entityItem);
-        } else {
-            return null;
-        }
+        if (entity.world.spawnEntity(entityItem)) return new ScriptEntityItem(entityItem);
+        return null;
     }
 
     @Override
     public ScriptEntityItem dropItem(int amount) {
-        ItemStack heldItemStack = this.getMainItem().asMinecraft();
+        ItemStack heldItemStack = getMainItem().asMinecraft();
 
-        if (heldItemStack.isEmpty()) {
-            return null;
-        }
+        if (heldItemStack.isEmpty()) return null;
 
         int count = heldItemStack.getCount();
 
-        if (amount > count) {
-            amount = count;
-        }
+        if (amount > count) amount = count;
 
         ItemStack droppedStack = heldItemStack.copy();
         droppedStack.setCount(amount);
@@ -876,55 +810,49 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public float getFallDistance() {
-        return this.entity.fallDistance;
+        return entity.fallDistance;
     }
 
     @Override
     public void setFallDistance(float distance) {
-        this.entity.fallDistance = distance;
+        entity.fallDistance = distance;
     }
 
     @Override
     public void remove() {
-        if (!isPlayer()) this.entity.setDead();
+        if (!isPlayer()) entity.setDead();
     }
 
     @Override
     public void kill() {
-        this.entity.onKillCommand();
+        entity.onKillCommand();
     }
 
     @Override
     public void swingArm(int arm) {
-        if (this.isLivingBase()) {
-            ((EntityLivingBase) this.entity).swingArm(arm == 1 ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
-        }
+        if (isLivingBase()) ((EntityLivingBase) entity).swingArm(arm == 1 ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
     }
 
     @Override
     public List<IScriptEntity> getLeashedEntities() {
         List<IScriptEntity> entities = new ArrayList<>();
-        World world = this.entity.world;
+        World world = entity.world;
 
-        for (Entity entity : world.loadedEntityList) {
+        for (Entity entity : world.loadedEntityList)
             if (entity instanceof EntityLiving) {
                 EntityLiving entityLiving = (EntityLiving) entity;
-                if (entityLiving.getLeashed() && entityLiving.getLeashHolder() == this.entity) {
+                if (entityLiving.getLeashed() && entityLiving.getLeashHolder() == this.entity)
                     entities.add(ScriptEntity.create(entityLiving));
-                }
             }
-        }
 
         return entities;
     }
 
     @Override
     public boolean setLeashHolder(IScriptEntity leashHolder) {
-        if (!(this.entity instanceof EntityLiving)) {
-            return false;
-        }
+        if (!(entity instanceof EntityLiving)) return false;
 
-        EntityLiving leashedEntity = (EntityLiving) this.entity;
+        EntityLiving leashedEntity = (EntityLiving) entity;
         boolean wasLeashed = leashedEntity.getLeashed();
         leashedEntity.setLeashHolder(leashHolder.asMinecraft(), true);
 
@@ -934,11 +862,9 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public IScriptEntity getLeashHolder() {
-        if (!(this.entity instanceof EntityLiving)) {
-            return null;
-        }
+        if (!(entity instanceof EntityLiving)) return null;
 
-        EntityLiving leashedEntity = (EntityLiving) this.entity;
+        EntityLiving leashedEntity = (EntityLiving) entity;
         Entity leashHolder = leashedEntity.getLeashHolder();
 
         return ScriptEntity.create(leashHolder);
@@ -946,11 +872,9 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public boolean clearLeashHolder(boolean dropLead) {
-        if (!(this.entity instanceof EntityLiving)) {
-            return false;
-        }
+        if (!(entity instanceof EntityLiving)) return false;
 
-        EntityLiving leashedEntity = (EntityLiving) this.entity;
+        EntityLiving leashedEntity = (EntityLiving) entity;
         boolean wasLeashed = leashedEntity.getLeashed();
 
         leashedEntity.clearLeashed(true, dropLead);
@@ -964,19 +888,15 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     @Override
     public void setModifier(String modifierName, double value) {
         if (isLivingBase()) {
-            EntityLivingBase entityLivingBase = (EntityLivingBase) this.entity;
+            EntityLivingBase entityLivingBase = (EntityLivingBase) entity;
             UUID uuid = entityLivingBase.getUniqueID();
             IAttributeInstance attribute = entityLivingBase.getAttributeMap().getAttributeInstanceByName(modifierName);
 
-            if (attribute == null) {
-                return;
-            }
+            if (attribute == null) return;
 
             AttributeModifier modifier = new AttributeModifier(uuid, "script." + modifierName, value, 0);
 
-            if (attribute.hasModifier(modifier)) {
-                attribute.removeModifier(modifier);
-            }
+            if (attribute.hasModifier(modifier)) attribute.removeModifier(modifier);
 
             attribute.applyModifier(modifier);
         }
@@ -985,7 +905,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     @Override
     public double getModifier(String modifierName) {
         if (isLivingBase()) {
-            EntityLivingBase entityLivingBase = (EntityLivingBase) this.entity;
+            EntityLivingBase entityLivingBase = (EntityLivingBase) entity;
             IAttributeInstance attribute = entityLivingBase.getAttributeMap().getAttributeInstanceByName(modifierName);
 
             if (attribute != null) {
@@ -1001,7 +921,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     @Override
     public void removeModifier(String modifierName) {
         if (isLivingBase()) {
-            EntityLivingBase entityLivingBase = (EntityLivingBase) this.entity;
+            EntityLivingBase entityLivingBase = (EntityLivingBase) entity;
             IAttributeInstance attribute = entityLivingBase.getAttributeMap().getAttributeInstanceByName(modifierName);
 
             if (attribute != null) {
@@ -1014,11 +934,10 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     @Override
     public void removeAllModifiers() {
         if (isLivingBase()) {
-            EntityLivingBase entityLivingBase = (EntityLivingBase) this.entity;
+            EntityLivingBase entityLivingBase = (EntityLivingBase) entity;
 
-            for (IAttributeInstance attribute : entityLivingBase.getAttributeMap().getAllAttributes()) {
+            for (IAttributeInstance attribute : entityLivingBase.getAttributeMap().getAllAttributes())
                 attribute.removeModifier(entityLivingBase.getUniqueID());
-            }
         }
     }
 
@@ -1029,22 +948,20 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         if (isLivingBase()) {
             PotionEffect effect = new PotionEffect(potion, duration, amplifier, false, particles);
 
-            ((EntityLivingBase) this.entity).addPotionEffect(effect);
+            ((EntityLivingBase) entity).addPotionEffect(effect);
         }
     }
 
     @Override
     public boolean hasPotion(Potion potion) {
-        if (this.isLivingBase()) {
-            return ((EntityLivingBase) this.entity).isPotionActive(potion);
-        }
+        if (isLivingBase()) return ((EntityLivingBase) entity).isPotionActive(potion);
 
         return false;
     }
 
     @Override
     public boolean removePotion(Potion potion) {
-        if (this.isLivingBase()) {
+        if (isLivingBase()) {
             EntityLivingBase entity = (EntityLivingBase) this.entity;
             int size = entity.getActivePotionMap().size();
 
@@ -1066,8 +983,8 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     @Override
     public IMappetStates getStates() {
         if (states == null) {
-            States entityStates = EntityUtils.getStates(this.entity);
-            if (entityStates != null) states = new MappetStates(entityStates);
+            States entityStates = EntityUtils.getStates(entity);
+            if (entityStates != null) states = entityStates;
         }
 
         return states;
@@ -1080,9 +997,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public boolean setMorph(AbstractMorph morph) {
-        if (Loader.isModLoaded("blockbuster")) {
-            return setActorsMorph(morph);
-        }
+        if (Loader.isModLoaded("blockbuster")) return setActorsMorph(morph);
 
         return false;
     }
@@ -1123,22 +1038,17 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         if (player == null) {
             Dispatcher.sendToTracked(entity, message);
 
-            if (this.isPlayer()) {
-                Dispatcher.sendTo(message, (EntityPlayerMP) entity);
-            }
-        } else {
-            Dispatcher.sendTo(message, player.asMinecraft());
+            if (isPlayer()) Dispatcher.sendTo(message, (EntityPlayerMP) entity);
         }
+        else Dispatcher.sendTo(message, player.asMinecraft());
     }
 
     @Override
     public IScriptEntity shootBBGunProjectile(String gunPropsNBT) {
-        if (isLivingBase() && Loader.isModLoaded("blockbuster")) {
-            try {
-                return shootBBGunProjectileMethod(gunPropsNBT);
-            } catch (Exception e) {
-                Mappet.logger.error(e.getMessage());
-            }
+        if (isLivingBase() && Loader.isModLoaded("blockbuster")) try {
+            return shootBBGunProjectileMethod(gunPropsNBT);
+        } catch (Exception e) {
+            Mappet.logger.error(e.getMessage());
         }
 
         return null;
@@ -1153,7 +1063,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             gunProps.fromNBT(gunPropsNBTCompound);
             EntityGunProjectile projectile = new EntityGunProjectile(entityLivingBase.world, gunProps, gunProps.projectileMorph);
 
-            projectile.setPosition(entityLivingBase.posX, (entityLivingBase.posY + 1.8), entityLivingBase.posZ);
+            projectile.setPosition(entityLivingBase.posX, entityLivingBase.posY + 1.8, entityLivingBase.posZ);
             projectile.shoot(entityLivingBase, entityLivingBase.rotationPitch, entityLivingBase.getRotationYawHead(), 0, gunProps.speed, 0);
             projectile.setInitialMotion();
             entityLivingBase.world.spawnEntity(projectile);
@@ -1185,7 +1095,8 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             Mappet.logger.error("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
             //throw new RuntimeException("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage(), e);
         } catch (Exception e) {
-            Mappet.logger.error("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage());
+            Mappet.logger.error("Script Empty: " + scriptName + " - Error: " + e.getClass()
+                                                                                .getSimpleName() + ": " + e.getMessage());
             //throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
         }
     }
@@ -1201,7 +1112,8 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             Mappet.logger.error("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
             //throw new RuntimeException("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage(), e);
         } catch (Exception e) {
-            Mappet.logger.error("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage());
+            Mappet.logger.error("Script Empty: " + scriptName + " - Error: " + e.getClass()
+                                                                                .getSimpleName() + ": " + e.getMessage());
             //throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
         }
     }
@@ -1248,7 +1160,8 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             setAIEnabled(false);
             moveTo(interpolation, durationTicks, x, y, z);
             CommonProxy.eventHandler.addExecutable(new RunnableExecutionFork(durationTicks, () -> setAIEnabled(true)));
-        } else moveTo(interpolation, durationTicks, x, y, z);
+        }
+        else moveTo(interpolation, durationTicks, x, y, z);
     }
 
     private void moveTo(String interpolation, int durationTicks, double x, double y, double z) {
@@ -1263,7 +1176,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             double interpY = interp.interpolate(startY, y, progress);
             double interpZ = interp.interpolate(startZ, z, progress);
 
-            CommonProxy.eventHandler.addExecutable(new RunnableExecutionFork(i, () -> this.setPosition(interpX, interpY, interpZ)));
+            CommonProxy.eventHandler.addExecutable(new RunnableExecutionFork(i, () -> setPosition(interpX, interpY, interpZ)));
         }
     }
 
@@ -1277,19 +1190,15 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             if (target == null) {
                 EntityAITasks.EntityAITaskEntry taskToRemove = null;
 
-                for (EntityAITasks.EntityAITaskEntry task : entityLiving.tasks.taskEntries) {
+                for (EntityAITasks.EntityAITaskEntry task : entityLiving.tasks.taskEntries)
                     if (task.action instanceof EntityAILookAtTarget) {
                         taskToRemove = task;
                         break;
                     }
-                }
 
-                if (taskToRemove != null) {
-                    entityLiving.tasks.removeTask(taskToRemove.action);
-                }
-            } else {
-                entityLiving.tasks.addTask(8, new EntityAILookAtTarget(entityLiving, target.asMinecraft(), 1.0F));
+                if (taskToRemove != null) entityLiving.tasks.removeTask(taskToRemove.action);
             }
+            else entityLiving.tasks.addTask(8, new EntityAILookAtTarget(entityLiving, target.asMinecraft(), 1.0F));
         }
     }
 
@@ -1303,14 +1212,13 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
                 if (task.action instanceof EntityAILookAtTarget) {
                     EntityAILookAtTarget lookAtTask = (EntityAILookAtTarget) task.action;
                     target = lookAtTask.getTarget();
-                } else if (task.action instanceof EntityAIWatchClosest) {
+                }
+                else if (task.action instanceof EntityAIWatchClosest) {
                     EntityAIWatchClosest watchClosestTask = (EntityAIWatchClosest) task.action;
                     target = getEntityFromWatchClosest(watchClosestTask);
                 }
 
-                if (target != null) {
-                    return ScriptEntity.create(target);
-                }
+                if (target != null) return ScriptEntity.create(target);
             }
         }
 
@@ -1341,9 +1249,9 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
                 entityLiving.tasks.removeTask(patrolTask);
 
                 patrolTask.addPatrolPoint(new BlockPos(x, y, z), shouldCirculate, executeCommandOnArrival);
-            } else {
-                patrolTask = new EntitiesAIPatrol((EntityLiving) entity, speed, new BlockPos[]{new BlockPos(x, y, z)}, new boolean[]{shouldCirculate}, new String[]{executeCommandOnArrival});
             }
+            else
+                patrolTask = new EntitiesAIPatrol((EntityLiving) entity, speed, new BlockPos[]{new BlockPos(x, y, z)}, new boolean[]{shouldCirculate}, new String[]{executeCommandOnArrival});
 
             entityLiving.tasks.addTask(1, patrolTask);
         }
@@ -1355,16 +1263,13 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             EntityLiving entityLiving = (EntityLiving) entity;
             EntityAITasks.EntityAITaskEntry taskToRemove = findEntitiesAIPatrolTask(entityLiving);
 
-            if (taskToRemove != null) {
-                entityLiving.tasks.removeTask(taskToRemove.action);
-            }
+            if (taskToRemove != null) entityLiving.tasks.removeTask(taskToRemove.action);
         }
     }
 
     private EntityAITasks.EntityAITaskEntry findEntitiesAIPatrolTask(EntityLiving entityLiving) {
-        for (EntityAITasks.EntityAITaskEntry task : entityLiving.tasks.taskEntries) {
+        for (EntityAITasks.EntityAITaskEntry task : entityLiving.tasks.taskEntries)
             if (task.action instanceof EntitiesAIPatrol) return task;
-        }
         return null;
     }
 
@@ -1375,7 +1280,8 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             EntityAITasks.EntityAITaskEntry taskToRemove = removeTaskIfExists(entityLiving, EntityAIRotations.class);
             entityLiving.tasks.addTask(9, new EntityAIRotations(entityLiving, yaw, pitch, yawHead, 1.0F));
 
-            RotationDataStorage.getRotationDataStorage(entity.world).addRotationData(entityLiving.getUniqueID(), yaw, pitch, yawHead);
+            RotationDataStorage.getRotationDataStorage(entity.world)
+                               .addRotationData(entityLiving.getUniqueID(), yaw, pitch, yawHead);
         }
     }
 
@@ -1392,12 +1298,11 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     private EntityAITasks.EntityAITaskEntry removeTaskIfExists(EntityLiving entityLiving, Class<?> taskClass) {
         EntityAITasks.EntityAITaskEntry taskToRemove = null;
 
-        for (EntityAITasks.EntityAITaskEntry task : entityLiving.tasks.taskEntries) {
+        for (EntityAITasks.EntityAITaskEntry task : entityLiving.tasks.taskEntries)
             if (task.action.getClass().equals(taskClass)) {
                 taskToRemove = task;
                 break;
             }
-        }
 
         if (taskToRemove != null) entityLiving.tasks.removeTask(taskToRemove.action);
 
@@ -1410,7 +1315,8 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         if (entity instanceof EntityLiving) {
             EntityLiving entityLiving = (EntityLiving) entity;
             entityLiving.tasks.addTask(10, new EntityAIRepeatingCommand(entityLiving, command, frequency));
-            RepeatingCommandDataStorage.getRepeatingCommandDataStorage(entity.world).addRepeatingCommandData(entityLiving.getUniqueID(), command, frequency);
+            RepeatingCommandDataStorage.getRepeatingCommandDataStorage(entity.world)
+                                       .addRepeatingCommandData(entityLiving.getUniqueID(), command, frequency);
         }
     }
 
@@ -1420,7 +1326,8 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             EntityLiving entityLiving = (EntityLiving) entity;
 
             removeTaskIfExists(entityLiving, EntityAIRepeatingCommand.class);
-            RepeatingCommandDataStorage.getRepeatingCommandDataStorage(entity.world).removeRepeatingCommandData(entityLiving.getUniqueID());
+            RepeatingCommandDataStorage.getRepeatingCommandDataStorage(entity.world)
+                                       .removeRepeatingCommandData(entityLiving.getUniqueID());
         }
     }
 
@@ -1430,20 +1337,19 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             EntityLiving entityLiving = (EntityLiving) entity;
 
             removeSpecificRepeatingCommandTaskIfExists(entityLiving, command);
-            RepeatingCommandDataStorage.getRepeatingCommandDataStorage(entity.world).removeSpecificRepeatingCommandData(entityLiving.getUniqueID(), command);
+            RepeatingCommandDataStorage.getRepeatingCommandDataStorage(entity.world)
+                                       .removeSpecificRepeatingCommandData(entityLiving.getUniqueID(), command);
         }
     }
 
     private void removeSpecificRepeatingCommandTaskIfExists(EntityLiving entityLiving, String command) {
         List<EntityAITasks.EntityAITaskEntry> tasksToRemove = new ArrayList<>();
 
-        for (EntityAITasks.EntityAITaskEntry task : entityLiving.tasks.taskEntries) {
-            if (task.action instanceof EntityAIRepeatingCommand && ((EntityAIRepeatingCommand) task.action).getCommand().equals(command)) {
+        for (EntityAITasks.EntityAITaskEntry task : entityLiving.tasks.taskEntries)
+            if (task.action instanceof EntityAIRepeatingCommand && ((EntityAIRepeatingCommand) task.action).getCommand()
+                                                                                                           .equals(command))
                 tasksToRemove.add(task);
-            }
-        }
-        for (EntityAITasks.EntityAITaskEntry taskToRemove : tasksToRemove) {
+        for (EntityAITasks.EntityAITaskEntry taskToRemove : tasksToRemove)
             entityLiving.tasks.removeTask(taskToRemove.action);
-        }
     }
 }

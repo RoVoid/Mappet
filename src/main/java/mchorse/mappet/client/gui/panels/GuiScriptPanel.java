@@ -73,15 +73,14 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
     public static GuiContextMenu createScriptContextMenu(Minecraft mc, GuiCodeEditor editor) {
         /* These GUI QoL features are getting out of hand... */
-        GuiSimpleContextMenu menu = new GuiSimpleContextMenu(mc)
-                .action(Icons.BLOCK, IKey.lang("mappet.gui.scripts.context.paste_block_pos"), () -> pasteBlockPosition(editor))
-                .action(Icons.POSE, IKey.lang("mappet.gui.scripts.context.paste_player_pos"), () -> pastePlayerPosition(editor))
-                .action(Icons.REVERSE, IKey.lang("mappet.gui.scripts.context.paste_player_rot"), () -> pastePlayerRotation(editor))
-                .action(Icons.WRENCH, IKey.lang("mappet.gui.scripts.context.paste_item"), () -> openItemPicker(editor))
-                .action(Icons.SOUND, IKey.lang("mappet.gui.scripts.context.paste_sound"), () -> openSoundPicker(editor))
-                .action(Icons.VISIBLE, IKey.lang("mappet.gui.scripts.context.paste_morph"), () -> openMorphPicker(editor))
-                .action(Icons.STOP, IKey.lang("mappet.gui.scripts.context.paste_colorRGB"), () -> openColorPicker(editor, false))
-                .action(Icons.MATERIAL, IKey.lang("mappet.gui.scripts.context.paste_colorARGB"), () -> openColorPicker(editor, true));
+        GuiSimpleContextMenu menu = new GuiSimpleContextMenu(mc).action(Icons.BLOCK, IKey.lang("mappet.gui.scripts.context.paste_block_pos"), () -> pasteBlockPosition(editor))
+                                                                .action(Icons.POSE, IKey.lang("mappet.gui.scripts.context.paste_player_pos"), () -> pastePlayerPosition(editor))
+                                                                .action(Icons.REVERSE, IKey.lang("mappet.gui.scripts.context.paste_player_rot"), () -> pastePlayerRotation(editor))
+                                                                .action(Icons.WRENCH, IKey.lang("mappet.gui.scripts.context.paste_item"), () -> openItemPicker(editor))
+                                                                .action(Icons.SOUND, IKey.lang("mappet.gui.scripts.context.paste_sound"), () -> openSoundPicker(editor))
+                                                                .action(Icons.VISIBLE, IKey.lang("mappet.gui.scripts.context.paste_morph"), () -> openMorphPicker(editor))
+                                                                .action(Icons.STOP, IKey.lang("mappet.gui.scripts.context.paste_colorRGB"), () -> openColorPicker(editor, false))
+                                                                .action(Icons.MATERIAL, IKey.lang("mappet.gui.scripts.context.paste_colorARGB"), () -> openColorPicker(editor, true));
 
         if (editor.isSelected()) {
             setupDocumentation(editor, menu);
@@ -95,8 +94,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         List<DocMethod> searched = GuiDocumentationOverlayPanel.searchMethod(text);
         if (searched.isEmpty()) return;
         for (DocMethod docMethod : searched) {
-            menu.action(Icons.SEARCH, IKey.format("mappet.gui.scripts.context.docs", docMethod.parent.getName()), () ->
-                    searchDocumentation(docMethod));
+            menu.action(Icons.SEARCH, IKey.format("mappet.gui.scripts.context.docs", docMethod.parent.getName()), () -> searchDocumentation(docMethod));
         }
     }
 
@@ -185,14 +183,13 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         if (isArgb) {
             picker.editAlpha();
         }
-        picker
-                .markIgnored()
-                .flex()
-                .relative(panel.content)
-                .xy(0.5f, 0.5f)
-                .anchor(0.5f, 0.5f)
-                .wh(200, 85)
-                .bounds(panel.content, 2);
+        picker.markIgnored()
+              .flex()
+              .relative(panel.content)
+              .xy(0.5f, 0.5f)
+              .anchor(0.5f, 0.5f)
+              .wh(200, 85)
+              .bounds(panel.content, 2);
 
         panel.content.add(picker);
 
@@ -225,15 +222,13 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         code = new GuiCodeEditor(mc, null);
         code.withHints();
         code.background().context(() -> createScriptContextMenu(this.mc, code));
-        code
-                .keys()
-                .ignoreFocus()
-                .register(IKey.lang("mappet.gui.scripts.keys.word_wrap"), Keyboard.KEY_P, this::toggleWordWrap)
-                .category(GuiMappetDashboardPanel.KEYS_CATEGORY)
-                .held(Keyboard.KEY_LCONTROL);
+        code.keys()
+            .ignoreFocus()
+            .register(IKey.lang("mappet.gui.scripts.keys.word_wrap"), Keyboard.KEY_P, this::toggleWordWrap)
+            .category(GuiMappetDashboardPanel.KEYS_CATEGORY)
+            .held(Keyboard.KEY_LCONTROL);
 
         repl = new GuiRepl(mc);
-
 
         unique = new GuiToggleElement(mc, IKey.lang("mappet.gui.npcs.meta.unique"), (b) -> data.unique = b.isToggled());
         globalLibrary = new GuiToggleElement(mc, IKey.lang("mappet.gui.scripts.global_library"), (b) -> data.globalLibrary = b.isToggled());
@@ -280,7 +275,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         try {
             formattedCode = Beautifier.beautify(code.getText());
         } catch (ScriptException | NoSuchMethodException e) {
-            Mappet.logger.error(e.getMessage());
+            Mappet.loggerClient.error(e.getMessage());
         }
 
         if (formattedCode.isEmpty()) return;
@@ -297,27 +292,17 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
     private void openLibraries(GuiIconElement element) {
         GuiLibrariesOverlayPanel overlay = new GuiLibrariesOverlayPanel(mc, data);
-
         GuiOverlay.addOverlay(GuiBase.getCurrent(), overlay, 0.4F, 0.6F);
     }
 
     @Override
     protected void addNewData(String name, Script data) {
-        if (name.lastIndexOf(".") == -1) {
-            name = name + ".js";
-        }
-
-        super.addNewData(name, data);
+        super.addNewData(name.endsWith(".js") ? name : name + ".js", data);
     }
 
-    /* TODO исправить ошибку с . (f.ile -> f.ile.js) */
     @Override
     protected void dupeData(String name) {
-        if (name.lastIndexOf(".") == -1) {
-            name = name + ".js";
-        }
-
-        super.dupeData(name);
+        super.dupeData(name.endsWith(".js") ? name : name + ".js");
     }
 
     @Override
@@ -333,7 +318,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
     @Override
     protected void fillDefaultData(Script data) {
         super.fillDefaultData(data);
-        data.code = "function main(c) {\n    var s = c.getSubject()\n    var States = c.getServer().getStates()\n}";
+        data.code = Mappet.scriptCodeTemplate.get();
     }
 
     @Override
@@ -347,31 +332,23 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         globalLibrary.setVisible(data != null && allowed);
         updateButtons();
 
-        if (data != null) {
-//            this.code.setHighlighter(Highlighters.readHighlighter(Highlighters.highlighterFile(data.getScriptExtension())));
+        if (data == null) return;
 
-            updateStyle();
+        updateStyle();
+        if (!code.getText().equals(data.code)) {
+            if (last != null) lastScrolls.put(last, code.vertical.scroll);
 
-            if (!code.getText().equals(data.code)) {
-                if (last != null) {
-                    lastScrolls.put(last, code.vertical.scroll);
-                }
+            code.setText(data.code);
+            setRepl(false);
 
-                code.setText(data.code);
-                setRepl(false);
-
-                if (last != null) {
-                    Integer scroll = lastScrolls.get(data.getId());
-
-                    if (scroll != null) {
-                        code.vertical.scroll = scroll;
-                    }
-                }
+            if (last != null) {
+                Integer scroll = lastScrolls.get(data.getId());
+                if (scroll != null) code.vertical.scroll = scroll;
             }
-
-            unique.toggled(data.unique);
-            globalLibrary.toggled(data.globalLibrary);
         }
+
+        unique.toggled(data.unique);
+        globalLibrary.toggled(data.globalLibrary);
     }
 
     private void updateButtons() {
@@ -394,7 +371,6 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
     @Override
     public void open() {
         super.open();
-
         updateStyle();
     }
 

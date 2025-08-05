@@ -22,25 +22,25 @@ public abstract class GuiEditorOverlayPanel <T> extends GuiOverlayPanel
     {
         super(mc, title);
 
-        this.list = this.createList(mc);
-        this.list.context(() ->
+        list = createList(mc);
+        list.context(() ->
         {
-            GuiSimpleContextMenu menu = new GuiSimpleContextMenu(this.mc).action(Icons.ADD, this.getAddLabel(), this::addItem);
+            GuiSimpleContextMenu menu = new GuiSimpleContextMenu(this.mc).action(Icons.ADD, getAddLabel(), this::addItem);
 
-            if (!this.list.getList().isEmpty())
+            if (!list.getList().isEmpty())
             {
-                menu.action(Icons.REMOVE, this.getRemoveLabel(), this::removeItem, Colors.NEGATIVE);
+                menu.action(Icons.REMOVE, getRemoveLabel(), this::removeItem, Colors.NEGATIVE);
             }
 
             return menu.shadow();
         });
 
-        this.editor = new GuiScrollElement(mc);
+        editor = new GuiScrollElement(mc);
 
-        this.list.flex().relative(this.content).w(120).h(1F);
-        this.editor.flex().relative(this.content).x(120).w(1F, -120).h(1F).column(5).vertical().stretch().scroll().padding(10);
+        list.flex().relative(content).w(120).h(1F);
+        editor.flex().relative(content).x(120).w(1F, -120).h(1F).column(5).vertical().stretch().scroll().padding(10);
 
-        this.content.add(this.editor, this.list);
+        content.add(editor, list);
     }
 
     protected abstract GuiListElement<T> createList(Minecraft mc);
@@ -57,8 +57,8 @@ public abstract class GuiEditorOverlayPanel <T> extends GuiOverlayPanel
 
     protected void addItem()
     {
-        this.addNewItem();
-        this.list.update();
+        addNewItem();
+        list.update();
     }
 
     protected void addNewItem()
@@ -66,33 +66,33 @@ public abstract class GuiEditorOverlayPanel <T> extends GuiOverlayPanel
 
     protected void removeItem()
     {
-        int index = this.list.getIndex();
+        int index = list.getIndex();
 
-        this.list.getList().remove(index);
+        list.getList().remove(index);
 
         index = Math.max(index - 1, 0);
-        T item = this.list.getList().isEmpty() ? null : this.list.getList().get(index);
+        T item = list.getList().isEmpty() ? null : list.getList().get(index);
 
-        this.pickItem(item, true);
-        this.list.update();
+        pickItem(item, true);
+        list.update();
     }
 
     protected void pickItem(T item, boolean select)
     {
         this.item = item;
 
-        this.editor.setVisible(item != null);
+        editor.setVisible(item != null);
 
         if (item != null)
         {
-            this.fillData(item);
+            fillData(item);
 
             if (select)
             {
-                this.list.setCurrentScroll(item);
+                list.setCurrentScroll(item);
             }
 
-            this.resize();
+            resize();
         }
     }
 

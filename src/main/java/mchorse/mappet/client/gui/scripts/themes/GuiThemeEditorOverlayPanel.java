@@ -136,6 +136,7 @@ public class GuiThemeEditorOverlayPanel extends GuiEditorOverlayPanel<GuiThemeEd
         editor.add(Elements.row(mc, 5, keyword, special));
         editor.add(Elements.row(mc, 5, string, comment));
         editor.add(other);
+
         editor.add(Elements.label(IKey.lang("mappet.gui.syntax_theme.background_colors.title")).marginTop(12));
         editor.add(Elements.row(mc, 5, lineNumbers, background));
 
@@ -199,16 +200,15 @@ public class GuiThemeEditorOverlayPanel extends GuiEditorOverlayPanel<GuiThemeEd
 
     private void addNewTheme(String string) {
         File file = Themes.getThemeFile(string);
+        if (file.isFile()) return;
 
-        if (!file.isFile()) {
-            SyntaxStyle style = new SyntaxStyle();
-            SyntaxStyleEntry entry = new SyntaxStyleEntry(file, style);
+        SyntaxStyle style = new SyntaxStyle();
+        SyntaxStyleEntry entry = new SyntaxStyleEntry(file, style);
 
-            style.title = "";
-            list.add(entry);
-            list.update();
-            pickItem(entry, true);
-        }
+        style.title = "";
+        list.add(entry);
+        list.update();
+        pickItem(entry, true);
     }
 
     @Override
@@ -257,22 +257,19 @@ public class GuiThemeEditorOverlayPanel extends GuiEditorOverlayPanel<GuiThemeEd
         SyntaxStyleEntry item = list.getCurrentFirst();
         item.save();
         Mappet.scriptEditorSyntaxStyle.set(item.file.getName(), item.style);
+        Mappet.scriptCodeTemplate.updateStyle();
         super.onClose();
     }
 
     public static class GuiSyntaxStyleListElement extends GuiListElement<SyntaxStyleEntry> {
         public GuiSyntaxStyleListElement(Minecraft mc, Consumer<List<SyntaxStyleEntry>> callback) {
             super(mc, callback);
-
             scroll.scrollItemSize = 16;
         }
 
         @Override
         protected String elementToString(SyntaxStyleEntry element) {
-            if (element.style.title.trim().isEmpty()) {
-                return element.file.getName();
-            }
-
+            if (element.style.title.trim().isEmpty()) return element.file.getName();
             return element.style.title + " (" + element.file.getName() + ")";
         }
     }

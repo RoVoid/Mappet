@@ -22,18 +22,16 @@ public class TriggerDocs {
         InputStream stream = null;
         language = mc.getLanguageManager().getCurrentLanguage().getLanguageCode().toLowerCase();
         try {
-            stream = mc
-                    .getResourceManager()
-                    .getResource(new ResourceLocation(Mappet.MOD_ID, "triggers/" + language + ".json"))
-                    .getInputStream();
+            stream = mc.getResourceManager()
+                       .getResource(new ResourceLocation(Mappet.MOD_ID, "triggers/" + language + ".json"))
+                       .getInputStream();
         } catch (Exception e) {
             Mappet.loggerClient.error("Not found docs on your localization!");
             if (language.equalsIgnoreCase("en_us")) return;
             try {
-                stream = mc
-                        .getResourceManager()
-                        .getResource(new ResourceLocation(Mappet.MOD_ID, "triggers/en_us.json"))
-                        .getInputStream();
+                stream = mc.getResourceManager()
+                           .getResource(new ResourceLocation(Mappet.MOD_ID, "triggers/en_us.json"))
+                           .getInputStream();
             } catch (Exception e1) {
                 Mappet.loggerClient.error("Not found docs");
             }
@@ -78,12 +76,11 @@ public class TriggerDocs {
 
 
     public static TriggerDoc get(String key) {
-        if (docs.isEmpty() || !Minecraft
-                .getMinecraft()
-                .getLanguageManager()
-                .getCurrentLanguage()
-                .getLanguageCode()
-                .equalsIgnoreCase(language)) init();
+        if (docs.isEmpty() || !Minecraft.getMinecraft()
+                                        .getLanguageManager()
+                                        .getCurrentLanguage()
+                                        .getLanguageCode()
+                                        .equalsIgnoreCase(language)) init();
         return docs.get(key);
     }
 }

@@ -1,5 +1,6 @@
 package mchorse.mappet.client.gui.scripts;
 
+import mchorse.mappet.Mappet;
 import mchorse.mappet.client.gui.scripts.style.SyntaxHighlighter;
 import mchorse.mappet.client.gui.scripts.utils.HighlightedTextLine;
 import mchorse.mappet.client.gui.scripts.utils.TextLineNumber;
@@ -52,16 +53,12 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
     }
 
     public void resetHighlight() {
-        for (HighlightedTextLine textLine : text) {
-            textLine.resetSegments();
-        }
+        for (HighlightedTextLine textLine : text) textLine.resetSegments();
     }
 
     @Override
     public void setText(String text) {
         super.setText(text);
-
-        /* It will be null before when it will get called from parent's constructor */
         resetHighlight();
     }
 
@@ -69,16 +66,13 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
     protected void recalculateSizes() {
         /* Calculate how many pixels will number lines will occupy horizontally */
         double power = Math.ceil(Math.log10(text.size() + 1));
-
         placements = (int) power * 6;
-
         super.recalculateSizes();
     }
 
     @Override
     protected void changedLine(int i) {
         String line = text.get(i).text;
-
         if (line.contains("/*") || line.contains("*/")) changedLineAfter(i);
         else {
             super.changedLine(i);
@@ -99,7 +93,6 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
         if (wasDoubleInsert(typedChar, ')', '(') || wasDoubleInsert(typedChar, ']', '[') || wasDoubleInsert(typedChar, '}', '{') || wasDoubleInsert(typedChar, '"', '"') || wasDoubleInsert(typedChar, '\'', '\'')) {
             moveCursor(1, 0);
             playSound(SoundEvents.BLOCK_STONE_PLACE);
-
             return "";
         }
 

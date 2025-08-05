@@ -16,8 +16,7 @@ import java.util.Set;
  *    }
  * }</pre>
  */
-public interface IMappetStates
-{
+public interface IMappetStates {
     /**
      * Add some value to existing state by ID.
      *
@@ -30,7 +29,7 @@ public interface IMappetStates
      *
      * @return original value plus the provided value
      */
-     double add(String id, double value);
+    double add(String id, double value);
 
     String add(String id, String value);
 
@@ -44,7 +43,9 @@ public interface IMappetStates
      *    c.send("Total spending is now " + states.getNumber("total_spending"));
      * }</pre>
      */
-     void setNumber(String id, double value);
+    void setNumber(String id, double value);
+
+    void setBoolean(String id, boolean value);
 
     /**
      * Set string value to existing state by ID.
@@ -56,11 +57,35 @@ public interface IMappetStates
      *    c.getSubject().send("Your name is " + states.getString("name"));
      * }</pre>
      */
-     void setString(String id, String value);
+    void setString(String id, String value);
 
-    void setBoolean(String id, boolean value);
+    default void set(String id, double value) {
+        setNumber(id, value);
+    }
 
-    boolean toggleBoolean(String id);
+    default void set(String id, boolean value) {
+        setBoolean(id, value);
+    }
+
+    default void set(String id, String value) {
+        setString(id, value);
+    }
+
+    /**
+     * @param value JsonSerializable
+     * Experimental
+     */
+    default void set(String id, Object value) {
+        setJson(id, value);
+    }
+
+    boolean toggle(String id);
+
+    /**
+     * @param value JsonSerializable
+     * Experimental
+     */
+    void setJson(String id, Object value);
 
     /**
      * Get a numeric value of a state by given ID.
@@ -73,7 +98,13 @@ public interface IMappetStates
      *
      * @return state value, or 0 if no state found
      */
-     double getNumber(String id);
+    double getNumber(String id);
+
+    /**
+     * @return JsonSerializable
+     * Experimental
+     */
+    Object getJson(String id);
 
     /**
      * Check if a state instance of number.
@@ -84,7 +115,7 @@ public interface IMappetStates
      *    c.send("State is number: " + states.isNumber("state_number"));
      * }</pre>
      */
-     boolean isNumber(String id);
+    boolean isNumber(String id);
 
     /**
      * Get a string value of a state by given ID.
@@ -97,7 +128,7 @@ public interface IMappetStates
      *
      * @return state value, or empty string if no state found
      */
-     String getString(String id);
+    String getString(String id);
 
     /**
      * Check if a state instance of string.
@@ -108,7 +139,7 @@ public interface IMappetStates
      *    c.send("State is string: " + states.isString("state_string"));
      * }</pre>
      */
-     boolean isString(String id);
+    boolean isString(String id);
 
     boolean getBoolean(String id);
 
@@ -121,10 +152,10 @@ public interface IMappetStates
      *    var states = c.getServer().getStates();
      *
      *    // The city has been defaulted
-     *    states.reset("total_spendings");
+     *    states.reset("total_spending");
      * }</pre>
      */
-     void reset(String id);
+    boolean reset(String id);
 
     /**
      * Removes multiple states by using mask.
@@ -136,7 +167,7 @@ public interface IMappetStates
      *    states.resetMasked("regions.*");
      * }</pre>
      */
-     void resetMasked(String id);
+    boolean resetMasked(String id);
 
     /**
      * Remove all states.
@@ -148,7 +179,7 @@ public interface IMappetStates
      *    states.clear();
      * }</pre>
      */
-     void clear();
+    void clear();
 
     /**
      * Check whether state by given ID exists.
@@ -160,7 +191,7 @@ public interface IMappetStates
      *    c.getSubject().send("Your name is " + name);
      * }</pre>
      */
-     boolean has(String id);
+    boolean has(String id);
 
     /**
      * Get IDs of all states.
@@ -174,5 +205,5 @@ public interface IMappetStates
      *    }
      * }</pre>
      */
-     Set<String> keys();
+    Set<String> keys();
 }

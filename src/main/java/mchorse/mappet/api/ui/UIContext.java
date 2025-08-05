@@ -1,7 +1,7 @@
 package mchorse.mappet.api.ui;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.api.ui.components.UIComponent;
+import mchorse.mappet.api.scripts.code.ui.UIComponent;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.common.ui.PacketUIData;

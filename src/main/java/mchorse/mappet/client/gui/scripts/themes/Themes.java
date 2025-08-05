@@ -76,6 +76,7 @@ public class Themes {
         File dracula = new File(editorThemes, "dracula.json");
         File vscode = new File(editorThemes, "vscode.json");
         File jetbrains = new File(editorThemes, "jetbrains.json");
+        File banana = new File(editorThemes, "blueberry-banana.json");
 
         if (!monokai.isFile()) {
             writeTheme(monokai, new SyntaxStyle());
@@ -94,6 +95,11 @@ public class Themes {
         if (!jetbrains.isFile()) {
             SyntaxStyle jetbrainsStyle = new SyntaxStyle("JetBrains", true, 0xfd971f, 0xc9a638, 0xff7c4c, 0xc052bd, 0x8dd364, 0x7f7f7f, 0x82e6ff, 0x79a0ff, 0xffffda, 0xaaaaaa, 0xeaeaea, 0x626262, 0x222227);
             writeTheme(jetbrains, jetbrainsStyle);
+        }
+
+        if (!banana.isFile()) {
+            SyntaxStyle bananaStyle = new SyntaxStyle("Banana", true, 0xf92672, 0x7fbf15, 0xdabe3f, 0xb954ea, 0xbf6c15, 0x685a7e, 0xc66f15, 0x30c6ad, 0x66bfd4, 0xc63966, 0xb2b9c2, 0x4c5366, 0x16151f);
+            writeTheme(banana, bananaStyle);
         }
     }
 }

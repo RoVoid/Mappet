@@ -1,4 +1,4 @@
-package mchorse.mappet.api.ui.components;
+package mchorse.mappet.api.scripts.code.ui;
 
 import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;

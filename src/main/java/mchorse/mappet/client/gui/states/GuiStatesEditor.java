@@ -17,74 +17,71 @@ public class GuiStatesEditor extends GuiScrollElement {
 
     public GuiStatesEditor(Minecraft mc) {
         super(mc);
-
-        this.flex().column(5).vertical().stretch().scroll().padding(10);
+        flex().column(5).vertical().stretch().scroll().padding(10);
     }
 
     public States get() {
-        return this.states;
+        return states;
     }
 
     public List<String> getChanges() {
         List<String> changes = new ArrayList<>();
-        for (String key : prestates.values.keySet()) {
-            if (!prestates.areValuesEqual(key, states.values.get(key))) changes.add(key);
+        for (String key : prestates.keys()) {
+            if (!prestates.areValuesEqual(key, states.values().get(key))) changes.add(key);
         }
         return changes;
     }
 
     public GuiStatesEditor set(States states) {
         this.states = states;
-        this.prestates.copy(states, true);
+        prestates.copy(states, true);
 
-        this.removeAll();
+        removeAll();
 
         if (states != null) {
-            for (String key : states.values.keySet()) {
-                this.add(new GuiState(this.mc, key, states));
-            }
+            for (String key : states.keys()) add(new GuiState(mc, key, states));
         }
 
-        this.sortElements();
-        this.resize();
+        sortElements();
+        resize();
 
         return this;
     }
 
     private void sortElements() {
-        this.getChildren().sort(Comparator.comparing(a -> ((GuiState) a).getKey()));
+        getChildren().sort(Comparator.comparing(a -> ((GuiState) a).getKey()));
     }
 
     public void addNew() {
-        if (this.states == null) {
+        if (states == null) {
             return;
         }
 
-        int index = this.states.values.size() + 1;
+        int index = states.keys().size() + 1;
         String key = "state_" + index;
 
-        while (this.states.values.containsKey(key)) {
+        while (states.has(key)) {
             index += 1;
             key = "state_" + index;
         }
 
-        this.states.values.put(key, 0);
-        this.add(new GuiState(this.mc, key, this.states));
+        states.values().put(key, 0);
+        add(new GuiState(mc, key, states));
 
-        this.sortElements();
+        sortElements();
 
-        this.getParentContainer().resize();
+        getParentContainer().resize();
     }
 
     @Override
     public void draw(GuiContext context) {
         super.draw(context);
 
-        if (this.states != null && this.states.values.isEmpty()) {
-            int w = this.area.w / 2;
-            int x = this.area.mx(w);
+        if (states != null && states.values().isEmpty()) {
+            int w = area.w / 2;
+            int x = area.mx(w);
 
-            GuiDraw.drawMultiText(this.font, I18n.format("mappet.gui.states.empty"), x, this.area.my(), 0xffffff, w, 12, 0.5F, 0.5F);
+            GuiDraw.drawMultiText(font, I18n.format("mappet.gui.states.empty"), x, area.my(), 0xffffff, w, 12, 0.5F, 0.5F);
         }
     }
 }

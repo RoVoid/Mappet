@@ -166,7 +166,7 @@ public class TileRegion extends TileEntity implements ITickable
         PositionCache cache = character.getPositionCache();
         Vec3d vec = cache.lastPosition;
 
-        if (vec != null && !this.region.isPlayerInside(vec.x, vec.y + player.height / 2, vec.z, this.getPos()))
+        if (vec != null && this.region.isPlayerOutside(vec.x, vec.y + player.height / 2, vec.z, this.getPos()))
         {
             this.teleportEntity(player, vec, last);
 
@@ -177,7 +177,7 @@ public class TileRegion extends TileEntity implements ITickable
 
         vec = cache.lastLastPosition;
 
-        if (vec != null && !this.region.isPlayerInside(vec.x, vec.y + player.height / 2, vec.z, this.getPos()))
+        if (vec != null && this.region.isPlayerOutside(vec.x, vec.y + player.height / 2, vec.z, this.getPos()))
         {
             this.teleportEntity(player, vec, last);
 

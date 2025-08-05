@@ -1,4 +1,4 @@
-package mchorse.mappet.api.ui.components;
+package mchorse.mappet.api.scripts.code.ui;
 
 import mchorse.mappet.CommonProxy;
 import mchorse.mappet.api.ui.utils.DiscardMethod;

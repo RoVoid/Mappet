@@ -1,8 +1,8 @@
 package mchorse.mappet.api.ui.utils;
 
 import mchorse.mappet.api.ui.UIContext;
-import mchorse.mappet.api.ui.components.UIComponent;
-import mchorse.mappet.api.ui.components.UIParentComponent;
+import mchorse.mappet.api.scripts.code.ui.UIComponent;
+import mchorse.mappet.api.scripts.code.ui.UIParentComponent;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;

@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.utils.graphics;
 
-import mchorse.mappet.api.ui.components.UIComponent;
-import mchorse.mappet.api.ui.components.UIGraphicsComponent;
+import mchorse.mappet.api.scripts.code.ui.UIComponent;
+import mchorse.mappet.api.scripts.code.ui.UIGraphicsComponent;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Area;

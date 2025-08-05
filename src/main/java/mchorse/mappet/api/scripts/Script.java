@@ -98,12 +98,14 @@ public class Script extends AbstractData {
             }
 
             char quote = lib.charAt(0);
-            if ((quote != '"' && quote != '\'')) {
+            if (quote != '"' && quote != '\'') {
                 newLines.add(line);
                 continue;
             }
 
-            int index = lib.indexOf(quote, 1);
+            int index = 1;
+            do index = lib.indexOf(quote, index); while (index != -1 && lib.charAt(index - 1) == '\\');
+
             if (index == -1) {
                 newLines.add(line);
                 continue;

@@ -8,7 +8,7 @@
  * point-and-click games, player creation screen, custom administration
  * tools, custom quest quest offers, and so on.</p>
  *
- * <p><b>All</b> UI components are based off {@link mchorse.mappet.api.ui.components.UIComponent},
+ * <p><b>All</b> UI components are based off {@link mchorse.mappet.api.scripts.code.ui.UIComponent},
  * therefore they all have UIComponent's methods.</p>
  *
  * <p>Here is a really basic example that drops an item upon pressing
@@ -39,4 +39,4 @@
  * }</pre>
  */
 
-package mchorse.mappet.api.ui.components;
+package mchorse.mappet.api.scripts.code.ui;

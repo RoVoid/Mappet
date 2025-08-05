@@ -21,10 +21,7 @@ import mchorse.mappet.blocks.BlockRegion;
 import mchorse.mappet.blocks.BlockTrigger;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.commands.CommandMappet;
-import mchorse.mappet.utils.MPIcons;
-import mchorse.mappet.utils.ScriptUtils;
-import mchorse.mappet.utils.ValueButtons;
-import mchorse.mappet.utils.ValueSyntaxStyle;
+import mchorse.mappet.utils.*;
 import mchorse.mclib.McLib;
 import mchorse.mclib.commands.utils.L10n;
 import mchorse.mclib.config.ConfigBuilder;
@@ -155,6 +152,7 @@ public final class Mappet {
     public static ValueSyntaxStyle scriptEditorSyntaxStyle;
     public static ValueBoolean scriptEditorSounds;
     public static ValueBoolean scriptUIDebug;
+    public static ValueCodeEditor scriptCodeTemplate;
 
     public Mappet() {
         MinecraftForge.EVENT_BUS.register(new ModEventHandler());
@@ -187,6 +185,7 @@ public final class Mappet {
         builder.category("script_editor").register(scriptEditorSyntaxStyle = new ValueSyntaxStyle("syntax_style"));
         scriptEditorSounds = builder.getBoolean("sounds", true);
         scriptUIDebug = builder.getBoolean("ui_debug", false);
+        builder.register(scriptCodeTemplate = new ValueCodeEditor("code_template"));
         builder.getCategory().markClientSide();
     }
 
