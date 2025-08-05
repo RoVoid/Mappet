@@ -76,7 +76,7 @@ public class TriggerEventHandler {
     }
 
     public boolean shouldSkipTrigger(Trigger trigger) {
-        return Mappet.settings == null || trigger == null || trigger.isEmpty();
+        return trigger == null || trigger.isEmpty();
     }
 
     @SubscribeEvent
@@ -151,9 +151,9 @@ public class TriggerEventHandler {
 
     @SubscribeEvent
     public void onEntityHurt(LivingDamageEvent event) {
-        if (shouldSkipTrigger(Mappet.settings.entityDamaged)) return;
         DamageSource source = event.getSource();
         if (event.getEntity() == null || event.getEntity().world.isRemote) return;
+        if (shouldSkipTrigger(Mappet.settings.entityDamaged)) return;
         DataContext context = new DataContext(event.getEntityLiving(), source.getTrueSource())
                 .set("damage", event.getAmount())
                 .set("type", source.getDamageType())
@@ -165,10 +165,10 @@ public class TriggerEventHandler {
 
     @SubscribeEvent
     public void onEntityAttacked(LivingAttackEvent event) {
-        if (shouldSkipTrigger(Mappet.settings.entityAttacked)) return;
         DamageSource source = event.getSource();
         if (!(source.getTrueSource() instanceof EntityLivingBase) || event.getEntity() == null || event.getEntity().world.isRemote)
             return;
+        if (shouldSkipTrigger(Mappet.settings.entityAttacked)) return;
         DataContext context = new DataContext(event.getEntityLiving(), source.getTrueSource())
                 .set("damage", event.getAmount())
                 .set("type", source.getDamageType())
@@ -182,7 +182,6 @@ public class TriggerEventHandler {
     @SideOnly(Side.CLIENT)
     public void onPlayerOpenOrCloseContainer(PlayerContainerEvent event) {
         Trigger trigger = event instanceof PlayerContainerEvent.Close ? Mappet.settings.playerCloseContainer : Mappet.settings.playerOpenContainer;
-
         if (shouldSkipTrigger(trigger)) return;
 
         EntityPlayer player = event.getEntityPlayer();
@@ -230,11 +229,10 @@ public class TriggerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerLeftClick(PlayerInteractEvent.LeftClickBlock event) {
-        if (shouldSkipTrigger(Mappet.settings.blockClick)) return;
-
         EntityPlayer player = event.getEntityPlayer();
         if (player.world.isRemote) return;
 
+        if (shouldSkipTrigger(Mappet.settings.blockClick)) return;
         DataContext context = new DataContext(player)
                 .set("position", event.getPos())
                 .set("hand", event.getHand() == EnumHand.MAIN_HAND ? "main" : "off");
@@ -244,11 +242,10 @@ public class TriggerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (shouldSkipTrigger(Mappet.settings.blockInteract)) return;
-
         EntityPlayer player = event.getEntityPlayer();
         if (player.world.isRemote) return;
 
+        if (shouldSkipTrigger(Mappet.settings.blockInteract)) return;
         IBlockState state = event.getWorld().getBlockState(event.getPos());
         ResourceLocation id = state.getBlock().getRegistryName();
         if (id == null) return;
@@ -263,11 +260,10 @@ public class TriggerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerRightClickItem(PlayerInteractEvent.RightClickItem event) {
-        if (shouldSkipTrigger(Mappet.settings.playerItemInteract)) return;
-
         EntityPlayer player = event.getEntityPlayer();
         if (player.world.isRemote) return;
 
+        if (shouldSkipTrigger(Mappet.settings.playerItemInteract)) return;
         DataContext context = new DataContext(player)
                 .set("position", event.getPos())
                 .set("hand", event.getHand() == EnumHand.MAIN_HAND ? "main" : "off");
@@ -277,13 +273,11 @@ public class TriggerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerInteractWithEntity(PlayerInteractEvent.EntityInteract event) {
-        if (shouldSkipTrigger(Mappet.settings.playerEntityInteract)) return;
-
         EntityPlayer player = event.getEntityPlayer();
         if (player.world.isRemote) return;
 
-        DataContext context = new DataContext(player, event.getTarget())
-                .set("hand", event.getHand() == EnumHand.MAIN_HAND ? "main" : "off");
+        if (shouldSkipTrigger(Mappet.settings.playerEntityInteract)) return;
+        DataContext context = new DataContext(player, event.getTarget()).set("hand", event.getHand() == EnumHand.MAIN_HAND ? "main" : "off");
         trigger(event, Mappet.settings.playerEntityInteract, context);
     }
 
@@ -297,6 +291,7 @@ public class TriggerEventHandler {
      * WORKS ONLY ON DEDICATED SERVER
      */
     @SubscribeEvent
+    @SideOnly(Side.SERVER)
     public void onPlayerLogsOut(PlayerEvent.PlayerLoggedOutEvent event) {
         if (shouldSkipTrigger(Mappet.settings.playerLogOut)) return;
         MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
@@ -328,15 +323,15 @@ public class TriggerEventHandler {
 
     @SubscribeEvent
     public void onPlayerJump(LivingEvent.LivingJumpEvent event) {
-        if (shouldSkipTrigger(Mappet.settings.playerJump)) return;
         if (event.getEntityLiving().world.isRemote || !(event.getEntityLiving() instanceof EntityPlayer)) return;
+        if (shouldSkipTrigger(Mappet.settings.playerJump)) return;
         trigger(event, Mappet.settings.playerJump, new DataContext(event.getEntityLiving()));
     }
 
     @SubscribeEvent
     public void onPlayerRun(LivingEvent.LivingUpdateEvent event) {
-        if (shouldSkipTrigger(Mappet.settings.playerRun)) return;
         if (event.getEntityLiving().world.isRemote || !(event.getEntityLiving() instanceof EntityPlayer)) return;
+        if (shouldSkipTrigger(Mappet.settings.playerRun)) return;
         EntityPlayer player = (EntityPlayer) event.getEntityLiving();
         if (player.isDead || !player.isSprinting()) return;
         trigger(event, Mappet.settings.playerRun, new DataContext(player));
@@ -344,8 +339,8 @@ public class TriggerEventHandler {
 
     @SubscribeEvent
     public void onPlayerMove(LivingEvent.LivingUpdateEvent event) {
-        if (shouldSkipTrigger(Mappet.settings.playerMove)) return;
         if (event.getEntityLiving().world.isRemote || !(event.getEntityLiving() instanceof EntityPlayer)) return;
+        if (shouldSkipTrigger(Mappet.settings.playerMove)) return;
         EntityPlayer player = (EntityPlayer) event.getEntityLiving();
         if (player.isDead || player.prevDistanceWalkedModified > player.distanceWalkedModified - 0.01) return;
         DataContext context = new DataContext(player).set("distance", player.distanceWalkedModified);
@@ -476,12 +471,12 @@ public class TriggerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerLeashEntity(PlayerInteractEvent.EntityInteract event) {
-        if (shouldSkipTrigger(Mappet.settings.playerEntityLeash)) return;
+        if (event.getEntityLiving().world.isRemote || shouldSkipTrigger(Mappet.settings.playerEntityLeash)) return;
 
         EntityPlayer player = event.getEntityPlayer();
         ItemStack item = player.getHeldItem(event.getHand());
 
-        if (player.world.isRemote || item.getItem() != Items.LEAD) return;
+        if (item.getItem() != Items.LEAD) return;
 
         Entity target = event.getTarget();
         if (!(target instanceof EntityLiving) || ((EntityLiving) target).getLeashed() || !((EntityLiving) target).canBeLeashedTo(player))
