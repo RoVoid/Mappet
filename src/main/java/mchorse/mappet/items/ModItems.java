@@ -10,6 +10,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -35,6 +37,7 @@ public class ModItems {
         for (Item item : blocks.values()) event.getRegistry().register(item);
     }
 
+    @SideOnly(Side.CLIENT)
     public static void bindModels(ModelRegistryEvent event) {
         ModelLoader.setCustomModelResourceLocation(NPC_TOOL, 0, getNpcToolTexture());
 
@@ -44,6 +47,7 @@ public class ModItems {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     public static Block addItemBlock(Block block) {
         ResourceLocation name = block.getRegistryName();
         if (name == null) return null;

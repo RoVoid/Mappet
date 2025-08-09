@@ -453,12 +453,12 @@ mappet.gui.nodes.info.empty_nodes=Right click here, and add a node, to start wor
 
 mappet.gui.hotkeys.title=Trigger hotkeys editor
 mappet.gui.hotkeys.name=Hotkey Id
+mappet.gui.hotkeys.id=Hotkey display name
 mappet.gui.hotkeys.key=Keybind
-mappet.gui.hotkeys.mode=Active Mode
+mappet.gui.hotkeys.mode=Activating Mode
 mappet.gui.hotkeys.mode.down_and_up=Down & Up
 mappet.gui.hotkeys.mode.down=Down
 mappet.gui.hotkeys.mode.up=Up
-mappet.gui.hotkeys.mode_tooltip=...?
 mappet.gui.hotkeys.enabled=Enabled
 mappet.gui.hotkeys.context.add=Add a trigger hotkey
 mappet.gui.hotkeys.context.remove=Remove this trigger hotkey

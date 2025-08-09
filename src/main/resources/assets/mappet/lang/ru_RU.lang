@@ -449,13 +449,13 @@ mappet.gui.nodes.info.empty_main=Вам необходимо обозначит�
 mappet.gui.nodes.info.empty_nodes=Чтобы начать работу с нодами, кликните сюда и добавьте нод!
 
 mappet.gui.hotkeys.title=Редактор горячей клавиши события
-mappet.gui.hotkeys.name=ID горячий клавиши
+mappet.gui.hotkeys.id=ID горячий клавиши
+mappet.gui.hotkeys.name=Выводимое имя клавиши
 mappet.gui.hotkeys.key=Клавиша
-mappet.gui.hotkeys.mode=Режим переключения
+mappet.gui.hotkeys.mode=Способ активации
 mappet.gui.hotkeys.mode.down_and_up=Нажать & Отпустить
 mappet.gui.hotkeys.mode.down=Нажать
 mappet.gui.hotkeys.mode.up=Отпустить
-mappet.gui.hotkeys.mode_tooltip=...?
 mappet.gui.hotkeys.enabled=Включена
 mappet.gui.hotkeys.context.add=Добавить горячую клавишу события
 mappet.gui.hotkeys.context.remove=Удалить горячую клавишу события

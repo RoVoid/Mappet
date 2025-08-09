@@ -8056,6 +8056,19 @@
           "docs": "Create and insert an icon button UI component into UI being built by this builder.\n\n \u003cp\u003eCheck {@link UIIconButtonComponent} for description and examples.\u003c/p\u003e"
         }
       ],
+      "keybind": [
+        {
+          "parameters": [
+            {
+              "name": "keycode",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIKeybindComponent"
+          }
+        }
+      ],
       "label": [
         {
           "parameters": [
@@ -12520,6 +12533,151 @@
       ]
     }
   },
+  "mchorse.mappet.api.scripts.code.ui.UIKeybindComponent": {
+    "name": "UIKeybindComponent",
+    "docs": "",
+    "superTypes": [
+      "mchorse.mappet.api.scripts.code.ui.UIComponent"
+    ],
+    "methods": {
+      "background": [
+        {
+          "parameters": [
+            {
+              "name": "background",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIKeybindComponent"
+          }
+        }
+      ],
+      "waitBackground": [
+        {
+          "parameters": [
+            {
+              "name": "waitBackground",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIKeybindComponent"
+          }
+        }
+      ],
+      "color": [
+        {
+          "parameters": [
+            {
+              "name": "color",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIKeybindComponent"
+          }
+        }
+      ],
+      "isDataReserved": [
+        {
+          "return": {
+            "type": "boolean"
+          },
+          "annotations": [
+            "java.lang.Override",
+            "mchorse.mappet.api.ui.utils.DiscardMethod",
+            "SideOnly"
+          ]
+        }
+      ],
+      "applyProperty": [
+        {
+          "parameters": [
+            {
+              "name": "context",
+              "type": "mchorse.mappet.api.ui.UIContext"
+            },
+            {
+              "name": "key",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "element",
+              "type": "GuiElement"
+            }
+          ],
+          "annotations": [
+            "java.lang.Override",
+            "mchorse.mappet.api.ui.utils.DiscardMethod",
+            "SideOnly"
+          ]
+        }
+      ],
+      "create": [
+        {
+          "parameters": [
+            {
+              "name": "mc",
+              "type": "Minecraft"
+            },
+            {
+              "name": "context",
+              "type": "mchorse.mappet.api.ui.UIContext"
+            }
+          ],
+          "return": {
+            "type": "GuiElement"
+          },
+          "annotations": [
+            "java.lang.Override",
+            "mchorse.mappet.api.ui.utils.DiscardMethod",
+            "SideOnly"
+          ]
+        }
+      ],
+      "populateData": [
+        {
+          "parameters": [
+            {
+              "name": "tag",
+              "type": "NBTTagCompound"
+            }
+          ],
+          "annotations": [
+            "java.lang.Override",
+            "mchorse.mappet.api.ui.utils.DiscardMethod"
+          ]
+        }
+      ],
+      "serializeNBT": [
+        {
+          "parameters": [
+            {
+              "name": "tag",
+              "type": "NBTTagCompound"
+            }
+          ],
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "deserializeNBT": [
+        {
+          "parameters": [
+            {
+              "name": "tag",
+              "type": "NBTTagCompound"
+            }
+          ],
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ]
+    }
+  },
   "mchorse.mappet.api.scripts.code.ui.UIIconButtonComponent": {
     "name": "UIIconButtonComponent",
     "docs": "Clickable icon button component.\n\n \u003cp\u003eThis component displays an icon, which allows users to trigger the handler\n script. The value that gets written to UI context\u0027s data (if ID is present)\n is how many times the icon button was pressed.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link IMappetUIBuilder#icon(String)} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var button \u003d ui.icon(\"more\").id(\"icon\");\n\n        button.rxy(0.5, 0.5).wh(20, 20).anchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"icon\")\n        {\n            // Get a set of all icons\n            var icons \u003d Java.type(\"mchorse.mclib.client.gui.utils.IconRegistry\").icons.keySet();\n\n            // Set a random icon\n            var index \u003d Math.floor(Math.random() * icons.size());\n            var i \u003d 0;\n\n            for each (var icon in icons)\n            {\n                if (i \u003d\u003d index)\n                {\n                    uiContext.get(\"icon\").icon(icon);\n\n                    break;\n                }\n\n                i +\u003d 1;\n            }\n        }\n    }\n }\u003c/pre\u003e",
@@ -14608,6 +14766,22 @@
           ],
           "return": {
             "type": "mchorse.mappet.api.scripts.code.ui.UIIconButtonComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
+      "keybind": [
+        {
+          "parameters": [
+            {
+              "name": "keycode",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIKeybindComponent"
           },
           "annotations": [
             "java.lang.Override"

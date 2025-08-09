@@ -16,7 +16,7 @@ public class ClientHandlerSyncHotkeys extends ClientMessageHandler<PacketSyncHot
 
         KeyboardHandler.hotkeys.clear();
         for (Hotkey hotkey : message.hotkeys) {
-            KeyboardHandler.hotkeys.put(hotkey.name, hotkey);
+            KeyboardHandler.hotkeys.put(hotkey.id, hotkey);
         }
     }
 }
