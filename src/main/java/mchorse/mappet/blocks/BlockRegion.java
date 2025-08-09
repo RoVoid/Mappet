@@ -1,6 +1,7 @@
 package mchorse.mappet.blocks;
 
 import mchorse.mappet.Mappet;
+import mchorse.mappet.items.ModItems;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.common.blocks.PacketEditRegion;
 import mchorse.mappet.tile.TileRegion;
@@ -12,7 +13,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -35,11 +35,11 @@ import java.util.List;
 public class BlockRegion extends Block implements ITileEntityProvider {
     public BlockRegion() {
         super(Material.ROCK);
-        this.setCreativeTab(Mappet.creativeTab);
-        this.setBlockUnbreakable();
-        this.setResistance(6000000.0F);
-        this.setRegistryName(new ResourceLocation(Mappet.MOD_ID, "region"));
-        this.setUnlocalizedName(Mappet.MOD_ID + ".region");
+        setCreativeTab(ModItems.creativeTab);
+        setBlockUnbreakable();
+        setResistance(6000000.0F);
+        setRegistryName(new ResourceLocation(Mappet.MOD_ID, "region"));
+        setUnlocalizedName(Mappet.MOD_ID + ".region");
     }
 
     @Override
@@ -63,7 +63,9 @@ public class BlockRegion extends Block implements ITileEntityProvider {
 
             TileRegion region = (TileRegion) tile;
             MinecraftServer server = playerIn.getServer();
-            if (server != null && server.getPlayerList().canSendCommands(playerIn.getGameProfile()) && playerIn.isCreative() && !playerIn.isSneaking()) {
+            if (server != null && server
+                    .getPlayerList()
+                    .canSendCommands(playerIn.getGameProfile()) && playerIn.isCreative() && !playerIn.isSneaking()) {
                 Dispatcher.sendTo(new PacketEditRegion(region).open(), (EntityPlayerMP) playerIn);
             }
         }

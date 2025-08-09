@@ -2,6 +2,7 @@ package mchorse.mappet.client;
 
 import mchorse.mappet.CommonProxy;
 import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.hotkeys.Hotkey;
 import mchorse.mappet.api.hotkeys.HotkeyState;
 import mchorse.mappet.api.scripts.Script;
@@ -56,11 +57,12 @@ public class KeyboardHandler {
     public void onKeyPress(KeyInputEvent event) {
         Minecraft mc = Minecraft.getMinecraft();
         if (openMappetDashboard.isPressed() && OpHelper.isPlayerOp()) {
-            if (Mappet.dashboardOnlyCreative.get()) {
+            if (MappetConfig.dashboardOnlyCreative.get()) {
                 if (mc.player.capabilities.isCreativeMode) {
                     mc.displayGuiScreen(GuiMappetDashboard.get(mc));
                 }
-            } else {
+            }
+            else {
                 mc.displayGuiScreen(GuiMappetDashboard.get(mc));
             }
         }
@@ -108,7 +110,8 @@ public class KeyboardHandler {
 
                 for (Hotkey hotkey : hotkeys)
                     if (keysNbt.hasKey(hotkey.name)) hotkey.keycode = keysNbt.getInteger(hotkey.name);
-            } else for (Hotkey hotkey : hotkeys) {
+            }
+            else for (Hotkey hotkey : hotkeys) {
                 hotkey.keycode = KeyboardHandler.hotkeys.getOrDefault(hotkey.name, hotkey).keycode;
             }
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 package mchorse.mappet.blocks;
 
 import mchorse.mappet.Mappet;
+import mchorse.mappet.items.ModItems;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.common.blocks.PacketEditEmitter;
 import mchorse.mappet.tile.TileEmitter;
@@ -38,12 +39,12 @@ public class BlockEmitter extends Block implements ITileEntityProvider
     public BlockEmitter()
     {
         super(Material.ROCK);
-        this.setDefaultState(this.getDefaultState().withProperty(POWERED, false));
-        this.setCreativeTab(Mappet.creativeTab);
-        this.setBlockUnbreakable();
-        this.setResistance(6000000.0F);
-        this.setRegistryName(new ResourceLocation(Mappet.MOD_ID, "emitter"));
-        this.setUnlocalizedName(Mappet.MOD_ID + ".emitter");
+        setDefaultState(getDefaultState().withProperty(POWERED, false));
+        setCreativeTab(ModItems.creativeTab);
+        setBlockUnbreakable();
+        setResistance(6000000.0F);
+        setRegistryName(new ResourceLocation(Mappet.MOD_ID, "emitter"));
+        setUnlocalizedName(Mappet.MOD_ID + ".emitter");
     }
 
     @Override
@@ -80,7 +81,7 @@ public class BlockEmitter extends Block implements ITileEntityProvider
     @Override
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(POWERED, meta == 1);
+        return getDefaultState().withProperty(POWERED, meta == 1);
     }
 
     @Override

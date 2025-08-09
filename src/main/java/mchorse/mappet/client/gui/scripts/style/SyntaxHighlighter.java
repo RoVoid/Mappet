@@ -1,6 +1,7 @@
 package mchorse.mappet.client.gui.scripts.style;
 
 import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.client.gui.scripts.utils.TextSegment;
 import mchorse.mappet.client.gui.scripts.utils.TextSegment.TOKEN;
 import net.minecraft.client.gui.FontRenderer;
@@ -32,7 +33,7 @@ public class SyntaxHighlighter {
     private SyntaxStyle style;
 
     public SyntaxHighlighter() {
-        style = Mappet.scriptEditorSyntaxStyle.get();
+        style = MappetConfig.scriptEditorSyntaxStyle.get();
 
         // Собираем pattern в правильном порядке
         String combinedPattern = "(" + doubleQuoted + ")" + "|" +                  // group 1  — string ""
@@ -57,7 +58,7 @@ public class SyntaxHighlighter {
     }
 
     public void setStyle(SyntaxStyle style) {
-        this.style = style == null ? Mappet.scriptEditorSyntaxStyle.get() : style;
+        this.style = style == null ? MappetConfig.scriptEditorSyntaxStyle.get() : style;
     }
 
     public List<TextSegment> parse(FontRenderer font, String line, TextSegment lastSegment) {

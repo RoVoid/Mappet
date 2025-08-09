@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.scripts.utils.documentation;
 
 import joptsimple.internal.Strings;
-import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.client.gui.scripts.GuiCodeEditor;
 import mchorse.mappet.client.gui.utils.text.GuiText;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
@@ -80,7 +80,7 @@ public class DocEntry {
 
                     editor.setText(text);
                     editor.background().flex().h(editor.getLines().size() * 12 + 20);
-                    editor.getHighlighter().setStyle(Mappet.scriptEditorSyntaxStyle.get());
+                    editor.getHighlighter().setStyle(MappetConfig.scriptEditorSyntaxStyle.get());
                     target.add(editor);
 
                     parsing = false;

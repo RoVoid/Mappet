@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.code.ui;
 
-import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
@@ -85,8 +85,7 @@ import java.text.DecimalFormat;
  *    }
  * }</pre>
  */
-public class UIMorphComponent extends UIComponent
-{
+public class UIMorphComponent extends UIComponent {
     public NBTTagCompound morph;
     public boolean editing;
 
@@ -105,8 +104,7 @@ public class UIMorphComponent extends UIComponent
      *    uiContext.get("morph").morph(mappet.createMorph('{Name:"blockbuster.alex"}'));
      * }</pre>
      */
-    public UIMorphComponent morph(AbstractMorph morph)
-    {
+    public UIMorphComponent morph(AbstractMorph morph) {
         this.change("Morph");
 
         this.morph = MorphUtils.toNBT(morph);
@@ -124,8 +122,7 @@ public class UIMorphComponent extends UIComponent
      *    uiContext.get("morph").editing();
      * }</pre>
      */
-    public UIMorphComponent editing()
-    {
+    public UIMorphComponent editing() {
         return this.editing(true);
     }
 
@@ -139,8 +136,7 @@ public class UIMorphComponent extends UIComponent
      *    uiContext.get("morph").editing(false);
      * }</pre>
      */
-    public UIMorphComponent editing(boolean editing)
-    {
+    public UIMorphComponent editing(boolean editing) {
         this.change("Editing");
 
         this.editing = editing;
@@ -164,8 +160,7 @@ public class UIMorphComponent extends UIComponent
      *    uiContext.get("morph").position(0, 1, 0.5);
      * }</pre>
      */
-    public UIMorphComponent position(float x, float y, float z)
-    {
+    public UIMorphComponent position(float x, float y, float z) {
         this.change("Position");
 
         this.pos = new Vector3f(x, y, z);
@@ -183,8 +178,7 @@ public class UIMorphComponent extends UIComponent
      *    uiContext.get("morph").rotation(15, 0);
      * }</pre>
      */
-    public UIMorphComponent rotation(float pitch, float yaw)
-    {
+    public UIMorphComponent rotation(float pitch, float yaw) {
         this.change("Rotation");
 
         this.rot = new Vector2f(pitch, yaw);
@@ -203,8 +197,7 @@ public class UIMorphComponent extends UIComponent
      *    uiContext.get("morph").distance(4);
      * }</pre>
      */
-    public UIMorphComponent distance(float distance)
-    {
+    public UIMorphComponent distance(float distance) {
         this.change("Distance");
 
         this.distance = distance;
@@ -222,8 +215,7 @@ public class UIMorphComponent extends UIComponent
      *    uiContext.get("morph").fov(50);
      * }</pre>
      */
-    public UIMorphComponent fov(float fov)
-    {
+    public UIMorphComponent fov(float fov) {
         this.change("Fov");
 
         this.fov = fov;
@@ -233,42 +225,34 @@ public class UIMorphComponent extends UIComponent
 
     @Override
     @DiscardMethod
-    protected int getDefaultUpdateDelay()
-    {
+    protected int getDefaultUpdateDelay() {
         return UIComponent.DELAY;
     }
 
     @Override
     @DiscardMethod
     @SideOnly(Side.CLIENT)
-    protected void applyProperty(UIContext context, String key, GuiElement element)
-    {
+    protected void applyProperty(UIContext context, String key, GuiElement element) {
         super.applyProperty(context, key, element);
 
         GuiMorphRenderer renderer = (GuiMorphRenderer) element;
 
-        if (key.equals("Morph"))
-        {
+        if (key.equals("Morph")) {
             renderer.morph.set(MorphManager.INSTANCE.morphFromNBT(this.morph));
         }
-        else if (key.equals("Editing"))
-        {
+        else if (key.equals("Editing")) {
             renderer.getChildren(GuiNestedEdit.class).get(0).setVisible(this.editing);
         }
-        else if (key.equals("Position") && this.pos != null)
-        {
+        else if (key.equals("Position") && this.pos != null) {
             renderer.setPosition(this.pos.x, this.pos.y, this.pos.z);
         }
-        else if (key.equals("Rotation") && this.rot != null)
-        {
+        else if (key.equals("Rotation") && this.rot != null) {
             renderer.setRotation(this.rot.y, this.rot.x);
         }
-        else if (key.equals("Distance"))
-        {
+        else if (key.equals("Distance")) {
             renderer.scale = this.distance;
         }
-        else if (key.equals("Fov"))
-        {
+        else if (key.equals("Fov")) {
             renderer.fov = this.fov;
         }
     }
@@ -276,20 +260,17 @@ public class UIMorphComponent extends UIComponent
     @Override
     @DiscardMethod
     @SideOnly(Side.CLIENT)
-    public GuiElement create(Minecraft mc, UIContext context)
-    {
+    public GuiElement create(Minecraft mc, UIContext context) {
         GuiMorphRenderer renderer = new GuiMorphRenderer(mc);
 
-        if (this.morph != null)
-        {
+        if (this.morph != null) {
             renderer.morph.set(MorphManager.INSTANCE.morphFromNBT(this.morph));
         }
 
-        GuiNestedEdit edit = new GuiNestedEdit(mc, (editing) ->
-                GuiMappetDashboard.get(mc).openMorphMenu(renderer.getRoot(), editing, renderer.morph.copy(), (morph) ->
-                {
-                    if (this.id.isEmpty())
-                    {
+        GuiNestedEdit edit = new GuiNestedEdit(mc, (editing) -> GuiMappetDashboard
+                .get(mc)
+                .openMorphMenu(renderer.getRoot(), editing, renderer.morph.copy(), (morph) -> {
+                    if (this.id.isEmpty()) {
                         return;
                     }
 
@@ -305,13 +286,11 @@ public class UIMorphComponent extends UIComponent
         edit.setVisible(this.editing);
         renderer.add(edit);
 
-        if (this.pos != null)
-        {
+        if (this.pos != null) {
             renderer.setPosition(this.pos.x, this.pos.y, this.pos.z);
         }
 
-        if (this.rot != null)
-        {
+        if (this.rot != null) {
             renderer.setRotation(this.rot.y, this.rot.x);
         }
 
@@ -323,16 +302,13 @@ public class UIMorphComponent extends UIComponent
 
     @Override
     @SideOnly(Side.CLIENT)
-    protected void resetContext(GuiElement element, UIContext context)
-    {
+    protected void resetContext(GuiElement element, UIContext context) {
         GuiMorphRenderer renderer = (GuiMorphRenderer) element;
 
-        renderer.context(() ->
-        {
+        renderer.context(() -> {
             GuiSimpleContextMenu menu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
 
-            if (Mappet.scriptUIDebug.get())
-            {
+            if (MappetConfig.scriptUIDebug.get()) {
                 menu.action(Icons.SEARCH, IKey.lang("mappet.gui.context.copy_camera"), () -> this.copyCameraProperties(renderer));
             }
 
@@ -342,10 +318,8 @@ public class UIMorphComponent extends UIComponent
 
     @Override
     @SideOnly(Side.CLIENT)
-    protected void createContext(GuiSimpleContextMenu menu, GuiElement element, UIContext context)
-    {
-        if (Mappet.scriptUIDebug.get())
-        {
+    protected void createContext(GuiSimpleContextMenu menu, GuiElement element, UIContext context) {
+        if (MappetConfig.scriptUIDebug.get()) {
             GuiMorphRenderer renderer = (GuiMorphRenderer) element;
 
             menu.action(Icons.SEARCH, IKey.lang("mappet.gui.context.copy_camera"), () -> this.copyCameraProperties(renderer));
@@ -355,55 +329,41 @@ public class UIMorphComponent extends UIComponent
     }
 
     @SideOnly(Side.CLIENT)
-    private void copyCameraProperties(GuiMorphRenderer renderer)
-    {
+    private void copyCameraProperties(GuiMorphRenderer renderer) {
         DecimalFormat formatter = GuiTrackpadElement.FORMAT;
 
-        GuiScreen.setClipboardString(".position(" +
-                formatter.format(renderer.pos.x) + ", " +
-                formatter.format(renderer.pos.y) + ", " +
-                formatter.format(renderer.pos.z) + ").rotation(" +
-                formatter.format(renderer.pitch) + ", " +
-                formatter.format(renderer.yaw) + ").distance(" +
-                formatter.format(renderer.scale) + ").fov(" +
-                formatter.format(renderer.fov) + ")");
+        GuiScreen.setClipboardString(".position(" + formatter.format(renderer.pos.x) + ", " + formatter.format(renderer.pos.y) + ", " + formatter.format(renderer.pos.z) + ").rotation(" + formatter.format(renderer.pitch) + ", " + formatter.format(renderer.yaw) + ").distance(" + formatter.format(renderer.scale) + ").fov(" + formatter.format(renderer.fov) + ")");
     }
 
     @Override
     @DiscardMethod
-    public void populateData(NBTTagCompound tag)
-    {
+    public void populateData(NBTTagCompound tag) {
         super.populateData(tag);
 
-        if (!this.id.isEmpty())
-        {
+        if (!this.id.isEmpty()) {
             tag.setTag(this.id, this.morph.copy());
         }
     }
 
     @Override
     @DiscardMethod
-    public void serializeNBT(NBTTagCompound tag)
-    {
+    public void serializeNBT(NBTTagCompound tag) {
         super.serializeNBT(tag);
 
-        if (this.morph != null)
-        {
+        if (this.morph != null) {
             tag.setTag("Morph", this.morph);
         }
 
         tag.setBoolean("Editing", this.editing);
 
-        if (this.pos != null)
-        {
+        if (this.pos != null) {
             NBTTagList pos = new NBTTagList();
 
             NBTUtils.writeFloatList(pos, this.pos);
             tag.setTag("Position", pos);
         }
 
-        if (this.rot != null)
-        {
+        if (this.rot != null) {
             NBTTagList rot = new NBTTagList();
             Vector3f rotation = new Vector3f(this.rot.x, this.rot.y, 0);
 
@@ -417,22 +377,18 @@ public class UIMorphComponent extends UIComponent
 
     @Override
     @DiscardMethod
-    public void deserializeNBT(NBTTagCompound tag)
-    {
+    public void deserializeNBT(NBTTagCompound tag) {
         super.deserializeNBT(tag);
 
-        if (tag.hasKey("Morph"))
-        {
+        if (tag.hasKey("Morph")) {
             this.morph = tag.getCompoundTag("Morph");
         }
 
-        if (tag.hasKey("Editing"))
-        {
+        if (tag.hasKey("Editing")) {
             this.editing = tag.getBoolean("Editing");
         }
 
-        if (tag.hasKey("Position"))
-        {
+        if (tag.hasKey("Position")) {
             Vector3f position = new Vector3f();
 
             NBTUtils.readFloatList(tag.getTagList("Position", Constants.NBT.TAG_FLOAT), position);
@@ -440,8 +396,7 @@ public class UIMorphComponent extends UIComponent
             this.pos = position;
         }
 
-        if (tag.hasKey("Rotation"))
-        {
+        if (tag.hasKey("Rotation")) {
             Vector3f rotation = new Vector3f();
 
             NBTUtils.readFloatList(tag.getTagList("Rotation", Constants.NBT.TAG_FLOAT), rotation);
@@ -449,13 +404,11 @@ public class UIMorphComponent extends UIComponent
             this.rot = new Vector2f(rotation.x, rotation.y);
         }
 
-        if (tag.hasKey("Distance"))
-        {
+        if (tag.hasKey("Distance")) {
             this.distance = tag.getFloat("Distance");
         }
 
-        if (tag.hasKey("Fov"))
-        {
+        if (tag.hasKey("Fov")) {
             this.fov = tag.getFloat("Fov");
         }
     }

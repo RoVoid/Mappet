@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.utils.text;
 
 import com.google.common.collect.ImmutableList;
-import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.client.gui.scripts.GuiDocumentationOverlayPanel;
 import mchorse.mappet.client.gui.scripts.utils.documentation.DocMethod;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
@@ -99,7 +99,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             if (character == '\n') {
                 splits.add(builder.toString());
                 builder = new StringBuilder();
-            } else {
+            }
+            else {
                 builder.append(character);
             }
         }
@@ -247,11 +248,14 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
 
             if (i == min.line && i == max.line) {
                 joiner.add(line.substring(min.getOffset(line), max.getOffset(line)));
-            } else if (i == min.line) {
+            }
+            else if (i == min.line) {
                 joiner.add(min.end(line));
-            } else if (i == max.line) {
+            }
+            else if (i == max.line) {
                 joiner.add(max.start(line));
-            } else {
+            }
+            else {
                 joiner.add(line);
             }
         }
@@ -273,14 +277,16 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             if (direction == 0) {
                 cursor.offset = max.offset;
                 selection.set(cursor.line, min.offset);
-            } else {
+            }
+            else {
                 if (!isSelected()) {
                     selection.copy(cursor);
                 }
 
                 cursor.offset = direction < 0 ? min.offset : max.offset;
             }
-        } else {
+        }
+        else {
             deselect();
             cursor.offset = direction < 0 ? min.offset : max.offset;
         }
@@ -325,7 +331,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             while (min > 0) {
                 if (matchSelectGroup(group, String.valueOf(line.charAt(min - 1)))) {
                     min -= 1;
-                } else {
+                }
+                else {
                     break;
                 }
             }
@@ -337,7 +344,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             while (max < line.length()) {
                 if (matchSelectGroup(group, String.valueOf(line.charAt(max)))) {
                     max += 1;
-                } else {
+                }
+                else {
                     break;
                 }
             }
@@ -376,12 +384,13 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             String line = this.text.get(selection.line).text;
             int l = splits.get(reverse ? splits.size() - (i + 1) : i).length();
 
-            selection.offset += (reverse ? -l : l);
+            selection.offset += reverse ? -l : l;
 
             if (i < splits.size() - 1) {
                 if (reverse && selection.offset < 0) {
                     return;
-                } else if (!reverse && selection.offset + l < line.length()) {
+                }
+                if (!reverse && selection.offset + l < line.length()) {
                     return;
                 }
 
@@ -395,7 +404,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
     public void checkSelection(boolean selecting) {
         if (selecting && !isSelected()) {
             startSelecting();
-        } else if (!selecting && isSelected()) {
+        }
+        else if (!selecting && isSelected()) {
             deselect();
         }
     }
@@ -425,9 +435,11 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
 
         if (cursor.offset == 0 || line.isEmpty()) {
             text.add(cursor.line, createTextLine(""));
-        } else if (cursor.offset >= line.length()) {
+        }
+        else if (cursor.offset >= line.length()) {
             text.add(cursor.line + 1, createTextLine(""));
-        } else {
+        }
+        else {
             text.get(cursor.line).text = cursor.start(line);
             text.add(cursor.line + 1, createTextLine(cursor.end(line)));
             moveCursorToLineStart();
@@ -446,9 +458,11 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
 
             if (index >= line.length()) {
                 line += character;
-            } else if (index == 0) {
+            }
+            else if (index == 0) {
                 line = character + line;
-            } else {
+            }
+            else {
                 line = cursor.start(line) + character + cursor.end(line);
             }
 
@@ -464,7 +478,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
         if (size == 1) {
             writeCharacter(string);
             cursor.offset += string.length();
-        } else {
+        }
+        else {
             int line = cursor.line;
             String remainder = cursor.end(text.get(line).text);
 
@@ -516,7 +531,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
 
             changedLineAfter(cursor.line);
             return '\n';
-        } else if (index == line.length()) {
+        }
+        if (index == line.length()) {
             text.get(cursor.line).text = line.substring(0, line.length() - 1);
             moveCursorToLineEnd();
             changedLine(cursor.line);
@@ -539,10 +555,12 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
 
             if (min.offset <= 0 && max.offset >= line.length()) {
                 text.get(min.line).text = "";
-            } else {
+            }
+            else {
                 text.get(min.line).text = min.start(line) + max.end(line);
             }
-        } else {
+        }
+        else {
             String end = "";
 
             for (int i = max.line; i >= min.line; i--) {
@@ -551,9 +569,11 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
                 if (i == max.line) {
                     end = max.end(line);
                     text.remove(i);
-                } else if (i == min.line) {
+                }
+                else if (i == min.line) {
                     text.get(i).text = min.start(line) + end;
-                } else {
+                }
+                else {
                     text.remove(i);
                 }
             }
@@ -598,19 +618,23 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
                         cursor.line -= 1;
                         moveCursorToLineEnd();
                     }
-                } else {
+                }
+                else {
                     moveCursorToLineStart();
                 }
-            } else if (nx > line.length()) {
+            }
+            else if (nx > line.length()) {
                 if (jumpLine) {
                     if (hasLine(cursor.line + 1)) {
                         cursor.line += 1;
                         moveCursorToLineStart();
                     }
-                } else {
+                }
+                else {
                     moveCursorToLineEnd();
                 }
-            } else {
+            }
+            else {
                 cursor.offset = nx;
             }
         }
@@ -646,7 +670,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
          * of the same operation due to complexity of wrapped data structure */
         if (wrapping) {
             moveToCursorWrapped(cursor, x, y);
-        } else {
+        }
+        else {
             moveCursorToUnwrapped(cursor, x, y);
         }
     }
@@ -699,7 +724,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             cursor.offset += lineText.length();
 
             return;
-        } else if (x < 0) {
+        }
+        if (x < 0) {
             return;
         }
 
@@ -725,9 +751,11 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
 
         if (x <= 0) {
             moveCursorToLineStart();
-        } else if (x > w) {
+        }
+        else if (x > w) {
             moveCursorToLineEnd();
-        } else {
+        }
+        else {
             cursor.offset = 0;
             w = font.getStringWidth(cursor.start(line));
 
@@ -827,7 +855,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
     protected void calculateWrappedLine(T textLine) {
         if (wrapping) {
             textLine.calculateWrappedLines(font, getWrappedWidth());
-        } else {
+        }
+        else {
             textLine.resetWrapping();
         }
     }
@@ -875,19 +904,22 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
                 if (System.currentTimeMillis() < lastClick) {
                     selectGroup(0, true);
                     lastClick -= 500;
-                } else {
+                }
+                else {
                     if (!shift) {
                         deselect();
 
                         dragging = 1;
-                    } else if (!isSelected()) {
+                    }
+                    else if (!isSelected()) {
                         startSelecting();
                     }
 
                     moveCursorTo(cursor, context.mouseX, context.mouseY);
                     lastClick = System.currentTimeMillis() + 200;
                 }
-            } else if (context.mouseButton == 2) {
+            }
+            else if (context.mouseButton == 2) {
                 dragging = 3;
             }
 
@@ -976,7 +1008,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             }
 
             return result;
-        } else if (ctrl && context.keyCode == Keyboard.KEY_Y) {
+        }
+        if (ctrl && context.keyCode == Keyboard.KEY_Y) {
             boolean result = this.undo.redo(this);
 
             if (result) {
@@ -986,20 +1019,21 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             return result;
         }
         /* Select all */
-        else if (ctrl && context.keyCode == Keyboard.KEY_A) {
+        if (ctrl && context.keyCode == Keyboard.KEY_A) {
             selectAll();
         }
         /* Cursor and navigation */
         else if (context.keyCode == Keyboard.KEY_UP || context.keyCode == Keyboard.KEY_DOWN || context.keyCode == Keyboard.KEY_RIGHT || context.keyCode == Keyboard.KEY_LEFT) {
-            int x = context.keyCode == Keyboard.KEY_RIGHT ? 1 : (context.keyCode == Keyboard.KEY_LEFT ? -1 : 0);
-            int y = context.keyCode == Keyboard.KEY_UP ? -1 : (context.keyCode == Keyboard.KEY_DOWN ? 1 : 0);
+            int x = context.keyCode == Keyboard.KEY_RIGHT ? 1 : context.keyCode == Keyboard.KEY_LEFT ? -1 : 0;
+            int y = context.keyCode == Keyboard.KEY_UP ? -1 : context.keyCode == Keyboard.KEY_DOWN ? 1 : 0;
 
             if (x != 0 && ctrl) {
                 if (!selectGroup(x, shift)) {
                     checkSelection(shift);
                     moveCursor(x, 0);
                 }
-            } else {
+            }
+            else {
                 checkSelection(shift);
                 moveCursor(x, y);
             }
@@ -1007,14 +1041,16 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             playSound(SoundEvents.BLOCK_CLOTH_STEP);
 
             return true;
-        } else if (context.keyCode == Keyboard.KEY_HOME) {
+        }
+        else if (context.keyCode == Keyboard.KEY_HOME) {
             checkSelection(shift);
             moveCursorToLineStart();
 
             playSound(SoundEvents.ENTITY_ARROW_SHOOT);
 
             return true;
-        } else if (context.keyCode == Keyboard.KEY_END) {
+        }
+        else if (context.keyCode == Keyboard.KEY_END) {
             checkSelection(shift);
             moveCursorToLineEnd();
 
@@ -1032,12 +1068,14 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
 
                 undo.ready().post("", cursor, selection);
                 playSound(SoundEvents.BLOCK_ANVIL_USE);
-            } else {
+            }
+            else {
                 playSound(SoundEvents.ENTITY_ITEM_PICKUP);
             }
 
             return context.keyCode == Keyboard.KEY_X;
-        } else if (ctrl && context.keyCode == Keyboard.KEY_V) {
+        }
+        else if (ctrl && context.keyCode == Keyboard.KEY_V) {
             String pasted = GuiScreen.getClipboardString();
 
             deleteSelection();
@@ -1048,7 +1086,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             playSound(SoundEvents.ENTITY_GENERIC_EXPLODE);
 
             return true;
-        } else if (ctrl && context.keyCode == Keyboard.KEY_D) {
+        }
+        else if (ctrl && context.keyCode == Keyboard.KEY_D) {
             deselect();
             String copy = text.get(cursor.line).text;
             moveCursorToLineEnd();
@@ -1073,14 +1112,16 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             playSound(GuiScreen.isShiftKeyDown() ? SoundEvents.BLOCK_PISTON_CONTRACT : SoundEvents.BLOCK_PISTON_EXTEND);
 
             return true;
-        } else if (ctrl && context.keyCode == Keyboard.KEY_SLASH) {
+        }
+        else if (ctrl && context.keyCode == Keyboard.KEY_SLASH) {
             Cursor min = new Cursor(), max = new Cursor();
 
             // Get the bounds for the operation, either a selection or the current line
             if (isSelected()) {
                 min.copy(getMin());
                 max.copy(getMax());
-            } else {
+            }
+            else {
                 min.copy(cursor);
                 max.copy(cursor);
             }
@@ -1091,7 +1132,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
                 String line = text.get(i).text;
                 if (line.startsWith("//")) {
                     numCommentedLines++;
-                } else {
+                }
+                else {
                     numUncommentedLines++;
                 }
             }
@@ -1104,7 +1146,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
                     if (line.startsWith("//")) {
                         text.get(i).text = line.substring(2);
                     }
-                } else if (numUncommentedLines > 0) {
+                }
+                else if (numUncommentedLines > 0) {
                     // Comment the line, adding leading "//"
                     if (!line.startsWith("//")) {
                         text.get(i).text = "//" + line;
@@ -1117,7 +1160,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
                 String selected = getSelectedText();
                 deleteSelection();
                 writeString(selected);
-            } else {
+            }
+            else {
                 String currentLine = text.get(cursor.line).text;
                 text.get(cursor.line).text = "";
                 writeString(currentLine);
@@ -1128,13 +1172,15 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             playSound(SoundEvents.BLOCK_CHEST_LOCKED);
 
             return true;
-        } else if (context.keyCode == Keyboard.KEY_RETURN) {
+        }
+        else if (context.keyCode == Keyboard.KEY_RETURN) {
             keyNewLine(undo.ready());
             undo.post(undo.postText, cursor, selection);
             playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT);
 
             return true;
-        } else if (context.keyCode == Keyboard.KEY_BACK || context.keyCode == Keyboard.KEY_DELETE) {
+        }
+        else if (context.keyCode == Keyboard.KEY_BACK || context.keyCode == Keyboard.KEY_DELETE) {
             boolean delete = context.keyCode == Keyboard.KEY_DELETE;
 
             if (isSelected()) {
@@ -1142,15 +1188,18 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
                 deselect();
 
                 playSound(SoundEvents.ENTITY_GENERIC_EXPLODE);
-            } else {
+            }
+            else {
                 if (delete) {
                     int measure = ctrl ? Math.max(measureGroup(1, cursor), 1) : 1;
-
+                    StringBuilder str = new StringBuilder(undo.text);
                     for (int i = 0; i < measure; i++) {
                         moveCursor(1, 0);
-                        undo.text = undo.text + deleteCharacter();
+                        str.append(deleteCharacter());
                     }
-                } else {
+                    undo.text = str.toString();
+                }
+                else {
                     keyBackspace(undo, ctrl);
                 }
 
@@ -1160,7 +1209,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             undo.ready().post("", cursor, selection);
 
             return true;
-        } else if (ChatAllowedCharacters.isAllowedCharacter(context.typedChar)) {
+        }
+        else if (ChatAllowedCharacters.isAllowedCharacter(context.typedChar)) {
             String character = getFromChar(context.typedChar);
 
             if (!character.isEmpty()) {
@@ -1180,9 +1230,7 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
     }
 
     protected void playSound(SoundEvent event) {
-        if (Mappet.scriptEditorSounds.get()) {
-            GuiMappetUtils.playSound(event);
-        }
+        if (MappetConfig.scriptEditorSounds.get()) GuiMappetUtils.playSound(event);
     }
 
     protected String getFromChar(char typedChar) {
@@ -1199,7 +1247,6 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
 
     protected void keyBackspace(TextEditUndo undo, boolean ctrl) {
         int measure = ctrl ? Math.max(Math.abs(measureGroup(-1, cursor)), 1) : 1;
-
         for (int i = 0; i < measure; i++) undo.text = deleteCharacter() + undo.text;
     }
 
@@ -1240,8 +1287,7 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
         int rectOffset = (font.FONT_HEIGHT + 4) * matchingMethods.size();
         if (i < 15)
             Gui.drawRect(x + cursorW + 5, y + font.FONT_HEIGHT + 5 + rectOffset, x + cursorW + 10 + maxWidth, y + font.FONT_HEIGHT + 5, 0xee000000);
-        else
-            Gui.drawRect(x + cursorW + 5, y - 5 - rectOffset, x + cursorW + 10 + maxWidth, y - 5, 0xee000000);
+        else Gui.drawRect(x + cursorW + 5, y - 5 - rectOffset, x + cursorW + 10 + maxWidth, y - 5, 0xee000000);
 
         for (int ii = 1; ii <= matchingMethods.size(); ii++) {
             int textOffset = (font.FONT_HEIGHT + 4) * ii + 3;
@@ -1254,7 +1300,7 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
     // Метод проверки, нужно ли выполнять автозаполнение
     private boolean shouldComplete(List<String> matchingMethods, String methodName) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_TAB)) return false;
-        return (!matchingMethods.isEmpty() && !matchingMethods.get(0).equalsIgnoreCase(methodName));
+        return !matchingMethods.isEmpty() && !matchingMethods.get(0).equalsIgnoreCase(methodName);
     }
 
     private String completeLine(String line, List<String> matchingMethods) {
@@ -1278,7 +1324,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
         if (index1 != -1) {
             if (line.charAt(index1) != '(') selectedMethod += "()";
             right = line.substring(index1);
-        } else selectedMethod += "()";
+        }
+        else selectedMethod += "()";
 
         cursor.offset = left.length() + selectedMethod.length();
 
@@ -1352,7 +1399,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
                         Gui.drawRect(newX + cursorW, newY - 1, newX + cursorW + 1, newY + font.FONT_HEIGHT + 1, cursorA + 0xffffff);
                     }
                     drawTextLine(line, i, 0, newX, newY);
-                } else {
+                }
+                else {
                     int wrappedW = 0;
 
                     for (int j = 0, cj = textLine.wrappedLines.size(); j < cj; j++) {
@@ -1453,8 +1501,9 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
         Vector2d pos = new Vector2d();
 
         if (wrapping) {
-            getCusrorPositionWrapped(cursor, pos);
-        } else {
+            getCursorPositionWrapped(cursor, pos);
+        }
+        else {
             String line = text.get(cursor.line).text;
 
             pos.x = font.getStringWidth(cursor.start(line));
@@ -1467,7 +1516,7 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
         return pos;
     }
 
-    private void getCusrorPositionWrapped(Cursor cursor, Vector2d pos) {
+    private void getCursorPositionWrapped(Cursor cursor, Vector2d pos) {
         int lines = 0;
         int offset = 0;
 
@@ -1478,7 +1527,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
             if (i == cursor.line) {
                 if (textLine.wrappedLines == null) {
                     offset = font.getStringWidth(cursor.start(textLine.text));
-                } else {
+                }
+                else {
                     int textOffset = 0;
 
                     for (int j = 0; j < textLine.wrappedLines.size(); j++) {

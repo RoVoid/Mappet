@@ -1,6 +1,5 @@
 package mchorse.mappet.client.gui;
 
-import mchorse.mappet.Mappet;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.common.npc.PacketNpcList;
 import mchorse.mappet.network.common.npc.PacketNpcTool;
@@ -15,13 +14,13 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.List;
 
-public class GuiNpcToolScreen extends GuiBase
-{
+import static mchorse.mappet.items.ModItems.NPC_TOOL;
+
+public class GuiNpcToolScreen extends GuiBase {
     public GuiStringListElement npcs;
     public GuiStringListElement states;
 
-    public GuiNpcToolScreen(Minecraft mc, List<String> npcs, List<String> states)
-    {
+    public GuiNpcToolScreen(Minecraft mc, List<String> npcs, List<String> states) {
         this.npcs = new GuiStringListElement(mc, (l) -> this.queryStates(l.get(0)));
         this.npcs.background().setList(npcs);
         this.npcs.sort();
@@ -37,22 +36,19 @@ public class GuiNpcToolScreen extends GuiBase
         /* Setting up */
         ItemStack stack = mc.player.getHeldItemMainhand();
 
-        if (stack.getItem() != Mappet.npcTool)
-        {
+        if (stack.getItem() != NPC_TOOL) {
             stack = mc.player.getHeldItemOffhand();
         }
 
         NBTTagCompound tag = stack.getTagCompound();
 
-        if (tag != null && tag.hasKey("Npc") && tag.hasKey("State"))
-        {
+        if (tag != null && tag.hasKey("Npc") && tag.hasKey("State")) {
             this.npcs.setCurrentScroll(tag.getString("Npc"));
             this.states.setCurrentScroll(tag.getString("State"));
         }
     }
 
-    private void queryStates(String s)
-    {
+    private void queryStates(String s) {
         PacketNpcList packet = new PacketNpcList();
 
         packet.npcs.add(s);
@@ -60,14 +56,12 @@ public class GuiNpcToolScreen extends GuiBase
     }
 
     @Override
-    public boolean doesGuiPauseGame()
-    {
+    public boolean doesGuiPauseGame() {
         return false;
     }
 
     @Override
-    protected void closeScreen()
-    {
+    protected void closeScreen() {
         super.closeScreen();
 
         String npc = this.npcs.isDeselected() ? "" : this.npcs.getCurrentFirst();
@@ -77,8 +71,7 @@ public class GuiNpcToolScreen extends GuiBase
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks)
-    {
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
 
         String title = I18n.format("mappet.gui.npc_tool.title");

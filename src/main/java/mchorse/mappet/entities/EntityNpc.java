@@ -2,6 +2,7 @@ package mchorse.mappet.entities;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.factions.Faction;
 import mchorse.mappet.api.factions.FactionAttitude;
 import mchorse.mappet.api.npcs.Npc;
@@ -72,7 +73,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     private Entity lastTarget;
 
     /**
-     * Needs to fix a clone issue, when npc dies and you quick reload world
+     * Needs to fix a clone issue, when npc dies and you quickly reload world
      */
     public boolean dieOnLoad = false;
 
@@ -84,19 +85,19 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
 
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3125D);
+        getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3125D);
     }
 
     @Override
     public void applyEntityCollision(Entity entityIn) {
-        if (!this.state.immovable.get()) {
+        if (!state.immovable.get()) {
             super.applyEntityCollision(entityIn);
         }
     }
 
     @Override
     protected void collideWithEntity(Entity entityIn) {
-        if (!this.state.immovable.get()) {
+        if (!state.immovable.get()) {
             super.collideWithEntity(entityIn);
         }
 
@@ -105,50 +106,51 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
         }
 
         // Call the trigger for entity collision
-        this.state.triggerEntityCollision.trigger(new DataContext(this, entityIn));
+        state.triggerEntityCollision.trigger(new DataContext(this, entityIn));
     }
 
     @Override
     public boolean hasNoGravity() {
-        return this.state.hasNoGravity.get();
+        return state.hasNoGravity.get();
     }
 
     @Override
     public boolean canPickUpLoot() {
-        return this.state.canPickUpLoot.get();
+        return state.canPickUpLoot.get();
     }
 
     @Override
     public boolean canBeSteered() {
-        return this.state.canBeSteered.get();
+        return state.canBeSteered.get();
     }
 
     @Override
     public void updatePassenger(Entity passenger) {
-        if (this.isPassenger(passenger)) {
-            int index = this.getPassengers().indexOf(passenger);
+        if (isPassenger(passenger)) {
+            int index = getPassengers().indexOf(passenger);
 
             BlockPos offsetPos;
-            if (this.state.steeringOffset.isEmpty() || index >= this.state.steeringOffset.size()) {
+            if (state.steeringOffset.isEmpty() || index >= state.steeringOffset.size()) {
                 offsetPos = new BlockPos(0, 0, 0); // default offset
-            } else {
-                offsetPos = this.state.steeringOffset.get(index);
+            }
+            else {
+                offsetPos = state.steeringOffset.get(index);
             }
 
             double offsetX = offsetPos.getX();
-            double offsetY = this.posY - 0.5 + EntityUtils.getHeight(this) + offsetPos.getY();
+            double offsetY = posY - 0.5 + EntityUtils.getHeight(this) + offsetPos.getY();
             double offsetZ = offsetPos.getZ();
 
             // Convert bodyYaw to radians as Java Math functions expect arguments in radians
-            double bodyYaw = Math.toRadians(this.renderYawOffset);
+            double bodyYaw = Math.toRadians(renderYawOffset);
 
             // Rotate the offset vector by the entity's bodyYaw
             double rotatedOffsetX = offsetX * Math.cos(bodyYaw) - offsetZ * Math.sin(bodyYaw);
             double rotatedOffsetZ = offsetX * Math.sin(bodyYaw) + offsetZ * Math.cos(bodyYaw);
 
             // Add the rotated offset to the entity's position
-            double finalPosX = this.posX + rotatedOffsetX;
-            double finalPosZ = this.posZ + rotatedOffsetZ;
+            double finalPosX = posX + rotatedOffsetX;
+            double finalPosZ = posZ + rotatedOffsetZ;
 
             // Update the passenger's position on both the server and the client
             passenger.setPosition(finalPosX, offsetY, finalPosZ);
@@ -157,35 +159,36 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
                 // This is a client
                 passenger.setPositionAndRotationDirect(finalPosX, offsetY, finalPosZ, passenger.rotationYaw, passenger.rotationPitch, 3, true);
-            } else {
+            }
+            else {
                 // This is a server
                 passenger.setPosition(finalPosX, offsetY, finalPosZ);
             }
 
             // Always align this entity's rotation with the passenger
-            this.rotationYaw = passenger.rotationYaw;
-            this.rotationPitch = passenger.rotationPitch;
+            rotationYaw = passenger.rotationYaw;
+            rotationPitch = passenger.rotationPitch;
         }
 
-        // Check if the passenger is a player and the entity can be steered and only allow the first passanger to steer it.
-        if (passenger instanceof EntityPlayer && canBeSteered() && this.getPassengers().indexOf(passenger) == (this.getPassengers().size() - 1)) {
+        // Check if the passenger is a player and the entity can be steered and only allow the first passenger to steer it.
+        if (passenger instanceof EntityPlayer && canBeSteered() && getPassengers().indexOf(passenger) == getPassengers().size() - 1) {
             handleSteering((EntityPlayer) passenger);
         }
     }
 
     private void handleSteering(EntityPlayer player) {
-        if (!this.world.isRemote) {
+        if (!world.isRemote) {
             float forward = player.moveForward;
             float strafe = player.moveStrafing;
-            this.rotationYaw = player.rotationYaw;
-            this.rotationYawHead = player.rotationYawHead;
+            rotationYaw = player.rotationYaw;
+            rotationYawHead = player.rotationYawHead;
 
             if (forward != 0 || strafe != 0) {
                 float speed = state.speed.get() / 15;
 
                 // Calculate motion based on player input
-                double motionX = -Math.sin(Math.toRadians(this.rotationYaw)) * forward + Math.cos(Math.toRadians(this.rotationYaw)) * strafe;
-                double motionZ = Math.cos(Math.toRadians(this.rotationYaw)) * forward + Math.sin(Math.toRadians(this.rotationYaw)) * strafe;
+                double motionX = -Math.sin(Math.toRadians(rotationYaw)) * forward + Math.cos(Math.toRadians(rotationYaw)) * strafe;
+                double motionZ = Math.cos(Math.toRadians(rotationYaw)) * forward + Math.sin(Math.toRadians(rotationYaw)) * strafe;
 
                 // Normalize motion vector
                 double motionMagnitude = Math.sqrt(motionX * motionX + motionZ * motionZ);
@@ -197,24 +200,24 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
                 this.motionZ = motionZ * speed;
 
                 // Use the move method to handle collisions and movement more accurately
-                this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+                move(MoverType.SELF, this.motionX, motionY, this.motionZ);
 
                 // Set position and rotation on the client side
-                this.setPositionAndRotation(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+                setPositionAndRotation(posX, posY, posZ, rotationYaw, rotationPitch);
             }
         }
     }
 
     @Override
     public void fall(float distance, float damageMultiplier) {
-        if (!this.isBeingRidden()) {
+        if (!isBeingRidden()) {
             super.fall(distance, damageMultiplier);
         }
     }
 
     @Override
     protected PathNavigate createNavigator(World world) {
-        if (this.state != null && this.state.canFly.get()) {
+        if (state != null && state.canFly.get()) {
             return new PathNavigateFlying(this, world);
         }
         return new PathNavigateGround(this, world);
@@ -224,60 +227,63 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     protected void initEntityAI() {
         super.initEntityAI();
 
-        this.tasks.taskEntries.clear();
-        this.targetTasks.taskEntries.clear();
+        tasks.taskEntries.clear();
+        targetTasks.taskEntries.clear();
 
         double speed = 1D;
 
-        if (this.state != null) {
-            speed = this.state.speed.get();
+        if (state != null) {
+            speed = state.speed.get();
 
-            if (this.state.canSwim.get()) {
-                this.tasks.addTask(0, new EntityAISwimming(this));
+            if (state.canSwim.get()) {
+                tasks.addTask(0, new EntityAISwimming(this));
             }
 
-            if (!this.state.follow.get().isEmpty()) {
-                this.tasks.addTask(6, new EntityAIFollowTarget(this, speed, 2, 10));
-            } else if (this.state.hasPost.get() && this.state.postPosition != null) {
-                this.tasks.addTask(6, new EntityAIReturnToPost(this, this.state.postPosition, speed, this.state.postRadius.get()));
-            } else if (!this.state.patrol.isEmpty()) {
-                this.tasks.addTask(6, new EntityAIPatrol(this));
+            if (!state.follow.get().isEmpty()) {
+                tasks.addTask(6, new EntityAIFollowTarget(this, speed, 2, 10));
+            }
+            else if (state.hasPost.get() && state.postPosition != null) {
+                tasks.addTask(6, new EntityAIReturnToPost(this, state.postPosition, speed, state.postRadius.get()));
+            }
+            else if (!state.patrol.isEmpty()) {
+                tasks.addTask(6, new EntityAIPatrol(this));
             }
 
-            if (this.state.lookAround.get()) {
-                this.tasks.addTask(8, new EntityAILookIdle(this));
+            if (state.lookAround.get()) {
+                tasks.addTask(8, new EntityAILookIdle(this));
             }
 
-            if (this.state.lookAtPlayer.get()) {
-                this.tasks.addTask(9, new EntityAIWatchClosest2(this, EntityPlayer.class, this.state.pathDistance.get(), 1.0F));
+            if (state.lookAtPlayer.get()) {
+                tasks.addTask(9, new EntityAIWatchClosest2(this, EntityPlayer.class, state.pathDistance.get(), 1.0F));
             }
 
-            if (this.state.wander.get()) {
-                this.tasks.addTask(9, new EntityAIWanderAvoidWater(this, speed / 2D));
+            if (state.wander.get()) {
+                tasks.addTask(9, new EntityAIWanderAvoidWater(this, speed / 2D));
             }
 
-            if (this.state.canFly.get()) {
-                this.moveHelper = new FlyingMoveHelper(this);
-                this.tasks.addTask(10, new EntityAINpcFly(this));
-            } else if (this.state.alwaysWander.get()) {
-                this.tasks.addTask(10, new EntityAIAlwaysWander(this, speed / 2D));
+            if (state.canFly.get()) {
+                moveHelper = new FlyingMoveHelper(this);
+                tasks.addTask(10, new EntityAINpcFly(this));
+            }
+            else if (state.alwaysWander.get()) {
+                tasks.addTask(10, new EntityAIAlwaysWander(this, speed / 2D));
             }
         }
 
-        this.targetTasks.addTask(1, targetAI = new EntityAIHurtByTargetNpc(this, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 10, true, false, this::targetCheck));
+        targetTasks.addTask(1, targetAI = new EntityAIHurtByTargetNpc(this, false));
+        targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 10, true, false, this::targetCheck));
 
-        if (this.state != null) {
-            this.tasks.addTask(4, new EntityAIAttackNpcMelee(this, speed, false, this.state.damageDelay.get()));
+        if (state != null) {
+            tasks.addTask(4, new EntityAIAttackNpcMelee(this, speed, false, state.damageDelay.get()));
         }
     }
 
     private boolean targetCheck(EntityLivingBase entity) {
-        if (this.isEntityOutOfPostDistance(entity)) {
+        if (isEntityOutOfPostDistance(entity)) {
             return false;
         }
 
-        Faction faction = this.getFaction();
+        Faction faction = getFaction();
 
         if (entity instanceof EntityNpc) {
             EntityNpc npc = (EntityNpc) entity;
@@ -294,7 +300,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
                 return false;
             }
 
-            FactionAttitude attitude = this.getPlayerAttitude(faction, entity);
+            FactionAttitude attitude = getPlayerAttitude(faction, entity);
 
             if (attitude != null) {
                 return attitude == FactionAttitude.AGGRESSIVE;
@@ -318,27 +324,27 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     }
 
     public void initialize() {
-        this.state.triggerInitialize.trigger(this);
+        state.triggerInitialize.trigger(this);
     }
 
     /* Getter and setters */
 
     public States getStates() {
-        return this.state.states;
+        return state.states;
     }
 
     public Faction getFaction() {
-        if (this.faction == null) {
-            String faction = this.state.faction.get();
+        if (faction == null) {
+            String faction = state.faction.get();
 
             this.faction = faction.isEmpty() ? null : Mappet.factions.load(faction);
         }
 
-        return this.faction;
+        return faction;
     }
 
     public void setNpc(Npc npc, NpcState state) {
-        this.setState(state, false);
+        setState(state, false);
 
         if (this.state.id.get().isEmpty()) {
             this.state.id.set(npc.getId());
@@ -346,11 +352,11 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     }
 
     public String getId() {
-        return this.state.id.get();
+        return state.id.get();
     }
 
     public NpcState getState() {
-        return this.state;
+        return state;
     }
 
     public void setState(NpcState state) {
@@ -363,56 +369,56 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
         this.state.deserializeNBT(state.serializeNBT());
 
         /* Set */
-        this.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(this.state.pathDistance.get());
-        this.navigator = this.createNavigator(this.world);
+        getAttributeMap().getAttributeInstance(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(this.state.pathDistance.get());
+        navigator = createNavigator(world);
 
         /* Set health */
-        double max = this.getMaxHealth();
-        double health = this.getHealth();
+        double max = getMaxHealth();
+        double health = getHealth();
 
-        this.setMaxHealth(state.maxHealth.get());
-        this.setHealth((float) MathHelper.clamp(state.maxHealth.get() * (health / max), 1, state.maxHealth.get()));
+        setMaxHealth(state.maxHealth.get());
+        setHealth((float) MathHelper.clamp(state.maxHealth.get() * (health / max), 1, state.maxHealth.get()));
 
-        this.isImmuneToFire = !this.state.canGetBurned.get();
-        this.experienceValue = this.state.xp.get();
+        isImmuneToFire = !this.state.canGetBurned.get();
+        experienceValue = this.state.xp.get();
 
         /* Morphing */
-        this.morph.set(state.morph);
+        morph.set(state.morph);
 
-        if (notify) this.sendNpcStateChangePacket();
+        if (notify) sendNpcStateChangePacket();
 
-        this.faction = null;
-        this.initEntityAI();
+        faction = null;
+        initEntityAI();
     }
 
     public void sendNpcStateChangePacket() {
-        if (this.world instanceof WorldServer) {
+        if (world instanceof WorldServer) {
             Dispatcher.sendToTracked(this, new PacketNpcStateChange(this));
         }
     }
 
     @Override
     public AbstractMorph getMorph() {
-        return this.morph.get();
+        return morph.get();
     }
 
 
     public EntityLivingBase getFollowTarget() {
-        if (this.state.follow.get().isEmpty()) {
+        if (state.follow.get().isEmpty()) {
             return null;
         }
 
-        if (this.state.follow.get().equals("@r")) {
-            List<EntityPlayer> players = this.world.playerEntities;
+        if (state.follow.get().equals("@r")) {
+            List<EntityPlayer> players = world.playerEntities;
             int index = MathHelper.clamp((int) (Math.random() * players.size() - 1), 0, players.size() - 1);
 
             return players.isEmpty() ? null : players.get(index);
         }
 
-        if (this.state.follow.get().startsWith("@")) {
+        if (state.follow.get().startsWith("@")) {
             try {
                 ICommandSender sender = CommandNpc.getCommandSender(this);
-                List<Entity> entities = EntitySelector.matchEntities(sender, this.state.follow.get(), Entity.class);
+                List<Entity> entities = EntitySelector.matchEntities(sender, state.follow.get(), Entity.class);
                 for (Entity entity : entities) {
                     if (entity instanceof EntityLivingBase) {
                         return (EntityLivingBase) entity;
@@ -421,10 +427,11 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
             } catch (Exception e) {
                 Mappet.logger.error(e.getMessage());
             }
-        } else {
+        }
+        else {
             try {
-                EntityPlayer player = this.world.getPlayerEntityByName(this.state.follow.get());
-                return player == null ? this.world.getPlayerEntityByUUID(UUID.fromString(this.state.follow.get())) : player;
+                EntityPlayer player = world.getPlayerEntityByName(state.follow.get());
+                return player == null ? world.getPlayerEntityByUUID(UUID.fromString(state.follow.get())) : player;
             } catch (Exception e) {
                 Mappet.logger.error(e.getMessage());
             }
@@ -435,53 +442,54 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
 
     public void setMorph(AbstractMorph morph) {
         this.morph.set(morph);
-        this.state.morph = morph;
+        state.morph = morph;
     }
 
     public void setMaxHealth(double value) {
-        this.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(value);
+        getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(value);
     }
 
     /* Other stuff */
 
     @Override
     public void onUpdate() {
-        if (this.lastTarget != this.getAttackTarget()) {
-            this.lastTarget = this.getAttackTarget();
+        if (lastTarget != getAttackTarget()) {
+            lastTarget = getAttackTarget();
 
-            this.state.triggerTarget.trigger(new DataContext(this, this.lastTarget));
+            state.triggerTarget.trigger(new DataContext(this, lastTarget));
         }
 
-        this.healthFailsafe();
-        this.updateAttackTarget();
+        healthFailsafe();
+        updateAttackTarget();
 
         super.onUpdate();
 
-        this.updateArmSwingProgress();
+        updateArmSwingProgress();
 
-        if (!this.morph.isEmpty()) {
-            this.morph.get().update(this);
+        if (!morph.isEmpty()) {
+            morph.get().update(this);
         }
 
-        if (this.state.regenDelay.get() > 0 && !this.world.isRemote) {
-            int regen = this.state.regenFrequency.get() == 0 ? 1 : this.state.regenFrequency.get();
+        if (state.regenDelay.get() > 0 && !world.isRemote) {
+            int regen = state.regenFrequency.get() == 0 ? 1 : state.regenFrequency.get();
 
-            if (this.lastDamageTime >= this.state.regenDelay.get() && this.ticksExisted % regen == 0) {
-                if (this.getHealth() > 0 && this.getHealth() < this.getMaxHealth()) {
-                    this.heal(1F);
+            if (lastDamageTime >= state.regenDelay.get() && ticksExisted % regen == 0) {
+                if (getHealth() > 0 && getHealth() < getMaxHealth()) {
+                    heal(1F);
                 }
             }
 
-            this.lastDamageTime += 1;
+            lastDamageTime += 1;
         }
 
-        if (this.world.isRemote) {
-            this.prevSmoothYawHead = this.smoothYawHead;
-            this.smoothYawHead = Interpolations.lerpYaw(this.smoothYawHead, this.rotationYawHead, 0.5F);
-            this.prevSmoothBodyYawHead = this.smoothBodyYawHead;
-            this.smoothBodyYawHead = Interpolations.lerpYaw(this.smoothBodyYawHead, this.renderYawOffset, 0.5F);
-        } else {
-            this.state.triggerTick.trigger(this);
+        if (world.isRemote) {
+            prevSmoothYawHead = smoothYawHead;
+            smoothYawHead = Interpolations.lerpYaw(smoothYawHead, rotationYawHead, 0.5F);
+            prevSmoothBodyYawHead = smoothBodyYawHead;
+            smoothBodyYawHead = Interpolations.lerpYaw(smoothBodyYawHead, renderYawOffset, 0.5F);
+        }
+        else {
+            state.triggerTick.trigger(this);
         }
     }
 
@@ -489,61 +497,61 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
      * If player's attitude has switched, then NPC should stop chasing
      */
     private boolean isEntityOutOfPostDistance(Entity entity) {
-        if (this.state == null || this.state.postPosition == null || !this.state.hasPost.get()) {
+        if (state == null || state.postPosition == null || !state.hasPost.get()) {
             return false;
         }
 
-        BlockPos post = this.state.postPosition;
+        BlockPos post = state.postPosition;
         BlockPos position = entity.getPosition();
         double distance = post.distanceSq(position);
 
-        return distance > this.state.fallback.get() * this.state.fallback.get();
+        return distance > state.fallback.get() * state.fallback.get();
     }
 
     private void updateAttackTarget() {
-        if (this.state != null && this.getAttackTarget() != null && this.state.postPosition != null && this.state.hasPost.get() && this.isEntityOutOfPostDistance(this.getAttackTarget())) {
-            this.targetAI.reset = true;
-            this.setAttackTarget(null);
+        if (state != null && getAttackTarget() != null && state.postPosition != null && state.hasPost.get() && isEntityOutOfPostDistance(getAttackTarget())) {
+            targetAI.reset = true;
+            setAttackTarget(null);
         }
 
-        if (this.faction == null || this.ticksExisted % 10 != 0) {
+        if (faction == null || ticksExisted % 10 != 0) {
             return;
         }
 
-        Entity entity = this.getAttackTarget();
+        Entity entity = getAttackTarget();
 
         if (entity instanceof EntityPlayerMP) {
             EntityPlayerMP player = (EntityPlayerMP) entity;
-            Faction faction = this.getFaction();
-            FactionAttitude attitude = this.getPlayerAttitude(faction, player);
+            Faction faction = getFaction();
+            FactionAttitude attitude = getPlayerAttitude(faction, player);
 
             if (attitude == FactionAttitude.FRIENDLY || player.isCreative()) {
-                this.setAttackTarget(null);
+                setAttackTarget(null);
             }
         }
     }
 
     @Override
     protected void onDeathUpdate() {
-        if (this.state.killable.get() || !this.unkillableFailsafe) {
+        if (state.killable.get() || !unkillableFailsafe) {
             super.onDeathUpdate();
         }
     }
 
     @Override
     protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
-        for (NpcDrop drop : this.state.drops) {
-            if (this.rand.nextFloat() < drop.chance) {
-                this.entityDropItem(drop.stack.copy(), 0F);
+        for (NpcDrop drop : state.drops) {
+            if (rand.nextFloat() < drop.chance) {
+                entityDropItem(drop.stack.copy(), 0F);
             }
         }
     }
 
     @Override
     public boolean attackEntityAsMob(Entity entityIn) {
-        DamageSource source = Mappet.npcsPeacefulDamage.get() ? new NpcDamageSource(this) : DamageSource.causeMobDamage(this);
+        DamageSource source = MappetConfig.npcsPeacefulDamage.get() ? new NpcDamageSource(this) : DamageSource.causeMobDamage(this);
 
-        entityIn.attackEntityFrom(source, this.state.damage.get());
+        entityIn.attackEntityFrom(source, state.damage.get());
 
         return super.attackEntityAsMob(entityIn);
     }
@@ -552,20 +560,20 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     protected void damageEntity(DamageSource damage, float damageAmount) {
         super.damageEntity(damage, damageAmount);
 
-        if (!this.isEntityInvulnerable(damage)) {
-            this.lastDamageTime = 0;
+        if (!isEntityInvulnerable(damage)) {
+            lastDamageTime = 0;
         }
 
-        this.healthFailsafe();
+        healthFailsafe();
         DataContext context = new DataContext(this, damage.getTrueSource());
         context.set("damage", damageAmount);
         context.set("damageType", damage.getDamageType());
-        this.state.triggerDamaged.trigger(context);
+        state.triggerDamaged.trigger(context);
     }
 
     @Override
     public boolean isEntityInvulnerable(DamageSource source) {
-        if (this.world.isRemote) {
+        if (world.isRemote) {
             return true;
         }
 
@@ -573,19 +581,19 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
 
         if (entity instanceof EntityPlayerMP) {
             EntityPlayerMP player = (EntityPlayerMP) entity;
-            Faction faction = this.getFaction();
-            FactionAttitude attitude = this.getPlayerAttitude(faction, player);
+            Faction faction = getFaction();
+            FactionAttitude attitude = getPlayerAttitude(faction, player);
 
             if (attitude == FactionAttitude.FRIENDLY && !player.isCreative()) {
                 return true;
             }
         }
 
-        if (this.state.invincible.get()) {
+        if (state.invincible.get()) {
             return !(source.isCreativePlayer() || source == DamageSource.OUT_OF_WORLD);
         }
 
-        if (!this.state.canFallDamage.get() && source == DamageSource.FALL) {
+        if (!state.canFallDamage.get() && source == DamageSource.FALL) {
             return true;
         }
 
@@ -594,7 +602,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
 
     @Override
     public void onKillCommand() {
-        this.unkillableFailsafe = false;
+        unkillableFailsafe = false;
 
         super.onKillCommand();
     }
@@ -602,39 +610,37 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     @Override
     public void onDeath(DamageSource cause) {
         super.onDeath(cause);
-        if (this.state.respawn.get() && !this.dieOnLoad) {
-            MappetNpcRespawnManager respawnManager = MappetNpcRespawnManager.get(this.world);
+        if (state.respawn.get() && !dieOnLoad) {
+            MappetNpcRespawnManager respawnManager = MappetNpcRespawnManager.get(world);
 
             respawnManager.addDiedNpc(this);
-            this.dieOnLoad = true;
+            dieOnLoad = true;
         }
-        this.state.triggerDied.trigger(this, cause.getTrueSource());
+        state.triggerDied.trigger(this, cause.getTrueSource());
     }
 
     @Override
     protected boolean canDespawn() {
-        return this.state.unique.get();
+        return state.unique.get();
     }
 
     public void healthFailsafe() {
-        if (!this.state.killable.get() && this.getHealth() <= 0 && this.unkillableFailsafe) {
-            this.setHealth(0.001F);
+        if (!state.killable.get() && getHealth() <= 0 && unkillableFailsafe) {
+            setHealth(0.001F);
         }
     }
 
     @Override
     protected boolean processInteract(EntityPlayer player, EnumHand hand) {
-        if (!this.world.isRemote) {
+        if (!world.isRemote) {
             if (!player.getHeldItem(hand).interactWithEntity(player, this, hand)) {
-                this.state.triggerInteract.trigger(new DataContext(this, player));
+                state.triggerInteract.trigger(new DataContext(this, player));
             }
 
             // Start riding the NPC when interacted with
-            if (
-                    ((this.getPassengers().size() < this.state.steeringOffset.size()) || this.state.steeringOffset.isEmpty()) &&
-                            this.canBeSteered() &&
-                            !(player.getHeldItem(hand).getItem() instanceof ItemNpcTool)
-            ) {
+            if ((getPassengers().size() < state.steeringOffset.size() || state.steeringOffset.isEmpty()) && canBeSteered() && !(player
+                    .getHeldItem(hand)
+                    .getItem() instanceof ItemNpcTool)) {
                 player.startRiding(this, true);
             }
         }
@@ -646,17 +652,17 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
 
     @Override
     public void writeEntityToNBT(NBTTagCompound tag) {
-        tag.setBoolean("DieOnLoad", this.dieOnLoad);
+        tag.setBoolean("DieOnLoad", dieOnLoad);
 
         /*
          * Do not load data to NBT, if NPC has to die
          * Prevents repeated quest trigger and drop.
          */
 
-        if (!this.dieOnLoad) {
+        if (!dieOnLoad) {
             super.writeEntityToNBT(tag);
 
-            tag.setTag("State", this.state.serializeNBT());
+            tag.setTag("State", state.serializeNBT());
         }
     }
 
@@ -673,14 +679,14 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
             state.states.deserializeNBT(tag.getCompoundTag("States"));
         }
 
-        this.setState(state, false);
+        setState(state, false);
 
         if (tag.hasKey("NpcId")) {
             state.id.set(tag.getString("NpcId"));
         }
 
         if (tag.hasKey("DieOnLoad") && tag.getBoolean("DieOnLoad")) {
-            this.setDead();
+            setDead();
         }
     }
 
@@ -688,17 +694,17 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
 
     @Override
     public void writeSpawnData(ByteBuf buf) {
-        MorphUtils.morphToBuf(buf, this.morph.get());
-        this.state.writeToBuf(buf);
+        MorphUtils.morphToBuf(buf, morph.get());
+        state.writeToBuf(buf);
     }
 
     @Override
     public void readSpawnData(ByteBuf buf) {
-        this.morph.setDirect(MorphUtils.morphFromBuf(buf));
-        this.state.readFromBuf(buf);
+        morph.setDirect(MorphUtils.morphFromBuf(buf));
+        state.readFromBuf(buf);
 
-        this.prevRotationYawHead = this.rotationYawHead;
-        this.smoothYawHead = this.rotationYawHead;
+        prevRotationYawHead = rotationYawHead;
+        smoothYawHead = rotationYawHead;
     }
 
     /* Client stuff */
@@ -712,7 +718,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     @SideOnly(Side.CLIENT)
     @Override
     public boolean isInRangeToRenderDist(double distance) {
-        double d0 = this.getEntityBoundingBox().getAverageEdgeLength();
+        double d0 = getEntityBoundingBox().getAverageEdgeLength();
 
         if (Double.isNaN(d0)) {
             d0 = 1.0D;
@@ -724,14 +730,13 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     }
 
     public void setStringInData(String key, String value) {
-        INBTCompound fullData = new ScriptNBTCompound(this.writeToNBT(new NBTTagCompound()));
+        INBTCompound fullData = new ScriptNBTCompound(writeToNBT(new NBTTagCompound()));
         fullData.getCompound("State").setString(key, value);
-        this.readFromNBT(fullData.asMinecraft());
+        readFromNBT(fullData.asMinecraft());
     }
 
     @Nullable
-    public AxisAlignedBB getCollisionBoundingBox()
-    {
+    public AxisAlignedBB getCollisionBoundingBox() {
         return isEntityAlive() && state.collision.get() ? getEntityBoundingBox() : null;
     }
 }

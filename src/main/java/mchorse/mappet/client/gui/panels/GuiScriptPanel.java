@@ -1,6 +1,7 @@
 package mchorse.mappet.client.gui.panels;
 
 import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.scripts.Script;
 import mchorse.mappet.api.utils.ContentType;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
@@ -73,14 +74,15 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
     public static GuiContextMenu createScriptContextMenu(Minecraft mc, GuiCodeEditor editor) {
         /* These GUI QoL features are getting out of hand... */
-        GuiSimpleContextMenu menu = new GuiSimpleContextMenu(mc).action(Icons.BLOCK, IKey.lang("mappet.gui.scripts.context.paste_block_pos"), () -> pasteBlockPosition(editor))
-                                                                .action(Icons.POSE, IKey.lang("mappet.gui.scripts.context.paste_player_pos"), () -> pastePlayerPosition(editor))
-                                                                .action(Icons.REVERSE, IKey.lang("mappet.gui.scripts.context.paste_player_rot"), () -> pastePlayerRotation(editor))
-                                                                .action(Icons.WRENCH, IKey.lang("mappet.gui.scripts.context.paste_item"), () -> openItemPicker(editor))
-                                                                .action(Icons.SOUND, IKey.lang("mappet.gui.scripts.context.paste_sound"), () -> openSoundPicker(editor))
-                                                                .action(Icons.VISIBLE, IKey.lang("mappet.gui.scripts.context.paste_morph"), () -> openMorphPicker(editor))
-                                                                .action(Icons.STOP, IKey.lang("mappet.gui.scripts.context.paste_colorRGB"), () -> openColorPicker(editor, false))
-                                                                .action(Icons.MATERIAL, IKey.lang("mappet.gui.scripts.context.paste_colorARGB"), () -> openColorPicker(editor, true));
+        GuiSimpleContextMenu menu = new GuiSimpleContextMenu(mc)
+                .action(Icons.BLOCK, IKey.lang("mappet.gui.scripts.context.paste_block_pos"), () -> pasteBlockPosition(editor))
+                .action(Icons.POSE, IKey.lang("mappet.gui.scripts.context.paste_player_pos"), () -> pastePlayerPosition(editor))
+                .action(Icons.REVERSE, IKey.lang("mappet.gui.scripts.context.paste_player_rot"), () -> pastePlayerRotation(editor))
+                .action(Icons.WRENCH, IKey.lang("mappet.gui.scripts.context.paste_item"), () -> openItemPicker(editor))
+                .action(Icons.SOUND, IKey.lang("mappet.gui.scripts.context.paste_sound"), () -> openSoundPicker(editor))
+                .action(Icons.VISIBLE, IKey.lang("mappet.gui.scripts.context.paste_morph"), () -> openMorphPicker(editor))
+                .action(Icons.STOP, IKey.lang("mappet.gui.scripts.context.paste_colorRGB"), () -> openColorPicker(editor, false))
+                .action(Icons.MATERIAL, IKey.lang("mappet.gui.scripts.context.paste_colorARGB"), () -> openColorPicker(editor, true));
 
         if (editor.isSelected()) {
             setupDocumentation(editor, menu);
@@ -183,13 +185,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         if (isArgb) {
             picker.editAlpha();
         }
-        picker.markIgnored()
-              .flex()
-              .relative(panel.content)
-              .xy(0.5f, 0.5f)
-              .anchor(0.5f, 0.5f)
-              .wh(200, 85)
-              .bounds(panel.content, 2);
+        picker.markIgnored().flex().relative(panel.content).xy(0.5f, 0.5f).anchor(0.5f, 0.5f).wh(200, 85).bounds(panel.content, 2);
 
         panel.content.add(picker);
 
@@ -222,11 +218,12 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         code = new GuiCodeEditor(mc, null);
         code.withHints();
         code.background().context(() -> createScriptContextMenu(this.mc, code));
-        code.keys()
-            .ignoreFocus()
-            .register(IKey.lang("mappet.gui.scripts.keys.word_wrap"), Keyboard.KEY_P, this::toggleWordWrap)
-            .category(GuiMappetDashboardPanel.KEYS_CATEGORY)
-            .held(Keyboard.KEY_LCONTROL);
+        code
+                .keys()
+                .ignoreFocus()
+                .register(IKey.lang("mappet.gui.scripts.keys.word_wrap"), Keyboard.KEY_P, this::toggleWordWrap)
+                .category(GuiMappetDashboardPanel.KEYS_CATEGORY)
+                .held(Keyboard.KEY_LCONTROL);
 
         repl = new GuiRepl(mc);
 
@@ -318,7 +315,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
     @Override
     protected void fillDefaultData(Script data) {
         super.fillDefaultData(data);
-        data.code = Mappet.scriptCodeTemplate.get();
+        data.code = MappetConfig.scriptCodeTemplate.get();
     }
 
     @Override
@@ -375,13 +372,12 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
     }
 
     public void updateStyle() {
-        SyntaxStyle style = Mappet.scriptEditorSyntaxStyle.get();
-        if (code.getHighlighter().getStyle() != style) {
-            code.getHighlighter().setStyle(style);
-            code.resetHighlight();
-            repl.repl.getHighlighter().setStyle(style);
-            repl.repl.resetHighlight();
-        }
+        SyntaxStyle style = MappetConfig.scriptEditorSyntaxStyle.get();
+        if (code.getHighlighter().getStyle() == style) return;
+        code.getHighlighter().setStyle(style);
+        code.resetHighlight();
+        repl.repl.getHighlighter().setStyle(style);
+        repl.repl.resetHighlight();
     }
 
     public Script getData() {

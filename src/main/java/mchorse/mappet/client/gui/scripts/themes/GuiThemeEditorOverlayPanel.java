@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.scripts.themes;
 
-import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.client.gui.scripts.GuiCodeEditor;
 import mchorse.mappet.client.gui.scripts.style.SyntaxStyle;
 import mchorse.mappet.client.gui.utils.overlays.GuiEditorOverlayPanel;
@@ -165,7 +165,7 @@ public class GuiThemeEditorOverlayPanel extends GuiEditorOverlayPanel<GuiThemeEd
         }
 
         for (SyntaxStyleEntry entry : list.getList()) {
-            if (entry.file.getName().equals(Mappet.scriptEditorSyntaxStyle.getFileName())) {
+            if (entry.file.getName().equals(MappetConfig.scriptEditorSyntaxStyle.getFileName())) {
                 pickItem(entry, true);
                 break;
             }
@@ -256,8 +256,8 @@ public class GuiThemeEditorOverlayPanel extends GuiEditorOverlayPanel<GuiThemeEd
     public void onClose() {
         SyntaxStyleEntry item = list.getCurrentFirst();
         item.save();
-        Mappet.scriptEditorSyntaxStyle.set(item.file.getName(), item.style);
-        Mappet.scriptCodeTemplate.updateStyle();
+        MappetConfig.scriptEditorSyntaxStyle.set(item.file.getName(), item.style);
+        MappetConfig.scriptCodeTemplate.updateStyle();
         super.onClose();
     }
 

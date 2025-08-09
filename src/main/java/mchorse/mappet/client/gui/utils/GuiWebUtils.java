@@ -2,6 +2,7 @@ package mchorse.mappet.client.gui.utils;
 
 import com.google.common.collect.Sets;
 import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.common.scripts.PacketOpenLink;
 import net.minecraft.client.Minecraft;
@@ -68,10 +69,11 @@ public class GuiWebUtils implements GuiYesNoCallback {
         URI uri;
         if ((uri = parseUrl(url)) == null) return;
 
-        if (Mappet.immediatelyOpenLink.get()) {
+        if (MappetConfig.immediatelyOpenLink.get()) {
             pendingUrl = "";
             openWebLink(uri);
-        } else {
+        }
+        else {
             pendingUrl = url;
             Minecraft.getMinecraft().displayGuiScreen(new GuiConfirmOpenLink(this, url, 0, false));
         }

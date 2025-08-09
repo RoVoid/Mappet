@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.panels;
 
-import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.TriggerEventHandler;
 import mchorse.mappet.api.ServerSettings;
 import mchorse.mappet.api.states.States;
@@ -131,10 +131,7 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
         forgeAttention.padding(10);
 
 
-        GuiLabel forgeTriggersLabel = Elements
-                .label(IKey.lang("mappet.gui.settings.forge_title"))
-                .anchor(0, 0.5F)
-                .background();
+        GuiLabel forgeTriggersLabel = Elements.label(IKey.lang("mappet.gui.settings.forge_title")).anchor(0, 0.5F).background();
 
         forgeTriggersLabel.flex().relative(this).x(0.5F, 10).y(10).wh(120, 20);
 
@@ -143,7 +140,7 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
         hotkeys.flex().relative(this).x(1F, -16).y(20).wh(20, 20).anchor(0.5F, 0.5F);
 
         triggersToggle = new GuiIconElement(mc, Icons.PROCESSOR, (i) -> toggleTriggerLayouts());
-        boolean enableForgeTriggers = Mappet.enableForgeTriggers.get();
+        boolean enableForgeTriggers = MappetConfig.enableForgeTriggers.get();
         IKey tooltip = IKey.lang("mappet.gui.settings.forge." + (enableForgeTriggers ? "toggle_triggers" : "disabled"));
         triggersToggle.tooltip(tooltip, Direction.LEFT).setEnabled(enableForgeTriggers);
         triggersToggle.disabledColor(0xFF880000);
@@ -270,14 +267,9 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
         TriggerDoc triggerDoc = TriggerDocs.get(trigger.value);
         editor.removeAll();
         editor.add(new GuiText(mc).text(triggerDoc.description).marginTop(8));
-        if (triggerDoc.cancelable)
-            editor.add(new GuiText(mc).text(IKey.lang("mappet.gui.settings.cancelable")).marginTop(8));
+        if (triggerDoc.cancelable) editor.add(new GuiText(mc).text(IKey.lang("mappet.gui.settings.cancelable")).marginTop(8));
         if (!triggerDoc.variables.isEmpty()) {
-            editor.add(Elements
-                    .label(IKey.lang("mappet.gui.settings.variables"))
-                    .background()
-                    .marginTop(16)
-                    .marginBottom(8));
+            editor.add(Elements.label(IKey.lang("mappet.gui.settings.variables")).background().marginTop(16).marginBottom(8));
             for (TriggerVariable variable : triggerDoc.variables) {
                 String text = "§6" + variable.type + " §r" + variable.name + "§7: §r" + variable.description;
                 editor.add(new GuiText(mc).text(text));
@@ -310,9 +302,7 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
     public void save() {
         if (settings != null) Dispatcher.sendToServer(new PacketServerSettings(settings.serializeNBT()));
         if (statesEditor.get() != null) {
-            Dispatcher.sendToServer(new PacketStates(lastTarget, statesEditor
-                    .get()
-                    .serializeNBT(), statesEditor.getChanges()));
+            Dispatcher.sendToServer(new PacketStates(lastTarget, statesEditor.get().serializeNBT(), statesEditor.getChanges()));
         }
     }
 

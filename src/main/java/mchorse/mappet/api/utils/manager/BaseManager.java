@@ -1,6 +1,7 @@
 package mchorse.mappet.api.utils.manager;
 
 import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.utils.AbstractData;
 import mchorse.mappet.utils.NBTToJsonLike;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,7 +19,7 @@ public abstract class BaseManager<T extends AbstractData> extends FolderManager<
 
     @Override
     public final T create(String id, NBTTagCompound tag) {
-        T data = this.createData(id, tag);
+        T data = createData(id, tag);
 
         data.setId(id);
 
@@ -30,10 +31,9 @@ public abstract class BaseManager<T extends AbstractData> extends FolderManager<
     @Override
     public T load(String id) {
         try {
-            NBTTagCompound tag = this.getCached(id);
-            return this.create(id, tag);
+            NBTTagCompound tag = getCached(id);
+            return create(id, tag);
         } catch (Exception e) {
-            e.printStackTrace();
             Mappet.logger.error(e.getMessage());
         }
         return null;
@@ -44,8 +44,8 @@ public abstract class BaseManager<T extends AbstractData> extends FolderManager<
      */
     protected NBTTagCompound getCached(String id) throws Exception {
         NBTTagCompound tag = null;
-        File file = this.getFile(id);
-        boolean isCaching = Mappet.generalDataCaching.get();
+        File file = getFile(id);
+        boolean isCaching = MappetConfig.generalDataCaching.get();
         long lastUpdated = file.lastModified();
 
         if (isCaching) {
@@ -56,13 +56,14 @@ public abstract class BaseManager<T extends AbstractData> extends FolderManager<
                  * because dashboard save will clear the cache for sure */
                 if (cache.lastUpdated < lastUpdated) {
                     this.cache.remove(id);
-                } else {
+                }
+                else {
                     tag = cache.tag;
 
                     cache.update();
                 }
 
-                this.doExpirationCheck();
+                doExpirationCheck();
             }
         }
 
@@ -70,7 +71,7 @@ public abstract class BaseManager<T extends AbstractData> extends FolderManager<
             tag = NBTToJsonLike.read(file);
 
             if (isCaching) {
-                this.cache.put(id, new ManagerCache(tag, lastUpdated));
+                cache.put(id, new ManagerCache(tag, lastUpdated));
             }
         }
 
@@ -78,14 +79,14 @@ public abstract class BaseManager<T extends AbstractData> extends FolderManager<
     }
 
     public boolean save(String id, T data) {
-        return this.save(id, data.serializeNBT());
+        return save(id, data.serializeNBT());
     }
 
     @Override
     public boolean save(String name, NBTTagCompound tag) {
         try {
-            NBTToJsonLike.write(this.getFile(name), tag);
-            this.cache.remove(name);
+            NBTToJsonLike.write(getFile(name), tag);
+            cache.remove(name);
 
             return true;
         } catch (Exception e) {
