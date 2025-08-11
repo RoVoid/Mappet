@@ -37,10 +37,7 @@ public class GuiMappetDashboard extends GuiAbstractDashboard {
     public GuiCreativeMorphsMenu morphs;
 
     public static GuiMappetDashboard get(Minecraft mc) {
-        if (dashboard == null) {
-            dashboard = new GuiMappetDashboard(mc);
-        }
-
+        if (dashboard == null) dashboard = new GuiMappetDashboard(mc);
         return dashboard;
     }
 
@@ -54,26 +51,21 @@ public class GuiMappetDashboard extends GuiAbstractDashboard {
     }
 
     public GuiCreativeMorphsMenu getMorphMenu() {
-        if (this.morphs == null) {
-            this.morphs = new GuiCreativeMorphsMenu(Minecraft.getMinecraft(), null).pickUponExit();
-        }
-
-        return this.morphs;
+        if (morphs == null) morphs = new GuiCreativeMorphsMenu(Minecraft.getMinecraft(), null).pickUponExit();
+        return morphs;
     }
 
     public void openMorphMenu(GuiElement parent, boolean editing, AbstractMorph morph, Consumer<AbstractMorph> callback) {
         GuiBase.getCurrent().unfocus();
 
-        GuiCreativeMorphsMenu menu = this.getMorphMenu();
+        GuiCreativeMorphsMenu menu = getMorphMenu();
 
         menu.callback = callback;
         menu.flex().reset().relative(parent).wh(1F, 1F);
         menu.resize();
         menu.setSelected(morph);
 
-        if (editing) {
-            menu.enterEditMorph();
-        }
+        if (editing) menu.enterEditMorph();
 
         menu.removeFromParent();
         parent.add(menu);
@@ -81,33 +73,33 @@ public class GuiMappetDashboard extends GuiAbstractDashboard {
 
     @Override
     protected void registerPanels(Minecraft mc) {
-        this.settings = new GuiServerSettingsPanel(mc, this);
-        this.quest = new GuiQuestPanel(mc, this);
-        this.event = new GuiEventPanel(mc, this);
-        this.dialogue = new GuiDialoguePanel(mc, this);
-        this.region = new GuiRegionPanel(mc, this);
-        this.conditionModel = new GuiConditionModelPanel(mc, this);
-        this.npc = new GuiNpcPanel(mc, this);
-        this.faction = new GuiFactionPanel(mc, this);
-        this.chain = new GuiQuestChainPanel(mc, this);
-        this.script = new GuiScriptPanel(mc, this);
-        this.hud = new GuiHUDScenePanel(mc, this);
-        this.logs = new GuiLogPanel(mc, this);
+        settings = new GuiServerSettingsPanel(mc, this);
+        quest = new GuiQuestPanel(mc, this);
+        event = new GuiEventPanel(mc, this);
+        dialogue = new GuiDialoguePanel(mc, this);
+        region = new GuiRegionPanel(mc, this);
+        conditionModel = new GuiConditionModelPanel(mc, this);
+        npc = new GuiNpcPanel(mc, this);
+        faction = new GuiFactionPanel(mc, this);
+        chain = new GuiQuestChainPanel(mc, this);
+        script = new GuiScriptPanel(mc, this);
+        hud = new GuiHUDScenePanel(mc, this);
+        logs = new GuiLogPanel(mc, this);
 
-        this.panels.registerPanel(this.settings, IKey.lang("mappet.gui.panels.settings"), Icons.GEAR);
-        this.panels.registerPanel(this.quest, IKey.lang("mappet.gui.panels.quests"), Icons.EXCLAMATION);
-        this.panels.registerPanel(this.event, IKey.lang("mappet.gui.panels.events"), Icons.FILE);
-        this.panels.registerPanel(this.dialogue, IKey.lang("mappet.gui.panels.dialogues"), Icons.BUBBLE);
-        this.panels.registerPanel(this.region, IKey.lang("mappet.gui.panels.regions"), Icons.FULLSCREEN);
-        this.panels.registerPanel(this.conditionModel, IKey.lang("mappet.gui.panels.condition_models"), Icons.BLOCK);
-        this.panels.registerPanel(this.npc, IKey.lang("mappet.gui.panels.npcs"), Icons.PROCESSOR);
-        this.panels.registerPanel(this.faction, IKey.lang("mappet.gui.panels.factions"), Icons.BOOKMARK);
-        this.panels.registerPanel(this.chain, IKey.lang("mappet.gui.panels.chains"), Icons.FOLDER);
-        this.panels.registerPanel(this.script, IKey.lang("mappet.gui.panels.scripts"), MMIcons.PROPERTIES);
-        this.panels.registerPanel(this.hud, IKey.lang("mappet.gui.panels.huds"), Icons.POSE);
-        this.panels.registerPanel(this.logs, IKey.lang("mappet.gui.panels.logs"), MPIcons.get(MPIcons.CONSOLE));
+        panels.registerPanel(settings, IKey.lang("mappet.gui.panels.settings"), Icons.GEAR);
+        panels.registerPanel(quest, IKey.lang("mappet.gui.panels.quests"), Icons.EXCLAMATION);
+        panels.registerPanel(event, IKey.lang("mappet.gui.panels.events"), Icons.FILE);
+        panels.registerPanel(dialogue, IKey.lang("mappet.gui.panels.dialogues"), Icons.BUBBLE);
+        panels.registerPanel(region, IKey.lang("mappet.gui.panels.regions"), Icons.FULLSCREEN);
+        panels.registerPanel(conditionModel, IKey.lang("mappet.gui.panels.condition_models"), Icons.BLOCK);
+        panels.registerPanel(npc, IKey.lang("mappet.gui.panels.npcs"), Icons.PROCESSOR);
+        panels.registerPanel(faction, IKey.lang("mappet.gui.panels.factions"), Icons.BOOKMARK);
+        panels.registerPanel(chain, IKey.lang("mappet.gui.panels.chains"), Icons.FOLDER);
+        panels.registerPanel(script, IKey.lang("mappet.gui.panels.scripts"), MMIcons.PROPERTIES);
+        panels.registerPanel(hud, IKey.lang("mappet.gui.panels.huds"), Icons.POSE);
+        panels.registerPanel(logs, IKey.lang("mappet.gui.panels.logs"), MPIcons.get(MPIcons.CONSOLE));
 
-        this.panels.setPanel(this.settings);
+        panels.setPanel(settings);
     }
 
     @Override

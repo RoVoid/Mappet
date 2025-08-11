@@ -132,6 +132,8 @@ mappet.config.general.load_custom_sounds_on_login=Перезагрузить з�
 mappet.config.comments.general.load_custom_sounds_on_login=Если включено, все пользовательские звуки перезагружаются при входе игрока
 mappet.config.general.immediately_open_link=Мгновенно открывать ссылки
 mappet.config.comments.general.immediately_open_link=Мгновенно открывает ссылки, отправленные с сервера
+mappet.config.general.deny_client_setting_changes=Отклонение изменений настроек клиента от сервера
+mappet.config.comments.general.deny_client_setting_changes=Клиент отклонит изменения настроек от сервера, такие как FOV, показ субтитр, клавиш и т.д.
 
 mappet.config.npc.title=NPC
 mappet.config.npc.tooltip=Настройки мода, относящиеся к NPC

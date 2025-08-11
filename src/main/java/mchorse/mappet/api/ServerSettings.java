@@ -19,6 +19,8 @@ import java.util.Map;
 public class ServerSettings implements INBTSerializable<NBTTagCompound> {
     private final File file;
 
+    private String mapVersion;
+
     public final Map<String, Trigger> triggers = new LinkedHashMap<>();
 
     public final Map<String, Trigger> forgeTriggers = new LinkedHashMap<>();
@@ -101,6 +103,8 @@ public class ServerSettings implements INBTSerializable<NBTTagCompound> {
     public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
 
+//        tag.setString("version", mapVersion);
+
         NBTTagCompound triggersNbt = new NBTTagCompound();
         for (Map.Entry<String, Trigger> entry : triggers.entrySet()) {
             writeTrigger(triggersNbt, entry.getKey(), entry.getValue());
@@ -109,7 +113,7 @@ public class ServerSettings implements INBTSerializable<NBTTagCompound> {
 
         NBTTagCompound forgeTriggersNbt = new NBTTagCompound();
         for (Map.Entry<String, Trigger> entry : forgeTriggers.entrySet()) {
-            this.writeTrigger(forgeTriggersNbt, entry.getKey(), entry.getValue());
+            writeTrigger(forgeTriggersNbt, entry.getKey(), entry.getValue());
         }
         if (!forgeTriggersNbt.hasNoTags()) tag.setTag("ForgeTriggers", forgeTriggersNbt);
 
@@ -127,6 +131,10 @@ public class ServerSettings implements INBTSerializable<NBTTagCompound> {
 
     @Override
     public void deserializeNBT(NBTTagCompound tag) {
+        if (tag == null) return;
+
+//        if (tag.hasKey("version")) mapVersion = tag.getString("version");
+
         if (tag.hasKey("Triggers")) {
             NBTTagCompound triggersNbt = tag.getCompoundTag("Triggers");
             for (Map.Entry<String, Trigger> entry : triggers.entrySet()) {

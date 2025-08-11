@@ -74,6 +74,7 @@ import mchorse.mappet.network.server.npc.ServerHandlerNpcState;
 import mchorse.mappet.network.server.npc.ServerHandlerNpcTool;
 import mchorse.mappet.network.server.quests.ServerHandlerQuestAction;
 import mchorse.mappet.network.server.quests.ServerHandlerQuestVisibility;
+import mchorse.mappet.network.server.scripts.ServerClientSettingsHandler;
 import mchorse.mappet.network.server.scripts.ServerHandlerClick;
 import mchorse.mappet.network.server.scripts.ServerHandlerRepl;
 import mchorse.mappet.network.server.ui.ServerHandlerUI;
@@ -95,96 +96,100 @@ public class Dispatcher {
         @Override
         public void register() {
             /* Dialogue */
-            this.register(PacketDialogueFragment.class, ClientHandlerDialogueFragment.class, Side.CLIENT);
-            this.register(PacketPickReply.class, ServerHandlerPickReply.class, Side.SERVER);
-            this.register(PacketFinishDialogue.class, ServerHandlerFinishDialogue.class, Side.SERVER);
+            register(PacketDialogueFragment.class, ClientHandlerDialogueFragment.class, Side.CLIENT);
+            register(PacketPickReply.class, ServerHandlerPickReply.class, Side.SERVER);
+            register(PacketFinishDialogue.class, ServerHandlerFinishDialogue.class, Side.SERVER);
 
             /* Blocks */
-            this.register(PacketEditEmitter.class, ClientHandlerEditEmitter.class, Side.CLIENT);
-            this.register(PacketEditEmitter.class, ServerHandlerEditEmitter.class, Side.SERVER);
+            register(PacketEditEmitter.class, ClientHandlerEditEmitter.class, Side.CLIENT);
+            register(PacketEditEmitter.class, ServerHandlerEditEmitter.class, Side.SERVER);
 
-            this.register(PacketEditTrigger.class, ClientHandlerEditTrigger.class, Side.CLIENT);
-            this.register(PacketEditTrigger.class, ServerHandlerEditTrigger.class, Side.SERVER);
+            register(PacketEditTrigger.class, ClientHandlerEditTrigger.class, Side.CLIENT);
+            register(PacketEditTrigger.class, ServerHandlerEditTrigger.class, Side.SERVER);
 
-            this.register(PacketEditRegion.class, ClientHandlerEditRegion.class, Side.CLIENT);
-            this.register(PacketEditRegion.class, ServerHandlerEditRegion.class, Side.SERVER);
+            register(PacketEditRegion.class, ClientHandlerEditRegion.class, Side.CLIENT);
+            register(PacketEditRegion.class, ServerHandlerEditRegion.class, Side.SERVER);
 
-            this.register(PacketEditConditionModel.class, ClientHandlerEditConditionModel.class, Side.CLIENT);
-            this.register(PacketEditConditionModel.class, ServerHandlerEditConditionModel.class, Side.SERVER);
+            register(PacketEditConditionModel.class, ClientHandlerEditConditionModel.class, Side.CLIENT);
+            register(PacketEditConditionModel.class, ServerHandlerEditConditionModel.class, Side.SERVER);
 
             /* Scripted item */
-            this.register(PacketScriptedItemInfo.class, ClientHandlerScriptedItemInfo.class, Side.CLIENT);
-            this.register(PacketScriptedItemInfo.class, ServerHandlerScriptedItemInfo.class, Side.SERVER);
+            register(PacketScriptedItemInfo.class, ClientHandlerScriptedItemInfo.class, Side.CLIENT);
+            register(PacketScriptedItemInfo.class, ServerHandlerScriptedItemInfo.class, Side.SERVER);
 
             /* Creative editing */
-            this.register(PacketContentRequestNames.class, ServerHandlerContentRequestNames.class, Side.SERVER);
-            this.register(PacketContentRequestData.class, ServerHandlerContentRequestData.class, Side.SERVER);
-            this.register(PacketContentData.class, ClientHandlerContentData.class, Side.CLIENT);
-            this.register(PacketContentData.class, ServerHandlerContentData.class, Side.SERVER);
-            this.register(PacketContentFolder.class, ServerHandlerContentFolder.class, Side.SERVER);
-            this.register(PacketContentNames.class, ClientHandlerContentNames.class, Side.CLIENT);
-            this.register(PacketContentExit.class, ServerHandlerContentExit.class, Side.SERVER);
+            register(PacketContentRequestNames.class, ServerHandlerContentRequestNames.class, Side.SERVER);
+            register(PacketContentRequestData.class, ServerHandlerContentRequestData.class, Side.SERVER);
+            register(PacketContentData.class, ClientHandlerContentData.class, Side.CLIENT);
+            register(PacketContentData.class, ServerHandlerContentData.class, Side.SERVER);
+            register(PacketContentFolder.class, ServerHandlerContentFolder.class, Side.SERVER);
+            register(PacketContentNames.class, ClientHandlerContentNames.class, Side.CLIENT);
+            register(PacketContentExit.class, ServerHandlerContentExit.class, Side.SERVER);
 
-            this.register(PacketServerSettings.class, ClientHandlerServerSettings.class, Side.CLIENT);
-            this.register(PacketServerSettings.class, ServerHandlerServerSettings.class, Side.SERVER);
-            this.register(PacketRequestServerSettings.class, ServerHandlerRequestServerSettings.class, Side.SERVER);
-            this.register(PacketStates.class, ClientHandlerStates.class, Side.CLIENT);
-            this.register(PacketStates.class, ServerHandlerStates.class, Side.SERVER);
-            this.register(PacketRequestStates.class, ServerHandlerRequestStates.class, Side.SERVER);
+            register(PacketServerSettings.class, ClientHandlerServerSettings.class, Side.CLIENT);
+            register(PacketServerSettings.class, ServerHandlerServerSettings.class, Side.SERVER);
+            register(PacketRequestServerSettings.class, ServerHandlerRequestServerSettings.class, Side.SERVER);
+            register(PacketStates.class, ClientHandlerStates.class, Side.CLIENT);
+            register(PacketStates.class, ServerHandlerStates.class, Side.SERVER);
+            register(PacketRequestStates.class, ServerHandlerRequestStates.class, Side.SERVER);
 
             /* NPCs */
-            this.register(PacketNpcStateChange.class, ClientHandlerNpcStateChange.class, Side.CLIENT);
-            this.register(PacketNpcState.class, ClientHandlerNpcState.class, Side.CLIENT);
-            this.register(PacketNpcState.class, ServerHandlerNpcState.class, Side.SERVER);
-            this.register(PacketNpcList.class, ClientHandlerNpcList.class, Side.CLIENT);
-            this.register(PacketNpcList.class, ServerHandlerNpcList.class, Side.SERVER);
-            this.register(PacketNpcTool.class, ServerHandlerNpcTool.class, Side.SERVER);
-            this.register(PacketNpcJump.class, ServerHandlerNpcJump.class, Side.SERVER);
+            register(PacketNpcStateChange.class, ClientHandlerNpcStateChange.class, Side.CLIENT);
+            register(PacketNpcState.class, ClientHandlerNpcState.class, Side.CLIENT);
+            register(PacketNpcState.class, ServerHandlerNpcState.class, Side.SERVER);
+            register(PacketNpcList.class, ClientHandlerNpcList.class, Side.CLIENT);
+            register(PacketNpcList.class, ServerHandlerNpcList.class, Side.SERVER);
+            register(PacketNpcTool.class, ServerHandlerNpcTool.class, Side.SERVER);
+            register(PacketNpcJump.class, ServerHandlerNpcJump.class, Side.SERVER);
 
             /* Quests */
-            this.register(PacketQuest.class, ClientHandlerQuest.class, Side.CLIENT);
-            this.register(PacketQuests.class, ClientHandlerQuests.class, Side.CLIENT);
-            this.register(PacketQuestAction.class, ServerHandlerQuestAction.class, Side.SERVER);
-            this.register(PacketQuestVisibility.class, ServerHandlerQuestVisibility.class, Side.SERVER);
+            register(PacketQuest.class, ClientHandlerQuest.class, Side.CLIENT);
+            register(PacketQuests.class, ClientHandlerQuests.class, Side.CLIENT);
+            register(PacketQuestAction.class, ServerHandlerQuestAction.class, Side.SERVER);
+            register(PacketQuestVisibility.class, ServerHandlerQuestVisibility.class, Side.SERVER);
 
             /* Factions */
-            this.register(PacketRequestFactions.class, ServerHandlerRequestFactions.class, Side.SERVER);
+            register(PacketRequestFactions.class, ServerHandlerRequestFactions.class, Side.SERVER);
 
             /* Events */
-            this.register(PacketSyncHotkeys.class, ClientHandlerSyncHotkeys.class, Side.CLIENT);
-            this.register(PacketTriggeredHotkeys.class, ServerHandlerHotkeys.class, Side.SERVER);
+            register(PacketSyncHotkeys.class, ClientHandlerSyncHotkeys.class, Side.CLIENT);
+            register(PacketTriggeredHotkeys.class, ServerHandlerHotkeys.class, Side.SERVER);
 
             /* Scripts */
-            this.register(PacketEntityRotations.class, ClientHandlerEntityRotations.class, Side.CLIENT);
-            this.register(PacketClick.class, ServerHandlerClick.class, Side.SERVER);
-            this.register(PacketClipboard.class, ClientHandlerClipboard.class, Side.CLIENT);
-            this.register(PacketRepl.class, ClientHandlerRepl.class, Side.CLIENT);
-            this.register(PacketRepl.class, ServerHandlerRepl.class, Side.SERVER);
-            this.register(PacketSound.class, ClientHandlerSound.class, Side.CLIENT);
-            this.register(PacketWorldMorph.class, ClientHandlerWorldMorph.class, Side.CLIENT);
-            this.register(PacketPlayAnimation.class, PacketPlayAnimation.ClientHandler.class, Side.CLIENT);
-            this.register(PacketOpenLink.class, ClientHandlerOpenLink.class, Side.CLIENT);
+            register(PacketEntityRotations.class, ClientHandlerEntityRotations.class, Side.CLIENT);
+            register(PacketClick.class, ServerHandlerClick.class, Side.SERVER);
+            register(PacketClipboard.class, ClientHandlerClipboard.class, Side.CLIENT);
+            register(PacketRepl.class, ClientHandlerRepl.class, Side.CLIENT);
+            register(PacketRepl.class, ServerHandlerRepl.class, Side.SERVER);
+            register(PacketSound.class, ClientHandlerSound.class, Side.CLIENT);
+            register(PacketWorldMorph.class, ClientHandlerWorldMorph.class, Side.CLIENT);
+            register(PacketPlayAnimation.class, PacketPlayAnimation.ClientHandler.class, Side.CLIENT);
+            register(PacketOpenLink.class, ClientHandlerOpenLink.class, Side.CLIENT);
+
+
+            register(PacketClientSettings.class, ClientSettingsHandler.class, Side.CLIENT);
+            register(PacketClientSettings.class, ServerClientSettingsHandler.class, Side.SERVER);
 
             /* HUD & UI */
-            this.register(PacketHUDScene.class, ClientHandlerHUDScene.class, Side.CLIENT);
-            this.register(PacketHUDMorph.class, ClientHandlerHUDMorph.class, Side.CLIENT);
+            register(PacketHUDScene.class, ClientHandlerHUDScene.class, Side.CLIENT);
+            register(PacketHUDMorph.class, ClientHandlerHUDMorph.class, Side.CLIENT);
 
-            this.register(PacketUI.class, ClientHandlerUI.class, Side.CLIENT);
-            this.register(PacketUI.class, ServerHandlerUI.class, Side.SERVER);
-            this.register(PacketUIData.class, ClientHandlerUIData.class, Side.CLIENT);
-            this.register(PacketUIData.class, ServerHandlerUIData.class, Side.SERVER);
-            this.register(PacketCloseUI.class, ClientHandlerCloseUI.class, Side.CLIENT);
+            register(PacketUI.class, ClientHandlerUI.class, Side.CLIENT);
+            register(PacketUI.class, ServerHandlerUI.class, Side.SERVER);
+            register(PacketUIData.class, ClientHandlerUIData.class, Side.CLIENT);
+            register(PacketUIData.class, ServerHandlerUIData.class, Side.SERVER);
+            register(PacketCloseUI.class, ClientHandlerCloseUI.class, Side.CLIENT);
 
             /* Logs */
-            this.register(PacketRequestLogs.class, ServerHandlerLogs.class, Side.SERVER);
-            this.register(PacketLogs.class, ClientHandlerLogs.class, Side.CLIENT);
+            register(PacketRequestLogs.class, ServerHandlerLogs.class, Side.SERVER);
+            register(PacketLogs.class, ClientHandlerLogs.class, Side.CLIENT);
 
             /* Utils */
-            this.register(PacketChangedBoundingBox.class, ClientHandlerChangedBoundingBox.class, Side.CLIENT);
+            register(PacketChangedBoundingBox.class, ClientHandlerChangedBoundingBox.class, Side.CLIENT);
 
-            this.register(PacketPack.class, ClientHandlerPack.class, Side.CLIENT);
-            this.register(PacketBlackAndWhiteShader.class, ClientHandlerBlackAndWhiteShader.class, Side.CLIENT);
-            this.register(PacketLockPerspective.class, ClientHandlerLockPerspective.class, Side.CLIENT);
+            register(PacketPack.class, ClientHandlerPack.class, Side.CLIENT);
+            register(PacketBlackAndWhiteShader.class, ClientHandlerBlackAndWhiteShader.class, Side.CLIENT);
+            register(PacketLockPerspective.class, ClientHandlerLockPerspective.class, Side.CLIENT);
         }
     };
 

@@ -29,7 +29,6 @@ public class GuiClientHotkeyScreen extends GuiBase {
     public GuiClientHotkeyScreen(Minecraft mc) {
         keybinds = new GuiScrollElement(mc);
 
-        System.out.println(KeyboardHandler.hotkeys.values());
         List<Hotkey> list = new ArrayList<>(KeyboardHandler.hotkeys.values());
         list.sort(Comparator.comparing((Hotkey h) -> h.name, new AlphaNumericLengthComparator()));
         for (Hotkey hotkey : list) {

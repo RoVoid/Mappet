@@ -134,6 +134,8 @@ mappet.config.general.load_custom_sounds_on_login=Reload all custom sounds on lo
 mappet.config.comments.general.load_custom_sounds_on_login=When enabled, reloads all custom sounds when the player logs in
 mappet.config.general.immediately_open_link=Open links immediately
 mappet.config.comments.general.immediately_open_link=Immediately opens links sent from the server
+mappet.config.general.deny_client_setting_changes=Deviation of client settings from server
+mappet.config.comments.general.deny_client_setting_changes=The client will reject changes in the settings from the server, such as fov, showing a subtitle, keys, etc.
 
 mappet.config.npc.title=NPCs
 mappet.config.npc.tooltip=Mod options related to NPCs

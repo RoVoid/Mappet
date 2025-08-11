@@ -14,6 +14,7 @@ public final class MappetConfig {
     public static ValueBoolean generalDataCaching;
     public static ValueBoolean loadCustomSoundsOnLogin;
     public static ValueBoolean immediatelyOpenLink;
+    public static ValueBoolean denyClientSettingChanges;
 
     public static ValueBoolean npcsPeacefulDamage;
     public static ValueBoolean npcsToolOnlyOP;
@@ -35,6 +36,7 @@ public final class MappetConfig {
     public static ValueBoolean scriptEditorSounds;
     public static ValueBoolean scriptUIDebug;
     public static ValueCodeEditor scriptCodeTemplate;
+
     public static void register(RegisterConfigEvent event) {
         ConfigBuilder builder = event.createBuilder(MOD_ID);
 
@@ -43,6 +45,7 @@ public final class MappetConfig {
         enableForgeTriggers = builder.getBoolean("enable_forge_triggers", false);
         loadCustomSoundsOnLogin = builder.getBoolean("load_custom_sounds_on_login", false);
         immediatelyOpenLink = builder.getBoolean("immediately_open_link", false);
+        denyClientSettingChanges = builder.getBoolean("deny_client_setting_changes", true);
 
         npcsPeacefulDamage = builder.category("npc").getBoolean("peaceful_damage", true);
         npcsToolOnlyOP = builder.getBoolean("tool_only_op", true);
