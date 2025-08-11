@@ -78,6 +78,7 @@ public class UIKeybindComponent extends UIComponent {
         GuiExtendedKeybindElement keybind = new GuiExtendedKeybindElement(mc, (k) -> {
             if (!id.isEmpty()) {
                 context.data.setInteger(id, k == Keyboard.KEY_ESCAPE ? 0 : k);
+                context.data.setString(id + ".name", k == Keyboard.KEY_ESCAPE ? "none" : Keyboard.getKeyName(k).toLowerCase());
                 context.dirty(id, updateDelay);
             }
         });
