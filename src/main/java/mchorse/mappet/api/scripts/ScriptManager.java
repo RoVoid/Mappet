@@ -118,8 +118,8 @@ public class ScriptManager extends BaseManager<Script> {
 
     public Object execute(String id, String function, DataContext context, Object... args) throws ScriptException, NoSuchMethodException {
         Script script = getScript(id);
-
-        return script == null ? null : script.execute(function, context, args);
+        if (script == null) throw new ScriptException("Failed to execute script '" + id + "', maybe is not exists");
+        return script.execute(function, context, args);
     }
 
     private Script getScript(String id) throws ScriptException {

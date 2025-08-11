@@ -95,14 +95,14 @@ public class ClientSettingsAccessor {
         boolean keybindUpdate = false;
         boolean mappetKeybindUpdate = false;
 
-        if (MappetConfig.denyClientSettingChanges.get() || options == null || options.hasNoTags()) {
-            result.setBoolean("all", false);
+        boolean deny = MappetConfig.denyClientSettingChanges.get();
+        if (deny || options == null || options.hasNoTags()) {
+            result.setBoolean(deny ? "deny" : "all", deny);
             return result;
         }
 
         for (String option : options.getKeySet()) {
             boolean applied = false;
-
             if (option.equals("fov")) {
                 if (options.hasKey("fov", TAG_FLOAT)) {
                     gameSettings.fovSetting = Math.min(110, Math.max(0, options.getFloat("fov")));
@@ -136,7 +136,12 @@ public class ClientSettingsAccessor {
                         keybindUpdate = true;
                         applied = true;
                     }
+                    else {
+                        allApplied = false;
+                        continue;
+                    }
                 }
+
             }
             else if (option.startsWith("mappetKeybind:")) {
                 String id = option.substring("mappetKeybind:".length());
@@ -147,8 +152,17 @@ public class ClientSettingsAccessor {
                         mappetKeybindUpdate = true;
                         applied = true;
                     }
+                    else {
+                        allApplied = false;
+                        continue;
+                    }
                 }
             }
+            else {
+                allApplied = false;
+                continue;
+            }
+
             result.setBoolean(option, applied);
             if (!applied) allApplied = false;
         }

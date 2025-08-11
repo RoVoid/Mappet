@@ -16,13 +16,11 @@ public class ServerClientSettingsHandler extends ServerMessageHandler<PacketClie
         if (message.script == null || message.script.isEmpty()) return;
         try {
             DataContext context = new DataContext(player);
-            if (Mappet.scripts.execute(message.script,
-                                       message.function == null || message.function.isEmpty() ? "handler" : message.function,
-                                       context,
-                                       new ScriptEvent(context, message.script, message.function),
-                                       new ScriptNBTCompound(message.options)) == null) {
-                Mappet.logger.warning("Script " + message.script + " don't found!");
-            }
+            Mappet.scripts.execute(message.script,
+                                   message.function == null || message.function.isEmpty() ? "handler" : message.function,
+                                   context,
+                                   new ScriptEvent(context, message.script, message.function),
+                                   new ScriptNBTCompound(message.options));
         } catch (ScriptException | NoSuchMethodException e) {
             Mappet.logger.error(e.getMessage());
         }
