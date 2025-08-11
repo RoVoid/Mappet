@@ -7,6 +7,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.EnumHandSide;
 
 import java.util.HashMap;
@@ -72,6 +74,11 @@ public class ClientSettingsAccessor {
                     break;
                 case "invertMouse":
                     tag.setBoolean("invertMouse", gameSettings.invertMouse);
+                    break;
+                case "keybinds":
+                    NBTTagList list = new NBTTagList();
+                    for (KeyBinding binding : gameSettings.keyBindings) list.appendTag(new NBTTagString(binding.getKeyDescription()));
+                    tag.setTag("keybinds", list);
                     break;
                 default:
                     if (option.startsWith("keybind:")) {

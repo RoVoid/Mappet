@@ -89,6 +89,12 @@ public class ClientSettings implements IClientSettings {
     }
 
     @Override
+    public IClientSettings keybinds() {
+        request("keybinds");
+        return this;
+    }
+
+    @Override
     public IClientSettings mappetKeybind(String id) {
         request("mappetKeybind:" + id);
         return this;

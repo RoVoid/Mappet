@@ -4079,6 +4079,13 @@
           }
         }
       ],
+      "keybinds": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+          }
+        }
+      ],
       "mappetKeybind": [
         {
           "parameters": [

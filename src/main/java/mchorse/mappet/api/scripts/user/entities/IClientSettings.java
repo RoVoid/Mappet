@@ -17,6 +17,8 @@ public interface IClientSettings {
     IClientSettings keybind(String id);
     IClientSettings keybind(String id, int code);
 
+    IClientSettings keybinds();
+
     IClientSettings mappetKeybind(String id);
 
     IClientSettings mappetKeybind(String id, int code);
