@@ -37,6 +37,13 @@ public class ModItems {
         for (Item item : blocks.values()) event.getRegistry().register(item);
     }
 
+    public static Block addItemBlock(Block block) {
+        ResourceLocation name = block.getRegistryName();
+        if (name == null) return null;
+        blocks.put(name, new ItemBlock(block).setRegistryName(name).setUnlocalizedName(block.getUnlocalizedName()));
+        return block;
+    }
+
     @SideOnly(Side.CLIENT)
     public static void bindModels(ModelRegistryEvent event) {
         ModelLoader.setCustomModelResourceLocation(NPC_TOOL, 0, getNpcToolTexture());
@@ -45,14 +52,6 @@ public class ModItems {
             if (item.getRegistryName() != null)
                 ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static Block addItemBlock(Block block) {
-        ResourceLocation name = block.getRegistryName();
-        if (name == null) return null;
-        blocks.put(name, new ItemBlock(block).setRegistryName(name).setUnlocalizedName(block.getUnlocalizedName()));
-        return block;
     }
 
     private static ModelResourceLocation getNpcToolTexture() {

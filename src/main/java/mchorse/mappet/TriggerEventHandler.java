@@ -215,7 +215,7 @@ public class TriggerEventHandler {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onPlayerLeftClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
-        if (!event.getEntityPlayer().world.isRemote || shouldSkipTrigger(Mappet.settings.playerLeftClick)) return;
+        if (!event.getEntityPlayer().world.isRemote) return;
         Dispatcher.sendToServer(new PacketClick());
     }
 
@@ -223,7 +223,6 @@ public class TriggerEventHandler {
     @SideOnly(Side.CLIENT)
     public void onPlayerRightClickEmpty(PlayerInteractEvent.RightClickEmpty event) {
         if (!event.getEntityPlayer().world.isRemote || event.getHand() == EnumHand.OFF_HAND) return;
-        if (shouldSkipTrigger(Mappet.settings.playerRightClick)) return;
         Dispatcher.sendToServer(new PacketClick(1));
     }
 
