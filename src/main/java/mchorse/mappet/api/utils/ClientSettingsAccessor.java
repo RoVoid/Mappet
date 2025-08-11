@@ -77,7 +77,7 @@ public class ClientSettingsAccessor {
                     break;
                 case "keybinds":
                     NBTTagList list = new NBTTagList();
-                    for (KeyBinding binding : gameSettings.keyBindings) list.appendTag(new NBTTagString(binding.getKeyDescription()));
+                    for (String id : keyBindCache.keySet()) list.appendTag(new NBTTagString(id));
                     tag.setTag("keybinds", list);
                     break;
                 default:
@@ -109,66 +109,17 @@ public class ClientSettingsAccessor {
         }
 
         for (String option : options.getKeySet()) {
-            boolean applied = false;
-            if (option.equals("fov")) {
-                if (options.hasKey("fov", TAG_FLOAT)) {
-                    gameSettings.fovSetting = Math.min(110, Math.max(0, options.getFloat("fov")));
-                    applied = true;
-                }
-            }
-            else if (option.equals("showSubtitles")) {
-                if (options.hasKey("showSubtitles", TAG_BYTE)) {
-                    gameSettings.showSubtitles = options.getBoolean("showSubtitles");
-                    applied = true;
-                }
-            }
-            else if (option.equals("gamma")) {
-                if (options.hasKey("gamma", TAG_FLOAT)) {
-                    gameSettings.gammaSetting = Math.max(0, options.getFloat("gamma"));
-                    applied = true;
-                }
-            }
-            else if (option.equals("renderDistance")) {
-                if (options.hasKey("renderDistance", TAG_INT)) {
-                    gameSettings.renderDistanceChunks = Math.max(0, Math.min(32, options.getInteger("renderDistance")));
-                    applied = true;
-                }
-            }
-            else if (option.startsWith("keybind:")) {
-                String id = option.substring("keybind:".length());
-                if (!id.isEmpty() && options.hasKey("keybind:" + id, TAG_INT)) {
-                    KeyBinding binding = keyBindCache.get(id);
-                    if (binding != null) {
-                        binding.setKeyCode(options.getInteger("keybind:" + id));
-                        keybindUpdate = true;
-                        applied = true;
-                    }
-                    else {
-                        allApplied = false;
-                        continue;
-                    }
-                }
+            boolean applied;
 
+            if (option.startsWith("keybind:")) {
+                applied = applyKeybindOption(option, options);
+                if (applied) keybindUpdate = true;
             }
             else if (option.startsWith("mappetKeybind:")) {
-                String id = option.substring("mappetKeybind:".length());
-                if (!id.isEmpty() && options.hasKey("mappetKeybind:" + id, TAG_INT)) {
-                    Hotkey hotkey = KeyboardHandler.hotkeys.get(id);
-                    if (hotkey != null) {
-                        hotkey.keycode = options.getInteger("mappetKeybind:" + id);
-                        mappetKeybindUpdate = true;
-                        applied = true;
-                    }
-                    else {
-                        allApplied = false;
-                        continue;
-                    }
-                }
+                applied = applyMappetKeybindOption(option, options);
+                if (applied) mappetKeybindUpdate = true;
             }
-            else {
-                allApplied = false;
-                continue;
-            }
+            else applied = applySimpleOption(option, options);
 
             result.setBoolean(option, applied);
             if (!applied) allApplied = false;
@@ -180,5 +131,59 @@ public class ClientSettingsAccessor {
         gameSettings.saveOptions();
         result.setBoolean("all", allApplied);
         return result;
+    }
+
+    private boolean applySimpleOption(String option, NBTTagCompound options) {
+        switch (option) {
+            case "fov":
+                if (options.hasKey("fov", TAG_FLOAT)) {
+                    gameSettings.fovSetting = Math.min(110, Math.max(0, options.getFloat("fov")));
+                    return true;
+                }
+                break;
+            case "showSubtitles":
+                if (options.hasKey("showSubtitles", TAG_BYTE)) {
+                    gameSettings.showSubtitles = options.getBoolean("showSubtitles");
+                    return true;
+                }
+                break;
+            case "gamma":
+                if (options.hasKey("gamma", TAG_FLOAT)) {
+                    gameSettings.gammaSetting = Math.max(0, options.getFloat("gamma"));
+                    return true;
+                }
+                break;
+            case "renderDistance":
+                if (options.hasKey("renderDistance", TAG_INT)) {
+                    gameSettings.renderDistanceChunks = Math.max(0, Math.min(32, options.getInteger("renderDistance")));
+                    return true;
+                }
+                break;
+        }
+        return false;
+    }
+
+    private boolean applyKeybindOption(String option, NBTTagCompound options) {
+        String id = option.substring("keybind:".length());
+        if (!id.isEmpty() && options.hasKey(option, TAG_INT)) {
+            KeyBinding binding = keyBindCache.get(id);
+            if (binding != null) {
+                binding.setKeyCode(options.getInteger(option));
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean applyMappetKeybindOption(String option, NBTTagCompound options) {
+        String id = option.substring("mappetKeybind:".length());
+        if (!id.isEmpty() && options.hasKey(option, TAG_INT)) {
+            Hotkey hotkey = KeyboardHandler.hotkeys.get(id);
+            if (hotkey != null) {
+                hotkey.keycode = options.getInteger(option);
+                return true;
+            }
+        }
+        return false;
     }
 }
