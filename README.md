@@ -2,7 +2,7 @@
   <a rel="noopener noreferrer" target="_blank" href="https://github.com/RoVoid/MappetR/releases">
     <img
       alt="Header"
-      src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=7&height=200&descSize=13&descAlignY=52&animation=fadeIn&section=header&text=MappetR&fontAlignY=32&fontSize=50&desc=Minecraft 1.12.2"
+      src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=7&height=200&descSize=13&descAlignY=52&animation=fadeIn&section=header&text=MappetR&fontAlignY=32&fontSize=50&desc=Minecraft&nbsp;1.12.2"
       width="100%"
     >
   </a>
