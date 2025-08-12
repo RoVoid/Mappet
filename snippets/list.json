@@ -1,6 +1,17 @@
 [
 	{
-		"": "",
-		"ru_ru": "Вывод имени локации"
+		"title": {
+			"": "Location name",
+			"ru_ru": "Вывод имени локации"
+		},
+		"tags": [
+			"world",
+			"player",
+			"hud"
+		],
+		"versions": [
+			"0.9"
+		],
+		"author": "blz"
 	}
 ]
