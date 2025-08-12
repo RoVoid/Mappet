@@ -227,6 +227,7 @@ mappet.gui.panels.chains=Цепочки квестов
 mappet.gui.panels.scripts=Скрипты
 mappet.gui.panels.huds=HUD сцены
 mappet.gui.panels.logs=Логи
+mappet.gui.panels.snippets=Фрагменты
 mappet.gui.panels.modals.add=Впишите название:
 mappet.gui.panels.modals.dupe=Впишите новое название для дубликата:
 mappet.gui.panels.modals.rename=Впишите новое название:
@@ -807,9 +808,19 @@ tile.mappet.condition_model.tooltip=Показывает игроку разны
 
 entity.mappet.npc.name=NPC Маппета
 
-mappet.translation.credit=Mappet by McHorse, особая благодарность Andruxioid, Centryfuga и Jvonlins
+mappet.translation.credit=MappetR сделанный RoVoid, особая благодарность McHorse
 mappet.translation.wiki=Вики
 mappet.translation.wiki_url=https://github.com/Andruxioid/mappet_ru/wiki
 mappet.translation.community=Дискорд
 mappet.translation.community_url=https://discord.gg/QhvbgSWpYn
 mappet.translation.sounds=Открыть папку со звуками
+
+mappet.snippet.author=§7%s §7(неизвестный автор)
+mappet.snippet.author.iron=§r%s §7(§rжелезный §7автор)
+mappet.snippet.author.gold=§e%s §7(§eзолотой §7автор)
+mappet.snippet.author.diamond=§b%s §7(§bалмазный §7автор)
+mappet.snippet.author.emerald=§a%s §7(§aизумрудный §7автор)
+mappet.snippet.author.obsidian=§5%s §7(§5обсидиановый §7автор)
+mappet.snippet.url=§rМожете посетить §9§n%s
+mappet.snippet.version=§6Фрагмент §rдля §dMappet %s
+mappet.snippet.version.mismatched=§6Фрагмент §rдля §dMappet %s §7(не совпадает с вашей)

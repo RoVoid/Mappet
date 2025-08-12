@@ -1,9 +1,6 @@
 package mchorse.mappet.utils;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,7 +25,12 @@ public class JsonFetcher {
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
             String json = reader.lines().collect(Collectors.joining());
-            return parser.parse(json);
+            try {
+                return parser.parse(json);
+            } catch (JsonSyntaxException ex) {
+                System.out.println(ex.getMessage());
+                return null;
+            }
         }
     }
 

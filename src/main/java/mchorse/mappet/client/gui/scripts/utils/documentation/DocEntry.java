@@ -1,7 +1,6 @@
 package mchorse.mappet.client.gui.scripts.utils.documentation;
 
 import joptsimple.internal.Strings;
-import mchorse.mappet.MappetConfig;
 import mchorse.mappet.client.gui.scripts.GuiCodeEditor;
 import mchorse.mappet.client.gui.utils.text.GuiText;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
@@ -96,7 +95,8 @@ public class DocEntry {
                 line = line.replaceAll("</(b|i|s|code|ul|li)>", TextFormatting.RESET.toString());
                 line = line.replaceAll("</?(p|ul|li)>", "");
                 line = line.replaceAll("\\{@link +[^}]+\\.([^}]+)}", TextFormatting.GOLD + "$1" + TextFormatting.RESET);
-                line = line.replaceAll("\\{@link +([^}]*)#([^}]+)}", TextFormatting.GOLD + "$1" + TextFormatting.RESET + "." + TextFormatting.GRAY + "$2" + TextFormatting.RESET);
+                line = line.replaceAll("\\{@link +([^}]*)#([^}]+)}",
+                                       TextFormatting.GOLD + "$1" + TextFormatting.RESET + "." + TextFormatting.GRAY + "$2" + TextFormatting.RESET);
                 line = line.replaceAll("\\{@link ([^}]+)}", TextFormatting.GOLD + "$1" + TextFormatting.RESET);
                 line = line.replaceAll("&lt;", "<");
                 line = line.replaceAll("&gt;", ">");

@@ -812,7 +812,7 @@ tile.mappet.condition_model.tooltip=Shows the player different morphs depending 
 
 entity.mappet.npc.name=Mappet NPC
 
-mappet.translation.credit=Mappet by RoVoid, special thanks goes to McHorse
+mappet.translation.credit=MappetR by RoVoid, special thanks goes to McHorse
 mappet.translation.wiki=Wiki
 mappet.translation.wiki_url=https://github.com/mchorse/mappet/wiki
 mappet.translation.community=Discord

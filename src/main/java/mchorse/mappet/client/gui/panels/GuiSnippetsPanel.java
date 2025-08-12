@@ -119,10 +119,10 @@ public class GuiSnippetsPanel extends GuiDashboardPanel<GuiMappetDashboard> {
 
         snippet.removeAll();
 
-        String tagsStr = sn.getTags().isEmpty() ? "" : " (§6#" + String.join(" #", sn.getTags()) + "§r)";
-        GuiLabel name = Elements.label(IKey.str(sn.getTitle(locale) + tagsStr));
-        name.marginBottom(10);
-        snippet.add(name);
+        String tagsStr = sn.getTags().isEmpty() ? "" : " §r(§6#" + String.join(" #", sn.getTags()) + "§r)";
+        GuiLabel title = Elements.label(IKey.str("§l" + sn.getTitle(locale) + tagsStr));
+        title.marginBottom(10);
+        snippet.add(title);
 
         String rankSuffix = sn.getAuthor().getRank().isEmpty() ? "" : "." + sn.getAuthor().getRank();
         snippet.add(Elements.label(IKey.format("mappet.snippet.author" + rankSuffix, sn.getAuthor().getName())));

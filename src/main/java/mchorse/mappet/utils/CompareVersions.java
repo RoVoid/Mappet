@@ -49,8 +49,12 @@ public class CompareVersions {
     public static String series(String version) {
         if (version == null) return null;
         String[] parts = version.split("\\.");
-        return parts.length <= 3 ? version : String.join(".", Arrays.copyOf(parts, 3));
+        int len = Math.min(parts.length, 3);
+        for (int i = 0; i < len; i++)
+            parts[i] = parts[i].replaceAll("\\D.*", "");
+        return String.join(".", Arrays.copyOf(parts, len));
     }
+
 
     private static void ensureVersionsLoaded() {
         if (versions != null) return;
