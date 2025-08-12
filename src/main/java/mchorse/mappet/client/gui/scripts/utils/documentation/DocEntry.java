@@ -80,7 +80,6 @@ public class DocEntry {
 
                     editor.setText(text);
                     editor.background().flex().h(editor.getLines().size() * 12 + 20);
-                    editor.getHighlighter().setStyle(MappetConfig.scriptEditorSyntaxStyle.get());
                     target.add(editor);
 
                     parsing = false;

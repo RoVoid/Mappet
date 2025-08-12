@@ -4472,6 +4472,55 @@
     "name": "IScriptMath",
     "docs": "",
     "methods": {
+      "box": [
+        {
+          "parameters": [
+            {
+              "name": "vec1",
+              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+            },
+            {
+              "name": "vec2",
+              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.data.ScriptBox"
+          }
+        },
+        {
+          "parameters": [
+            {
+              "name": "minX",
+              "type": "double"
+            },
+            {
+              "name": "minY",
+              "type": "double"
+            },
+            {
+              "name": "minZ",
+              "type": "double"
+            },
+            {
+              "name": "maxX",
+              "type": "double"
+            },
+            {
+              "name": "maxY",
+              "type": "double"
+            },
+            {
+              "name": "maxZ",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.data.ScriptBox"
+          },
+          "docs": "Create a bounding box.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var pos \u003d c.getSubject().getPosition();\n     var box \u003d math.box(-10, 4, -10, 10, 6, 10);\n     if (box.contains(pos)){\n         c.send(\"Player in the box\")\n     }\n }\n }\u003c/pre\u003e"
+        }
+      ],
       "random": [
         {
           "parameters": [
@@ -4681,40 +4730,6 @@
           "return": {
             "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
           }
-        }
-      ],
-      "box": [
-        {
-          "parameters": [
-            {
-              "name": "minX",
-              "type": "double"
-            },
-            {
-              "name": "minY",
-              "type": "double"
-            },
-            {
-              "name": "minZ",
-              "type": "double"
-            },
-            {
-              "name": "maxX",
-              "type": "double"
-            },
-            {
-              "name": "maxY",
-              "type": "double"
-            },
-            {
-              "name": "maxZ",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptBox"
-          },
-          "docs": "Create a bounding box.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var pos \u003d c.getSubject().getPosition();\n     var box \u003d math.box(-10, 4, -10, 10, 6, 10);\n     if (box.contains(pos)){\n         c.send(\"Player in the box\")\n     }\n }\n }\u003c/pre\u003e"
         }
       ]
     }

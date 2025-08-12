@@ -33,6 +33,7 @@ public class GuiMappetDashboard extends GuiAbstractDashboard {
     public GuiScriptPanel script;
     public GuiHUDScenePanel hud;
     public GuiLogPanel logs;
+    public GuiSnippetsPanel snippets;
 
     public GuiCreativeMorphsMenu morphs;
 
@@ -85,6 +86,7 @@ public class GuiMappetDashboard extends GuiAbstractDashboard {
         script = new GuiScriptPanel(mc, this);
         hud = new GuiHUDScenePanel(mc, this);
         logs = new GuiLogPanel(mc, this);
+        snippets = new GuiSnippetsPanel(mc, this);
 
         panels.registerPanel(settings, IKey.lang("mappet.gui.panels.settings"), Icons.GEAR);
         panels.registerPanel(quest, IKey.lang("mappet.gui.panels.quests"), Icons.EXCLAMATION);
@@ -98,6 +100,7 @@ public class GuiMappetDashboard extends GuiAbstractDashboard {
         panels.registerPanel(script, IKey.lang("mappet.gui.panels.scripts"), MMIcons.PROPERTIES);
         panels.registerPanel(hud, IKey.lang("mappet.gui.panels.huds"), Icons.POSE);
         panels.registerPanel(logs, IKey.lang("mappet.gui.panels.logs"), MPIcons.get(MPIcons.CONSOLE));
+        panels.registerPanel(snippets, IKey.lang("mappet.gui.panels.snippets"), MPIcons.get(MPIcons.GLASSES));
 
         panels.setPanel(settings);
     }

@@ -1,6 +1,7 @@
 package mchorse.mappet.client.gui.scripts.themes;
 
 import mchorse.mappet.MappetConfig;
+import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.scripts.GuiCodeEditor;
 import mchorse.mappet.client.gui.scripts.style.SyntaxStyle;
 import mchorse.mappet.client.gui.utils.overlays.GuiEditorOverlayPanel;
@@ -258,6 +259,7 @@ public class GuiThemeEditorOverlayPanel extends GuiEditorOverlayPanel<GuiThemeEd
         item.save();
         MappetConfig.scriptEditorSyntaxStyle.set(item.file.getName(), item.style);
         MappetConfig.scriptCodeTemplate.updateStyle();
+        GuiMappetDashboard.get(mc).snippets.update();
         super.onClose();
     }
 

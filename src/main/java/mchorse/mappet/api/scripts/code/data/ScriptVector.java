@@ -127,7 +127,7 @@ public class ScriptVector implements IScriptVector {
 
     @Override
     public boolean equals(double x, double y, double z) {
-        return (this.x == x) && (this.y == y) && (this.z == z);
+        return this.x == x && this.y == y && this.z == z;
     }
 
     @Override

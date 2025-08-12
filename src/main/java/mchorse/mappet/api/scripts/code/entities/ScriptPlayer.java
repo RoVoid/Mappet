@@ -27,7 +27,7 @@ import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.utils.SkinUtils;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
-import mchorse.mappet.client.gui.utils.GuiWebUtils;
+import mchorse.mappet.client.gui.utils.SafeWebLinkOpener;
 import mchorse.mappet.entities.utils.WalkSpeedManager;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.common.PacketBlackAndWhiteShader;
@@ -313,7 +313,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
 
     @Override
     public void openLink(String url) {
-        GuiWebUtils.requestToOpenWebLink(url, entity);
+        SafeWebLinkOpener.requestToOpenWebLink(url, entity);
     }
 
     /* XP methods */

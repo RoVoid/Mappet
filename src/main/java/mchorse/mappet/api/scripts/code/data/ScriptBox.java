@@ -27,6 +27,15 @@ public class ScriptBox implements IScriptBox {
         this.maxZ = Math.max(minZ, maxZ);
     }
 
+    public ScriptBox(ScriptVector vec1, ScriptVector vec2) {
+        minX = Math.min(vec1.x, vec2.x);
+        minY = Math.min(vec1.y, vec2.y);
+        minZ = Math.min(vec1.z, vec2.z);
+        maxX = Math.max(vec1.x, vec2.x);
+        maxY = Math.max(vec1.y, vec2.y);
+        maxZ = Math.max(vec1.z, vec2.z);
+    }
+
     @Override
     public boolean isColliding(ScriptBox box) {
         return minX < box.maxX && maxX > minX && minY < maxY && maxY > box.minY && minZ < box.maxZ && maxZ > box.minZ;
@@ -34,23 +43,23 @@ public class ScriptBox implements IScriptBox {
 
     @Override
     public void offset(double x, double y, double z) {
-        this.minX += x;
-        this.minY += y;
-        this.minZ += z;
+        minX += x;
+        minY += y;
+        minZ += z;
 
-        this.maxX += x;
-        this.maxY += y;
-        this.maxZ += z;
+        maxX += x;
+        maxY += y;
+        maxZ += z;
     }
 
     @Override
     public boolean contains(double x, double y, double z) {
-        return x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY && z >= this.minZ && z <= this.maxZ;
+        return x >= minX && x <= maxX && y >= minY && y <= maxY && z >= minZ && z <= maxZ;
     }
 
     @Override
     public boolean contains(ScriptVector vector) {
-        return this.contains(vector.x, vector.y, vector.z);
+        return contains(vector.x, vector.y, vector.z);
     }
 
     @Override

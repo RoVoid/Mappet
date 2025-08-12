@@ -99,7 +99,7 @@ public class ScriptItemStack implements IScriptItemStack {
 
     @Override
     public void setData(INBTCompound tag) {
-        stack.setTagCompound(tag.getNBTTagCompound());
+        stack.setTagCompound(tag.asMinecraft());
     }
 
     @Override

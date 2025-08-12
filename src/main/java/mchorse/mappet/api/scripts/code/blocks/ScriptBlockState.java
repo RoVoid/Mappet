@@ -19,7 +19,7 @@ public class ScriptBlockState implements IScriptBlockState {
     }
 
     public static IScriptBlockState create(IBlockState state) {
-        return (state == null || state == Blocks.AIR.getDefaultState()) ? AIR : new ScriptBlockState(state);
+        return state == null || state == Blocks.AIR.getDefaultState() ? AIR : new ScriptBlockState(state);
     }
 
     @Override
@@ -69,12 +69,12 @@ public class ScriptBlockState implements IScriptBlockState {
 
     @Override
     public boolean hasCollision(IScriptWorld world, int x, int y, int z) {
-        return state.getCollisionBoundingBox(world.getMinecraftWorld(), BLOCK_POS.setPos(x, y, z)) != null;
+        return state.getCollisionBoundingBox(world.asMinecraft(), BLOCK_POS.setPos(x, y, z)) != null;
     }
 
     @Override
     public boolean hasCollision(IScriptWorld world, ScriptVector vector) {
-        return state.getCollisionBoundingBox(world.getMinecraftWorld(), BLOCK_POS.setPos(vector.toBlockPos())) != null;
+        return state.getCollisionBoundingBox(world.asMinecraft(), BLOCK_POS.setPos(vector.toBlockPos())) != null;
     }
 
     @Override

@@ -22,14 +22,14 @@ public class ScriptResourcePack implements IScriptResourcePack {
         if (folder.exists() && folder.isDirectory()) {
             File packFile = server.getFile("config/mappet/packs/" + name + ".zip");
             if (!packFile.exists() || packFile.isDirectory()) {
-                this.pack = null;
+                pack = null;
                 return;
             }
             try {
-                this.pack = Files.readAllBytes(packFile.toPath());
+                pack = Files.readAllBytes(packFile.toPath());
             } catch (IOException e) {
                 Mappet.logger.error("Resource Pack \""+name+"\" not be found");
-                this.pack = null;
+                pack = null;
             }
         }
     }

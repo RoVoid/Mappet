@@ -72,7 +72,7 @@ public class ScriptMath implements IScriptMath {
 
     @Override
     public double factorial(double number) {
-        return (number != 1) ? number * factorial(number - 1) : 1;
+        return number != 1 ? number * factorial(number - 1) : 1;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class ScriptMath implements IScriptMath {
 
     @Override
     public double lcm(double a, double b) {
-        return (a * b) / gcd(a, b);
+        return a * b / gcd(a, b);
     }
 
     @Override
@@ -99,5 +99,10 @@ public class ScriptMath implements IScriptMath {
     @Override
     public ScriptBox box(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
         return new ScriptBox(minX, minY, minZ, maxX, maxY, maxZ);
+    }
+
+    @Override
+    public ScriptBox box(ScriptVector vec1, ScriptVector vec2) {
+        return new ScriptBox(vec1, vec2);
     }
 }

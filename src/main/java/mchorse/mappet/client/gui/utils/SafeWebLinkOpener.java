@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 import java.util.Locale;
 import java.util.Set;
 
-public class GuiWebUtils implements GuiYesNoCallback {
+public class SafeWebLinkOpener implements GuiYesNoCallback {
     private static final Set<String> PROTOCOLS = Sets.newHashSet("http", "https");
 
     private String pendingUrl = "";
@@ -85,6 +85,8 @@ public class GuiWebUtils implements GuiYesNoCallback {
 
         String url = pendingUrl;
         pendingUrl = "";
+
+        Minecraft.getMinecraft().player.closeScreen();
 
         if (!result) return;
 

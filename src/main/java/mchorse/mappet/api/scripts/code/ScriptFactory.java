@@ -80,7 +80,7 @@ public class ScriptFactory implements IScriptFactory {
             if (mirror.isArray()) {
                 NBTTagList list = new NBTTagList();
                 for (int i = 0, c = mirror.size(); i < c; i++) {
-                    NBTBase base = this.convertToNBT(mirror.getSlot(i));
+                    NBTBase base = convertToNBT(mirror.getSlot(i));
                     if (base != null) list.appendTag(base);
                 }
                 return list;
@@ -88,7 +88,7 @@ public class ScriptFactory implements IScriptFactory {
 
             NBTTagCompound tag = new NBTTagCompound();
             for (String key : mirror.keySet()) {
-                NBTBase base = this.convertToNBT(mirror.get(key));
+                NBTBase base = convertToNBT(mirror.get(key));
                 if (base != null) tag.setTag(key, base);
             }
             return tag;
@@ -222,7 +222,7 @@ public class ScriptFactory implements IScriptFactory {
         for (Field field : clazz.getDeclaredFields()) {
             if (Modifier.isStatic(field.getModifiers())) continue;
             output.append("    ");
-            if (!simple) output.append(this.getModifier(field.getModifiers()));
+            if (!simple) output.append(getModifier(field.getModifiers()));
             output.append(field.getName());
             if (!simple) output.append(" (").append(field.getType().getTypeName()).append(")");
 
@@ -245,7 +245,7 @@ public class ScriptFactory implements IScriptFactory {
 
             output.append("    ");
 
-            if (!simple) output.append(this.getModifier(method.getModifiers()));
+            if (!simple) output.append(getModifier(method.getModifiers()));
 
             output.append(simple ? method.getReturnType().getSimpleName() : method.getReturnType().getTypeName());
             output.append(" ");
