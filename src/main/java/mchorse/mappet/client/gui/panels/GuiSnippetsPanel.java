@@ -43,7 +43,7 @@ public class GuiSnippetsPanel extends GuiDashboardPanel<GuiMappetDashboard> {
 
         JsonArray jsonList;
         try {
-            jsonList = JsonFetcher.fetchJsonArray(JsonFetcher.GITHUB + "snippets/list.json");
+            jsonList = JsonFetcher.fetchJsonArray(JsonFetcher.SNIPPETS + "list.json");
             if (jsonList == null) throw new IOException();
         } catch (IOException e) {
             Mappet.loggerClient.error("Error while trying to load snippets list from URL: {}", e.getMessage());
@@ -55,7 +55,7 @@ public class GuiSnippetsPanel extends GuiDashboardPanel<GuiMappetDashboard> {
 
         JsonObject jsonAuthors;
         try {
-            jsonAuthors = JsonFetcher.fetchJsonObject(JsonFetcher.GITHUB + "snippets/authors.json");
+            jsonAuthors = JsonFetcher.fetchJsonObject(JsonFetcher.SNIPPETS + "authors.json");
             if (jsonAuthors == null) throw new IOException();
         } catch (IOException e) {
             Mappet.loggerClient.error("Error while trying to load snippets authors from URL: {}", e.getMessage());
@@ -106,7 +106,7 @@ public class GuiSnippetsPanel extends GuiDashboardPanel<GuiMappetDashboard> {
 
         if (!sn.hasContent()) {
             try {
-                JsonObject json = JsonFetcher.fetchJsonObject(JsonFetcher.GITHUB + "snippets/" + index + ".json");
+                JsonObject json = JsonFetcher.fetchJsonObject(JsonFetcher.SNIPPETS + index + ".json");
                 if (json == null) throw new IOException("Received null JSON for snippet " + index);
                 sn.setContent(json);
             } catch (IOException e) {

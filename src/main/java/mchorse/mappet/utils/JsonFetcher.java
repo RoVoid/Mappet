@@ -16,7 +16,8 @@ import java.util.stream.Collectors;
 public class JsonFetcher {
     private static final JsonParser parser = new JsonParser();
 
-    public static final String GITHUB = "https://raw.githubusercontent.com/RoVoid/Mappet/refs/heads/beta/";
+    public static final String SOURCE = "https://raw.githubusercontent.com/RoVoid/Mappet/refs/heads/beta/";
+    public static final String SNIPPETS = "https://raw.githubusercontent.com/RoVoid/Mappet-Snippets/refs/heads/main/";
 
     public static JsonElement fetchJson(String url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();

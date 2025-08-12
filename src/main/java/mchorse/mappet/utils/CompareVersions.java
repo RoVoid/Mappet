@@ -57,7 +57,7 @@ public class CompareVersions {
 
         versions = new ArrayList<>();
         try {
-            JsonArray json = JsonFetcher.fetchJsonArray(JsonFetcher.GITHUB + "versions.json");
+            JsonArray json = JsonFetcher.fetchJsonArray(JsonFetcher.SOURCE + "versions.json");
             if (json == null) return;
             for (JsonElement el : json) {
                 if (el.isJsonPrimitive()) versions.add(el.getAsString());

@@ -1,9 +1,0 @@
-{
-	"latest": "0.9.6",
-	"0.9": {
-		"": "Данный код выводит название локации в которой находится игрок (Так же можно заменить под свое действие, ну те кто шарят)\n<code>box</code> - Координаты углов\n<code>HUD_ID</code> - Название необходимого худа\n\n<pre>{@code const LOCATIONS = [{\n    info: \"Склад\",\n    firstPos: mappet.vector3(0, 0, 0),\n    lastPos: mappet.vector3(1, 1, 1)\n}]\nconst HUD_ID = \"HUD_locations\"\n\nfunction main(c) {\n    let s = c.subject\n\n    LOCATIONS.forEach(\n        function(loc) {\n            let firstPos = loc.firstPos\n            let lastPos = loc.lastPos\n            let box = mappet.box(\n                firstPos.x, firstPos.y, firstPos.z,\n                lastPos.x, lastPos.y, lastPos.z\n            )\n\n            if (box.contains(s.getPosition())) {\n                s.setupHUD(HUD_ID)\n                s.changeHUDMorph(HUD_ID, 0, mappet.createMorph('{Background:-1828716544,Label:\"Локация: [e' + loc.info + '\",Name:\"label\"}'))\n            }\n        })\n}\n}</pre>"
-	},
-	"0.9.6": {
-		"": "Данный код выводит название локации в которой находится игрок (Так же можно заменить под свое действие, ну те кто шарят)\n<code>box</code> - Координаты углов\n<code>HUD_ID</code> - Название необходимого худа\n\n<pre>{@code const LOCATIONS = [{\n    info: \"Склад\",\n    box: math.box(0, 0, 0, 1, 1, 1)\n}]\nconst HUD_ID = \"HUD_locations\"\n\nfunction main(c) {\n    let player = c.getPlayer()\n    let pos = player.getPosition()\n\n    for each(var loc in LOCATIONS) {\n        if (!loc.box.contains(pos)) continue\n        player.setupHUD(HUD_ID)\n        player.changeHUDMorph(HUD_ID, 0, mappet.createMorph('{Background:-1828716544,Label:\"Локация: [e' + loc.info + '\",Name:\"label\"}'))\n        break;\n    }\n}\n}</pre>"
-	}
-}
