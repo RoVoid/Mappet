@@ -1,6 +1,5 @@
 package mchorse.mappet.client.gui.scripts;
 
-import mchorse.mappet.Mappet;
 import mchorse.mappet.client.gui.scripts.style.SyntaxHighlighter;
 import mchorse.mappet.client.gui.scripts.utils.HighlightedTextLine;
 import mchorse.mappet.client.gui.scripts.utils.TextLineNumber;
@@ -14,6 +13,7 @@ import mchorse.mclib.utils.ColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
 
 import java.util.ArrayList;
@@ -90,7 +90,12 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
 
     @Override
     protected String getFromChar(char typedChar) {
-        if (wasDoubleInsert(typedChar, ')', '(') || wasDoubleInsert(typedChar, ']', '[') || wasDoubleInsert(typedChar, '}', '{') || wasDoubleInsert(typedChar, '"', '"') || wasDoubleInsert(typedChar, '\'', '\'')) {
+        if (wasDoubleInsert(typedChar, ')', '(') || wasDoubleInsert(typedChar, ']', '[') || wasDoubleInsert(typedChar,
+                                                                                                            '}',
+                                                                                                            '{') || wasDoubleInsert(
+                typedChar,
+                '"',
+                '"') || wasDoubleInsert(typedChar, '\'', '\'')) {
             moveCursor(1, 0);
             playSound(SoundEvents.BLOCK_STONE_PLACE);
             return "";
@@ -119,13 +124,15 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
 
         String line = text.get(cursor.line).text;
 
-        return line.length() >= 2 && cursor.offset > 0 && cursor.offset < line.length() && line.charAt(cursor.offset) == target && line.charAt(cursor.offset - 1) == supplementary;
+        return line.length() >= 2 && cursor.offset > 0 && cursor.offset < line.length() && line.charAt(cursor.offset) == target && line.charAt(
+                cursor.offset - 1) == supplementary;
     }
 
     @Override
     protected void keyNewLine(TextEditUndo undo) {
         String line = text.get(cursor.line).text;
-        boolean unwrap = line.length() >= 2 && cursor.offset > 0 && cursor.offset < line.length() && line.charAt(cursor.offset) == '}' && line.charAt(cursor.offset - 1) == '{';
+        boolean unwrap = line.length() >= 2 && cursor.offset > 0 && cursor.offset < line.length() && line.charAt(cursor.offset) == '}' && line.charAt(
+                cursor.offset - 1) == '{';
 
         int indent = getIndent(line) + (unwrap ? 4 : 0);
 
@@ -169,7 +176,8 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
             deselect();
 
             undo.text = deleted;
-        } else {
+        }
+        else {
             super.keyBackspace(undo, ctrl);
         }
     }
@@ -192,7 +200,8 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
                     int indent = getIndent(splits.get(i));
 
                     splits.set(i, splits.get(i).substring(Math.min(indent, 4)));
-                } else {
+                }
+                else {
                     splits.set(i, "    " + splits.get(i));
                 }
             }
@@ -210,7 +219,8 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
             }
 
             undo.postText = result;
-        } else {
+        }
+        else {
             super.keyTab(undo);
         }
     }
@@ -287,11 +297,15 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
         }
 
         if (segments != null) {
-            for (TextSegment segment : segments) {
-                font.drawString(segment.text, nx, ny, segment.color, highlighter.getStyle().shadow);
-
-                nx += segment.width;
+            GlStateManager.enableBlend();
+            for (TextSegment s : segments) {
+                int color = s.alpha < 0x1A ? s.color & 0xFFFFFF : s.color; // Because of OpenGL
+                boolean shadow = (s.alpha < 0x1A || s.alpha == 0xFF) && highlighter.getStyle().shadow;
+                font.drawString(s.text, nx, ny, color, shadow);
+                nx += s.width;
             }
+            GlStateManager.disableBlend();
+
         }
     }
 

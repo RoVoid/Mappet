@@ -1,6 +1,5 @@
 package mchorse.mappet.client.gui.scripts.style;
 
-import mchorse.mappet.Mappet;
 import mchorse.mappet.MappetConfig;
 import mchorse.mappet.client.gui.scripts.utils.TextSegment;
 import mchorse.mappet.client.gui.scripts.utils.TextSegment.TOKEN;
@@ -63,7 +62,7 @@ public class SyntaxHighlighter {
 
     public List<TextSegment> parse(FontRenderer font, String line, TextSegment lastSegment) {
         List<TextSegment> list = new ArrayList<>();
-        if (line == null || line.isEmpty()) return list;
+        if (line == null) return list;
 
         boolean inComment = false;
         char inString = '\0';
@@ -87,6 +86,8 @@ public class SyntaxHighlighter {
                 }
             }
         }
+
+        if (line.isEmpty()) return list;
 
         if (inComment) {
             int index = line.indexOf("*/");
@@ -118,6 +119,7 @@ public class SyntaxHighlighter {
             String match = matcher.group();
             TOKEN token;
             int color;
+            int alpha = 0;
 
             if (matcher.group(1) != null) {
                 token = TOKEN.STRING;
@@ -141,7 +143,20 @@ public class SyntaxHighlighter {
             }
             else if (matcher.group(6) != null) {
                 token = TOKEN.NUMBER;
-                color = style.numbers;
+                if (match.startsWith("0x")) {
+                    try {
+                        int value = Integer.parseUnsignedInt(match.substring(2), 16);
+                        if (match.length() == 10) {
+                            color = value;
+                            alpha = value >> 24 & 0xFF;
+                        }
+                        else if (match.length() == 8) color = value;
+                        else color = style.numbers;
+                    } catch (NumberFormatException e) {
+                        color = style.numbers;
+                    }
+                }
+                else color = style.numbers;
             }
             else if (matcher.group(7) != null) {
                 token = TOKEN.CONSTANT;
@@ -178,7 +193,7 @@ public class SyntaxHighlighter {
                 color = style.other;
             }
 
-            list.add(new TextSegment(token, match, color, font.getStringWidth(match)));
+            list.add(new TextSegment(token, match, color, alpha, font.getStringWidth(match)));
             lastEnd = end;
         }
 
