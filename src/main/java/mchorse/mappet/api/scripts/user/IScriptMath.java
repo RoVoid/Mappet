@@ -5,6 +5,8 @@ import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import net.minecraft.util.math.BlockPos;
 
 public interface IScriptMath {
+    ScriptBox box(ScriptVector vec1, ScriptVector vec2);
+
     /**
      * Generate a number between 0 and the given max value (but not including the max value)
      *

@@ -7,7 +7,6 @@ import mchorse.mappet.api.scripts.code.ScriptMath;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.api.utils.manager.BaseManager;
 import mchorse.mappet.utils.ScriptUtils;
-import mchorse.mappet.utils.Utils;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -82,11 +81,14 @@ public class ScriptManager extends BaseManager<Script> {
 
         if (key instanceof EntityPlayerMP) {
             context = new DataContext((EntityPlayerMP) key);
-        } else if (key instanceof MinecraftServer) {
+        }
+        else if (key instanceof MinecraftServer) {
             context = new DataContext((MinecraftServer) key);
-        } else if (key instanceof EntityLiving) {
+        }
+        else if (key instanceof EntityLiving) {
             context = new DataContext((EntityLiving) key);
-        } else {
+        }
+        else {
             MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
             context = new DataContext(server);
         }
@@ -116,8 +118,8 @@ public class ScriptManager extends BaseManager<Script> {
 
     public Object execute(String id, String function, DataContext context, Object... args) throws ScriptException, NoSuchMethodException {
         Script script = getScript(id);
-
-        return script == null ? null : script.execute(function, context, args);
+        if (script == null) throw new ScriptException("Failed to execute script '" + id + "', maybe is not exists");
+        return script.execute(function, context, args);
     }
 
     private Script getScript(String id) throws ScriptException {
@@ -191,7 +193,7 @@ public class ScriptManager extends BaseManager<Script> {
 
         if (scriptFile != null && scriptFile.isFile()) {
             try {
-                String code = FileUtils.readFileToString(scriptFile, Utils.getCharset());
+                String code = FileUtils.readFileToString(scriptFile, StandardCharsets.UTF_8);
 
                 if (script == null) {
                     script = new Script();
@@ -215,7 +217,7 @@ public class ScriptManager extends BaseManager<Script> {
 
         if (!code.trim().isEmpty()) {
             try {
-                FileUtils.writeStringToFile(getScriptFile(id), code, Utils.getCharset());
+                FileUtils.writeStringToFile(getScriptFile(id), code, StandardCharsets.UTF_8);
 
                 result = true;
             } catch (Exception ignored) {
@@ -245,7 +247,7 @@ public class ScriptManager extends BaseManager<Script> {
     public boolean exists(String name) {
         File scriptFile = getScriptFile(name);
 
-        return super.exists(name) || (scriptFile != null && scriptFile.exists());
+        return super.exists(name) || scriptFile != null && scriptFile.exists();
     }
 
     @Override
@@ -265,7 +267,7 @@ public class ScriptManager extends BaseManager<Script> {
         boolean result = super.delete(name);
         File scriptFile = getScriptFile(name);
 
-        return (scriptFile != null && scriptFile.delete()) || result;
+        return scriptFile != null && scriptFile.delete() || result;
     }
 
     @Override

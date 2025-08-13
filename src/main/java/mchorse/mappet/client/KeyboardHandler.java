@@ -2,6 +2,7 @@ package mchorse.mappet.client;
 
 import mchorse.mappet.CommonProxy;
 import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.hotkeys.Hotkey;
 import mchorse.mappet.api.hotkeys.HotkeyState;
 import mchorse.mappet.api.scripts.Script;
@@ -56,11 +57,12 @@ public class KeyboardHandler {
     public void onKeyPress(KeyInputEvent event) {
         Minecraft mc = Minecraft.getMinecraft();
         if (openMappetDashboard.isPressed() && OpHelper.isPlayerOp()) {
-            if (Mappet.dashboardOnlyCreative.get()) {
+            if (MappetConfig.dashboardOnlyCreative.get()) {
                 if (mc.player.capabilities.isCreativeMode) {
                     mc.displayGuiScreen(GuiMappetDashboard.get(mc));
                 }
-            } else {
+            }
+            else {
                 mc.displayGuiScreen(GuiMappetDashboard.get(mc));
             }
         }
@@ -91,7 +93,7 @@ public class KeyboardHandler {
             if (hotkey.keycode != -1 && hotkey.keycode != key) continue;
             if (state && hotkey.mode == Hotkey.Mode.UP) continue;
             if (!state && hotkey.mode == Hotkey.Mode.DOWN) continue;
-            hotkeyStates.add(HotkeyState.of(hotkey.name, state));
+            hotkeyStates.add(HotkeyState.of(hotkey.id, state));
         }
         if (!hotkeyStates.isEmpty()) Dispatcher.sendToServer(new PacketTriggeredHotkeys(hotkeyStates));
     }
@@ -107,9 +109,10 @@ public class KeyboardHandler {
                 NBTTagCompound keysNbt = NBTToJsonLike.read(keybinds);
 
                 for (Hotkey hotkey : hotkeys)
-                    if (keysNbt.hasKey(hotkey.name)) hotkey.keycode = keysNbt.getInteger(hotkey.name);
-            } else for (Hotkey hotkey : hotkeys) {
-                hotkey.keycode = KeyboardHandler.hotkeys.getOrDefault(hotkey.name, hotkey).keycode;
+                    if (keysNbt.hasKey(hotkey.id)) hotkey.keycode = keysNbt.getInteger(hotkey.id);
+            }
+            else for (Hotkey hotkey : hotkeys) {
+                hotkey.keycode = KeyboardHandler.hotkeys.getOrDefault(hotkey.id, hotkey).keycode;
             }
         } catch (Exception e) {
             Mappet.logger.error("Failed to load keybinds from file: " + e.getMessage());
@@ -118,8 +121,6 @@ public class KeyboardHandler {
 
     public static void saveClientKeys() {
         try {
-            System.out.println("PreSave");
-
             if (CommonProxy.configFolder == null) return;
             File keybinds = new File(CommonProxy.configFolder, "keybinds.json");
 
@@ -128,11 +129,9 @@ public class KeyboardHandler {
             else keysNbt = new NBTTagCompound();
 
             for (Hotkey hotkey : hotkeys.values()) {
-                if (hotkey.keycode == -1) keysNbt.removeTag(hotkey.name);
-                else keysNbt.setInteger(hotkey.name, hotkey.keycode);
+                if (hotkey.keycode == -1) keysNbt.removeTag(hotkey.id);
+                else keysNbt.setInteger(hotkey.id, hotkey.keycode);
             }
-
-            System.out.println("Save: " + keysNbt);
 
             NBTToJsonLike.write(keybinds, keysNbt);
         } catch (Exception e) {

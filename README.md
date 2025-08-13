@@ -1,34 +1,34 @@
 <div align="center">
-  <a rel="noopener noreferrer" target="_blank" href="https://github.com/RoVoid/Mappet/releases">
+  <a rel="noopener noreferrer" target="_blank" href="https://github.com/RoVoid/MappetR/releases">
     <img
       alt="Header"
-      src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=7&height=200&descSize=13&descAlignY=52&animation=fadeIn&section=header&text=Mappet&fontAlignY=32&fontSize=50&desc=R-Version"
+      src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=7&height=200&descSize=13&descAlignY=52&animation=fadeIn&section=header&text=MappetR&fontAlignY=32&fontSize=50&desc=Minecraft&nbsp;1.12.2"
       width="100%"
     >
   </a>
 
   <p>
-    Enhance your <b>Minecraft</b> map-making experience with <b>Mappet</b>’s scripting tools and more
+    Enhance your <b>Minecraft</b> map-making experience with <b>MappetR</b>’s scripting tools and more
   </p>
 
 • • •<br>
 
   <div>
-    <a href="https://github.com/RoVoid/Mappet/stargazers">
+    <a href="https://github.com/RoVoid/MappetR/stargazers">
       <img
-        src="https://img.shields.io/github/stars/RoVoid/Mappet?style=for-the-badge&color=ad4b14&labelColor=963337"
+        src="https://img.shields.io/github/stars/RoVoid/MappetR?style=for-the-badge&color=ad4b14&labelColor=963337"
         alt="Stars"
       >
     </a>
-    <a href="https://github.com/RoVoid/Mappet/releases">
+    <a href="https://github.com/RoVoid/MappetR/releases">
       <img
-        src="https://img.shields.io/github/v/release/RoVoid/Mappet?include_prereleases&style=for-the-badge&color=aa315e&labelColor=963337&label=Last"
+        src="https://img.shields.io/github/v/release/RoVoid/MappetR?include_prereleases&style=for-the-badge&color=aa315e&labelColor=963337&label=Last"
         alt="Last Release"
       >
     </a>
-    <a href="https://github.com/RoVoid/Mappet/releases/latest">
+    <a href="https://github.com/RoVoid/MappetR/releases/latest">
       <img
-        src="https://img.shields.io/github/v/release/RoVoid/Mappet?style=for-the-badge&color=a9228d&labelColor=963337&label=Stable"
+        src="https://img.shields.io/github/v/release/RoVoid/MappetR?style=for-the-badge&color=a9228d&labelColor=963337&label=Stable"
         alt="Stable Release"
       >
     </a>
@@ -37,7 +37,7 @@
 <br>• • •
 
   <h6>
-    <b>Mappet</b> for <a href="https://github.com/RoVoid/Mappet">Forge 1.12.2</a> exclusively and also install following mods:
+    <b>MappetR</b> for <a href="https://github.com/RoVoid/MappetR">Forge 1.12.2</a> exclusively and also install following mods:
     <p></p>
     <p align="center">
       <a href="https://curseforge.com/minecraft/mc-mods/mchorses-mclib">McLib</a> •
@@ -57,7 +57,7 @@
     >
   </a>
   &nbsp;&nbsp;&nbsp;
-  <a rel="license noopener noreferrer" href="https://github.com/RoVoid/Mappet#MIT-1-ov-file">
+  <a rel="license noopener noreferrer" href="https://github.com/RoVoid/MappetR#MIT-1-ov-file">
     <img
       alt="MIT License"
       src="https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg"
@@ -72,7 +72,7 @@
     <ul align="justify">
       <li>This mod is free to use for any purpose you wish</li>
       <li>You are free to modify, distribute, and incorporate this project into your projects, as long as you keep the original copyright notice</li>
-      <li>A link to this <a href="https://github.com/RoVoid/Mappet">GitHub repository</a> is appreciated</li>
+      <li>A link to this <a href="https://github.com/RoVoid/MappetR">GitHub repository</a> is appreciated</li>
     </ul>
     <br>Not an official Minecraft product<br>
     We are in no way affiliated with or endorsed by Mojang Synergies AB, Microsoft Corporation or other rights-holders

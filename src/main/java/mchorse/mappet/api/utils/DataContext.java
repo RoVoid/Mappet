@@ -1,6 +1,6 @@
 package mchorse.mappet.api.utils;
 
-import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.scripts.code.data.ScriptVector;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.entities.EntityNpc;
@@ -192,7 +192,7 @@ public class DataContext {
     }
 
     public ICommandSender getSender() {
-        if (Mappet.eventUseServerForCommands.get()) return server;
+        if (MappetConfig.eventUseServerForCommands.get()) return server;
         if (sender == null) sender = new TriggerSender();
         return subject == null ? sender.set(server, world, pos) : sender.set(subject);
     }

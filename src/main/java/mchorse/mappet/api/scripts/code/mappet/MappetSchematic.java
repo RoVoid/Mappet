@@ -25,14 +25,14 @@ public class MappetSchematic implements IMappetSchematic
     @Override
     public MappetSchematic loadFromWorld(int x1, int y1, int z1, int x2, int y2, int z2)
     {
-        this.schematic.loadFromWorld(this.world.getMinecraftWorld(), x1, y1, z1, x2, y2, z2);
+        this.schematic.loadFromWorld(this.world.asMinecraft(), x1, y1, z1, x2, y2, z2);
         return this;
     }
 
     @Override
     public MappetSchematic place(int x, int y, int z, boolean replaceBlocks, boolean placeAir)
     {
-        this.schematic.place(this.world.getMinecraftWorld(), x, y, z, replaceBlocks, placeAir);
+        this.schematic.place(this.world.asMinecraft(), x, y, z, replaceBlocks, placeAir);
         return this;
     }
 

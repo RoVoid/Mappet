@@ -2,6 +2,7 @@ package mchorse.mappet.client.gui.utils;
 
 import com.google.common.collect.Sets;
 import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.common.scripts.PacketOpenLink;
 import net.minecraft.client.Minecraft;
@@ -19,7 +20,7 @@ import java.net.URISyntaxException;
 import java.util.Locale;
 import java.util.Set;
 
-public class GuiWebUtils implements GuiYesNoCallback {
+public class SafeWebLinkOpener implements GuiYesNoCallback {
     private static final Set<String> PROTOCOLS = Sets.newHashSet("http", "https");
 
     private String pendingUrl = "";
@@ -68,10 +69,11 @@ public class GuiWebUtils implements GuiYesNoCallback {
         URI uri;
         if ((uri = parseUrl(url)) == null) return;
 
-        if (Mappet.immediatelyOpenLink.get()) {
+        if (MappetConfig.immediatelyOpenLink.get()) {
             pendingUrl = "";
             openWebLink(uri);
-        } else {
+        }
+        else {
             pendingUrl = url;
             Minecraft.getMinecraft().displayGuiScreen(new GuiConfirmOpenLink(this, url, 0, false));
         }
@@ -83,6 +85,8 @@ public class GuiWebUtils implements GuiYesNoCallback {
 
         String url = pendingUrl;
         pendingUrl = "";
+
+        Minecraft.getMinecraft().player.closeScreen();
 
         if (!result) return;
 

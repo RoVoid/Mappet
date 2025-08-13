@@ -16,38 +16,38 @@ public class ScriptRayTrace implements IScriptRayTrace {
 
     @Override
     public RayTraceResult getMinecraftRayTraceResult() {
-        return this.result;
+        return result;
     }
 
     @Override
     public boolean isMissed() {
-        return this.result.typeOfHit == RayTraceResult.Type.MISS;
+        return result.typeOfHit == RayTraceResult.Type.MISS;
     }
 
     @Override
     public boolean isBlock() {
-        return this.result.typeOfHit == RayTraceResult.Type.BLOCK;
+        return result.typeOfHit == RayTraceResult.Type.BLOCK;
     }
 
     @Override
     public boolean isEntity() {
-        return this.result.typeOfHit == RayTraceResult.Type.ENTITY;
+        return result.typeOfHit == RayTraceResult.Type.ENTITY;
     }
 
     @Override
     public IScriptEntity getEntity() {
-        if (this.result.entityHit == null) return null;
-        if (this.entity == null) this.entity = ScriptEntity.create(this.result.entityHit);
-        return this.entity;
+        if (result.entityHit == null) return null;
+        if (entity == null) entity = ScriptEntity.create(result.entityHit);
+        return entity;
     }
 
     @Override
     public ScriptVector getBlock() {
-        return new ScriptVector(this.result.getBlockPos());
+        return new ScriptVector(result.getBlockPos());
     }
 
     @Override
     public ScriptVector getHitPosition() {
-        return new ScriptVector(this.result.hitVec);
+        return new ScriptVector(result.hitVec);
     }
 }

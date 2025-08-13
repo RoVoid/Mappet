@@ -4,6 +4,7 @@ import io.netty.buffer.Unpooled;
 import mchorse.aperture.network.common.PacketCameraState;
 import mchorse.mappet.api.scripts.code.ScriptResourcePack;
 import mchorse.mappet.api.scripts.code.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.entities.utils.ClientSettings;
 import mchorse.mappet.api.scripts.code.items.ScriptInventory;
 import mchorse.mappet.api.scripts.code.mappet.MappetQuests;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
@@ -12,6 +13,7 @@ import mchorse.mappet.api.scripts.code.score.ScriptScoreboard;
 import mchorse.mappet.api.scripts.code.score.ScriptTeam;
 import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.scripts.code.ui.MappetUIContext;
+import mchorse.mappet.api.scripts.user.entities.IClientSettings;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.items.IScriptInventory;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
@@ -25,7 +27,7 @@ import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.utils.SkinUtils;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
-import mchorse.mappet.client.gui.utils.GuiWebUtils;
+import mchorse.mappet.client.gui.utils.SafeWebLinkOpener;
 import mchorse.mappet.entities.utils.WalkSpeedManager;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.common.PacketBlackAndWhiteShader;
@@ -310,8 +312,8 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     }
 
     @Override
-    public void openLink(String url){
-        GuiWebUtils.requestToOpenWebLink(url, entity);
+    public void openLink(String url) {
+        SafeWebLinkOpener.requestToOpenWebLink(url, entity);
     }
 
     /* XP methods */
@@ -460,8 +462,13 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     }
 
     @Override
-    public int getPing(){
+    public int getPing() {
         return entity.ping;
+    }
+
+    @Override
+    public IClientSettings getSettings() {
+        return new ClientSettings(asMinecraft());
     }
 
     /* Sounds */
@@ -528,7 +535,8 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     public boolean setMorph(AbstractMorph morph) {
         if (morph == null) {
             MorphAPI.demorph(this.entity);
-        } else {
+        }
+        else {
             MorphAPI.morph(this.entity, morph, true);
         }
 

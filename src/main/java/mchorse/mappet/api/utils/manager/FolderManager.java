@@ -1,66 +1,52 @@
 package mchorse.mappet.api.utils.manager;
 
-import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.utils.AbstractData;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Folder based manager
  */
-public abstract class FolderManager <T extends AbstractData> implements IManager<T>
-{
-    protected Map<String, ManagerCache> cache = new HashMap<String, ManagerCache>();
+public abstract class FolderManager<T extends AbstractData> implements IManager<T> {
+    protected Map<String, ManagerCache> cache = new HashMap<>();
     protected File folder;
     protected long lastCheck;
 
-    public FolderManager(File folder)
-    {
-        if (folder != null)
-        {
+    public FolderManager(File folder) {
+        if (folder != null) {
             this.folder = folder;
             this.folder.mkdirs();
         }
     }
 
-    protected void doExpirationCheck()
-    {
+    protected void doExpirationCheck() {
         final int threshold = 1000 * 30;
         long current = System.currentTimeMillis();
 
         /* Check every 30 seconds all cached entries and remove those that weren't used in
          * last 30 seconds */
-        if (current - this.lastCheck > threshold)
-        {
-            this.cache.values().removeIf((cache) -> current - cache.lastUsed > threshold);
+        if (current - lastCheck > threshold) {
+            cache.values().removeIf((cache) -> current - cache.lastUsed > threshold);
 
-            this.lastCheck = current;
+            lastCheck = current;
         }
     }
 
     @Override
-    public boolean exists(String name)
-    {
-        return this.getFile(name).exists();
+    public boolean exists(String name) {
+        return getFile(name).exists();
     }
 
     @Override
-    public boolean rename(String id, String newId)
-    {
-        File file = this.getFile(id);
+    public boolean rename(String id, String newId) {
+        File file = getFile(id);
 
-        if (file != null && file.exists())
-        {
-            if (file.renameTo(this.getFile(newId)))
-            {
-                if (Mappet.generalDataCaching.get())
-                {
-                    this.cache.put(newId, this.cache.remove(id));
+        if (file != null && file.exists()) {
+            if (file.renameTo(getFile(newId))) {
+                if (MappetConfig.generalDataCaching.get()) {
+                    cache.put(newId, cache.remove(id));
                 }
 
                 return true;
@@ -71,13 +57,11 @@ public abstract class FolderManager <T extends AbstractData> implements IManager
     }
 
     @Override
-    public boolean delete(String name)
-    {
-        File file = this.getFile(name);
+    public boolean delete(String name) {
+        File file = getFile(name);
 
-        if (file != null && file.delete())
-        {
-            this.cache.remove(name);
+        if (file != null && file.delete()) {
+            cache.remove(name);
 
             return true;
         }
@@ -86,66 +70,57 @@ public abstract class FolderManager <T extends AbstractData> implements IManager
     }
 
     @Override
-    public Collection<String> getKeys()
-    {
-        Set<String> set = new HashSet<String>();
+    public Collection<String> getKeys() {
+        Set<String> set = new HashSet<>();
 
-        if (this.folder == null)
-        {
+        if (folder == null) {
             return set;
         }
 
-        this.recursiveFind(set, this.folder, "");
+        recursiveFind(set, folder, "");
 
         return set;
     }
 
-    protected void recursiveFind(Set<String> set, File folder, String prefix)
-    {
-        for (File file : folder.listFiles())
-        {
+    protected void recursiveFind(Set<String> set, File folder, String prefix) {
+        File[] files = folder.listFiles();
+        if(files == null) return;
+        for (File file : files) {
             String name = file.getName();
 
-            if (file.isFile() && name.endsWith(".json"))
-            {
+            if (file.isFile() && name.endsWith(".json")) {
                 set.add(prefix + name.replace(".json", ""));
             }
-            else if (file.isDirectory())
-            {
-                if (file.listFiles().length > 0)
-                {
-                    this.recursiveFind(set, file, prefix + name + "/");
+            else if (file.isDirectory()) {
+                File[] subFiles = file.listFiles();
+                if(subFiles == null) continue;
+                if (subFiles.length > 0) {
+                    recursiveFind(set, file, prefix + name + "/");
                 }
-                else
-                {
+                else {
                     set.add(prefix + name + "/");
                 }
             }
         }
     }
 
-    protected boolean isData(File file)
-    {
-        return file.getName().endsWith(this.getExtension());
+    protected boolean isData(File file) {
+        return file.getName().endsWith(getExtension());
     }
 
-    public File getFile(String name)
-    {
-        if (this.folder == null)
-        {
+    public File getFile(String name) {
+        if (folder == null) {
             return null;
         }
 
-        return new File(this.folder, name + this.getExtension());
+        return new File(folder, name + getExtension());
     }
 
-    public File getFolder()
-    {
-        return this.folder;
+    public File getFolder() {
+        return folder;
     }
 
-    protected String getExtension()
-    {
+    protected String getExtension() {
         return ".json";
     }
 }

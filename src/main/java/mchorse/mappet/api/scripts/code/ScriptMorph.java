@@ -8,7 +8,7 @@ public class ScriptMorph {
     AbstractMorph morph;
 
     public ScriptMorph(INBTCompound compound) {
-        morph = MorphManager.INSTANCE.morphFromNBT(compound.getNBTTagCompound());
+        morph = MorphManager.INSTANCE.morphFromNBT(compound.asMinecraft());
     }
 
     public AbstractMorph getMinecraftMorph() {

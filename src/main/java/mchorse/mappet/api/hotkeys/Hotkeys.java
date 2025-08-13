@@ -16,9 +16,9 @@ public class Hotkeys implements INBTSerializable<NBTTagList> {
 
     public void execute(EntityPlayer player, Set<HotkeyState> hotkeyStates) {
         for (HotkeyState hotkeyState : hotkeyStates) {
-            Hotkey hotkey = keys.get(hotkeyState.name);
+            Hotkey hotkey = keys.get(hotkeyState.id);
             if (hotkey != null) hotkey.execute(new DataContext(player)
-                    .set("keyName", hotkey.name)
+                    .set("keyId", hotkey.id)
                     .set("keyMode", hotkey.mode.ordinal())
                     .set("keyState", hotkeyState.state ? 1 : 0));
         }
@@ -41,7 +41,7 @@ public class Hotkeys implements INBTSerializable<NBTTagList> {
             if (nbt.getId() != 10) continue;
             Hotkey hotkey = new Hotkey();
             hotkey.deserializeNBT((NBTTagCompound) nbt);
-            keys.put(hotkey.name, hotkey);
+            keys.put(hotkey.id, hotkey);
         }
     }
 }

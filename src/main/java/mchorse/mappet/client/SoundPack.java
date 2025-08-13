@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.mappet.CommonProxy;
-import mchorse.mappet.utils.Utils;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.MetadataSerializer;
@@ -19,6 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +44,7 @@ public class SoundPack implements IResourcePack {
 
         if (path.equals("sounds.json")) {
             JsonObject object = generateJson(folder, new JsonObject());
-            return IOUtils.toInputStream(object.toString(), Utils.getCharset());
+            return IOUtils.toInputStream(object.toString(), StandardCharsets.UTF_8);
         }
 
         File file = new File(folder, path.substring(7));
@@ -73,7 +73,8 @@ public class SoundPack implements IResourcePack {
                 elements.add("mp.sounds:" + id);
                 sound.add("sounds", elements);
                 object.add(id, sound);
-            } else if (file.isDirectory()) {
+            }
+            else if (file.isDirectory()) {
                 generateJson(file, object, parent + name + ".");
             }
         }

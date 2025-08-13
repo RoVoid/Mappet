@@ -2,6 +2,7 @@ package mchorse.mappet.client.gui.hotkey;
 
 import mchorse.mappet.api.hotkeys.Hotkey;
 import mchorse.mappet.client.KeyboardHandler;
+import mchorse.mappet.client.gui.utils.AlphaNumericLengthComparator;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
@@ -29,7 +30,7 @@ public class GuiClientHotkeyScreen extends GuiBase {
         keybinds = new GuiScrollElement(mc);
 
         List<Hotkey> list = new ArrayList<>(KeyboardHandler.hotkeys.values());
-        list.sort(Comparator.comparingInt((Hotkey h) -> h.name.length()).thenComparing(h -> h.name, String.CASE_INSENSITIVE_ORDER));
+        list.sort(Comparator.comparing((Hotkey h) -> h.name, new AlphaNumericLengthComparator()));
         for (Hotkey hotkey : list) {
             keybinds.add(new GuiHotkeyElement(mc, hotkey));
         }

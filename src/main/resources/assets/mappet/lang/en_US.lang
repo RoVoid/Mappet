@@ -134,6 +134,8 @@ mappet.config.general.load_custom_sounds_on_login=Reload all custom sounds on lo
 mappet.config.comments.general.load_custom_sounds_on_login=When enabled, reloads all custom sounds when the player logs in
 mappet.config.general.immediately_open_link=Open links immediately
 mappet.config.comments.general.immediately_open_link=Immediately opens links sent from the server
+mappet.config.general.deny_client_setting_changes=Deviation of client settings from server
+mappet.config.comments.general.deny_client_setting_changes=The client will reject changes in the settings from the server, such as fov, showing a subtitle, keys, etc.
 
 mappet.config.npc.title=NPCs
 mappet.config.npc.tooltip=Mod options related to NPCs
@@ -228,6 +230,7 @@ mappet.gui.panels.chains=Quest chains
 mappet.gui.panels.scripts=Scripts
 mappet.gui.panels.huds=HUD scenes
 mappet.gui.panels.logs=Logs
+mappet.gui.panels.snippets=Snippets
 mappet.gui.panels.modals.add=Type in a name:
 mappet.gui.panels.modals.dupe=Type in a new name for a duplicate:
 mappet.gui.panels.modals.rename=Type in a new name:
@@ -453,12 +456,12 @@ mappet.gui.nodes.info.empty_nodes=Right click here, and add a node, to start wor
 
 mappet.gui.hotkeys.title=Trigger hotkeys editor
 mappet.gui.hotkeys.name=Hotkey Id
+mappet.gui.hotkeys.id=Hotkey display name
 mappet.gui.hotkeys.key=Keybind
-mappet.gui.hotkeys.mode=Active Mode
+mappet.gui.hotkeys.mode=Activating Mode
 mappet.gui.hotkeys.mode.down_and_up=Down & Up
 mappet.gui.hotkeys.mode.down=Down
 mappet.gui.hotkeys.mode.up=Up
-mappet.gui.hotkeys.mode_tooltip=...?
 mappet.gui.hotkeys.enabled=Enabled
 mappet.gui.hotkeys.context.add=Add a trigger hotkey
 mappet.gui.hotkeys.context.remove=Remove this trigger hotkey
@@ -809,9 +812,19 @@ tile.mappet.condition_model.tooltip=Shows the player different morphs depending 
 
 entity.mappet.npc.name=Mappet NPC
 
-mappet.translation.credit=Mappet by McHorse, special thanks goes to Andruxioid, Centryfuga and Jvonlins
+mappet.translation.credit=MappetR by RoVoid, special thanks goes to McHorse
 mappet.translation.wiki=Wiki
 mappet.translation.wiki_url=https://github.com/mchorse/mappet/wiki
 mappet.translation.community=Discord
 mappet.translation.community_url=https://discord.gg/QhvbgSWpYn
 mappet.translation.sounds=Open sounds folder
+
+mappet.snippet.author=§7%s §7(unknown author)
+mappet.snippet.author.iron=§r%s §7(§riron §7author)
+mappet.snippet.author.gold=§e%s §7(§egold §7author)
+mappet.snippet.author.diamond=§b%s §7(§bdiamond §7author)
+mappet.snippet.author.emerald=§a%s §7(§aemerald §7author)
+mappet.snippet.author.obsidian=§5%s §7(§5obsidian §7author)
+mappet.snippet.url=§rYou can visit §9§n%s
+mappet.snippet.version=§6Snippet §rfor §dMappet %s
+mappet.snippet.version.mismatched=§6Snippet §rfor §dMappet %s §7(mismatch with your)

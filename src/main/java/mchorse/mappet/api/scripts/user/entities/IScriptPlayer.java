@@ -653,6 +653,8 @@ public interface IScriptPlayer extends IScriptEntity {
 
     int getPing();
 
+    IClientSettings getSettings();
+
     /**
      * Play a sound event only to this player with volume and pitch.
      *

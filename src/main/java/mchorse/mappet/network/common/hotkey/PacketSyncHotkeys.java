@@ -22,7 +22,7 @@ public class PacketSyncHotkeys implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         for (int i = 0, c = buf.readInt(); i < c; i++) {
-            hotkeys.add(new Hotkey(ByteBufUtils.readUTF8String(buf), buf.readInt(), buf.readInt()));
+            hotkeys.add(new Hotkey(ByteBufUtils.readUTF8String(buf), ByteBufUtils.readUTF8String(buf), buf.readInt(), buf.readInt()));
         }
     }
 
@@ -30,6 +30,7 @@ public class PacketSyncHotkeys implements IMessage {
     public void toBytes(ByteBuf buf) {
         buf.writeInt(hotkeys.size());
         for (Hotkey hotkey : hotkeys) {
+            ByteBufUtils.writeUTF8String(buf, hotkey.id);
             ByteBufUtils.writeUTF8String(buf, hotkey.name);
             buf.writeInt(hotkey.defaultKeycode);
             buf.writeInt(hotkey.mode.ordinal());

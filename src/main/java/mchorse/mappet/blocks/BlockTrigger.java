@@ -2,6 +2,7 @@ package mchorse.mappet.blocks;
 
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.utils.DataContext;
+import mchorse.mappet.items.ModItems;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.common.blocks.PacketEditTrigger;
 import mchorse.mappet.tile.TileTrigger;
@@ -40,11 +41,11 @@ public class BlockTrigger extends Block implements ITileEntityProvider {
 
     public BlockTrigger() {
         super(Material.ROCK);
-        this.setCreativeTab(Mappet.creativeTab);
-        this.setBlockUnbreakable();
-        this.setResistance(6000000.0F);
-        this.setRegistryName(new ResourceLocation(Mappet.MOD_ID, "trigger"));
-        this.setUnlocalizedName(Mappet.MOD_ID + ".trigger");
+        setCreativeTab(ModItems.creativeTab);
+        setBlockUnbreakable();
+        setResistance(6000000.0F);
+        setRegistryName(new ResourceLocation(Mappet.MOD_ID, "trigger"));
+        setUnlocalizedName(Mappet.MOD_ID + ".trigger");
     }
 
     @Override
@@ -86,7 +87,8 @@ public class BlockTrigger extends Block implements ITileEntityProvider {
         if (playerIn.isCreative() && !playerIn.isSneaking()) {
             if (server != null && server.getPlayerList().canSendCommands(playerIn.getGameProfile()))
                 Dispatcher.sendTo(new PacketEditTrigger(trigger), (EntityPlayerMP) playerIn);
-        } else {
+        }
+        else {
             trigger.rightClick.trigger(new DataContext(playerIn)
                     .set("x", pos.getX())
                     .set("y", pos.getY())
@@ -104,7 +106,7 @@ public class BlockTrigger extends Block implements ITileEntityProvider {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(COLLIDABLE, meta == 1);
+        return getDefaultState().withProperty(COLLIDABLE, meta == 1);
     }
 
     @Override

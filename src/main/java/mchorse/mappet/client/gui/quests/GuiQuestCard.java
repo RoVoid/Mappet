@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.quests;
 
-import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.dialogues.DialogueFragment;
 import mchorse.mappet.api.quests.Quest;
 import mchorse.mappet.api.quests.Quests;
@@ -20,27 +20,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 
-public class GuiQuestCard
-{
-    public static void fillQuest(GuiElement element, Quest quest, boolean forceReward, boolean displayVisibility)
-    {
+public class GuiQuestCard {
+    public static void fillQuest(GuiElement element, Quest quest, boolean forceReward, boolean displayVisibility) {
         Minecraft mc = Minecraft.getMinecraft();
         Quests quests = Character.get(mc.player).getQuests();
         Quest playerQuest = quests.getByName(quest.getId());
         Quest characterQuest = playerQuest == null ? quest : playerQuest;
         String title = characterQuest.getProcessedTitle();
 
-        if (mc.player.isCreative())
-        {
+        if (mc.player.isCreative()) {
             title += TextFormatting.GRAY + " (" + characterQuest.getId() + ")";
         }
 
         element.add(Elements.label(IKey.str(title)).background().marginBottom(12));
 
-        if (displayVisibility)
-        {
-            element.add(new GuiToggleElement(mc, IKey.lang("mappet.gui.quests.visible"), characterQuest.visible, (b) ->
-            {
+        if (displayVisibility) {
+            element.add(new GuiToggleElement(mc, IKey.lang("mappet.gui.quests.visible"), characterQuest.visible, (b) -> {
                 Dispatcher.sendToServer(new PacketQuestVisibility(characterQuest.getId(), characterQuest, b.isToggled()));
                 characterQuest.visible = b.isToggled();
             }));
@@ -51,36 +46,26 @@ public class GuiQuestCard
 
         StringBuilder objectives = new StringBuilder();
 
-        for (AbstractObjective objective : characterQuest.objectives)
-        {
-            objectives.append(IKey.str("- " + objective.stringify(mc.player)).toString() + "\n");
+        for (AbstractObjective objective : characterQuest.objectives) {
+            objectives.append(IKey.str("- " + objective.stringify(mc.player))).append("\n");
         }
 
         element.add(new GuiText(mc).text(objectives.toString()).color(0xaaaaaa, true));
 
-        if (!Mappet.questsPreviewRewards.get() && !forceReward)
-        {
-            return;
-        }
+        if (!MappetConfig.questsPreviewRewards.get() && !forceReward) return;
 
-        if (characterQuest.rewards.isEmpty())
-        {
-            return;
-        }
+        if (characterQuest.rewards.isEmpty()) return;
 
         element.add(Elements.label(IKey.lang("mappet.gui.quests.rewards.title")).marginTop(12));
 
-        for (IReward reward : characterQuest.rewards)
-        {
-            if (reward instanceof ItemStackReward)
-            {
+        for (IReward reward : characterQuest.rewards) {
+            if (reward instanceof ItemStackReward) {
                 ItemStackReward stack = (ItemStackReward) reward;
                 GuiElement stacks = new GuiElement(mc);
 
                 stacks.flex().h(24).grid(5).resizes(false).width(24);
 
-                for (ItemStack item : stack.stacks)
-                {
+                for (ItemStack item : stack.stacks) {
                     GuiSlotElement slot = new GuiSlotElement(mc, 0, null);
 
                     slot.setEnabled(false);

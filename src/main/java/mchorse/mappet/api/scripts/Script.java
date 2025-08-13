@@ -9,7 +9,6 @@ import mchorse.mappet.api.utils.AbstractData;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.events.RegisterScriptVariablesEvent;
 import mchorse.mappet.utils.ScriptUtils;
-import mchorse.mappet.utils.Utils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -166,7 +165,7 @@ public class Script extends AbstractData {
                 Mappet.logger.error("[Mappet] Didn't find " + library + ".js");
                 return total;
             }
-            String code = FileUtils.readFileToString(scriptFile, Utils.getCharset());
+            String code = FileUtils.readFileToString(scriptFile, StandardCharsets.UTF_8);
 
             finalCode.append(code);
             finalCode.append("\n");

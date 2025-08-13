@@ -30,7 +30,7 @@ public class PacketTriggeredHotkeys implements IMessage {
     @Override
     public void toBytes(ByteBuf buf) {
         for (HotkeyState hotkey : hotkeys) {
-            ByteBufUtils.writeUTF8String(buf, hotkey.name);
+            ByteBufUtils.writeUTF8String(buf, hotkey.id);
             buf.writeBoolean(hotkey.state);
         }
     }

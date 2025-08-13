@@ -83,7 +83,7 @@ public class TriggerEventHandler {
     public void onAnyEvent(Event event) {
         MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
 
-        if (server == null || Mappet.settings == null || !Mappet.enableForgeTriggers.get()) return;
+        if (server == null || Mappet.settings == null || !MappetConfig.enableForgeTriggers.get()) return;
 
         if (event instanceof TickEvent && ((TickEvent) event).side == Side.CLIENT) return;
         if (event instanceof EntityEvent && (((EntityEvent) event).getEntity() == null || ((EntityEvent) event).getEntity().world.isRemote))
@@ -102,7 +102,7 @@ public class TriggerEventHandler {
     }
 
     public static Set<Class<? extends Event>> getRegisteredEvents() {
-        if (!Mappet.enableForgeTriggers.get()) return new HashSet<>();
+        if (!MappetConfig.enableForgeTriggers.get()) return new HashSet<>();
         if (registeredEvents == null || registeredEvents.isEmpty()) {
             registeredEvents = new Reflections()
                     .getSubTypesOf(Event.class)
@@ -215,7 +215,7 @@ public class TriggerEventHandler {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onPlayerLeftClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
-        if (!event.getEntityPlayer().world.isRemote || shouldSkipTrigger(Mappet.settings.playerLeftClick)) return;
+        if (!event.getEntityPlayer().world.isRemote) return;
         Dispatcher.sendToServer(new PacketClick());
     }
 
@@ -223,7 +223,6 @@ public class TriggerEventHandler {
     @SideOnly(Side.CLIENT)
     public void onPlayerRightClickEmpty(PlayerInteractEvent.RightClickEmpty event) {
         if (!event.getEntityPlayer().world.isRemote || event.getHand() == EnumHand.OFF_HAND) return;
-        if (shouldSkipTrigger(Mappet.settings.playerRightClick)) return;
         Dispatcher.sendToServer(new PacketClick(1));
     }
 

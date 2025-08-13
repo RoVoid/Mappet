@@ -8,17 +8,16 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * NBT to JSON-like utility
- *
+ * <p>
  * This is successor of {@link NBTToJsonLike} which is better because
  * it also stores the data type of the
  */
-public class NBTToJsonLike
-{
-    public static String toJson(NBTBase base)
-    {
+public class NBTToJsonLike {
+    public static String toJson(NBTBase base) {
         return toJson(base, new StringBuilder(), "").toString();
     }
 
@@ -26,23 +25,19 @@ public class NBTToJsonLike
      * Write given NBT base element to JSON like format (which
      * preserves NBT data types)
      */
-    public static StringBuilder toJson(NBTBase base, StringBuilder builder, String indent)
-    {
-        if (base instanceof NBTTagList)
-        {
+    public static StringBuilder toJson(NBTBase base, StringBuilder builder, String indent) {
+        if (base instanceof NBTTagList) {
             NBTTagList list = (NBTTagList) base;
 
             builder.append("[\n");
 
-            for (int i = 0; i < list.tagCount(); i++)
-            {
+            for (int i = 0; i < list.tagCount(); i++) {
                 builder.append(indent);
                 builder.append("    ");
 
                 toJson(list.get(i), builder, indent + "    ");
 
-                if (i < list.tagCount() - 1)
-                {
+                if (i < list.tagCount() - 1) {
                     builder.append(",");
                 }
 
@@ -52,16 +47,14 @@ public class NBTToJsonLike
             builder.append(indent);
             builder.append("]");
         }
-        else if (base instanceof NBTTagCompound)
-        {
+        else if (base instanceof NBTTagCompound) {
             NBTTagCompound tag = (NBTTagCompound) base;
 
             builder.append("{\n");
 
             int i = 0;
 
-            for (String key : tag.getKeySet())
-            {
+            for (String key : tag.getKeySet()) {
                 builder.append(indent);
                 builder.append("    \"");
                 builder.append(key);
@@ -69,8 +62,7 @@ public class NBTToJsonLike
 
                 toJson(tag.getTag(key), builder, indent + "    ");
 
-                if (i < tag.getSize() - 1)
-                {
+                if (i < tag.getSize() - 1) {
                     builder.append(",");
                 }
 
@@ -82,8 +74,7 @@ public class NBTToJsonLike
             builder.append(indent);
             builder.append("}");
         }
-        else
-        {
+        else {
             builder.append(base.toString());
         }
 
@@ -93,14 +84,10 @@ public class NBTToJsonLike
     /**
      * From JSON (but it can only do a NBT tag compound)
      */
-    public static NBTTagCompound fromJson(String json)
-    {
-        try
-        {
+    public static NBTTagCompound fromJson(String json) {
+        try {
             return JsonToNBT.getTagFromJson(json);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -110,17 +97,15 @@ public class NBTToJsonLike
     /**
      * Write NBT tag compound into a file
      */
-    public static void write(File file, NBTTagCompound tag) throws IOException
-    {
-        FileUtils.writeStringToFile(file, NBTToJsonLike.toJson(tag), Utils.getCharset());
+    public static void write(File file, NBTTagCompound tag) throws IOException {
+        FileUtils.writeStringToFile(file, NBTToJsonLike.toJson(tag), StandardCharsets.UTF_8);
     }
 
     /**
      * Read NBT tag compound out of file
      */
-    public static NBTTagCompound read(File file) throws IOException
-    {
-        String json = FileUtils.readFileToString(file, Utils.getCharset());
+    public static NBTTagCompound read(File file) throws IOException {
+        String json = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 
         return NBTToJsonLike.fromJson(json);
     }

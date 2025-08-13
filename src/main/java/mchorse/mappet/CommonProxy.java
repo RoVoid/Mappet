@@ -119,11 +119,11 @@ public class CommonProxy {
 
         /* Register dialogue nodes */
         MapFactory<EventBaseNode> dialogueNodes = eventNodes.copy()
-                .register("reply", ReplyNode.class, Colors.REPLY)
-                .register("reaction", ReactionNode.class, Colors.STATE)
-                .register("quest_chain", QuestChainNode.class, Colors.QUEST)
-                .register("quest", QuestDialogueNode.class, Colors.QUEST)
-                .unregister("timer");
+                                                            .register("reply", ReplyNode.class, Colors.REPLY)
+                                                            .register("reaction", ReactionNode.class, Colors.STATE)
+                                                            .register("quest_chain", QuestChainNode.class, Colors.QUEST)
+                                                            .register("quest", QuestDialogueNode.class, Colors.QUEST)
+                                                            .unregister("timer");
 
         dialogues = dialogueNodes;
         Mappet.EVENT_BUS.post(new RegisterDialogueNodeEvent(dialogueNodes));
@@ -170,6 +170,7 @@ public class CommonProxy {
                 .register("graphics", UIGraphicsComponent.class, 0xffffff)
                 .register("button", UIButtonComponent.class, 0xffffff)
                 .register("icon", UIIconButtonComponent.class, 0xffffff)
+                .register("keybind", UIKeybindComponent.class, 0xffffff)
                 .register("label", UILabelComponent.class, 0xffffff)
                 .register("text", UITextComponent.class, 0xffffff)
                 .register("textbox", UITextboxComponent.class, 0xffffff)

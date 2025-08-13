@@ -1,22 +1,8 @@
 package mchorse.mappet.api.scripts.user.ui;
 
+import mchorse.mappet.api.scripts.code.ui.*;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
-import mchorse.mappet.api.scripts.code.ui.UIButtonComponent;
-import mchorse.mappet.api.scripts.code.ui.UIClickComponent;
-import mchorse.mappet.api.scripts.code.ui.UIComponent;
-import mchorse.mappet.api.scripts.code.ui.UIGraphicsComponent;
-import mchorse.mappet.api.scripts.code.ui.UIIconButtonComponent;
-import mchorse.mappet.api.scripts.code.ui.UILabelComponent;
-import mchorse.mappet.api.scripts.code.ui.UILayoutComponent;
-import mchorse.mappet.api.scripts.code.ui.UIMorphComponent;
-import mchorse.mappet.api.scripts.code.ui.UIStackComponent;
-import mchorse.mappet.api.scripts.code.ui.UIStringListComponent;
-import mchorse.mappet.api.scripts.code.ui.UITextComponent;
-import mchorse.mappet.api.scripts.code.ui.UITextareaComponent;
-import mchorse.mappet.api.scripts.code.ui.UITextboxComponent;
-import mchorse.mappet.api.scripts.code.ui.UIToggleComponent;
-import mchorse.mappet.api.scripts.code.ui.UITrackpadComponent;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 
 import java.util.List;
@@ -145,6 +131,8 @@ public interface IMappetUIBuilder
      * <p>Check {@link UIIconButtonComponent} for description and examples.</p>
      */
     public UIIconButtonComponent icon(String icon);
+
+    UIKeybindComponent keybind(int keycode);
 
     /**
      * Create and insert a label UI component into UI being built by this builder.

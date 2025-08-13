@@ -30,6 +30,7 @@ public class MPIcons {
     public static final String PLANET = "planet";
     public static final String KEYBOARD = "keyboard";
     public static final String ANVIL = "anvil";
+    public static final String GLASSES = "glasses";
 
     public static List<String> getAllNames() {
         return new ArrayList<>(IconRegistry.icons.keySet());

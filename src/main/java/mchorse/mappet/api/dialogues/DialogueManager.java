@@ -2,6 +2,7 @@ package mchorse.mappet.api.dialogues;
 
 import mchorse.mappet.CommonProxy;
 import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.dialogues.nodes.ReactionNode;
 import mchorse.mappet.api.events.nodes.EventBaseNode;
 import mchorse.mappet.api.quests.Quest;
@@ -44,7 +45,7 @@ public class DialogueManager extends BaseManager<Dialogue> {
             Mappet.dialogues.execute(dialogue, context);
 
             if (context.reactionNode != null) {
-                this.handleContext(player, dialogue, context, null);
+                handleContext(player, dialogue, context, null);
             }
         }
     }
@@ -54,7 +55,10 @@ public class DialogueManager extends BaseManager<Dialogue> {
             WorldUtils.stopSound(player, last.sound);
         }
 
-        List<DialogueFragment> replies = context.replyNodes.stream().map((r) -> r.message.copy().process(context.data)).collect(Collectors.toList());
+        List<DialogueFragment> replies = context.replyNodes
+                .stream()
+                .map((r) -> r.message.copy().process(context.data))
+                .collect(Collectors.toList());
         DialogueFragment reaction = context.reactionNode == null ? new DialogueFragment() : context.reactionNode.message.copy();
 
         reaction.process(context.data);
@@ -80,7 +84,8 @@ public class DialogueManager extends BaseManager<Dialogue> {
 
                 packet.addQuest(new QuestInfo(quest, status));
             }
-        } else if (context.questChain != null) {
+        }
+        else if (context.questChain != null) {
             packet.addQuests(Mappet.chains.evaluate(context.questChain.chain, player, context.data.process(context.questChain.subject)));
         }
 
@@ -99,16 +104,14 @@ public class DialogueManager extends BaseManager<Dialogue> {
 
     public DialogueContext execute(Dialogue event, DialogueContext context) {
         if (event.main != null) {
-            this.recursiveExecute(event, event.main, context, false);
+            recursiveExecute(event, event.main, context, false);
         }
 
         return context;
     }
 
     public void recursiveExecute(Dialogue system, EventBaseNode node, DialogueContext context, boolean skipFirst) {
-        if (context.executions >= Mappet.eventMaxExecutions.get()) {
-            return;
-        }
+        if (context.executions >= MappetConfig.eventMaxExecutions.get()) return;
 
         int result = skipFirst ? EventBaseNode.ALL : node.execute(context);
 
@@ -119,10 +122,11 @@ public class DialogueManager extends BaseManager<Dialogue> {
 
             if (result == EventBaseNode.ALL) {
                 for (EventBaseNode child : children) {
-                    this.recursiveExecute(system, child, context, false);
+                    recursiveExecute(system, child, context, false);
                 }
-            } else if (result <= children.size()) {
-                this.recursiveExecute(system, children.get(result - 1), context, false);
+            }
+            else if (result <= children.size()) {
+                recursiveExecute(system, children.get(result - 1), context, false);
             }
 
             context.nesting -= 1;

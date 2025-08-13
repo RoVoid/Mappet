@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.nodes;
 
-import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.utils.factory.IFactory;
 import mchorse.mappet.api.utils.nodes.Node;
 import mchorse.mappet.api.utils.nodes.NodeRelation;
@@ -29,35 +29,23 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTException;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.*;
 import net.minecraftforge.common.util.Constants;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import javax.vecmath.Vector2d;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class GuiNodeGraph <T extends Node> extends GuiCanvas
-{
+public class GuiNodeGraph<T extends Node> extends GuiCanvas {
     public static final IKey KEYS_CATEGORY = IKey.lang("mappet.gui.nodes.keys.editor");
     public static final IKey ADD_CATEGORY = IKey.lang("mappet.gui.nodes.keys.add");
 
     public NodeSystem<T> system;
 
-    private List<T> selected = new ArrayList<T>();
+    private final List<T> selected = new ArrayList<>();
     private boolean lastSelected;
     private boolean selecting;
     private int lastNodeX;
@@ -66,58 +54,50 @@ public class GuiNodeGraph <T extends Node> extends GuiCanvas
     private T output;
     private T input;
 
-    private Color a = new Color();
-    private Color b = new Color();
+    private final Color a = new Color();
+    private final Color b = new Color();
 
     private boolean notifyAboutMain;
     private long tick;
     private int average;
     private int prevAverage;
 
-    private Consumer<T> callback;
+    private final Consumer<T> callback;
 
-    public GuiNodeGraph(Minecraft mc, IFactory<T> factory, Consumer<T> callback)
-    {
+    public GuiNodeGraph(Minecraft mc, IFactory<T> factory, Consumer<T> callback) {
         super(mc);
 
         this.callback = callback;
 
-        this.context(() ->
-        {
+        context(() -> {
             GuiSimpleContextMenu menu = new GuiSimpleContextMenu(this.mc);
 
-            int x = (int) this.fromX(GuiBase.getCurrent().mouseX);
-            int y = (int) this.fromY(GuiBase.getCurrent().mouseY);
+            int x = (int) fromX(GuiBase.getCurrent().mouseX);
+            int y = (int) fromY(GuiBase.getCurrent().mouseY);
 
-            menu.action(Icons.ADD, IKey.lang("mappet.gui.nodes.context.add"), () ->
-            {
+            menu.action(Icons.ADD, IKey.lang("mappet.gui.nodes.context.add"), () -> {
                 GuiSimpleContextMenu adds = new GuiSimpleContextMenu(this.mc);
 
-                for (String key : this.system.getFactory().getKeys())
-                {
+                for (String key : system.getFactory().getKeys()) {
                     IKey label = IKey.format("mappet.gui.nodes.context.add_node", IKey.lang("mappet.gui.node_types." + key));
-                    int color = this.system.getFactory().getColor(key);
+                    int color = system.getFactory().getColor(key);
 
-                    adds.action(Icons.ADD, label, () -> this.addNode(key, x, y), color);
+                    adds.action(Icons.ADD, label, () -> addNode(key, x, y), color);
                 }
 
                 GuiBase.getCurrent().replaceContextMenu(adds);
             });
 
-            if (!this.selected.isEmpty())
-            {
+            if (!selected.isEmpty()) {
                 menu.action(Icons.COPY, IKey.lang("mappet.gui.nodes.context.copy"), this::copyNodes);
             }
 
-            try
-            {
-                this.addPaste(menu, x, y);
+            try {
+                addPaste(menu, x, y);
+            } catch (Exception ignored1) {
             }
-            catch (Exception e)
-            {}
 
-            if (!this.selected.isEmpty())
-            {
+            if (!selected.isEmpty()) {
                 menu.action(Icons.DOWNLOAD, IKey.lang("mappet.gui.nodes.context.main"), this::markMain);
                 menu.action(Icons.REVERSE, IKey.lang("mappet.gui.nodes.context.sort"), this::sortInputs);
                 menu.action(Icons.MINIMIZE, IKey.lang("mappet.gui.nodes.context.tie"), this::tieSelected);
@@ -128,63 +108,58 @@ public class GuiNodeGraph <T extends Node> extends GuiCanvas
             return menu;
         });
 
-        this.keys().register(IKey.lang("mappet.gui.nodes.context.tie"), Keyboard.KEY_F, this::tieSelected).inside().category(KEYS_CATEGORY);
-        this.keys().register(IKey.lang("mappet.gui.nodes.context.untie"), Keyboard.KEY_U, this::untieSelected).inside().category(KEYS_CATEGORY);
-        this.keys().register(IKey.lang("mappet.gui.nodes.context.main"), Keyboard.KEY_M, this::markMain).inside().category(KEYS_CATEGORY);
-        this.keys().register(IKey.lang("mappet.gui.nodes.context.sort"), Keyboard.KEY_C, this::sortInputs).inside().category(KEYS_CATEGORY);
+        keys().register(IKey.lang("mappet.gui.nodes.context.tie"), Keyboard.KEY_F, this::tieSelected).inside().category(KEYS_CATEGORY);
+        keys()
+                .register(IKey.lang("mappet.gui.nodes.context.untie"), Keyboard.KEY_U, this::untieSelected)
+                .inside()
+                .category(KEYS_CATEGORY);
+        keys().register(IKey.lang("mappet.gui.nodes.context.main"), Keyboard.KEY_M, this::markMain).inside().category(KEYS_CATEGORY);
+        keys().register(IKey.lang("mappet.gui.nodes.context.sort"), Keyboard.KEY_C, this::sortInputs).inside().category(KEYS_CATEGORY);
 
         int keycode = Keyboard.KEY_1;
 
-        for (String key : factory.getKeys())
-        {
-            Keybind keybind = this.keys().register(IKey.format("mappet.gui.nodes.context.add_node", IKey.lang("mappet.gui.node_types." + key)), keycode, () ->
-            {
-                GuiContext context = GuiBase.getCurrent();
+        for (String key : factory.getKeys()) {
+            Keybind keybind = keys()
+                    .register(IKey.format("mappet.gui.nodes.context.add_node", IKey.lang("mappet.gui.node_types." + key)), keycode, () -> {
+                        GuiContext context = GuiBase.getCurrent();
 
-                this.addNode(key, (int) this.fromX(context.mouseX), (int) this.fromY(context.mouseY));
-            });
+                        addNode(key, (int) fromX(context.mouseX), (int) fromY(context.mouseY));
+                    });
 
             keybind.inside().held(Keyboard.KEY_LCONTROL).category(ADD_CATEGORY);
             keycode += 1;
         }
     }
 
-    public GuiNodeGraph<T> notifyAboutMain()
-    {
-        this.notifyAboutMain = true;
+    public GuiNodeGraph<T> notifyAboutMain() {
+        notifyAboutMain = true;
 
         return this;
     }
 
     /* Copy/paste */
 
-    private void copyNodes()
-    {
+    private void copyNodes() {
         NBTTagCompound tag = new NBTTagCompound();
         NBTTagList list = new NBTTagList();
         NBTTagCompound relations = new NBTTagCompound();
 
-        for (T node : this.selected)
-        {
-            NBTTagCompound nodeTag = NodeUtils.nodeToNBT(this.system, node);
+        for (T node : selected) {
+            NBTTagCompound nodeTag = NodeUtils.nodeToNBT(system, node);
 
             list.appendTag(nodeTag);
 
-            List<T> children = this.system.getChildren(node);
+            List<T> children = system.getChildren(node);
 
-            for (T child : children)
-            {
-                if (this.selected.contains(child))
-                {
+            for (T child : children) {
+                if (selected.contains(child)) {
                     NBTTagList relation;
                     String key = node.getId().toString();
 
-                    if (relations.hasKey(key))
-                    {
+                    if (relations.hasKey(key)) {
                         relation = relations.getTagList(key, Constants.NBT.TAG_STRING);
                     }
-                    else
-                    {
+                    else {
                         relation = new NBTTagList();
                         relations.setTag(key, relation);
                     }
@@ -200,31 +175,28 @@ public class GuiNodeGraph <T extends Node> extends GuiCanvas
         GuiScreen.setClipboardString(tag.toString());
     }
 
-    private void addPaste(GuiSimpleContextMenu menu, int x, int y) throws NBTException
-    {
+    private void addPaste(GuiSimpleContextMenu menu, int x, int y) throws NBTException {
         String json = GuiScreen.getClipboardString();
 
         NBTTagCompound tag = JsonToNBT.getTagFromJson(json);
 
-        if (!tag.getBoolean("_CopyNodes"))
-        {
+        if (!tag.getBoolean("_CopyNodes")) {
             return;
         }
 
         NBTTagList nodesTag = tag.getTagList("Nodes", Constants.NBT.TAG_COMPOUND);
         NBTTagCompound relationsTag = tag.getCompoundTag("Relations");
 
-        List<T> nodes = new ArrayList<T>();
-        Map<String, T> mapping = new HashMap<String, T>();
+        List<T> nodes = new ArrayList<>();
+        Map<String, T> mapping = new HashMap<>();
 
-        for (int i = 0; i < nodesTag.tagCount(); i++)
-        {
+        for (int i = 0; i < nodesTag.tagCount(); i++) {
             NBTTagCompound nodeTag = nodesTag.getCompoundTagAt(i);
             String id = nodeTag.getString("Id");
 
             nodeTag.removeTag("Id");
 
-            T node = NodeUtils.nodeFromNBT(this.system, nodeTag);
+            T node = NodeUtils.nodeFromNBT(system, nodeTag);
 
             mapping.put(id, node);
             nodes.add(node);
@@ -233,32 +205,27 @@ public class GuiNodeGraph <T extends Node> extends GuiCanvas
         int nx = nodes.get(0).x;
         int ny = nodes.get(0).y;
 
-        menu.action(Icons.PASTE, IKey.lang("mappet.gui.nodes.context.paste"), () ->
-        {
-            this.selected.clear();
+        menu.action(Icons.PASTE, IKey.lang("mappet.gui.nodes.context.paste"), () -> {
+            selected.clear();
 
-            for (T node : nodes)
-            {
-                this.system.add(node);
+            for (T node : nodes) {
+                system.add(node);
 
                 node.x = node.x - nx + x;
                 node.y = node.y - ny + y;
 
-                this.select(node, true);
+                select(node, true);
             }
 
-            for (String key : relationsTag.getKeySet())
-            {
+            for (String key : relationsTag.getKeySet()) {
                 NBTTagList relations = relationsTag.getTagList(key, Constants.NBT.TAG_STRING);
                 T output = mapping.get(key);
 
-                for (NBTBase base : relations)
-                {
+                for (NBTBase base : relations) {
                     T input = mapping.get(((NBTTagString) base).getString());
 
-                    if (output != null && input != null)
-                    {
-                        this.system.tie(output, input);
+                    if (output != null && input != null) {
+                        system.tie(output, input);
                     }
                 }
             }
@@ -267,153 +234,126 @@ public class GuiNodeGraph <T extends Node> extends GuiCanvas
 
     /* CRUD */
 
-    private void addNode(String key, int x, int y)
-    {
-        T node = this.system.getFactory().create(key);
+    private void addNode(String key, int x, int y) {
+        T node = system.getFactory().create(key);
 
-        if (node != null)
-        {
+        if (node != null) {
             node.x = x;
             node.y = y;
 
-            this.system.add(node);
-            this.select(node);
+            system.add(node);
+            select(node);
         }
     }
 
-    private void removeSelected()
-    {
-        for (T selected : this.selected)
-        {
-            this.system.remove(selected);
+    private void removeSelected() {
+        for (T selected : selected) {
+            system.remove(selected);
         }
 
-        if (this.system.main != null && this.selected.contains(this.system.main))
-        {
-            this.system.main = null;
+        if (system.main != null && selected.contains(system.main)) {
+            system.main = null;
         }
 
-        this.select(null);
+        select(null);
     }
 
-    private void tieSelected()
-    {
-        if (this.selected.size() <= 1)
-        {
+    private void tieSelected() {
+        if (selected.size() <= 1) {
             return;
         }
 
-        T last = this.selected.get(this.selected.size() - 1);
-        List<T> nodes = new ArrayList<T>(this.selected);
+        T last = selected.get(selected.size() - 1);
+        List<T> nodes = new ArrayList<>(selected);
 
         nodes.remove(last);
         nodes.sort(Comparator.comparingInt(a -> a.x));
 
-        for (T node : nodes)
-        {
-            this.system.tie(last, node);
+        for (T node : nodes) {
+            system.tie(last, node);
         }
     }
 
-    private void untieSelected()
-    {
-        if (this.selected.isEmpty())
-        {
+    private void untieSelected() {
+        if (selected.isEmpty()) {
             return;
         }
 
-        if (this.selected.size() == 1)
-        {
-            this.system.relations.remove(this.selected.get(0).getId());
+        if (selected.size() == 1) {
+            system.relations.remove(selected.get(0).getId());
         }
-        else if (this.selected.size() == 2)
-        {
+        else if (selected.size() == 2) {
             /* Untying from both sides */
-            T a = this.selected.get(0);
-            T b = this.selected.get(1);
+            T a = selected.get(0);
+            T b = selected.get(1);
 
-            this.system.untie(a, b);
-            this.system.untie(b, a);
+            system.untie(a, b);
+            system.untie(b, a);
         }
-        else
-        {
-            T last = this.selected.get(this.selected.size() - 1);
+        else {
+            T last = selected.get(selected.size() - 1);
 
-            for (int i = 0; i < this.selected.size() - 1; i++)
-            {
-                this.system.untie(last, this.selected.get(i));
+            for (int i = 0; i < selected.size() - 1; i++) {
+                system.untie(last, selected.get(i));
             }
         }
     }
 
-    private void markMain()
-    {
-        if (this.selected.isEmpty())
-        {
+    private void markMain() {
+        if (selected.isEmpty()) {
             return;
         }
 
-        this.system.main = this.selected.get(this.selected.size() - 1);
+        system.main = selected.get(selected.size() - 1);
     }
 
-    private void sortInputs()
-    {
-        if (this.selected.size() != 1)
-        {
+    private void sortInputs() {
+        if (selected.size() != 1) {
             return;
         }
 
-        T node = this.selected.get(0);
-        List<NodeRelation<T>> relations = this.system.relations.get(node.getId());
+        T node = selected.get(0);
+        List<NodeRelation<T>> relations = system.relations.get(node.getId());
 
-        if (relations != null)
-        {
+        if (relations != null) {
             relations.sort(Comparator.comparingInt(a -> a.input.x));
         }
     }
 
-    public void setNode(T node)
-    {
-        if (this.callback != null)
-        {
-            this.callback.accept(node);
+    public void setNode(T node) {
+        if (callback != null) {
+            callback.accept(node);
         }
     }
 
-    public void select(T node)
-    {
-        this.select(node, false);
+    public void select(T node) {
+        select(node, false);
     }
 
-    public void select(T node, boolean add)
-    {
-        if (!add)
-        {
-            this.selected.clear();
+    public void select(T node, boolean add) {
+        if (!add) {
+            selected.clear();
         }
 
-        if (node != null)
-        {
-            this.selected.add(node);
+        if (node != null) {
+            selected.add(node);
         }
 
-        this.setNode(node);
+        setNode(node);
     }
 
-    public Area getNodeArea(T node)
-    {
-        int x1 = this.toX(node.x - 60);
-        int y1 = this.toY(node.y - 35);
-        int x2 = this.toX(node.x + 60);
-        int y2 = this.toY(node.y + 35);
+    public Area getNodeArea(T node) {
+        int x1 = toX(node.x - 60);
+        int y1 = toY(node.y - 35);
+        int x2 = toX(node.x + 60);
+        int y2 = toY(node.y + 35);
 
         Area.SHARED.setPoints(x1, y1, x2, y2);
 
         return Area.SHARED;
     }
 
-    public Area getNodeOutletArea(Area nodeArea, boolean output)
-    {
+    public Area getNodeOutletArea(Area nodeArea, boolean output) {
         int y = output ? 7 : -7;
 
         int x1 = nodeArea.mx() - 4;
@@ -428,26 +368,21 @@ public class GuiNodeGraph <T extends Node> extends GuiCanvas
         return area;
     }
 
-    public boolean isConnecting()
-    {
-        return this.output != null || this.input != null;
+    public boolean isConnecting() {
+        return output != null || input != null;
     }
 
-    public void set(NodeSystem<T> system)
-    {
+    public void set(NodeSystem<T> system) {
         boolean same = this.system != null && system != null && this.system.getId().equals(system.getId());
 
         this.system = system;
 
-        if (system != null && !same)
-        {
+        if (system != null && !same) {
             int x = system.main == null ? 0 : system.main.x;
             int y = system.main == null ? 0 : system.main.y;
 
-            if (system.main == null && !system.nodes.isEmpty())
-            {
-                for (T node : system.nodes.values())
-                {
+            if (system.main == null && !system.nodes.isEmpty()) {
+                for (T node : system.nodes.values()) {
                     x += node.x;
                     y += node.y;
                 }
@@ -456,108 +391,87 @@ public class GuiNodeGraph <T extends Node> extends GuiCanvas
                 y /= system.nodes.size();
             }
 
-            this.scaleX.setShift(x);
-            this.scaleY.setShift(y);
-            this.scaleX.setZoom(0.5F);
-            this.scaleY.setZoom(0.5F);
+            scaleX.setShift(x);
+            scaleY.setShift(y);
+            scaleX.setZoom(0.5F);
+            scaleY.setZoom(0.5F);
         }
 
-        if (same)
-        {
-            List<UUID> ids = this.selected.stream().map(Node::getId).collect(Collectors.toList());
+        if (same) {
+            List<UUID> ids = selected.stream().map(Node::getId).collect(Collectors.toList());
 
-            this.selected.clear();
+            selected.clear();
 
-            for (UUID uuid : ids)
-            {
-                this.selected.add(this.system.nodes.get(uuid));
+            for (UUID uuid : ids) {
+                selected.add(this.system.nodes.get(uuid));
             }
 
-            this.setNode(this.selected.isEmpty() ? null : this.selected.get(this.selected.size() - 1));
+            setNode(selected.isEmpty() ? null : selected.get(selected.size() - 1));
         }
-        else
-        {
-            this.selected.clear();
+        else {
+            selected.clear();
         }
     }
 
     @Override
-    public boolean mouseClicked(GuiContext context)
-    {
-        if (super.mouseClicked(context) && context.mouseButton == 2)
-        {
+    public boolean mouseClicked(GuiContext context) {
+        if (super.mouseClicked(context) && context.mouseButton == 2) {
             return true;
         }
 
-        if (this.system == null)
-        {
+        if (system == null) {
             return false;
         }
 
-        if (context.mouseButton == 0)
-        {
-            this.lastNodeX = (int) this.fromX(context.mouseX);
-            this.lastNodeY = (int) this.fromY(context.mouseY);
+        if (context.mouseButton == 0) {
+            lastNodeX = (int) fromX(context.mouseX);
+            lastNodeY = (int) fromY(context.mouseY);
             boolean shift = GuiScreen.isShiftKeyDown();
-            List<T> nodes = new ArrayList<T>(this.system.nodes.values());
+            List<T> nodes = new ArrayList<>(system.nodes.values());
 
             Collections.reverse(nodes);
 
-            for (T node : nodes)
-            {
-                Area nodeArea = this.getNodeArea(node);
+            for (T node : nodes) {
+                Area nodeArea = getNodeArea(node);
 
-                if (nodeArea.isInside(context))
-                {
-                    if (shift)
-                    {
-                        if (!this.selected.contains(node))
-                        {
-                            this.select(node, true);
+                if (nodeArea.isInside(context)) {
+                    if (shift) {
+                        if (!selected.contains(node)) {
+                            select(node, true);
                         }
-                        else
-                        {
-                            this.selected.remove(node);
-                            this.select(node, true);
+                        else {
+                            selected.remove(node);
+                            select(node, true);
                         }
                     }
-                    else if (!this.selected.contains(node))
-                    {
-                        this.select(node);
+                    else if (!selected.contains(node)) {
+                        select(node);
                     }
 
-                    this.lastSelected = true;
+                    lastSelected = true;
 
                     return true;
                 }
-                else
-                {
-                    Area output = this.getNodeOutletArea(nodeArea, true);
-                    Area input = this.getNodeOutletArea(nodeArea, false);
+                Area output = getNodeOutletArea(nodeArea, true);
+                Area input = getNodeOutletArea(nodeArea, false);
 
-                    if (output.isInside(context))
-                    {
-                        this.output = node;
-                    }
-                    else if (input.isInside(context) && this.system.main != node)
-                    {
-                        this.input = node;
-                    }
+                if (output.isInside(context)) {
+                    this.output = node;
+                }
+                else if (input.isInside(context) && system.main != node) {
+                    this.input = node;
+                }
 
-                    if (this.isConnecting())
-                    {
-                        return false;
-                    }
+                if (isConnecting()) {
+                    return false;
                 }
             }
 
-            if (shift)
-            {
-                this.selecting = true;
+            if (shift) {
+                selecting = true;
             }
-            else
-            {
-                this.select(null);
+            else {
+                select(null);
             }
         }
 
@@ -565,40 +479,32 @@ public class GuiNodeGraph <T extends Node> extends GuiCanvas
     }
 
     @Override
-    protected void startDragging(GuiContext context)
-    {
+    protected void startDragging(GuiContext context) {
         /* Fake middle mouse click to add an ability to navigate
          * with Ctrl + click dragging */
-        if (context.mouseButton == 0 && GuiScreen.isCtrlKeyDown())
-        {
-            this.mouse = 2;
+        if (context.mouseButton == 0 && GuiScreen.isCtrlKeyDown()) {
+            mouse = 2;
         }
 
         super.startDragging(context);
     }
 
     @Override
-    public void mouseReleased(GuiContext context)
-    {
+    public void mouseReleased(GuiContext context) {
         super.mouseReleased(context);
 
-        if (this.isConnecting())
-        {
+        if (isConnecting()) {
             boolean output = this.output != null;
 
-            for (T node : this.system.nodes.values())
-            {
-                Area nodeArea = this.getNodeArea(node);
-                Area outlet = this.getNodeOutletArea(nodeArea, !output);
+            for (T node : system.nodes.values()) {
+                Area nodeArea = getNodeArea(node);
+                Area outlet = getNodeOutletArea(nodeArea, !output);
 
-                if (outlet.isInside(context))
-                {
-                    if (output)
-                    {
-                        this.input = node;
+                if (outlet.isInside(context)) {
+                    if (output) {
+                        input = node;
                     }
-                    else
-                    {
+                    else {
                         this.output = node;
                     }
 
@@ -607,50 +513,42 @@ public class GuiNodeGraph <T extends Node> extends GuiCanvas
             }
         }
 
-        if (this.selecting)
-        {
+        if (selecting) {
             Area area = new Area();
-            boolean wasSelected = !this.selected.isEmpty();
+            boolean wasSelected = !selected.isEmpty();
 
-            area.setPoints(this.lastX, this.lastY, context.mouseX, context.mouseY);
+            area.setPoints(lastX, lastY, context.mouseX, context.mouseY);
 
-            for (T node : this.system.nodes.values())
-            {
-                Area nodeArea = this.getNodeArea(node);
+            for (T node : system.nodes.values()) {
+                Area nodeArea = getNodeArea(node);
 
-                if (nodeArea.intersects(area) && !this.selected.contains(node))
-                {
-                    this.selected.add(0, node);
+                if (nodeArea.intersects(area) && !selected.contains(node)) {
+                    selected.add(0, node);
                 }
             }
 
-            if (!wasSelected && !this.selected.isEmpty())
-            {
-                this.setNode(this.selected.get(this.selected.size() - 1));
+            if (!wasSelected && !selected.isEmpty()) {
+                setNode(selected.get(selected.size() - 1));
             }
         }
-        else if (this.output != null && this.input != null && this.input != this.output)
-        {
-            this.system.tie(this.output, this.input);
+        else if (output != null && input != null && input != output) {
+            system.tie(output, input);
         }
 
-        this.lastSelected = false;
-        this.selecting = false;
-        this.output = this.input = null;
+        lastSelected = false;
+        selecting = false;
+        output = input = null;
     }
 
     @Override
-    protected void dragging(GuiContext context)
-    {
+    protected void dragging(GuiContext context) {
         super.dragging(context);
 
-        if (this.dragging && this.mouse == 0 && this.lastSelected && !this.selected.isEmpty())
-        {
-            int lastNodeX = (int) this.fromX(context.mouseX);
-            int lastNodeY = (int) this.fromY(context.mouseY);
+        if (dragging && mouse == 0 && lastSelected && !selected.isEmpty()) {
+            int lastNodeX = (int) fromX(context.mouseX);
+            int lastNodeY = (int) fromY(context.mouseY);
 
-            for (T node : this.selected)
-            {
+            for (T node : selected) {
                 node.x += lastNodeX - this.lastNodeX;
                 node.y += lastNodeY - this.lastNodeY;
             }
@@ -661,69 +559,60 @@ public class GuiNodeGraph <T extends Node> extends GuiCanvas
     }
 
     @Override
-    public void draw(GuiContext context)
-    {
-        if (this.area.isInside(context) && !context.isFocused())
-        {
-            float steps = this.prevAverage <= 0 ? 1 : this.prevAverage;
+    public void draw(GuiContext context) {
+        if (area.isInside(context) && !context.isFocused()) {
+            float steps = prevAverage <= 0 ? 1 : prevAverage;
             float step = 15 / steps;
-            float x = Keyboard.isKeyDown(Keyboard.KEY_LEFT) ? -step : (Keyboard.isKeyDown(Keyboard.KEY_RIGHT) ? step : 0);
-            float y = Keyboard.isKeyDown(Keyboard.KEY_UP) ? -step : (Keyboard.isKeyDown(Keyboard.KEY_DOWN) ? step : 0);
+            float x = Keyboard.isKeyDown(Keyboard.KEY_LEFT) ? -step : Keyboard.isKeyDown(Keyboard.KEY_RIGHT) ? step : 0;
+            float y = Keyboard.isKeyDown(Keyboard.KEY_UP) ? -step : Keyboard.isKeyDown(Keyboard.KEY_DOWN) ? step : 0;
 
-            if (x != 0)
-            {
-                this.scaleX.setShift(x / this.scaleX.getZoom() + this.scaleX.getShift());
+            if (x != 0) {
+                scaleX.setShift(x / scaleX.getZoom() + scaleX.getShift());
             }
 
-            if (y != 0)
-            {
-                this.scaleY.setShift(y / this.scaleY.getZoom() + this.scaleY.getShift());
+            if (y != 0) {
+                scaleY.setShift(y / scaleY.getZoom() + scaleY.getShift());
             }
 
             /* Limiting speed so it wouldn't go crazy fast for people who play on
              * absurd frame rates (like 300 or something like that) */
-            this.average += 1;
+            average += 1;
 
-            if (this.tick < context.tick)
-            {
-                this.tick = context.tick;
-                this.prevAverage = this.average;
-                this.average = 0;
+            if (tick < context.tick) {
+                tick = context.tick;
+                prevAverage = average;
+                average = 0;
             }
         }
 
         super.draw(context);
 
-        if (this.system.nodes.isEmpty())
-        {
-            int w = this.area.w / 2;
+        if (system.nodes.isEmpty()) {
+            int w = area.w / 2;
 
             GlStateManager.enableTexture2D();
-            GuiDraw.drawMultiText(this.font, I18n.format("mappet.gui.nodes.info.empty_nodes"), this.area.mx(w), this.area.my(), 0xffffff, w, 12, 0.5F, 0.5F);
+            GuiDraw.drawMultiText(font, I18n.format("mappet.gui.nodes.info.empty_nodes"), area.mx(w), area.my(), 0xffffff, w, 12, 0.5F, 0.5F);
         }
-        else if (this.notifyAboutMain && this.system.main == null)
-        {
+        else if (notifyAboutMain && system.main == null) {
             String label = I18n.format("mappet.gui.nodes.info.empty_main");
-            int w = this.font.getStringWidth(label);
+            int w = font.getStringWidth(label);
 
-            Gui.drawRect(this.area.x + 4, this.area.y + 4, this.area.x + 24 + w, this.area.y + 20, ColorUtils.HALF_BLACK);
+            Gui.drawRect(area.x + 4, area.y + 4, area.x + 24 + w, area.y + 20, ColorUtils.HALF_BLACK);
             GlStateManager.color(1F, 0F, 0.1F, 1F);
-            Icons.EXCLAMATION.render(this.area.x + 4, this.area.y + 4);
-            this.font.drawStringWithShadow(label, this.area.x + 20, this.area.y + 8, 0xff0010);
+            Icons.EXCLAMATION.render(area.x + 4, area.y + 4);
+            font.drawStringWithShadow(label, area.x + 20, area.y + 8, 0xff0010);
         }
     }
 
     @Override
-    protected void drawCanvas(GuiContext context)
-    {
+    protected void drawCanvas(GuiContext context) {
         super.drawCanvas(context);
 
-        if (this.system == null)
-        {
+        if (system == null) {
             return;
         }
 
-        int thickness = Mappet.nodeThickness.get();
+        int thickness = MappetConfig.nodeThickness.get();
 
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
@@ -732,15 +621,14 @@ public class GuiNodeGraph <T extends Node> extends GuiCanvas
         GlStateManager.glLineWidth(thickness);
 
         BufferBuilder builder = Tessellator.getInstance().getBuffer();
-        T lastSelected = this.selected.isEmpty() ? null : this.selected.get(this.selected.size() - 1);
-        List<Vector2d> positions = new ArrayList<Vector2d>();
+        T lastSelected = selected.isEmpty() ? null : selected.get(selected.size() - 1);
+        List<Vector2d> positions = new ArrayList<>();
 
         /* Draw connections */
-        if (thickness > 0)
-        {
+        if (thickness > 0) {
             builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 
-            this.renderConnections(context, builder, positions, lastSelected);
+            renderConnections(context, builder, positions, lastSelected);
 
             Tessellator.getInstance().draw();
         }
@@ -748,24 +636,21 @@ public class GuiNodeGraph <T extends Node> extends GuiCanvas
         /* Draw node boxes */
         Area main = null;
 
-        for (T node : this.system.nodes.values())
-        {
-            Area nodeArea = this.getNodeArea(node);
+        for (T node : system.nodes.values()) {
+            Area nodeArea = getNodeArea(node);
 
-            if (nodeArea.w > 25)
-            {
-                this.renderOutlets(context, node, nodeArea);
+            if (nodeArea.w > 25) {
+                renderOutlets(context, node, nodeArea);
             }
 
             boolean hover = Area.SHARED.isInside(context);
-            int index = this.selected.indexOf(node);
+            int index = selected.indexOf(node);
 
             int colorBg = hover ? 0xff080808 : 0xff000000;
-            int colorFg = 0xaa000000 + this.system.getFactory().getColor(node);
+            int colorFg = 0xaa000000 + system.getFactory().getColor(node);
 
-            if (index >= 0)
-            {
-                int colorSh = index == this.selected.size() - 1 ? 0x0088ff : 0x0022aa;
+            if (index >= 0) {
+                int colorSh = index == selected.size() - 1 ? 0x0088ff : 0x0022aa;
 
                 GuiDraw.drawDropShadow(nodeArea.x + 4, nodeArea.y + 4, nodeArea.ex() - 4, nodeArea.ey() - 4, 8, 0xff000000 + colorSh, colorSh);
             }
@@ -774,41 +659,35 @@ public class GuiNodeGraph <T extends Node> extends GuiCanvas
             Gui.drawRect(nodeArea.x, nodeArea.y + 1, nodeArea.ex(), nodeArea.ey() - 1, colorBg);
             GuiDraw.drawOutline(nodeArea.x + 3, nodeArea.y + 3, nodeArea.ex() - 3, nodeArea.ey() - 3, colorFg);
 
-            if (node == this.system.main)
-            {
+            if (node == system.main) {
                 main = new Area();
                 main.copy(nodeArea);
             }
         }
 
-        for (T node : this.system.nodes.values())
-        {
-            Area nodeArea = this.getNodeArea(node);
+        for (T node : system.nodes.values()) {
+            Area nodeArea = getNodeArea(node);
             String title = node.getTitle();
 
-            if (!title.isEmpty() && nodeArea.w > 40)
-            {
-                if (title.length() > 37)
-                {
+            if (!title.isEmpty() && nodeArea.w > 40) {
+                if (title.length() > 37) {
                     title = title.substring(0, 37) + "§r...";
                 }
 
-                GuiDraw.drawTextBackground(this.font, title, nodeArea.mx() - this.font.getStringWidth(title) / 2, nodeArea.my() - 4, 0xffffff, ColorUtils.HALF_BLACK);
+                GuiDraw.drawTextBackground(font, title, nodeArea.mx() - font.getStringWidth(title) / 2, nodeArea.my() - 4, 0xffffff, ColorUtils.HALF_BLACK);
             }
         }
 
         /* Draw selected node's indices */
-        for (int i = 0; i < positions.size(); i++)
-        {
+        for (int i = 0; i < positions.size(); i++) {
             Vector2d pos = positions.get(i);
             String label = String.valueOf(i);
 
-            this.font.drawStringWithShadow(label, (int) pos.x - this.font.getStringWidth(label) / 2, (int) pos.y - 4, this.getIndexLabelColor(lastSelected, i));
+            font.drawStringWithShadow(label, (int) pos.x - (float) font.getStringWidth(label) / 2, (int) pos.y - 4, getIndexLabelColor(lastSelected, i));
         }
 
         /* Draw main entry node icon */
-        if (main != null)
-        {
+        if (main != null) {
             GlStateManager.color(1F, 1F, 1F, 1F);
             GuiDraw.drawOutlinedIcon(Icons.DOWNLOAD, main.mx(), main.y - 4, 0xffffffff, 0.5F, 1F);
         }
@@ -816,16 +695,14 @@ public class GuiNodeGraph <T extends Node> extends GuiCanvas
         GlStateManager.glLineWidth(1);
 
         /* Draw selection */
-        if (this.selecting)
-        {
-            Gui.drawRect(this.lastX, this.lastY, context.mouseX, context.mouseY, 0x440088ff);
+        if (selecting) {
+            Gui.drawRect(lastX, lastY, context.mouseX, context.mouseY, 0x440088ff);
         }
     }
 
-    private void renderOutlets(GuiContext context, T node, Area nodeArea)
-    {
-        Area output = this.getNodeOutletArea(nodeArea, true);
-        Area input = this.getNodeOutletArea(nodeArea, false);
+    private void renderOutlets(GuiContext context, T node, Area nodeArea) {
+        Area output = getNodeOutletArea(nodeArea, true);
+        Area input = getNodeOutletArea(nodeArea, false);
 
         boolean insideO = output.isInside(context);
         boolean insideI = input.isInside(context);
@@ -833,164 +710,151 @@ public class GuiNodeGraph <T extends Node> extends GuiCanvas
         int colorO = ColorUtils.multiplyColor(0xffffff, insideO ? 1F : 0.6F);
         int colorI = ColorUtils.multiplyColor(0xffffff, insideI ? 1F : 0.6F);
 
-        if (this.output == node)
-        {
+        if (this.output == node) {
             colorO = Colors.ACTIVE;
 
-            if (insideI)
-            {
+            if (insideI) {
                 colorI = Colors.NEGATIVE;
             }
         }
-        else if (this.output != null)
-        {
-            if (insideO)
-            {
+        else if (this.output != null) {
+            if (insideO) {
                 colorO = Colors.NEGATIVE;
             }
-            else if (insideI)
-            {
+            else if (insideI) {
                 colorI = Colors.POSITIVE;
             }
         }
 
-        if (this.input == node)
-        {
+        if (this.input == node) {
             colorI = Colors.ACTIVE;
 
-            if (insideO)
-            {
+            if (insideO) {
                 colorO = Colors.NEGATIVE;
             }
         }
-        else if (this.input != null)
-        {
-            if (insideI)
-            {
+        else if (this.input != null) {
+            if (insideI) {
                 colorI = Colors.NEGATIVE;
             }
-            else if (insideO)
-            {
+            else if (insideO) {
                 colorO = Colors.POSITIVE;
             }
         }
 
         GuiDraw.drawOutline(output.x, output.y, output.ex(), output.ey(), 0xff000000 + colorO);
 
-        if (this.system.main != node)
-        {
+        if (system.main != node) {
             GuiDraw.drawOutline(input.x, input.y, input.ex(), input.ey(), 0xff000000 + colorI);
         }
     }
 
-    private void renderConnections(GuiContext context, BufferBuilder builder, List<Vector2d> positions, T lastSelected)
-    {
-        for (List<NodeRelation<T>> relations : this.system.relations.values())
-        {
-            for (int r = 0; r < relations.size(); r++)
-            {
+    private void renderConnections(GuiContext context, BufferBuilder builder, List<Vector2d> positions, T lastSelected) {
+        for (List<NodeRelation<T>> relations : system.relations.values()) {
+            for (int r = 0; r < relations.size(); r++) {
                 NodeRelation<T> relation = relations.get(r);
 
-                Area output = this.getNodeOutletArea(this.getNodeArea(relation.output), true);
-                Area input = this.getNodeOutletArea(this.getNodeArea(relation.input), false);
+                Area output = getNodeOutletArea(getNodeArea(relation.output), true);
+                Area input = getNodeOutletArea(getNodeArea(relation.input), false);
 
                 int x1 = input.mx();
                 int y1 = input.my();
                 int x2 = output.mx();
                 int y2 = output.my();
 
-                this.drawConnection(builder, context, relation.output, r, x1, y1, x2, y2, false);
+                drawConnection(builder, context, relation.output, r, x1, y1, x2, y2, false);
 
-                if (relation.output == lastSelected)
-                {
+                if (relation.output == lastSelected) {
                     positions.add(new Vector2d((x1 + x2) / 2F, (y1 + y2) / 2F));
                 }
             }
         }
 
-        if (this.isConnecting())
-        {
-            T node = this.output == null ? this.input : this.output;
-            Area area = this.getNodeArea(node);
-            Area outlet = this.getNodeOutletArea(area, node == this.output);
+        if (isConnecting()) {
+            T node = output == null ? input : output;
+            Area area = getNodeArea(node);
+            Area outlet = getNodeOutletArea(area, node == output);
 
             int x1 = context.mouseX;
             int y1 = context.mouseY;
             int x2 = outlet.mx();
             int y2 = outlet.my();
 
-            List<NodeRelation<T>> list = this.system.relations.get(node.getId());
+            List<NodeRelation<T>> list = system.relations.get(node.getId());
 
-            this.drawConnection(builder, context, node, list == null ? 0 : list.size(), x1, y1, x2, y2, true);
+            drawConnection(builder, context, node, list == null ? 0 : list.size(), x1, y1, x2, y2, true);
         }
     }
 
     /**
      * Draw the connection line
      */
-    private void drawConnection(BufferBuilder builder, GuiContext context, T node, int r, int x1, int y1, int x2, int y2, boolean forceLine)
-    {
+    private void drawConnection(BufferBuilder builder, GuiContext context, T node, int r, int x1, int y1, int x2, int y2, boolean forceLine) {
         float factor = (context.tick + context.partialTicks) / 60F;
         final float segments = 8F;
 
-        float opacity = this.getNodeActiveColorOpacity(node, r);
-        int c1 = Mappet.nodePulseBackgroundMcLibPrimary.get() ? McLib.primaryColor.get() : Mappet.nodePulseBackgroundColor.get();
-        int c2 = this.getNodeActiveColor(node, r);
+        float opacity = getNodeActiveColorOpacity(node, r);
+        int c1 = MappetConfig.nodePulseBackgroundMcLibPrimary.get() ? McLib.primaryColor.get() : MappetConfig.nodePulseBackgroundColor.get();
+        int c2 = getNodeActiveColor(node, r);
 
-        for (int i = 0; i < segments; i++)
-        {
+        for (int i = 0; i < segments; i++) {
             float factor1 = i / segments;
             float factor2 = (i + 1) / segments;
-            float color1 = 1 - MathUtils.clamp(Math.abs((1 - factor1) - (factor % 1)) / 0.2F, 0F, 1F);
-            float color2 = 1 - MathUtils.clamp(Math.abs((1 - factor2) - (factor % 1)) / 0.2F, 0F, 1F);
+            float color1 = 1 - MathUtils.clamp(Math.abs(1 - factor1 - factor % 1) / 0.2F, 0F, 1F);
+            float color2 = 1 - MathUtils.clamp(Math.abs(1 - factor2 - factor % 1) / 0.2F, 0F, 1F);
 
-            color1 = Math.max(color1, 1 - MathUtils.clamp(Math.abs(((1 - factor1) + 1) - (factor % 1)) / 0.2F, 0F, 1F));
-            color2 = Math.max(color2, 1 - MathUtils.clamp(Math.abs(((1 - factor2) + 1) - (factor % 1)) / 0.2F, 0F, 1F));
+            color1 = Math.max(color1, 1 - MathUtils.clamp(Math.abs(1 - factor1 + 1 - factor % 1) / 0.2F, 0F, 1F));
+            color2 = Math.max(color2, 1 - MathUtils.clamp(Math.abs(1 - factor2 + 1 - factor % 1) / 0.2F, 0F, 1F));
 
-            color1 = Math.max(color1, 1 - MathUtils.clamp(Math.abs(((1 - factor1) - 1) - (factor % 1)) / 0.2F, 0F, 1F));
-            color2 = Math.max(color2, 1 - MathUtils.clamp(Math.abs(((1 - factor2) - 1) - (factor % 1)) / 0.2F, 0F, 1F));
+            color1 = Math.max(color1, 1 - MathUtils.clamp(Math.abs(1 - factor1 - 1 - factor % 1) / 0.2F, 0F, 1F));
+            color2 = Math.max(color2, 1 - MathUtils.clamp(Math.abs(1 - factor2 - 1 - factor % 1) / 0.2F, 0F, 1F));
 
-            ColorUtils.interpolate(this.a, c1, c2, color1, false);
-            ColorUtils.interpolate(this.b, c1, c2, color2, false);
+            ColorUtils.interpolate(a, c1, c2, color1, false);
+            ColorUtils.interpolate(b, c1, c2, color2, false);
 
-            this.a.a = opacity;
-            this.b.a = opacity;
+            a.a = opacity;
+            b.a = opacity;
 
-            if (y2 <= y1 || forceLine)
-            {
-                builder.pos(Interpolations.lerp(x1, x2, factor1), Interpolations.lerp(y1, y2, factor1), 0).color(a.r, a.g, a.b, a.a).endVertex();
-                builder.pos(Interpolations.lerp(x1, x2, factor2), Interpolations.lerp(y1, y2, factor2), 0).color(b.r, b.g, b.b, b.a).endVertex();
+            if (y2 <= y1 || forceLine) {
+                builder
+                        .pos(Interpolations.lerp(x1, x2, factor1), Interpolations.lerp(y1, y2, factor1), 0)
+                        .color(a.r, a.g, a.b, a.a)
+                        .endVertex();
+                builder
+                        .pos(Interpolations.lerp(x1, x2, factor2), Interpolations.lerp(y1, y2, factor2), 0)
+                        .color(b.r, b.g, b.b, b.a)
+                        .endVertex();
             }
-            else
-            {
-                if (i == segments / 2)
-                {
+            else {
+                if (i == segments / 2) {
                     builder.pos(Interpolations.lerp(x1, x2, 0.5F), y1, 0).color(a.r, a.g, a.b, a.a).endVertex();
                     builder.pos(Interpolations.lerp(x1, x2, 0.5F), y2, 0).color(b.r, b.g, b.b, b.a).endVertex();
                 }
-                else
-                {
+                else {
                     int y = i < segments / 2 ? y1 : y2;
 
-                    builder.pos(Interpolations.lerp(x1, x2, i == segments / 2 + 1 ? 0.5F : factor1), y, 0).color(a.r, a.g, a.b, a.a).endVertex();
-                    builder.pos(Interpolations.lerp(x1, x2, i == segments / 2 - 1 ? 0.5F : factor2), y, 0).color(b.r, b.g, b.b, b.a).endVertex();
+                    builder
+                            .pos(Interpolations.lerp(x1, x2, i == segments / 2 + 1 ? 0.5F : factor1), y, 0)
+                            .color(a.r, a.g, a.b, a.a)
+                            .endVertex();
+                    builder
+                            .pos(Interpolations.lerp(x1, x2, i == segments / 2 - 1 ? 0.5F : factor2), y, 0)
+                            .color(b.r, b.g, b.b, b.a)
+                            .endVertex();
                 }
             }
         }
     }
 
-    protected int getIndexLabelColor(T lastSelected, int i)
-    {
+    protected int getIndexLabelColor(T lastSelected, int i) {
         return 0xffffff;
     }
 
-    protected int getNodeActiveColor(T output, int r)
-    {
+    protected int getNodeActiveColor(T output, int r) {
         return Colors.ACTIVE;
     }
 
-    protected float getNodeActiveColorOpacity(T output, int r)
-    {
+    protected float getNodeActiveColorOpacity(T output, int r) {
         return 0.75F;
     }
 }

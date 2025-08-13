@@ -89,7 +89,7 @@ public class NBTUtils
 
     public static void writeStringList(NBTTagList list, Set<String> set)
     {
-        set.stream().forEach(string -> list.appendTag(new NBTTagString(string)));
+        for (String string : set) list.appendTag(new NBTTagString(string));
     }
 
     public static boolean saveScriptedItemProps(ItemStack stack, NBTTagCompound tag)
