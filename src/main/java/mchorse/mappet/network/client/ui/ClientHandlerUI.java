@@ -15,7 +15,6 @@ public class ClientHandlerUI extends ClientMessageHandler<PacketUI>
     public void run(EntityPlayerSP player, PacketUI message)
     {
         Minecraft mc = Minecraft.getMinecraft();
-
         mc.displayGuiScreen(new GuiUserInterface(mc, message.ui));
     }
 }

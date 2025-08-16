@@ -1339,6 +1339,16 @@
           ]
         }
       ],
+      "setPerspective": [
+        {
+          "parameters": [
+            {
+              "name": "perspective",
+              "type": "int"
+            }
+          ]
+        }
+      ],
       "lockPerspective": [
         {
           "parameters": [
@@ -4489,6 +4499,11 @@
           }
         },
         {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.data.ScriptBox"
+          }
+        },
+        {
           "parameters": [
             {
               "name": "minX",
@@ -4701,6 +4716,12 @@
       ],
       "vector": [
         {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+          },
+          "docs": "Create a scripted vector."
+        },
+        {
           "parameters": [
             {
               "name": "x",
@@ -4717,8 +4738,7 @@
           ],
           "return": {
             "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-          },
-          "docs": "Create a scripted vector."
+          }
         },
         {
           "parameters": [
@@ -8185,6 +8205,13 @@
             "type": "java.lang.String"
           },
           "docs": "Get the ID of the last context menu item.\n\n \u003cp\u003eIf no context menu was activated, it will be an empty string (\u003ccode\u003e\"\"\u003c/code\u003e).\n See {@link UIComponent#context(String, String, String, int)} method for an example.\u003c/p\u003e"
+        }
+      ],
+      "getMouse": [
+        {
+          "return": {
+            "type": "NBTTagCompound"
+          }
         }
       ],
       "get": [
@@ -14870,6 +14897,16 @@
           ]
         }
       ],
+      "getMouse": [
+        {
+          "return": {
+            "type": "NBTTagCompound"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
       "get": [
         {
           "parameters": [
@@ -14973,6 +15010,19 @@
           "annotations": [
             "java.lang.Override"
           ]
+        }
+      ],
+      "mouse": [
+        {
+          "parameters": [
+            {
+              "name": "delay",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
+          }
         }
       ],
       "create": [

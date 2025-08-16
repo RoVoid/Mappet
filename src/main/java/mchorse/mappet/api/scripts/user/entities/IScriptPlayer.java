@@ -642,6 +642,7 @@ public interface IScriptPlayer extends IScriptEntity {
 
     void enableBlackAndWhiteShader(boolean enable);
 
+    void setPerspective(int perspective);
     void lockPerspective(int perspective);
 
     void unlockPerspective();

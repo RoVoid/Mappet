@@ -87,6 +87,11 @@ public class ScriptMath implements IScriptMath {
     }
 
     @Override
+    public ScriptVector vector() {
+        return ScriptVector.EMPTY;
+    }
+
+    @Override
     public ScriptVector vector(double x, double y, double z) {
         return new ScriptVector(x, y, z);
     }
@@ -94,6 +99,11 @@ public class ScriptMath implements IScriptMath {
     @Override
     public ScriptVector vector(BlockPos pos) {
         return new ScriptVector(pos);
+    }
+
+    @Override
+    public ScriptBox box() {
+        return ScriptBox.EMPTY;
     }
 
     @Override

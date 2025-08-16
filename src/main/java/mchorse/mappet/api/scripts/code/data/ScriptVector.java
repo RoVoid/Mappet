@@ -8,6 +8,8 @@ public class ScriptVector implements IScriptVector {
 
     public double x, y, z;
 
+    public static ScriptVector EMPTY = new ScriptVector(0, 0, 0);
+
     public ScriptVector(double x, double y, double z) {
         this.x = x;
         this.y = y;
@@ -137,7 +139,9 @@ public class ScriptVector implements IScriptVector {
 
     @Override
     public double angleBetween(ScriptVector other) {
-        return other == null || isZero() || other.isZero() ? -1 : Math.acos(Math.max(-1.0, Math.min(1.0, normalize().dotProduct(other.normalize()))));
+        return other == null || isZero() || other.isZero() ? -1 : Math.acos(Math.max(-1.0,
+                                                                                     Math.min(1.0,
+                                                                                              normalize().dotProduct(other.normalize()))));
     }
 
     @Override

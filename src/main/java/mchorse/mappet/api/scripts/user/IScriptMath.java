@@ -77,9 +77,12 @@ public interface IScriptMath {
     /**
      * Create a scripted vector.
      */
+    ScriptVector vector();
     ScriptVector vector(double x, double y, double z);
 
     ScriptVector vector(BlockPos pos);
+
+    ScriptBox box();
 
     /**
      * Create a bounding box.

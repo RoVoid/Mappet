@@ -18,6 +18,8 @@ public class ScriptBox implements IScriptBox {
     public double maxY;
     public double maxZ;
 
+    public static ScriptBox EMPTY = new ScriptBox(0, 0, 0, 0, 0, 0);
+
     public ScriptBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
         this.minX = Math.min(minX, maxX);
         this.minY = Math.min(minY, maxY);

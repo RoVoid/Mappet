@@ -82,6 +82,9 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     protected IMappetStates states;
 
+//    protected ScriptVector moveTarget = ScriptVector.EMPTY;
+//    protected int movingTick = 0;
+
     public static IScriptEntity create(Entity entity) {
         if (entity instanceof EntityPlayerMP) return new ScriptPlayer((EntityPlayerMP) entity);
         if (entity instanceof EntityNpc) return new ScriptNpc((EntityNpc) entity);
@@ -1179,6 +1182,15 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             CommonProxy.eventHandler.addExecutable(new RunnableExecutionFork(i, () -> setPosition(interpX, interpY, interpZ)));
         }
     }
+
+//    public void breakMove(String interpolation, int durationTicks, double x, double y, double z, boolean disableAI) {
+//        if (disableAI) {
+//            setAIEnabled(false);
+//            moveTo(interpolation, durationTicks, x, y, z);
+//            CommonProxy.eventHandler.addExecutable(new RunnableExecutionFork(durationTicks, () -> setAIEnabled(true)));
+//        }
+//        else moveTo(interpolation, durationTicks, x, y, z);
+//    }
 
     /* Entity AI */
 

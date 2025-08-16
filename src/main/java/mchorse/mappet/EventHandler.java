@@ -24,7 +24,7 @@ import mchorse.mappet.entities.utils.MappetNpcRespawnManager;
 import mchorse.mappet.events.StateChangedEvent;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.client.ClientHandlerBlackAndWhiteShader;
-import mchorse.mappet.network.client.ClientHandlerLockPerspective;
+import mchorse.mappet.network.client.ClientHandlerPlayerPerspective;
 import mchorse.mappet.network.common.hotkey.PacketSyncHotkeys;
 import mchorse.mappet.network.common.huds.PacketHUDScene;
 import mchorse.mappet.network.common.npc.PacketNpcJump;
@@ -248,9 +248,9 @@ public class EventHandler {
     @SideOnly(Side.CLIENT)
     public void onClientTick(TickEvent.ClientTickEvent event) {
         Minecraft mc = Minecraft.getMinecraft();
-        if (ClientHandlerLockPerspective.getLockedPerspective() != -1) {
-            if (mc.gameSettings.thirdPersonView != ClientHandlerLockPerspective.getLockedPerspective()) {
-                mc.gameSettings.thirdPersonView = ClientHandlerLockPerspective.getLockedPerspective();
+        if (ClientHandlerPlayerPerspective.locked()) {
+            if (mc.gameSettings.thirdPersonView != ClientHandlerPlayerPerspective.getPerspective()) {
+                mc.gameSettings.thirdPersonView = ClientHandlerPlayerPerspective.getPerspective();
             }
         }
         if (previousPerspective != mc.gameSettings.thirdPersonView) {

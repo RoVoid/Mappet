@@ -17,68 +17,61 @@ public class MappetUIBuilder implements IMappetUIBuilder {
 
     public MappetUIBuilder(UI ui, String script, String function) {
         this.ui = ui;
-        this.current = ui.root;
+        current = ui.root;
         this.script = script;
         this.function = function;
     }
 
     public MappetUIBuilder(UIComponent component) {
-        this.current = component;
+        current = component;
     }
 
     @Override
     public UIComponent getCurrent() {
-        return this.current;
+        return current;
     }
 
     public UI getUI() {
-        return this.ui;
+        return ui;
     }
 
     public String getScript() {
-        return this.script;
+        return script;
     }
 
     public String getFunction() {
-        return this.function;
+        return function;
     }
 
     @Override
     public IMappetUIBuilder background() {
-        if (this.ui != null) {
-            this.ui.background = true;
-        }
-
+        if (ui != null) ui.background = true;
         return this;
     }
 
     @Override
     public IMappetUIBuilder closable(boolean closable) {
-        if (this.ui != null) {
-            this.ui.closable = closable;
-        }
-
+        if (ui != null) ui.closable = closable;
         return this;
     }
 
     @Override
     public IMappetUIBuilder paused(boolean paused) {
-        if (this.ui != null) {
-            this.ui.paused = paused;
-        }
+        if (ui != null) ui.paused = paused;
+        return this;
+    }
 
+    public IMappetUIBuilder mouse(int delay){
+        if (ui != null) ui.mouse = delay;
         return this;
     }
 
     @Override
     public UIComponent create(String id) {
         UIComponent component = CommonProxy.getUiComponents().create(id);
+        if (component == null) return null;
 
-        if (component == null) {
-            return null;
-        }
-
-        this.current.getChildComponents().add(component);
+        current.getChildComponents().add(component);
 
         return component;
     }
@@ -87,7 +80,7 @@ public class MappetUIBuilder implements IMappetUIBuilder {
     public UIGraphicsComponent graphics() {
         UIGraphicsComponent component = new UIGraphicsComponent();
 
-        this.current.getChildComponents().add(component);
+        current.getChildComponents().add(component);
 
         return component;
     }
@@ -96,7 +89,7 @@ public class MappetUIBuilder implements IMappetUIBuilder {
     public UIButtonComponent button(String label) {
         UIButtonComponent component = new UIButtonComponent();
 
-        this.current.getChildComponents().add(component);
+        current.getChildComponents().add(component);
         component.label(label);
 
         return component;
@@ -106,7 +99,7 @@ public class MappetUIBuilder implements IMappetUIBuilder {
     public UIIconButtonComponent icon(String icon) {
         UIIconButtonComponent component = new UIIconButtonComponent();
 
-        this.current.getChildComponents().add(component);
+        current.getChildComponents().add(component);
         component.icon(icon);
 
         return component;
@@ -126,7 +119,7 @@ public class MappetUIBuilder implements IMappetUIBuilder {
     public UILabelComponent label(String label) {
         UILabelComponent component = new UILabelComponent();
 
-        this.current.getChildComponents().add(component);
+        current.getChildComponents().add(component);
         component.label(label);
 
         return component;
@@ -136,7 +129,7 @@ public class MappetUIBuilder implements IMappetUIBuilder {
     public UITextComponent text(String text) {
         UITextComponent component = new UITextComponent();
 
-        this.current.getChildComponents().add(component);
+        current.getChildComponents().add(component);
         component.label(text);
 
         return component;
@@ -146,7 +139,7 @@ public class MappetUIBuilder implements IMappetUIBuilder {
     public UITextboxComponent textbox(String text, int maxLength) {
         UITextboxComponent component = new UITextboxComponent();
 
-        this.current.getChildComponents().add(component);
+        current.getChildComponents().add(component);
         component.maxLength(maxLength).label(text);
 
         return component;
@@ -156,7 +149,7 @@ public class MappetUIBuilder implements IMappetUIBuilder {
     public UITextareaComponent textarea(String text) {
         UITextareaComponent component = new UITextareaComponent();
 
-        this.current.getChildComponents().add(component);
+        current.getChildComponents().add(component);
         component.label(text);
 
         return component;
@@ -166,7 +159,7 @@ public class MappetUIBuilder implements IMappetUIBuilder {
     public UIToggleComponent toggle(String label, boolean state) {
         UIToggleComponent component = new UIToggleComponent();
 
-        this.current.getChildComponents().add(component);
+        current.getChildComponents().add(component);
         component.state(state).label(label);
 
         return component;
@@ -176,7 +169,7 @@ public class MappetUIBuilder implements IMappetUIBuilder {
     public UITrackpadComponent trackpad(double value) {
         UITrackpadComponent component = new UITrackpadComponent();
 
-        this.current.getChildComponents().add(component);
+        current.getChildComponents().add(component);
         component.value(value);
 
         return component;
@@ -186,12 +179,10 @@ public class MappetUIBuilder implements IMappetUIBuilder {
     public UIStringListComponent stringList(List<String> values, int selected) {
         UIStringListComponent component = new UIStringListComponent();
 
-        this.current.getChildComponents().add(component);
+        current.getChildComponents().add(component);
         component.values(values);
 
-        if (selected >= 0) {
-            component.selected(selected);
-        }
+        if (selected >= 0) component.selected(selected);
 
         return component;
     }
@@ -200,10 +191,10 @@ public class MappetUIBuilder implements IMappetUIBuilder {
     public UIStackComponent item(IScriptItemStack stack) {
         UIStackComponent component = new UIStackComponent();
 
-        this.current.getChildComponents().add(component);
+        current.getChildComponents().add(component);
 
         if (stack != null && !stack.isEmpty()) {
-            component.stack(stack.getMinecraftItemStack());
+            component.stack(stack.asMinecraft());
         }
 
         return component;
@@ -213,12 +204,10 @@ public class MappetUIBuilder implements IMappetUIBuilder {
     public UIMorphComponent morph(AbstractMorph morph, boolean editing) {
         UIMorphComponent component = new UIMorphComponent();
 
-        this.current.getChildComponents().add(component);
+        current.getChildComponents().add(component);
         component.morph(morph);
 
-        if (editing) {
-            component.editing();
-        }
+        if (editing) component.editing();
 
         return component;
     }
@@ -227,14 +216,14 @@ public class MappetUIBuilder implements IMappetUIBuilder {
     public UIClickComponent click() {
         UIClickComponent component = new UIClickComponent();
 
-        this.current.getChildComponents().add(component);
+        current.getChildComponents().add(component);
 
         return component;
     }
 
     @Override
     public IMappetUIBuilder layout() {
-        return new MappetUIBuilder(this.layout(0, 0));
+        return new MappetUIBuilder(layout(0, 0));
     }
 
     public UILayoutComponent layout(int margin, int padding) {
@@ -242,14 +231,14 @@ public class MappetUIBuilder implements IMappetUIBuilder {
 
         layout.margin = margin;
         layout.padding = padding;
-        this.current.getChildComponents().add(layout);
+        current.getChildComponents().add(layout);
 
         return layout;
     }
 
     @Override
     public IMappetUIBuilder column(int margin, int padding) {
-        UILayoutComponent layout = this.layout(margin, padding);
+        UILayoutComponent layout = layout(margin, padding);
 
         layout.layoutType = LayoutType.COLUMN;
 
@@ -258,7 +247,7 @@ public class MappetUIBuilder implements IMappetUIBuilder {
 
     @Override
     public IMappetUIBuilder row(int margin, int padding) {
-        UILayoutComponent layout = this.layout(margin, padding);
+        UILayoutComponent layout = layout(margin, padding);
 
         layout.layoutType = LayoutType.ROW;
 
@@ -267,7 +256,7 @@ public class MappetUIBuilder implements IMappetUIBuilder {
 
     @Override
     public IMappetUIBuilder grid(int margin, int padding) {
-        UILayoutComponent layout = this.layout(margin, padding);
+        UILayoutComponent layout = layout(margin, padding);
 
         layout.layoutType = LayoutType.GRID;
 
