@@ -143,23 +143,16 @@ public class UIContext {
         return mouse;
     }
 
+    public void setMouse(NBTTagCompound mouse) {
+        this.mouse = mouse;
+    }
+
     public boolean isDirty() {
         return dirty != null && System.currentTimeMillis() >= dirty;
     }
 
     public boolean isDirtyInProgress() {
         return dirty != null;
-    }
-
-    public void setMouse(NBTTagCompound mouse) {
-        this.mouse = mouse;
-        if (ui.mouse <= 0) {
-            dirty = null;
-            sendToServer();
-        }
-        else {
-            dirty = System.currentTimeMillis() + ui.mouse;
-        }
     }
 
     /* Client side code */
@@ -220,6 +213,21 @@ public class UIContext {
     }
 
     @SideOnly(Side.CLIENT)
+    public void sendMouse() {
+        if (dirty != null) {
+            sendToServer();
+        }
+        else {
+            NBTTagCompound tag = new NBTTagCompound();
+
+            tag.setTag("Mouse", mouse);
+            mouse = new NBTTagCompound();
+
+            Dispatcher.sendToServer(new PacketUIData(tag));
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
     public void dirty(String id, long delay) {
         last = id;
 
@@ -255,6 +263,7 @@ public class UIContext {
         }
 
         hotkey = "";
+        mouse = new NBTTagCompound();
 
         Dispatcher.sendToServer(new PacketUIData(tag));
     }

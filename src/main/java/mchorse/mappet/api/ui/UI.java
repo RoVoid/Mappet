@@ -13,7 +13,7 @@ public class UI extends AbstractData {
     public boolean background = false;
     public boolean closable = true;
     public boolean paused = true;
-    public int mouse = -1;
+    public int mouse = 0;
 
     public UI() {
         this(UUID.randomUUID());
@@ -49,6 +49,6 @@ public class UI extends AbstractData {
         if (tag.hasKey("Background")) background = tag.getBoolean("Background");
         if (tag.hasKey("Closeable")) closable = tag.getBoolean("Closeable");
         if (tag.hasKey("Paused")) paused = tag.getBoolean("Paused");
-        if (tag.hasKey("Mouse")) mouse = tag.getInteger("Mouse");
+        if (tag.hasKey("Mouse")) mouse = Math.min(31, Math.max(0, tag.getInteger("Mouse")));
     }
 }

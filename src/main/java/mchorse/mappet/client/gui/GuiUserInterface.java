@@ -1,13 +1,11 @@
 package mchorse.mappet.client.gui;
 
-import mchorse.mappet.api.scripts.code.ui.UIComponent;
 import mchorse.mappet.api.ui.UI;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.common.ui.PacketUI;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
-import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -42,67 +40,67 @@ public class GuiUserInterface extends GuiBase {
     }
 
     @Override
-    protected void mouseClicked(int x, int y, int button) throws IOException {
+    protected void mouseClicked(int x, int y, int button) throws IOException { // 2
         super.mouseClicked(x, y, button);
-        if(context.ui.mouse < 0) return;
+        if ((context.ui.mouse & 1 << 1) == 0) return;
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("type", "click");
         tag.setInteger("button", button);
-        tag.setInteger("x", x);
-        tag.setInteger("y", y);
-        tag.setString("on", onMouse(x, y));
+
         context.setMouse(tag);
-        //System.out.println("[GUI] Mouse clicked at " + x + ":" + y + ", button " + button);
+        System.out.println("[GUI] Mouse clicked at " + x + ":" + y + ", button " + button);
     }
 
     @Override
-    protected void mouseReleased(int x, int y, int button) {
+    protected void mouseReleased(int x, int y, int button) { // 4
         super.mouseReleased(x, y, button);
-        if(context.ui.mouse < 0) return;
+        if ((context.ui.mouse & 1 << 2) == 0) return;
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("type", "release");
         tag.setInteger("button", button);
-        tag.setInteger("x", x);
-        tag.setInteger("y", y);
-        tag.setString("on", onMouse(x, y));
+        pushCoords(tag, x, y);
         context.setMouse(tag);
-        //System.out.println("[GUI] Mouse clicked at " + x + ":" + y + ", release " + button);
+        System.out.println("[GUI] Mouse clicked at " + x + ":" + y + ", release " + button);
     }
 
     @Override
-    protected void mouseScrolled(int x, int y, int scroll) {
+    protected void mouseScrolled(int x, int y, int scroll) { // 16
         super.mouseScrolled(x, y, scroll);
-        if(context.ui.mouse < 0) return;
+        if ((context.ui.mouse & 1 << 4) == 0) return;
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("type", "scroll");
         tag.setInteger("scroll", scroll);
-        tag.setInteger("x", x);
-        tag.setInteger("y", y);
-        tag.setString("on", onMouse(x, y));
+        pushCoords(tag, x, y);
         context.setMouse(tag);
-        //System.out.println("[GUI] Mouse clicked at " + x + ":" + y + ", scroll " + scroll);
+        System.out.println("[GUI] Mouse clicked at " + x + ":" + y + ", scroll " + scroll);
     }
 
     @Override
-    protected void mouseClickMove(int x, int y, int button, long timeSinceLastClick) {
+    protected void mouseClickMove(int x, int y, int button, long timeSinceLastClick) { // 8
         super.mouseClickMove(x, y, button, timeSinceLastClick);
-        if(context.ui.mouse < 0) return;
+        if ((context.ui.mouse & 1 << 3) == 0) return;
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("type", "drag");
         tag.setInteger("button", button);
         tag.setLong("time", timeSinceLastClick);
-        tag.setInteger("x", x);
-        tag.setInteger("y", y);
-        tag.setString("on", onMouse(x, y));
+        pushCoords(tag, x, y);
         context.setMouse(tag);
-        //System.out.println("[GUI] Mouse clicked at " + x + ":" + y + ", button " + button + ", time " + timeSinceLastClick);
+        System.out.println("[GUI] Mouse clicked at " + x + ":" + y + ", button " + button + ", time " + timeSinceLastClick);
     }
 
-    public String onMouse(int x, int y){
-        for(String key : context.getElementKeys()){
-            if(context.getElement(key).area.isInside(x, y)) return key;
+
+    protected String mouseHover(int x, int y) { // 1
+        for (String key : context.getElementKeys()) {
+            if (context.getElement(key).area.isInside(x, y)) return key;
         }
         return "";
+    }
+
+    protected void pushCoords(NBTTagCompound tag, int x, int y) {
+        tag.setInteger("x", x);
+        tag.setInteger("y", y);
+        tag.setFloat("rx", Math.round(x / (float) width * 1000f) / 1000f);
+        tag.setFloat("ry", Math.round(y / (float) height * 1000f) / 1000f);
     }
 
     @Override
@@ -118,9 +116,24 @@ public class GuiUserInterface extends GuiBase {
     }
 
     @Override
+    public void updateScreen() {
+        super.updateScreen();
+    }
+
+    @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         if (context.isDirty()) context.sendToServer();
         if (context.ui.background) drawDefaultBackground();
+        if ((context.ui.mouse & 1) != 0) {
+            NBTTagCompound tag = context.getMouse();
+            String hover = mouseHover(mouseX, mouseY);
+            if (!tag.hasNoTags() || !hover.isEmpty()) {
+                tag.setString("hover", hover);
+                if (!tag.hasKey("x")) pushCoords(tag, mouseX, mouseY);
+                context.setMouse(tag);
+                context.sendMouse();
+            }
+        }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }

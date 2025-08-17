@@ -61,8 +61,8 @@ public class MappetUIBuilder implements IMappetUIBuilder {
         return this;
     }
 
-    public IMappetUIBuilder mouse(int delay){
-        if (ui != null) ui.mouse = delay;
+    public IMappetUIBuilder mouse(int flags){
+        if (ui != null) ui.mouse = flags;
         return this;
     }
 
