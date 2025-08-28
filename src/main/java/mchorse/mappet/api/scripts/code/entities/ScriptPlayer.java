@@ -3,7 +3,8 @@ package mchorse.mappet.api.scripts.code.entities;
 import io.netty.buffer.Unpooled;
 import mchorse.aperture.network.common.PacketCameraState;
 import mchorse.mappet.api.scripts.code.ScriptResourcePack;
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.entities.utils.ScriptCamera;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.code.entities.utils.ClientSettings;
 import mchorse.mappet.api.scripts.code.items.ScriptInventory;
 import mchorse.mappet.api.scripts.code.mappet.MappetQuests;
@@ -14,6 +15,7 @@ import mchorse.mappet.api.scripts.code.score.ScriptTeam;
 import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.scripts.code.ui.MappetUIContext;
 import mchorse.mappet.api.scripts.user.entities.IClientSettings;
+import mchorse.mappet.api.scripts.user.entities.IScriptCamera;
 import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.items.IScriptInventory;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
@@ -588,6 +590,11 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
         UIContext context = character.getUIContext();
 
         return context == null ? null : new MappetUIContext(context);
+    }
+
+    @Override
+    public IScriptCamera getCamera() {
+        return new ScriptCamera(asMinecraft());
     }
 
     @Override

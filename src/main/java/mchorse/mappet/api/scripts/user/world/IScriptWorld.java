@@ -1,8 +1,8 @@
 package mchorse.mappet.api.scripts.user.world;
 
 import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
-import mchorse.mappet.api.scripts.code.data.ScriptBox;
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.math.ScriptBox;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.code.mappet.MappetSchematic;
 import mchorse.mappet.api.scripts.code.world.ScriptStructure;
 import mchorse.mappet.api.scripts.code.world.ScriptWorldBorder;

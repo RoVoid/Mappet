@@ -4,7 +4,7 @@ import mchorse.mappet.api.scripts.code.ScriptResourcePack;
 import mchorse.mappet.api.scripts.code.score.ScriptScoreObjective;
 import mchorse.mappet.api.scripts.code.score.ScriptScoreboard;
 import mchorse.mappet.api.scripts.code.score.ScriptTeam;
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.user.items.IScriptInventory;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
 import mchorse.mappet.api.scripts.user.mappet.IMappetQuests;
@@ -833,6 +833,8 @@ public interface IScriptPlayer extends IScriptEntity {
      * for code examples.
      */
     IMappetUIContext getUIContext();
+
+    IScriptCamera getCamera();
 
     /**
      * Returns the faction of the npc as a string

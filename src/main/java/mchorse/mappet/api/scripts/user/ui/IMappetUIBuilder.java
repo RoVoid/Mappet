@@ -87,6 +87,10 @@ public interface IMappetUIBuilder
      */
     public IMappetUIBuilder paused(boolean paused);
 
+    IMappetUIBuilder mouse(int flags);
+
+    IMappetUIBuilder mouse(int flags, int delay);
+
     /**
      * Create and insert a UI component based on its ID into UI being built by this builder.
      *

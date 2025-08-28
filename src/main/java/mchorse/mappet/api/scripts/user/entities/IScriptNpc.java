@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.user.entities;
 
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.entities.EntityNpc;
 
 import java.util.List;

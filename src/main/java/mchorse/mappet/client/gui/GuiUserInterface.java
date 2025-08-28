@@ -42,7 +42,7 @@ public class GuiUserInterface extends GuiBase {
     @Override
     protected void mouseClicked(int x, int y, int button) throws IOException { // 2
         super.mouseClicked(x, y, button);
-        if ((context.ui.mouse & 1 << 1) == 0) return;
+        if ((context.ui.mouseFlags & 1 << 1) == 0) return;
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("type", "click");
         tag.setInteger("button", button);
@@ -54,7 +54,7 @@ public class GuiUserInterface extends GuiBase {
     @Override
     protected void mouseReleased(int x, int y, int button) { // 4
         super.mouseReleased(x, y, button);
-        if ((context.ui.mouse & 1 << 2) == 0) return;
+        if ((context.ui.mouseFlags & 1 << 2) == 0) return;
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("type", "release");
         tag.setInteger("button", button);
@@ -66,7 +66,7 @@ public class GuiUserInterface extends GuiBase {
     @Override
     protected void mouseScrolled(int x, int y, int scroll) { // 16
         super.mouseScrolled(x, y, scroll);
-        if ((context.ui.mouse & 1 << 4) == 0) return;
+        if ((context.ui.mouseFlags & 1 << 4) == 0) return;
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("type", "scroll");
         tag.setInteger("scroll", scroll);
@@ -78,7 +78,7 @@ public class GuiUserInterface extends GuiBase {
     @Override
     protected void mouseClickMove(int x, int y, int button, long timeSinceLastClick) { // 8
         super.mouseClickMove(x, y, button, timeSinceLastClick);
-        if ((context.ui.mouse & 1 << 3) == 0) return;
+        if ((context.ui.mouseFlags & 1 << 3) == 0) return;
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("type", "drag");
         tag.setInteger("button", button);
@@ -116,23 +116,21 @@ public class GuiUserInterface extends GuiBase {
     }
 
     @Override
-    public void updateScreen() {
-        super.updateScreen();
-    }
-
-    @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         if (context.isDirty()) context.sendToServer();
         if (context.ui.background) drawDefaultBackground();
-        if ((context.ui.mouse & 1) != 0) {
+        System.out.println(getCurrent().tick + " " + context.ui.mouseDelay + " " + (getCurrent().tick % context.ui.mouseDelay == 0));
+        if (context.ui.mouseFlags != 0 && (context.ui.mouseDelay == 0 || getCurrent().tick % context.ui.mouseDelay == 0)) {
             NBTTagCompound tag = context.getMouse();
-            String hover = mouseHover(mouseX, mouseY);
-            if (!tag.hasNoTags() || !hover.isEmpty()) {
-                tag.setString("hover", hover);
-                if (!tag.hasKey("x")) pushCoords(tag, mouseX, mouseY);
-                context.setMouse(tag);
-                context.sendMouse();
+            if ((context.ui.mouseFlags & 1) != 0) {
+                String hover = mouseHover(mouseX, mouseY);
+                if (!hover.isEmpty()) {
+                    tag.setString("hover", hover);
+                    if (!tag.hasKey("x")) pushCoords(tag, mouseX, mouseY);
+                    context.setMouse(tag);
+                }
             }
+            if (!tag.hasNoTags()) context.sendMouse();
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);

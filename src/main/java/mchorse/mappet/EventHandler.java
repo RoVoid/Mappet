@@ -14,17 +14,20 @@ import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.utils.IExecutable;
 import mchorse.mappet.blocks.BlockRegion;
 import mchorse.mappet.blocks.BlockTrigger;
+import mchorse.mappet.capabilities.camera.CameraProvider;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.CharacterProvider;
 import mchorse.mappet.capabilities.character.ICharacter;
 import mchorse.mappet.client.RenderingHandler;
 import mchorse.mappet.commands.data.CommandDataClear;
+import mchorse.mappet.entities.EntityCamera;
 import mchorse.mappet.entities.EntityNpc;
 import mchorse.mappet.entities.utils.MappetNpcRespawnManager;
 import mchorse.mappet.events.StateChangedEvent;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.client.ClientHandlerBlackAndWhiteShader;
 import mchorse.mappet.network.client.ClientHandlerPlayerPerspective;
+import mchorse.mappet.network.common.PacketCamera;
 import mchorse.mappet.network.common.hotkey.PacketSyncHotkeys;
 import mchorse.mappet.network.common.huds.PacketHUDScene;
 import mchorse.mappet.network.common.npc.PacketNpcJump;
@@ -157,6 +160,7 @@ public class EventHandler {
     @SubscribeEvent
     public void attachPlayerCapability(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof EntityPlayer) event.addCapability(CAPABILITY, new CharacterProvider());
+        if (event.getObject() instanceof EntityCamera) event.addCapability(CAPABILITY, new CameraProvider());
     }
 
     @SubscribeEvent
@@ -176,6 +180,9 @@ public class EventHandler {
         }
 
         if (character != null) {
+//            UUID camera = character.getCamera();
+//            if(camera != null)Dispatcher.sendTo(new PacketCamera(player.world.get), );
+
             Map<String, List<HUDScene>> displayedHUDs = character.getDisplayedHUDs();
             for (Map.Entry<String, List<HUDScene>> entry : displayedHUDs.entrySet()) {
                 String id = entry.getKey();
@@ -294,7 +301,8 @@ public class EventHandler {
 
         // Handle load AI repeating command data
         RepeatingCommandDataStorage repeatingCommandDataStorage = RepeatingCommandDataStorage.getRepeatingCommandDataStorage(event.getWorld());
-        List<RepeatingCommandDataStorage.RepeatingCommandData> repeatingCommandDataList = repeatingCommandDataStorage.getRepeatingCommandData(entityLiving.getUniqueID());
+        List<RepeatingCommandDataStorage.RepeatingCommandData> repeatingCommandDataList = repeatingCommandDataStorage.getRepeatingCommandData(
+                entityLiving.getUniqueID());
         if (repeatingCommandDataList != null) {
             for (RepeatingCommandDataStorage.RepeatingCommandData repeatingCommandData : repeatingCommandDataList) {
                 String command = repeatingCommandData.command;
@@ -315,18 +323,18 @@ public class EventHandler {
             if (entity.getEntityData().getBoolean("positionLocked")) {
                 IScriptEntity scriptEntity = ScriptEntity.create(entity);
                 if (scriptEntity == null) continue;
-                scriptEntity.setPosition(entity.getEntityData().getDouble("lockX"), entity
-                        .getEntityData()
-                        .getDouble("lockY"), entity.getEntityData().getDouble("lockZ"));
+                scriptEntity.setPosition(entity.getEntityData().getDouble("lockX"),
+                                         entity.getEntityData().getDouble("lockY"),
+                                         entity.getEntityData().getDouble("lockZ"));
                 scriptEntity.setMotion(0.0, 0.0, 0.0);
             }
             //lock rotation if it should be locked
             if (entity.getEntityData().getBoolean("rotationLocked")) {
                 IScriptEntity scriptEntity = ScriptEntity.create(entity);
                 if (scriptEntity == null) continue;
-                scriptEntity.setRotations(entity.getEntityData().getFloat("lockPitch"), entity
-                        .getEntityData()
-                        .getFloat("lockYaw"), entity.getEntityData().getFloat("lockYawHead"));
+                scriptEntity.setRotations(entity.getEntityData().getFloat("lockPitch"),
+                                          entity.getEntityData().getFloat("lockYaw"),
+                                          entity.getEntityData().getFloat("lockYawHead"));
             }
         }
 
@@ -437,11 +445,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public void onStateChange(StateChangedEvent event) {
-        for (EntityPlayer player : FMLCommonHandler
-                .instance()
-                .getMinecraftServerInstance()
-                .getPlayerList()
-                .getPlayers()) {
+        for (EntityPlayer player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
             ICharacter character = Character.get(player);
 
             if (character != null && (event.isGlobal() || character.getStates() == event.states)) {
@@ -452,7 +456,7 @@ public class EventHandler {
                 }
 
                 if (i > 0) {
-                    this.playersToCheck.add(player);
+                    playersToCheck.add(player);
                 }
             }
         }

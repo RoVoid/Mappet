@@ -3,7 +3,7 @@ package mchorse.mappet.api.scripts;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.ScriptEvent;
 import mchorse.mappet.api.scripts.code.ScriptFactory;
-import mchorse.mappet.api.scripts.code.ScriptMath;
+import mchorse.mappet.api.scripts.code.math.ScriptMath;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.api.utils.manager.BaseManager;
 import mchorse.mappet.utils.ScriptUtils;

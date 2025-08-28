@@ -1,8 +1,6 @@
-package mchorse.mappet.api.scripts.code;
+package mchorse.mappet.api.scripts.code.math;
 
-import mchorse.mappet.api.scripts.code.data.ScriptBox;
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
-import mchorse.mappet.api.scripts.user.IScriptMath;
+import mchorse.mappet.api.scripts.user.math.IScriptMath;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Random;

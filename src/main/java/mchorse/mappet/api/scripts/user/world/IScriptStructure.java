@@ -1,9 +1,11 @@
 package mchorse.mappet.api.scripts.user.world;
 
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import net.minecraft.world.gen.structure.template.Template;
 
 public interface IScriptStructure {
+    Template asMinecraft();
+
     void takeBlocks(ScriptVector start, ScriptVector end, boolean withEntities);
 
     void takeBlocks(int x1, int y1, int z1, int x2, int y2, int z2, boolean withEntities);

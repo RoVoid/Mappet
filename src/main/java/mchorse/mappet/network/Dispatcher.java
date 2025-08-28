@@ -1,10 +1,7 @@
 package mchorse.mappet.network;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.network.client.ClientHandlerBlackAndWhiteShader;
-import mchorse.mappet.network.client.ClientHandlerPlayerPerspective;
-import mchorse.mappet.network.client.ClientHandlerPack;
-import mchorse.mappet.network.client.ClientHandlerSyncHotkeys;
+import mchorse.mappet.network.client.*;
 import mchorse.mappet.network.client.blocks.ClientHandlerEditConditionModel;
 import mchorse.mappet.network.client.blocks.ClientHandlerEditEmitter;
 import mchorse.mappet.network.client.blocks.ClientHandlerEditRegion;
@@ -28,9 +25,7 @@ import mchorse.mappet.network.client.ui.ClientHandlerCloseUI;
 import mchorse.mappet.network.client.ui.ClientHandlerUI;
 import mchorse.mappet.network.client.ui.ClientHandlerUIData;
 import mchorse.mappet.network.client.utils.ClientHandlerChangedBoundingBox;
-import mchorse.mappet.network.common.PacketBlackAndWhiteShader;
-import mchorse.mappet.network.common.PacketPlayerPerspective;
-import mchorse.mappet.network.common.PacketPack;
+import mchorse.mappet.network.common.*;
 import mchorse.mappet.network.common.blocks.PacketEditConditionModel;
 import mchorse.mappet.network.common.blocks.PacketEditEmitter;
 import mchorse.mappet.network.common.blocks.PacketEditRegion;
@@ -154,6 +149,9 @@ public class Dispatcher {
             /* Events */
             register(PacketSyncHotkeys.class, ClientHandlerSyncHotkeys.class, Side.CLIENT);
             register(PacketTriggeredHotkeys.class, ServerHandlerHotkeys.class, Side.SERVER);
+            register(PacketCamera.class, ClientHandlerCamera.class, Side.CLIENT);
+            register(PacketScreenshot.class, ClientHandlerScreenshot.class, Side.CLIENT);
+            //  register(PacketScreenshot.class, ServerHandlerScre.class, Side.CLIENT);
 
             /* Scripts */
             register(PacketEntityRotations.class, ClientHandlerEntityRotations.class, Side.CLIENT);

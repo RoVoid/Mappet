@@ -1,7 +1,7 @@
-package mchorse.mappet.api.scripts.user;
+package mchorse.mappet.api.scripts.user.math;
 
-import mchorse.mappet.api.scripts.code.data.ScriptBox;
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.math.ScriptBox;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import net.minecraft.util.math.BlockPos;
 
 public interface IScriptMath {

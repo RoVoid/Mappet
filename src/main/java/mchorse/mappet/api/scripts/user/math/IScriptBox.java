@@ -1,15 +1,15 @@
-package mchorse.mappet.api.scripts.user.data;
+package mchorse.mappet.api.scripts.user.math;
 
 import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
-import mchorse.mappet.api.scripts.code.data.ScriptBox;
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.math.ScriptBox;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.code.world.ScriptWorld;
 
 import java.util.List;
 
 /**
  * Script Box
- * <p> CREATE: {@link mchorse.mappet.api.scripts.user.IScriptMath#box(double, double, double, double, double, double)} </p>
+ * <p> CREATE: {@link IScriptMath#box(double, double, double, double, double, double)} </p>
  *
  * <pre>{@code
  * function main(c)

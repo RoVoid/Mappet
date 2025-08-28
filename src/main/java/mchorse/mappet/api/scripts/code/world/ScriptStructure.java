@@ -1,7 +1,7 @@
 package mchorse.mappet.api.scripts.code.world;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.user.world.IScriptStructure;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -25,8 +25,8 @@ public class ScriptStructure implements IScriptStructure {
     Template structure;
 
     public ScriptStructure(ScriptWorld world, String name) {
-        if (!(world.getMinecraftWorld() instanceof WorldServer)) return;
-        this.world = ((WorldServer) world.getMinecraftWorld());
+        if (!(world.asMinecraft() instanceof WorldServer)) return;
+        this.world = (WorldServer) world.asMinecraft();
         this.name = name;
         TemplateManager manager = this.world.getStructureTemplateManager();
         structure = manager.get(this.world.getMinecraftServer(), new ResourceLocation(name));
@@ -110,7 +110,13 @@ public class ScriptStructure implements IScriptStructure {
     }
 
     @Override
+    @Deprecated
     public Template getMinecraftStructure() {
+        return asMinecraft();
+    }
+
+    @Override
+    public Template asMinecraft() {
         return structure;
     }
 }

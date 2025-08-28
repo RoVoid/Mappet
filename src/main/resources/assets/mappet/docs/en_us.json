@@ -186,7 +186,7 @@
             },
             {
               "name": "vector",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ],
           "return": {
@@ -200,381 +200,6 @@
             "type": "boolean"
           },
           "docs": "Checks if this block state is air"
-        }
-      ]
-    }
-  },
-  "mchorse.mappet.api.scripts.user.data.IScriptVector": {
-    "name": "IScriptVector",
-    "docs": "Script Vector\n \u003cp\u003e CREATE: {@link mchorse.mappet.api.scripts.user.IScriptMath#vector(double, double, double)} \u003c/p\u003e",
-    "methods": {
-      "add": [
-        {
-          "parameters": [
-            {
-              "name": "other",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-            }
-          ],
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-          }
-        },
-        {
-          "parameters": [
-            {
-              "name": "x",
-              "type": "double"
-            },
-            {
-              "name": "y",
-              "type": "double"
-            },
-            {
-              "name": "z",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-          }
-        }
-      ],
-      "subtract": [
-        {
-          "parameters": [
-            {
-              "name": "other",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-            }
-          ],
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-          }
-        },
-        {
-          "parameters": [
-            {
-              "name": "x",
-              "type": "double"
-            },
-            {
-              "name": "y",
-              "type": "double"
-            },
-            {
-              "name": "z",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-          }
-        }
-      ],
-      "multiply": [
-        {
-          "parameters": [
-            {
-              "name": "scalar",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-          }
-        },
-        {
-          "parameters": [
-            {
-              "name": "other",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-            }
-          ],
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-          }
-        }
-      ],
-      "divide": [
-        {
-          "parameters": [
-            {
-              "name": "scalar",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-          }
-        },
-        {
-          "parameters": [
-            {
-              "name": "other",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-            }
-          ],
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-          }
-        }
-      ],
-      "floor": [
-        {
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-          }
-        }
-      ],
-      "floorX": [
-        {
-          "return": {
-            "type": "int"
-          }
-        }
-      ],
-      "floorY": [
-        {
-          "return": {
-            "type": "int"
-          }
-        }
-      ],
-      "floorZ": [
-        {
-          "return": {
-            "type": "int"
-          }
-        }
-      ],
-      "dotProduct": [
-        {
-          "parameters": [
-            {
-              "name": "other",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-            }
-          ],
-          "return": {
-            "type": "double"
-          }
-        }
-      ],
-      "crossProduct": [
-        {
-          "parameters": [
-            {
-              "name": "other",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-            }
-          ],
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-          }
-        }
-      ],
-      "length": [
-        {
-          "return": {
-            "type": "double"
-          }
-        }
-      ],
-      "distance": [
-        {
-          "parameters": [
-            {
-              "name": "other",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-            }
-          ],
-          "return": {
-            "type": "double"
-          }
-        },
-        {
-          "parameters": [
-            {
-              "name": "x",
-              "type": "double"
-            },
-            {
-              "name": "y",
-              "type": "double"
-            },
-            {
-              "name": "z",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "double"
-          }
-        }
-      ],
-      "normalize": [
-        {
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-          }
-        }
-      ],
-      "equals": [
-        {
-          "parameters": [
-            {
-              "name": "x",
-              "type": "double"
-            },
-            {
-              "name": "y",
-              "type": "double"
-            },
-            {
-              "name": "z",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "boolean"
-          }
-        },
-        {
-          "parameters": [
-            {
-              "name": "other",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-            }
-          ],
-          "return": {
-            "type": "boolean"
-          }
-        }
-      ],
-      "angleBetween": [
-        {
-          "parameters": [
-            {
-              "name": "other",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-            }
-          ],
-          "return": {
-            "type": "double"
-          }
-        }
-      ],
-      "isZero": [
-        {
-          "return": {
-            "type": "boolean"
-          }
-        }
-      ],
-      "toBlockPos": [
-        {
-          "return": {
-            "type": "BlockPos"
-          }
-        }
-      ]
-    }
-  },
-  "mchorse.mappet.api.scripts.user.data.IScriptBox": {
-    "name": "IScriptBox",
-    "docs": "Script Box\n \u003cp\u003e CREATE: {@link mchorse.mappet.api.scripts.user.IScriptMath#box(double, double, double, double, double, double)} \u003c/p\u003e\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var pos \u003d c.getSubject().getPosition();\n     var box \u003d mappet.box(-10, 4, -10, 10, 6, 10);\n     if (box.contains(pos)){\n         c.send(\"Player in the box\")\n     }\n }\n }\u003c/pre\u003e",
-    "methods": {
-      "isColliding": [
-        {
-          "parameters": [
-            {
-              "name": "box",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptBox"
-            }
-          ],
-          "return": {
-            "type": "boolean"
-          },
-          "docs": "Checks if this box collides with another."
-        }
-      ],
-      "offset": [
-        {
-          "parameters": [
-            {
-              "name": "x",
-              "type": "double"
-            },
-            {
-              "name": "y",
-              "type": "double"
-            },
-            {
-              "name": "z",
-              "type": "double"
-            }
-          ],
-          "docs": "Offsets the box by given coordinates\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var box \u003d mappet.box(-10, 4, -10, 10, 6, 10);\n     box.offset(10, 0, 10);\n     c.send(box.toString()); // ScriptBox(0.0, 4.0, 0.0, 20.0, 6.0, 20.0)\n }\n }\u003c/pre\u003e"
-        }
-      ],
-      "contains": [
-        {
-          "parameters": [
-            {
-              "name": "x",
-              "type": "double"
-            },
-            {
-              "name": "y",
-              "type": "double"
-            },
-            {
-              "name": "z",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "boolean"
-          },
-          "docs": "\u003cp id\u003d\"title\"\u003e Checks if given coordinates are inside of this box \u003c/p\u003e\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var box \u003d mappet.box(-10, 4, -10, 10, 6, 10);\n     c.send(box.contains(0, 4, 0)) // true\n     c.send(box.contains(0, 7, 0)) // false\n }\n }\u003c/pre\u003e"
-        },
-        {
-          "parameters": [
-            {
-              "name": "vector",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-            }
-          ],
-          "return": {
-            "type": "boolean"
-          },
-          "docs": "\u003cpre\u003e{@code\n function main(c)\n {\n     var box \u003d mappet.box(-10, 4, -10, 10, 6, 10);\n     var pos \u003d c.getSubject().getPosition()\n     if (box.contains(pos)){\n         c.send(\"Subject is inside the box\")\n     }\n }\n }\u003c/pre\u003e"
-        }
-      ],
-      "getBlocksPositions": [
-        {
-          "parameters": [
-            {
-              "name": "world",
-              "type": "mchorse.mappet.api.scripts.code.world.ScriptWorld"
-            },
-            {
-              "name": "state",
-              "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
-            }
-          ],
-          "return": {
-            "type": "java.util.List"
-          },
-          "docs": "Returns a list of positions for blocks in the box that match a given block state in a given world.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var state \u003d mappet.createBlockState(\"minecraft:stone\");\n     var box \u003d mappet.box(-10, 4, -10, 10, 6, 10);\n\n     c.send(box.getBlocksPositions(c.getWorld(), state));\n }\n }\u003c/pre\u003e"
-        }
-      ],
-      "toString": [
-        {
-          "return": {
-            "type": "java.lang.String"
-          }
         }
       ]
     }
@@ -683,7 +308,7 @@
       "getSpawnPoint": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
           },
           "docs": "Gets the player\u0027s spawn point.\n\n \u003cpre\u003e{@code\n   var spawnPoint \u003d c.getSubject().getSpawnPoint();\n   c.send(\"Spawn point: \" + spawnPoint.x + \", \" + spawnPoint.y + \", \" + spawnPoint.z);\n }\u003c/pre\u003e"
         }
@@ -1499,6 +1124,13 @@
             "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIContext"
           },
           "docs": "Get the UI context of currently opened user UI. See {@link IMappetUIContext}\n for code examples."
+        }
+      ],
+      "getCamera": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.entities.IScriptCamera"
+          }
         }
       ],
       "getFactions": [
@@ -2359,7 +1991,7 @@
       "getPosition": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
           },
           "docs": "Get entity\u0027s position.\n\n \u003cpre\u003e{@code\n    var pos \u003d c.getSubject().getPosition();\n\n    c.send(c.getSubject().getName() + \"\u0027s position is (\" + pos.x + \", \" + pos.y + \", \" + pos.z + \")\");\n }\u003c/pre\u003e"
         }
@@ -2407,7 +2039,7 @@
       "getMotion": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
           },
           "docs": "Get entity\u0027s motion.\n\n \u003cpre\u003e{@code\n    var motion \u003d c.getSubject().getMotion();\n\n    c.send(c.getSubject().getName() + \"\u0027s motion is (\" + motion.x + \", \" + motion.y + \", \" + motion.z + \")\");\n }\u003c/pre\u003e"
         }
@@ -2453,7 +2085,7 @@
       "getRotations": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
           },
           "docs": "Get entity\u0027s rotation (x is pitch, y is yaw, and z is yaw head, if entity\n is living base).\n\n \u003cpre\u003e{@code\n     var rotations \u003d c.getSubject().getRotations();\n     var pitch \u003d rotations.x;\n     var yaw \u003d rotations.y;\n     var yaw_head \u003d rotations.z;\n\n     c.send(c.getSubject().getName() + \"\u0027s rotations are (\" + pitch + \", \" + yaw + \", \" + yaw_head + \")\");\n }\u003c/pre\u003e"
         }
@@ -2504,7 +2136,7 @@
       "getLook": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
           },
           "docs": "Get a vector in which direction entity looks.\n\n \u003cpre\u003e{@code\n     var look \u003d c.getSubject().getLook();\n\n     c.getSubject().setMotion(look.x * 0.5, look.y * 0.5, look.z * 0.5);\n }\u003c/pre\u003e"
         }
@@ -3291,7 +2923,7 @@
         {
           "return": {
             "docs": "the bounding box of this entity",
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptBox"
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
           },
           "docs": "Returns the bounding box of this entity.\n\n \u003cpre\u003e{@code\n    var s \u003d c.getSubject();\n    var box \u003d s.getBoundingBox();\n    c.send(\"The bounding box of \" + s.getName() + \" is \" + box.minX + \", \" + box.minY + \", \" + box.minZ + \" to \" + box.maxX + \", \" + box.maxY + \", \" + box.maxZ);\n }\u003c/pre\u003e"
         }
@@ -3996,6 +3628,85 @@
       ]
     }
   },
+  "mchorse.mappet.api.scripts.user.entities.IScriptCamera": {
+    "name": "IScriptCamera",
+    "docs": "",
+    "methods": {
+      "removeCamera": [
+        {}
+      ],
+      "setPosition": [
+        {
+          "parameters": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            }
+          ]
+        }
+      ],
+      "setRotation": [
+        {
+          "parameters": [
+            {
+              "name": "yaw",
+              "type": "float"
+            },
+            {
+              "name": "pitch",
+              "type": "float"
+            }
+          ]
+        }
+      ],
+      "switchTo": [
+        {
+          "parameters": [
+            {
+              "name": "entity",
+              "type": "mchorse.mappet.api.scripts.code.entities.ScriptEntity"
+            }
+          ]
+        }
+      ],
+      "switchToCamera": [
+        {}
+      ],
+      "switchToOwner": [
+        {}
+      ],
+      "takeScreenshot": [
+        {
+          "parameters": [
+            {
+              "name": "name",
+              "type": "java.lang.String"
+            }
+          ]
+        },
+        {
+          "parameters": [
+            {
+              "name": "name",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "share",
+              "type": "boolean"
+            }
+          ]
+        }
+      ]
+    }
+  },
   "mchorse.mappet.api.scripts.user.entities.IClientSettings": {
     "name": "IClientSettings",
     "docs": "",
@@ -4463,7 +4174,7 @@
       "getBlock": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
           },
           "docs": "Get block position it hit."
         }
@@ -4471,285 +4182,9 @@
       "getHitPosition": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
           },
           "docs": "Get precise position where it hit."
-        }
-      ]
-    }
-  },
-  "mchorse.mappet.api.scripts.user.IScriptMath": {
-    "name": "IScriptMath",
-    "docs": "",
-    "methods": {
-      "box": [
-        {
-          "parameters": [
-            {
-              "name": "vec1",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-            },
-            {
-              "name": "vec2",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-            }
-          ],
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptBox"
-          }
-        },
-        {
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptBox"
-          }
-        },
-        {
-          "parameters": [
-            {
-              "name": "minX",
-              "type": "double"
-            },
-            {
-              "name": "minY",
-              "type": "double"
-            },
-            {
-              "name": "minZ",
-              "type": "double"
-            },
-            {
-              "name": "maxX",
-              "type": "double"
-            },
-            {
-              "name": "maxY",
-              "type": "double"
-            },
-            {
-              "name": "maxZ",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptBox"
-          },
-          "docs": "Create a bounding box.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var pos \u003d c.getSubject().getPosition();\n     var box \u003d math.box(-10, 4, -10, 10, 6, 10);\n     if (box.contains(pos)){\n         c.send(\"Player in the box\")\n     }\n }\n }\u003c/pre\u003e"
-        }
-      ],
-      "random": [
-        {
-          "parameters": [
-            {
-              "name": "max",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "double"
-          },
-          "docs": "Generate a number between 0 and the given max value (but not including the max value)\n\n \u003cpre\u003e{@code\n    var randomNumber \u003d mappet.random(10); // [0, 10)\n    c.send(randomNumber);\n }\u003c/pre\u003e"
-        },
-        {
-          "parameters": [
-            {
-              "name": "min",
-              "type": "double"
-            },
-            {
-              "name": "max",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "double"
-          },
-          "docs": "Generate a number between given min value and the given max value (but not including the max value)\n\n \u003cpre\u003e{@code\n    var randomNumber \u003d mappet.random(-3, 10); // [-3, 10)\n    c.send(randomNumber);\n }\u003c/pre\u003e"
-        }
-      ],
-      "seed": [
-        {
-          "parameters": [
-            {
-              "name": "seed",
-              "type": "long"
-            }
-          ],
-          "docs": "@deprecated Use {@link #setSeed(long)} instead"
-        }
-      ],
-      "setSeed": [
-        {
-          "parameters": [
-            {
-              "name": "newSeed",
-              "type": "long"
-            }
-          ],
-          "docs": "Set seed for randomizer"
-        }
-      ],
-      "getSeed": [
-        {
-          "return": {
-            "type": "long"
-          },
-          "docs": "Get randomizer seed"
-        }
-      ],
-      "floor": [
-        {
-          "parameters": [
-            {
-              "name": "value",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "double"
-          },
-          "docs": "\u003cpre\u003e{@code\n    c.send(math.floor(3.14)); // 3\n }\u003c/pre\u003e"
-        },
-        {
-          "parameters": [
-            {
-              "name": "value",
-              "type": "double"
-            },
-            {
-              "name": "precision",
-              "type": "int"
-            }
-          ],
-          "return": {
-            "type": "double"
-          },
-          "docs": "\u003cpre\u003e{@code\n    c.send(math.floor(3.14, 1)); // 3.1\n }\u003c/pre\u003e"
-        }
-      ],
-      "toDegrees": [
-        {
-          "parameters": [
-            {
-              "name": "radians",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "double"
-          },
-          "docs": "Convert radians to degrees"
-        }
-      ],
-      "toRadians": [
-        {
-          "parameters": [
-            {
-              "name": "degrees",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "double"
-          },
-          "docs": "Convert degrees to radians"
-        }
-      ],
-      "sign": [
-        {
-          "parameters": [
-            {
-              "name": "number",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "double"
-          }
-        }
-      ],
-      "factorial": [
-        {
-          "parameters": [
-            {
-              "name": "number",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "double"
-          }
-        }
-      ],
-      "gcd": [
-        {
-          "parameters": [
-            {
-              "name": "a",
-              "type": "double"
-            },
-            {
-              "name": "b",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "double"
-          }
-        }
-      ],
-      "lcm": [
-        {
-          "parameters": [
-            {
-              "name": "a",
-              "type": "double"
-            },
-            {
-              "name": "b",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "double"
-          }
-        }
-      ],
-      "vector": [
-        {
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-          },
-          "docs": "Create a scripted vector."
-        },
-        {
-          "parameters": [
-            {
-              "name": "x",
-              "type": "double"
-            },
-            {
-              "name": "y",
-              "type": "double"
-            },
-            {
-              "name": "z",
-              "type": "double"
-            }
-          ],
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-          }
-        },
-        {
-          "parameters": [
-            {
-              "name": "pos",
-              "type": "BlockPos"
-            }
-          ],
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
-          }
         }
       ]
     }
@@ -6764,6 +6199,657 @@
       ]
     }
   },
+  "mchorse.mappet.api.scripts.user.math.IScriptVector": {
+    "name": "IScriptVector",
+    "docs": "Script Vector\n \u003cp\u003e CREATE: {@link IScriptMath#vector(double, double, double)} \u003c/p\u003e",
+    "methods": {
+      "add": [
+        {
+          "parameters": [
+            {
+              "name": "other",
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        },
+        {
+          "parameters": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        }
+      ],
+      "subtract": [
+        {
+          "parameters": [
+            {
+              "name": "other",
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        },
+        {
+          "parameters": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        }
+      ],
+      "multiply": [
+        {
+          "parameters": [
+            {
+              "name": "scalar",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        },
+        {
+          "parameters": [
+            {
+              "name": "other",
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        }
+      ],
+      "divide": [
+        {
+          "parameters": [
+            {
+              "name": "scalar",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        },
+        {
+          "parameters": [
+            {
+              "name": "other",
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        }
+      ],
+      "floor": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        }
+      ],
+      "floorX": [
+        {
+          "return": {
+            "type": "int"
+          }
+        }
+      ],
+      "floorY": [
+        {
+          "return": {
+            "type": "int"
+          }
+        }
+      ],
+      "floorZ": [
+        {
+          "return": {
+            "type": "int"
+          }
+        }
+      ],
+      "dotProduct": [
+        {
+          "parameters": [
+            {
+              "name": "other",
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+            }
+          ],
+          "return": {
+            "type": "double"
+          }
+        }
+      ],
+      "crossProduct": [
+        {
+          "parameters": [
+            {
+              "name": "other",
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        }
+      ],
+      "length": [
+        {
+          "return": {
+            "type": "double"
+          }
+        }
+      ],
+      "distance": [
+        {
+          "parameters": [
+            {
+              "name": "other",
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+            }
+          ],
+          "return": {
+            "type": "double"
+          }
+        },
+        {
+          "parameters": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "double"
+          }
+        }
+      ],
+      "normalize": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        }
+      ],
+      "equals": [
+        {
+          "parameters": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "boolean"
+          }
+        },
+        {
+          "parameters": [
+            {
+              "name": "other",
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+            }
+          ],
+          "return": {
+            "type": "boolean"
+          }
+        }
+      ],
+      "angleBetween": [
+        {
+          "parameters": [
+            {
+              "name": "other",
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+            }
+          ],
+          "return": {
+            "type": "double"
+          }
+        }
+      ],
+      "isZero": [
+        {
+          "return": {
+            "type": "boolean"
+          }
+        }
+      ],
+      "toBlockPos": [
+        {
+          "return": {
+            "type": "BlockPos"
+          }
+        }
+      ]
+    }
+  },
+  "mchorse.mappet.api.scripts.user.math.IScriptMath": {
+    "name": "IScriptMath",
+    "docs": "",
+    "methods": {
+      "box": [
+        {
+          "parameters": [
+            {
+              "name": "vec1",
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+            },
+            {
+              "name": "vec2",
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+          }
+        },
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+          }
+        },
+        {
+          "parameters": [
+            {
+              "name": "minX",
+              "type": "double"
+            },
+            {
+              "name": "minY",
+              "type": "double"
+            },
+            {
+              "name": "minZ",
+              "type": "double"
+            },
+            {
+              "name": "maxX",
+              "type": "double"
+            },
+            {
+              "name": "maxY",
+              "type": "double"
+            },
+            {
+              "name": "maxZ",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+          },
+          "docs": "Create a bounding box.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var pos \u003d c.getSubject().getPosition();\n     var box \u003d math.box(-10, 4, -10, 10, 6, 10);\n     if (box.contains(pos)){\n         c.send(\"Player in the box\")\n     }\n }\n }\u003c/pre\u003e"
+        }
+      ],
+      "random": [
+        {
+          "parameters": [
+            {
+              "name": "max",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "double"
+          },
+          "docs": "Generate a number between 0 and the given max value (but not including the max value)\n\n \u003cpre\u003e{@code\n    var randomNumber \u003d mappet.random(10); // [0, 10)\n    c.send(randomNumber);\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "min",
+              "type": "double"
+            },
+            {
+              "name": "max",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "double"
+          },
+          "docs": "Generate a number between given min value and the given max value (but not including the max value)\n\n \u003cpre\u003e{@code\n    var randomNumber \u003d mappet.random(-3, 10); // [-3, 10)\n    c.send(randomNumber);\n }\u003c/pre\u003e"
+        }
+      ],
+      "seed": [
+        {
+          "parameters": [
+            {
+              "name": "seed",
+              "type": "long"
+            }
+          ],
+          "docs": "@deprecated Use {@link #setSeed(long)} instead"
+        }
+      ],
+      "setSeed": [
+        {
+          "parameters": [
+            {
+              "name": "newSeed",
+              "type": "long"
+            }
+          ],
+          "docs": "Set seed for randomizer"
+        }
+      ],
+      "getSeed": [
+        {
+          "return": {
+            "type": "long"
+          },
+          "docs": "Get randomizer seed"
+        }
+      ],
+      "floor": [
+        {
+          "parameters": [
+            {
+              "name": "value",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "double"
+          },
+          "docs": "\u003cpre\u003e{@code\n    c.send(math.floor(3.14)); // 3\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "value",
+              "type": "double"
+            },
+            {
+              "name": "precision",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "double"
+          },
+          "docs": "\u003cpre\u003e{@code\n    c.send(math.floor(3.14, 1)); // 3.1\n }\u003c/pre\u003e"
+        }
+      ],
+      "toDegrees": [
+        {
+          "parameters": [
+            {
+              "name": "radians",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "double"
+          },
+          "docs": "Convert radians to degrees"
+        }
+      ],
+      "toRadians": [
+        {
+          "parameters": [
+            {
+              "name": "degrees",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "double"
+          },
+          "docs": "Convert degrees to radians"
+        }
+      ],
+      "sign": [
+        {
+          "parameters": [
+            {
+              "name": "number",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "double"
+          }
+        }
+      ],
+      "factorial": [
+        {
+          "parameters": [
+            {
+              "name": "number",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "double"
+          }
+        }
+      ],
+      "gcd": [
+        {
+          "parameters": [
+            {
+              "name": "a",
+              "type": "double"
+            },
+            {
+              "name": "b",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "double"
+          }
+        }
+      ],
+      "lcm": [
+        {
+          "parameters": [
+            {
+              "name": "a",
+              "type": "double"
+            },
+            {
+              "name": "b",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "double"
+          }
+        }
+      ],
+      "vector": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          "docs": "Create a scripted vector."
+        },
+        {
+          "parameters": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        },
+        {
+          "parameters": [
+            {
+              "name": "pos",
+              "type": "BlockPos"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        }
+      ]
+    }
+  },
+  "mchorse.mappet.api.scripts.user.math.IScriptBox": {
+    "name": "IScriptBox",
+    "docs": "Script Box\n \u003cp\u003e CREATE: {@link IScriptMath#box(double, double, double, double, double, double)} \u003c/p\u003e\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var pos \u003d c.getSubject().getPosition();\n     var box \u003d mappet.box(-10, 4, -10, 10, 6, 10);\n     if (box.contains(pos)){\n         c.send(\"Player in the box\")\n     }\n }\n }\u003c/pre\u003e",
+    "methods": {
+      "isColliding": [
+        {
+          "parameters": [
+            {
+              "name": "box",
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+            }
+          ],
+          "return": {
+            "type": "boolean"
+          },
+          "docs": "Checks if this box collides with another."
+        }
+      ],
+      "offset": [
+        {
+          "parameters": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            }
+          ],
+          "docs": "Offsets the box by given coordinates\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var box \u003d mappet.box(-10, 4, -10, 10, 6, 10);\n     box.offset(10, 0, 10);\n     c.send(box.toString()); // ScriptBox(0.0, 4.0, 0.0, 20.0, 6.0, 20.0)\n }\n }\u003c/pre\u003e"
+        }
+      ],
+      "contains": [
+        {
+          "parameters": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "boolean"
+          },
+          "docs": "\u003cp id\u003d\"title\"\u003e Checks if given coordinates are inside of this box \u003c/p\u003e\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var box \u003d mappet.box(-10, 4, -10, 10, 6, 10);\n     c.send(box.contains(0, 4, 0)) // true\n     c.send(box.contains(0, 7, 0)) // false\n }\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "vector",
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+            }
+          ],
+          "return": {
+            "type": "boolean"
+          },
+          "docs": "\u003cpre\u003e{@code\n function main(c)\n {\n     var box \u003d mappet.box(-10, 4, -10, 10, 6, 10);\n     var pos \u003d c.getSubject().getPosition()\n     if (box.contains(pos)){\n         c.send(\"Subject is inside the box\")\n     }\n }\n }\u003c/pre\u003e"
+        }
+      ],
+      "getBlocksPositions": [
+        {
+          "parameters": [
+            {
+              "name": "world",
+              "type": "mchorse.mappet.api.scripts.code.world.ScriptWorld"
+            },
+            {
+              "name": "state",
+              "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+            }
+          ],
+          "return": {
+            "type": "java.util.List"
+          },
+          "docs": "Returns a list of positions for blocks in the box that match a given block state in a given world.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var state \u003d mappet.createBlockState(\"minecraft:stone\");\n     var box \u003d mappet.box(-10, 4, -10, 10, 6, 10);\n\n     c.send(box.getBlocksPositions(c.getWorld(), state));\n }\n }\u003c/pre\u003e"
+        }
+      ],
+      "toString": [
+        {
+          "return": {
+            "type": "java.lang.String"
+          }
+        }
+      ]
+    }
+  },
   "mchorse.mappet.api.scripts.user.nbt.INBTList": {
     "name": "INBTList",
     "docs": "Interface that represents an NBT list tag",
@@ -8293,6 +8379,34 @@
           "docs": "Toggle pausing of this UI screen."
         }
       ],
+      "mouse": [
+        {
+          "parameters": [
+            {
+              "name": "flags",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
+          }
+        },
+        {
+          "parameters": [
+            {
+              "name": "flags",
+              "type": "int"
+            },
+            {
+              "name": "delay",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
+          }
+        }
+      ],
       "create": [
         {
           "parameters": [
@@ -8700,7 +8814,7 @@
       "getCenter": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
           }
         }
       ],
@@ -8889,7 +9003,7 @@
             },
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ]
         },
@@ -8939,7 +9053,7 @@
           "parameters": [
             {
               "name": "newPos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ],
           "return": {
@@ -8969,7 +9083,7 @@
           "parameters": [
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ]
         }
@@ -9000,7 +9114,7 @@
           "parameters": [
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ],
           "return": {
@@ -9035,7 +9149,7 @@
           "parameters": [
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ],
           "return": {
@@ -9092,11 +9206,11 @@
             },
             {
               "name": "start",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             },
             {
               "name": "end",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ]
         },
@@ -9112,7 +9226,7 @@
             },
             {
               "name": "box",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptBox"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
             }
           ]
         },
@@ -9172,11 +9286,11 @@
             },
             {
               "name": "start",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             },
             {
               "name": "end",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ]
         },
@@ -9196,7 +9310,7 @@
             },
             {
               "name": "box",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptBox"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
             }
           ]
         }
@@ -9226,7 +9340,7 @@
           "parameters": [
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ],
           "return": {
@@ -9259,7 +9373,7 @@
           "parameters": [
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ],
           "return": {
@@ -9417,7 +9531,7 @@
             },
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             },
             {
               "name": "number",
@@ -9425,7 +9539,7 @@
             },
             {
               "name": "offset",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             },
             {
               "name": "speed",
@@ -9564,7 +9678,7 @@
             },
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             },
             {
               "name": "compound",
@@ -9681,7 +9795,7 @@
             },
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ],
           "return": {
@@ -9700,11 +9814,11 @@
             },
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             },
             {
               "name": "rot",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ],
           "return": {
@@ -9749,7 +9863,7 @@
           "parameters": [
             {
               "name": "box",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptBox"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
             }
           ],
           "return": {
@@ -9796,7 +9910,7 @@
           "parameters": [
             {
               "name": "box",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptBox"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
             },
             {
               "name": "ignoreVolumeLimit",
@@ -9867,7 +9981,7 @@
             },
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             },
             {
               "name": "volume",
@@ -10070,7 +10184,7 @@
             },
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             },
             {
               "name": "distance",
@@ -10192,7 +10306,7 @@
           "parameters": [
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ],
           "return": {
@@ -10238,7 +10352,7 @@
             },
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ],
           "return": {
@@ -10295,11 +10409,11 @@
             },
             {
               "name": "start",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             },
             {
               "name": "end",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ]
         },
@@ -10311,7 +10425,7 @@
             },
             {
               "name": "box",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptBox"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
             }
           ]
         }
@@ -10348,7 +10462,7 @@
             },
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ],
           "return": {
@@ -10407,7 +10521,7 @@
           "parameters": [
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ],
           "return": {
@@ -10448,7 +10562,7 @@
             },
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             },
             {
               "name": "tileData",
@@ -10586,7 +10700,7 @@
           "parameters": [
             {
               "name": "box",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptBox"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
             },
             {
               "name": "xNew",
@@ -10904,16 +11018,23 @@
     "name": "IScriptStructure",
     "docs": "",
     "methods": {
+      "asMinecraft": [
+        {
+          "return": {
+            "type": "Template"
+          }
+        }
+      ],
       "takeBlocks": [
         {
           "parameters": [
             {
               "name": "start",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             },
             {
               "name": "end",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             },
             {
               "name": "withEntities",
@@ -10959,7 +11080,7 @@
           "parameters": [
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             }
           ]
         },
@@ -10983,7 +11104,7 @@
           "parameters": [
             {
               "name": "pos",
-              "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+              "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
             },
             {
               "name": "rotation",
@@ -11031,7 +11152,7 @@
       "getSize": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.code.data.ScriptVector"
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
           }
         }
       ],
@@ -15022,7 +15143,28 @@
           ],
           "return": {
             "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
-          }
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        },
+        {
+          "parameters": [
+            {
+              "name": "flags",
+              "type": "int"
+            },
+            {
+              "name": "delay",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
         }
       ],
       "create": [
