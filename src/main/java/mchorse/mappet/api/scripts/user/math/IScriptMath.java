@@ -7,6 +7,8 @@ import net.minecraft.util.math.BlockPos;
 public interface IScriptMath {
     ScriptBox box(ScriptVector vec1, ScriptVector vec2);
 
+    double random();
+
     /**
      * Generate a number between 0 and the given max value (but not including the max value)
      *

@@ -204,1039 +204,6 @@
       ]
     }
   },
-  "mchorse.mappet.api.scripts.user.entities.IScriptPlayer": {
-    "name": "IScriptPlayer",
-    "docs": "Player entity interface.\n\n \u003cp\u003eThis interface represents a player entity.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        if (c.getSubject().isPlayer())\n        {\n            // Do something with the player...\n        }\n    }\n }\u003c/pre\u003e",
-    "superTypes": [
-      "mchorse.mappet.api.scripts.user.entities.IScriptEntity"
-    ],
-    "methods": {
-      "getMinecraftPlayer": [
-        {
-          "return": {
-            "type": "EntityPlayerMP"
-          },
-          "annotations": [
-            "java.lang.Deprecated"
-          ],
-          "docs": "Use {@link #asMinecraft()}\n @deprecated"
-        }
-      ],
-      "asMinecraft": [
-        {
-          "return": {
-            "type": "EntityPlayerMP"
-          },
-          "docs": "Get Minecraft player entity instance.\n \u003cb\u003eBEWARE:\u003c/b\u003e you need to know the MCP mappings to directly call methods on this instance!"
-        }
-      ],
-      "isOperator": [
-        {
-          "return": {
-            "docs": "Whether player is an operator",
-            "type": "boolean"
-          }
-        }
-      ],
-      "getGameMode": [
-        {
-          "return": {
-            "docs": "Player\u0027s game mode as an integer, \u003ccode\u003e0\u003c/code\u003e is survival, \u003ccode\u003e1\u003c/code\u003e\n is creative, \u003ccode\u003e2\u003c/code\u003e is adventure, and \u003ccode\u003e3\u003c/code\u003e is spectator.",
-            "type": "int"
-          },
-          "docs": "Get player\u0027s game mode.\n\n \u003cpre\u003e{@code\n    // Assuming that c.getSubject() is a player\n    var player \u003d c.getSubject();\n    var gamemode \u003d player.getGameMode();\n\n    if (gamemode \u003d\u003d\u003d 0)\n    {\n        player.send(\"You\u0027re in survival mode!\");\n    }\n }\u003c/pre\u003e\n\n is creative, \u003ccode\u003e2\u003c/code\u003e is adventure, and \u003ccode\u003e3\u003c/code\u003e is spectator."
-        }
-      ],
-      "setGameMode": [
-        {
-          "parameters": [
-            {
-              "name": "gameMode",
-              "type": "int",
-              "docs": "Player\u0027s game mode \u003ccode\u003e0\u003c/code\u003e is survival, \u003ccode\u003e1\u003c/code\u003e\n                 is creative, \u003ccode\u003e2\u003c/code\u003e is adventure, and \u003ccode\u003e3\u003c/code\u003e is spectator."
-            }
-          ],
-          "docs": "Set player\u0027s game mode.\n\n \u003cpre\u003e{@code\n    // Assuming that c.getSubject() is a player\n    var player \u003d c.getSubject();\n    var gamemode \u003d c.getSubject().getGameMode();\n\n    // When player exits the mining region, set their game mode back to adventure\n    if (gamemode \u003d\u003d\u003d 0 \u0026\u0026 !player.getStates().has(\"region.mining_factory\"))\n    {\n        player.setGameMode(2);\n    }\n }\u003c/pre\u003e\n\n                 is creative, \u003ccode\u003e2\u003c/code\u003e is adventure, and \u003ccode\u003e3\u003c/code\u003e is spectator."
-        }
-      ],
-      "getInventory": [
-        {
-          "return": {
-            "type": "mchorse.mappet.api.scripts.user.items.IScriptInventory"
-          },
-          "docs": "Get player\u0027s inventory.\n\n \u003cpre\u003e{@code\n    // Assuming that c.getSubject() is a player\n    var inventory \u003d c.getSubject().getInventory();\n    var item \u003d mappet.createItem(\"minecraft:diamond_sword\");\n\n    // This will change the first slot in the hotbar to a diamond sword\n    inventory.setStack(0, item);\n }\u003c/pre\u003e"
-        }
-      ],
-      "getEnderChest": [
-        {
-          "return": {
-            "type": "mchorse.mappet.api.scripts.user.items.IScriptInventory"
-          },
-          "docs": "Get player\u0027s ender chest inventory.\n\n \u003cpre\u003e{@code\n    // Assuming that c.getSubject() is a player\n    var inventory \u003d c.getSubject().getEnderChest();\n    var item \u003d mappet.createItem(\"minecraft:diamond_sword\");\n\n    // This will change the first slot in player\u0027s ender chest to a diamond sword\n    inventory.setStack(0, item);\n }\u003c/pre\u003e"
-        }
-      ],
-      "executeCommand": [
-        {
-          "parameters": [
-            {
-              "name": "command",
-              "type": "java.lang.String"
-            }
-          ],
-          "docs": "Executes a command as a player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        c.getSubject().executeCommand(\"/kill\");\n    }\n }\u003c/pre\u003e"
-        }
-      ],
-      "setSpawnPoint": [
-        {
-          "parameters": [
-            {
-              "name": "x",
-              "type": "double"
-            },
-            {
-              "name": "y",
-              "type": "double"
-            },
-            {
-              "name": "z",
-              "type": "double"
-            }
-          ],
-          "docs": "Sets the player\u0027s spawn point.\n\n \u003cpre\u003e{@code\n   c.getSubject().setSpawnPoint(0, 0, 0);\n }\u003c/pre\u003e"
-        }
-      ],
-      "getSpawnPoint": [
-        {
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
-          },
-          "docs": "Gets the player\u0027s spawn point.\n\n \u003cpre\u003e{@code\n   var spawnPoint \u003d c.getSubject().getSpawnPoint();\n   c.send(\"Spawn point: \" + spawnPoint.x + \", \" + spawnPoint.y + \", \" + spawnPoint.z);\n }\u003c/pre\u003e"
-        }
-      ],
-      "isFlying": [
-        {
-          "return": {
-            "type": "boolean"
-          },
-          "docs": "Returns if the player is flying.\n\n \u003cpre\u003e{@code\n    function main(c) {\n        c.send(\"Is the player flying? \" + c.getSubject().isFlying());\n    }\n }\u003c/pre\u003e"
-        }
-      ],
-      "getWalkSpeed": [
-        {
-          "return": {
-            "type": "float"
-          },
-          "docs": "Returns if the walk speed of the player.\n\n \u003cpre\u003e{@code\n    function main(c) {\n        c.send(\"The walk speed of the player is: \" + c.getSubject().getWalkSpeed());\n    }\n }\u003c/pre\u003e"
-        }
-      ],
-      "setFlyingEnabled": [
-        {
-          "parameters": [
-            {
-              "name": "enabled",
-              "type": "boolean",
-              "docs": "Whether the player can fly or not."
-            }
-          ],
-          "docs": "Allows the player to fly in whatever game mode they\u0027re in.\n\n \u003cpre\u003e{@code\n c.getSubject().setFlyingEnabled(true);\n }\u003c/pre\u003e"
-        }
-      ],
-      "getFlySpeed": [
-        {
-          "return": {
-            "type": "float"
-          },
-          "docs": "Returns if the flight speed of the player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        c.send(\"The flight speed of the player is: \" + c.getSubject().getFlySpeed());\n    }\n }\u003c/pre\u003e"
-        }
-      ],
-      "setWalkSpeed": [
-        {
-          "parameters": [
-            {
-              "name": "speed",
-              "type": "float"
-            }
-          ],
-          "docs": "Set the walk speed of the player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        c.getSubject().setWalkSpeed(0.5);\n    }\n }\u003c/pre\u003e"
-        }
-      ],
-      "setFlySpeed": [
-        {
-          "parameters": [
-            {
-              "name": "speed",
-              "type": "float"
-            }
-          ],
-          "docs": "Set the flight speed of the player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        c.getSubject().setFlySpeed(0.5);\n    }\n }\u003c/pre\u003e"
-        }
-      ],
-      "resetFlySpeed": [
-        {
-          "docs": "Reset the flight speed of the player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        c.getSubject().resetFlySpeed();\n    }\n }\u003c/pre\u003e"
-        }
-      ],
-      "resetWalkSpeed": [
-        {
-          "docs": "Reset the walking speed of the player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        c.getSubject().resetWalkSpeed();\n    }\n }\u003c/pre\u003e"
-        }
-      ],
-      "getCooldown": [
-        {
-          "parameters": [
-            {
-              "name": "inventorySlot",
-              "type": "int"
-            }
-          ],
-          "return": {
-            "type": "float"
-          },
-          "docs": "Get cooldown of a particular inventory index of the player.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var player \u003d c.getSubject();\n     var cooldown \u003d player.getCooldown(40); // tip: 40 is the offhand slot\n\n     c.send(The held item cooldown \" + ((1 - cooldown) * 100) + \" percent expired.\");\n }\n }\u003c/pre\u003e"
-        },
-        {
-          "parameters": [
-            {
-              "name": "item",
-              "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
-            }
-          ],
-          "return": {
-            "type": "float"
-          },
-          "docs": "Get cooldown of a particular inventory index of the player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var player \u003d c.getSubject();\n        var item \u003d mappet.createItem(\"minecraft:diamond_sword\");\n        var cooldown \u003d player.getCooldown(item);\n\n        c.send(The held item cooldown \" + ((1 - cooldown) * 100) + \" percent expired.\");\n    }\n }\u003c/pre\u003e"
-        }
-      ],
-      "setCooldown": [
-        {
-          "parameters": [
-            {
-              "name": "inventorySlot",
-              "type": "int"
-            },
-            {
-              "name": "ticks",
-              "type": "int"
-            }
-          ],
-          "docs": "Set cooldown of a particular inventory index of the player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var player \u003d c.getSubject();\n\n        player.setCooldown(player.getHotbarIndex(), 100); // tip: 40 is the offhand slot\n    }\n }\u003c/pre\u003e"
-        },
-        {
-          "parameters": [
-            {
-              "name": "item",
-              "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
-            },
-            {
-              "name": "ticks",
-              "type": "int"
-            }
-          ],
-          "docs": "Set cooldown for given item.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var player \u003d c.getSubject();\n        var item \u003d mappet.createItem(\"minecraft:diamond_sword\");\n\n        player.setCooldown(item, 100);\n    }\n }\u003c/pre\u003e"
-        }
-      ],
-      "resetCooldown": [
-        {
-          "parameters": [
-            {
-              "name": "inventorySlot",
-              "type": "int"
-            }
-          ],
-          "docs": "Reset cooldown for given item.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var player \u003d c.getSubject();\n\n        player.resetCooldown(player.getMainItemInventoryIndex()); // tip: 40 is the offhand slot\n    }\n }\u003c/pre\u003e"
-        },
-        {
-          "parameters": [
-            {
-              "name": "item",
-              "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
-            }
-          ],
-          "docs": "Reset cooldown of a particular inventory index of the player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var player \u003d c.getSubject();\n        var item \u003d mappet.createItem(\"minecraft:diamond_sword\");\n\n        player.resetCooldown(item);\n    }\n }\u003c/pre\u003e"
-        }
-      ],
-      "getHotbarIndex": [
-        {
-          "return": {
-            "type": "int"
-          },
-          "docs": "Get the inventory index of the main item. Useful for e.g., main hand\u0027s cooldown methods.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var player \u003d c.getSubject();\n\n        player.setCooldown(player.getHotbarIndex(), 100); //tip: 40 is the offhand slot\n    }\n }\u003c/pre\u003e"
-        }
-      ],
-      "setHotbarIndex": [
-        {
-          "parameters": [
-            {
-              "name": "slot",
-              "type": "int"
-            }
-          ],
-          "docs": "Set forcefully player\u0027s current hotbar inventory index. Acceptable values are \u003ccode\u003e0\u003c/code\u003e - \u003ccode\u003e8\u003c/code\u003e."
-        }
-      ],
-      "send": [
-        {
-          "parameters": [
-            {
-              "name": "message",
-              "type": "java.lang.String"
-            }
-          ],
-          "docs": "Send a message to this player.\n\n \u003cpre\u003e{@code\n    // Assuming that c.getSubject() is a player\n    c.send(\"I love all my players equally.\");\n    c.getSubject().send(\"...but between you and me, you\u0027re my favorite player ;)\");\n }\u003c/pre\u003e"
-        }
-      ],
-      "sendRaw": [
-        {
-          "parameters": [
-            {
-              "name": "message",
-              "type": "mchorse.mappet.api.scripts.user.nbt.INBT"
-            }
-          ],
-          "docs": "Send a message to this player using a text component (like \u003ccode\u003e/tellraw\u003c/code\u003e command).\n\n \u003cpre\u003e{@code\n    var message \u003d mappet.createCompound();\n\n    message.setString(\"text\", \"This message displays an item...\");\n    message.setString(\"color\", \"gold\");\n    message.setNBT(\"hoverEvent\",\u0027{action:\"show_item\",value:\"{id:\\\\\"minecraft:diamond_hoe\\\\\",Count:1b}\"}\u0027);\n\n    c.getSubject().sendRaw(message);\n }\u003c/pre\u003e"
-        }
-      ],
-      "getSkin": [
-        {
-          "return": {
-            "type": "java.lang.String"
-          },
-          "docs": "Get skin texture URL for a player from Mojang\n\n \u003cpre\u003e{@code\n    var player \u003d c.getPlayer()\n    var skinUrl \u003d player.getSkin();\n }\u003c/pre\u003e"
-        },
-        {
-          "parameters": [
-            {
-              "name": "source",
-              "type": "java.lang.String",
-              "docs": "Source of skin data"
-            }
-          ],
-          "return": {
-            "type": "java.lang.String"
-          },
-          "docs": "Get skin texture URL for a player from the specific source\n\n \u003cp\u003eSource defines where the skin should be fetched from\u003c/p\u003e\n \u003cp\u003eValid sources: \u003ccode\u003eMinecraft / Mojang\u003c/code\u003e, \u003ccode\u003eElyBy / Ely.By\u003c/code\u003e, \u003ccode\u003eTL / TLauncher\u003c/code\u003e\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var player \u003d c.getPlayer()\n    var skinUrl \u003d player.getSkin(\"elyby\");\n }\u003c/pre\u003e"
-        }
-      ],
-      "getSkinObject": [
-        {
-          "return": {
-            "docs": "\u003ccode\u003eurl\u003c/code\u003e – URL to the player\u0027s skin texture\u003c/li\u003e, \u003ccode\u003eslim\u003c/code\u003e – boolean indicating if the model is Alex\u003c/li\u003e",
-            "type": "java.lang.Object"
-          },
-          "docs": "Get an object containing both the skin texture URL and whether the model is slim (Alex)\n\n \u003cpre\u003e{@code\n    var player \u003d c.getPlayer();\n    var skinObject \u003d player.getSkinObject();\n\n    if (skinObject.slim) {\n        c.send(player.getName(), \"is female or femboy!\");\n        c.send(\"Take fast her skin:\", skinObject.url);\n    }\n }\u003c/pre\u003e"
-        },
-        {
-          "parameters": [
-            {
-              "name": "source",
-              "type": "java.lang.String"
-            }
-          ],
-          "return": {
-            "docs": "\u003ccode\u003eurl\u003c/code\u003e – URL to the player\u0027s skin texture\u003c/li\u003e, \u003ccode\u003eslim\u003c/code\u003e – boolean indicating if the model is Alex\u003c/li\u003e",
-            "type": "java.lang.Object"
-          },
-          "docs": "Get an object containing both the skin texture URL and whether the model is slim (Alex)\n\n \u003cp\u003eSource defines where the skin should be fetched from\u003c/p\u003e\n \u003cp\u003eValid sources: \u003ccode\u003eMinecraft / Mojang\u003c/code\u003e, \u003ccode\u003eElyBy / Ely.By\u003c/code\u003e, \u003ccode\u003eTL / TLauncher\u003c/code\u003e\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var player \u003d c.getPlayer();\n    var skinObject \u003d player.getSkinObject(\"elyby\");\n }\u003c/pre\u003e"
-        }
-      ],
-      "sendTitleDurations": [
-        {
-          "parameters": [
-            {
-              "name": "fadeIn",
-              "type": "int",
-              "docs": "How many ticks it will take for title and subtitle to appear."
-            },
-            {
-              "name": "idle",
-              "type": "int",
-              "docs": "For how many ticks will title and subtitle stay after fading in."
-            },
-            {
-              "name": "fadeOut",
-              "type": "int",
-              "docs": "How many ticks it will take for title and subtitle to disappear after idling."
-            }
-          ],
-          "docs": "Send title and subtitle durations (in ticks, \u003ccode\u003e20\u003c/code\u003e ticks \u003d \u003ccode\u003e1\u003c/code\u003e second).\n These must be sent before sending title or subtitle.\n\n \u003cp\u003e\u003cb\u003eBEWARE\u003c/b\u003e: these durations will stay the same until the player logs out, so you may want\n to change them before every time you send title and subtitle.\u003c/p\u003e\n\n \u003cp\u003eDefault values are: fadeIn \u003d \u003ccode\u003e10\u003c/code\u003e ticks, idle \u003d \u003ccode\u003e70\u003c/code\u003e ticks,\n fadeOut \u003d \u003ccode\u003e20\u003c/code\u003e ticks.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var player \u003d c.getSubject();\n\n    player.sendTitleDurations(5, 10, 5);\n    player.sendTitle(\"Quick!\");\n    player.sendSubtitle(\"Get into cover!\");\n }\u003c/pre\u003e"
-        }
-      ],
-      "sendTitle": [
-        {
-          "parameters": [
-            {
-              "name": "title",
-              "type": "java.lang.String"
-            }
-          ],
-          "docs": "Send the title to this player that will be displayed in the middle of the screen.\n\n \u003cpre\u003e{@code\n    c.getSubject().sendTitle(\"Hello, world!\");\n }\u003c/pre\u003e"
-        }
-      ],
-      "sendSubtitle": [
-        {
-          "parameters": [
-            {
-              "name": "title",
-              "type": "java.lang.String"
-            }
-          ],
-          "docs": "Send the subtitle to this player that will be displayed in the middle of the\n screen. Title must be sent as well, using {@link #sendTitle(String)}, in order\n for subtitle to appear.\n\n \u003cpre\u003e{@code\n    c.getSubject().sendTitle(\"Hello,\");\n    c.getSubject().sendSubtitle(\"world!\");\n }\u003c/pre\u003e"
-        }
-      ],
-      "sendActionBar": [
-        {
-          "parameters": [
-            {
-              "name": "title",
-              "type": "java.lang.String"
-            }
-          ],
-          "docs": "Send a message to this player that will be displayed in the action bar. The duration\n of action bar line is \u003ccode\u003e60\u003c/code\u003e ticks (\u003ccode\u003e3\u003c/code\u003e seconds)."
-        }
-      ],
-      "setClipboard": [
-        {
-          "parameters": [
-            {
-              "name": "text",
-              "type": "java.lang.String"
-            }
-          ]
-        }
-      ],
-      "openLink": [
-        {
-          "parameters": [
-            {
-              "name": "url",
-              "type": "java.lang.String"
-            }
-          ]
-        }
-      ],
-      "openWebLink": [
-        {
-          "parameters": [
-            {
-              "name": "url",
-              "type": "java.lang.String"
-            }
-          ]
-        }
-      ],
-      "setXp": [
-        {
-          "parameters": [
-            {
-              "name": "level",
-              "type": "int",
-              "docs": "Experience level."
-            },
-            {
-              "name": "points",
-              "type": "int",
-              "docs": "Number of experience points in that particular level."
-            }
-          ],
-          "docs": "Set experience level and number of points for that level.\n\n \u003cpre\u003e{@code\n    // For more information of how levels work (i.e. how many points per\n    // level to level up) see this table:\n    // https://minecraft.fandom.com/wiki/Experience#Leveling_up\n\n    // Set player\u0027s XP level to 17 and half of the bar (level 17 has\n    // 42 points in total to level up)\n    c.getSubject().setXp(17, 21);\n }\u003c/pre\u003e"
-        }
-      ],
-      "addXp": [
-        {
-          "parameters": [
-            {
-              "name": "points",
-              "type": "int",
-              "docs": "Number of experience points to add to player."
-            }
-          ],
-          "docs": "Add experience points to this player. Inputting more points than player\u0027s\n current level can contain will result into leveling up one or more times.\n\n \u003cpre\u003e{@code\n    // For more information of how levels work (i.e. how many points per\n    // level to level up) see this table:\n    // https://minecraft.fandom.com/wiki/Experience#Leveling_up\n\n    // Add 1000 experience points\n    c.getSubject().addXp(1000);\n }\u003c/pre\u003e"
-        }
-      ],
-      "getXpLevel": [
-        {
-          "return": {
-            "type": "int"
-          },
-          "docs": "Get player\u0027s current experience level.\n\n \u003cpre\u003e{@code\n    // For more information of how levels work (i.e. how many points per\n    // level to level up) see this table:\n    // https://minecraft.fandom.com/wiki/Experience#Leveling_up\n\n    var s \u003d c.getSubject();\n\n    if (s.getXpLevel() \u003c 50)\n    {\n        var section \u003d \"§\";\n\n        // Teleport the player out of the area\n        s.setPosition(10, 4, -15);\n        s.send(\"Come back when you\u0027re level\" + section + \"7 50\" + section + \"r!\");\n    }\n }\u003c/pre\u003e"
-        }
-      ],
-      "getXpPoints": [
-        {
-          "return": {
-            "type": "int"
-          },
-          "docs": "Get player\u0027s experience points in their current level."
-        }
-      ],
-      "setHunger": [
-        {
-          "parameters": [
-            {
-              "name": "value",
-              "type": "int"
-            }
-          ]
-        }
-      ],
-      "getHunger": [
-        {
-          "return": {
-            "type": "int"
-          }
-        }
-      ],
-      "setSaturation": [
-        {
-          "parameters": [
-            {
-              "name": "value",
-              "type": "float"
-            }
-          ]
-        }
-      ],
-      "getSaturation": [
-        {
-          "return": {
-            "type": "float"
-          }
-        }
-      ],
-      "playSound": [
-        {
-          "parameters": [
-            {
-              "name": "event",
-              "type": "java.lang.String"
-            },
-            {
-              "name": "x",
-              "type": "double"
-            },
-            {
-              "name": "y",
-              "type": "double"
-            },
-            {
-              "name": "z",
-              "type": "double"
-            }
-          ],
-          "docs": "Play a sound event only to this player.\n\n \u003cp\u003eFor all possible sound event IDs, please refer to either \u003ccode\u003e/playsound\u003c/code\u003e\n command, or script editor\u0027s sound picker.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var player \u003d c.getSubject();\n    var pos \u003d player.getPosition();\n\n    player.playSound(\"minecraft:entity.pig.ambient\", pos.x, pos.y, pos.z);\n }\u003c/pre\u003e"
-        },
-        {
-          "parameters": [
-            {
-              "name": "event",
-              "type": "java.lang.String"
-            },
-            {
-              "name": "soundCategory",
-              "type": "java.lang.String"
-            },
-            {
-              "name": "x",
-              "type": "double"
-            },
-            {
-              "name": "y",
-              "type": "double"
-            },
-            {
-              "name": "z",
-              "type": "double"
-            }
-          ],
-          "docs": "Play a sound event only to this player at the specific sound channel.\n\n \u003cpre\u003e{@code\n    var player \u003d c.getSubject();\n    var pos \u003d player.getPosition();\n\n    player.playSound(\"minecraft:entity.pig.ambient\", \"voice\", pos.x, pos.y, pos.z);\n }\u003c/pre\u003e"
-        },
-        {
-          "parameters": [
-            {
-              "name": "event",
-              "type": "java.lang.String"
-            },
-            {
-              "name": "soundCategory",
-              "type": "java.lang.String"
-            },
-            {
-              "name": "x",
-              "type": "double"
-            },
-            {
-              "name": "y",
-              "type": "double"
-            },
-            {
-              "name": "z",
-              "type": "double"
-            },
-            {
-              "name": "volume",
-              "type": "float"
-            },
-            {
-              "name": "pitch",
-              "type": "float"
-            }
-          ],
-          "docs": "Play a sound event only to this player with volume and pitch at the specific channel.\n\n \u003cpre\u003e{@code\n    var player \u003d c.getSubject();\n    var pos \u003d player.getPosition();\n\n    player.playSound(\"minecraft:entity.pig.ambient\", \"voice\", pos.x, pos.y, pos.z, 1.0, 0.8);\n }\u003c/pre\u003e"
-        },
-        {
-          "parameters": [
-            {
-              "name": "event",
-              "type": "java.lang.String"
-            },
-            {
-              "name": "x",
-              "type": "double"
-            },
-            {
-              "name": "y",
-              "type": "double"
-            },
-            {
-              "name": "z",
-              "type": "double"
-            },
-            {
-              "name": "volume",
-              "type": "float"
-            },
-            {
-              "name": "pitch",
-              "type": "float"
-            }
-          ],
-          "docs": "Play a sound event only to this player with volume and pitch.\n\n \u003cpre\u003e{@code\n    var player \u003d c.getSubject();\n    var pos \u003d player.getPosition();\n\n    player.playSound(\"minecraft:entity.pig.ambient\", pos.x, pos.y, pos.z, 1.0, 0.8);\n }\u003c/pre\u003e"
-        }
-      ],
-      "getScoreboard": [
-        {
-          "return": {
-            "type": "mchorse.mappet.api.scripts.code.score.ScriptScoreboard"
-          }
-        }
-      ],
-      "join": [
-        {
-          "parameters": [
-            {
-              "name": "team",
-              "type": "mchorse.mappet.api.scripts.code.score.ScriptTeam"
-            }
-          ]
-        },
-        {
-          "parameters": [
-            {
-              "name": "name",
-              "type": "java.lang.String"
-            }
-          ]
-        }
-      ],
-      "leave": [
-        {}
-      ],
-      "setScore": [
-        {
-          "parameters": [
-            {
-              "name": "objective",
-              "type": "mchorse.mappet.api.scripts.code.score.ScriptScoreObjective"
-            },
-            {
-              "name": "value",
-              "type": "int"
-            }
-          ]
-        },
-        {
-          "parameters": [
-            {
-              "name": "name",
-              "type": "java.lang.String"
-            },
-            {
-              "name": "value",
-              "type": "int"
-            }
-          ]
-        }
-      ],
-      "addScore": [
-        {
-          "parameters": [
-            {
-              "name": "objective",
-              "type": "mchorse.mappet.api.scripts.code.score.ScriptScoreObjective"
-            },
-            {
-              "name": "value",
-              "type": "int"
-            }
-          ],
-          "return": {
-            "type": "int"
-          }
-        },
-        {
-          "parameters": [
-            {
-              "name": "name",
-              "type": "java.lang.String"
-            },
-            {
-              "name": "value",
-              "type": "int"
-            }
-          ],
-          "return": {
-            "type": "int"
-          }
-        }
-      ],
-      "getScore": [
-        {
-          "parameters": [
-            {
-              "name": "objective",
-              "type": "mchorse.mappet.api.scripts.code.score.ScriptScoreObjective"
-            }
-          ],
-          "return": {
-            "type": "int"
-          }
-        },
-        {
-          "parameters": [
-            {
-              "name": "name",
-              "type": "java.lang.String"
-            }
-          ],
-          "return": {
-            "type": "int"
-          }
-        }
-      ],
-      "resetScore": [
-        {
-          "parameters": [
-            {
-              "name": "objective",
-              "type": "mchorse.mappet.api.scripts.code.score.ScriptScoreObjective"
-            }
-          ]
-        },
-        {
-          "parameters": [
-            {
-              "name": "name",
-              "type": "java.lang.String"
-            }
-          ]
-        }
-      ],
-      "updateServerPack": [
-        {
-          "parameters": [
-            {
-              "name": "resourcePack",
-              "type": "mchorse.mappet.api.scripts.code.ScriptResourcePack"
-            }
-          ]
-        }
-      ],
-      "clearServerPack": [
-        {}
-      ],
-      "enableBlackAndWhiteShader": [
-        {
-          "parameters": [
-            {
-              "name": "enable",
-              "type": "boolean"
-            }
-          ]
-        }
-      ],
-      "setPerspective": [
-        {
-          "parameters": [
-            {
-              "name": "perspective",
-              "type": "int"
-            }
-          ]
-        }
-      ],
-      "lockPerspective": [
-        {
-          "parameters": [
-            {
-              "name": "perspective",
-              "type": "int"
-            }
-          ]
-        }
-      ],
-      "unlockPerspective": [
-        {}
-      ],
-      "getModsList": [
-        {
-          "return": {
-            "type": "java.util.ArrayList"
-          },
-          "docs": "Returns array of mods on the client [id:version]"
-        }
-      ],
-      "getPing": [
-        {
-          "return": {
-            "type": "int"
-          }
-        }
-      ],
-      "getSettings": [
-        {
-          "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
-          }
-        }
-      ],
-      "stopAllSounds": [
-        {
-          "docs": "Stop all playing sound events for this player.\n\n \u003cpre\u003e{@code\n    c.getWorld().stopAllSounds();\n }\u003c/pre\u003e"
-        }
-      ],
-      "stopSound": [
-        {
-          "parameters": [
-            {
-              "name": "event",
-              "type": "java.lang.String"
-            }
-          ],
-          "docs": "Stop specific sound event for this player.\n\n \u003cpre\u003e{@code\n    c.getWorld().stopSound(\"minecraft:entity.pig.ambient\");\n }\u003c/pre\u003e"
-        },
-        {
-          "parameters": [
-            {
-              "name": "event",
-              "type": "java.lang.String"
-            },
-            {
-              "name": "category",
-              "type": "java.lang.String"
-            }
-          ],
-          "docs": "\u003cp\u003eStop specific sound event in given sound category for this player.\u003c/p\u003e\n\n \u003cp\u003eFor list of sound categories, type into chat\n \u003ccode\u003e/playsound minecraft:entity.pig.ambient\u003c/code\u003e, press space, and press\n Tab key. The list of sounds categories will be displayed.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    c.getWorld().stopSound(\"minecraft:entity.pig.ambient\", \"master\");\n }\u003c/pre\u003e"
-        }
-      ],
-      "playStaticSound": [
-        {
-          "parameters": [
-            {
-              "name": "event",
-              "type": "java.lang.String"
-            },
-            {
-              "name": "volume",
-              "type": "float"
-            },
-            {
-              "name": "pitch",
-              "type": "float"
-            }
-          ],
-          "docs": "Play a sound event to this player stationary.\n\n \u003cp\u003eThe difference between this method and {@link #playSound(String, double, double, double, float, float)}\n is that if player gets teleported, the sound will continue playing.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var player \u003d c.getSubject();\n\n    player.playStaticSound(\"minecraft:block.portal.ambient\", 1.0, 0.8);\n\n    c.scheduleScript(20, function (c)\n    {\n        c.getSubject().setPosition(-15, 4, 561);\n    });\n }\u003c/pre\u003e"
-        },
-        {
-          "parameters": [
-            {
-              "name": "event",
-              "type": "java.lang.String"
-            },
-            {
-              "name": "soundCategory",
-              "type": "java.lang.String"
-            },
-            {
-              "name": "volume",
-              "type": "float"
-            },
-            {
-              "name": "pitch",
-              "type": "float"
-            }
-          ],
-          "docs": "Play a sound event to this player stationary at the specific channel.\n\n \u003cp\u003eThe difference between this method and {@link #playSound(String, double, double, double, float, float)}\n is that if player gets teleported, the sound will continue playing.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var player \u003d c.getSubject();\n\n    player.playStaticSound(\"minecraft:block.portal.ambient\", \"voice\", 1.0, 0.8);\n\n    c.scheduleScript(20, function (c)\n    {\n        c.getSubject().setPosition(-15, 4, 561);\n    });\n }\u003c/pre\u003e"
-        }
-      ],
-      "getQuests": [
-        {
-          "return": {
-            "type": "mchorse.mappet.api.scripts.user.mappet.IMappetQuests"
-          },
-          "docs": "Get entity\u0027s quests (if it has some, only players have quests).\n\n \u003cpre\u003e{@code\n    // Assuming that c.getSubject() is a player\n    var quests \u003d c.getSubject().getQuests();\n\n    if (!quests.has(\"important_quest\"))\n    {\n        c.getSubject().send(\"I think you should complete the main quest chain before attempting side quests...\");\n    }\n }\u003c/pre\u003e"
-        }
-      ],
-      "openUI": [
-        {
-          "parameters": [
-            {
-              "name": "builder",
-              "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
-            }
-          ],
-          "docs": "Open UI for this player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI().background();\n        var button \u003d ui.button(\"Push me\").id(\"button\");\n\n        // Place a button in the middle of the screen\n        button.rxy(0.5, 0.5).wh(80, 20).anchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e"
-        },
-        {
-          "parameters": [
-            {
-              "name": "builder",
-              "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
-            },
-            {
-              "name": "defaultData",
-              "type": "boolean"
-            }
-          ],
-          "return": {
-            "type": "boolean"
-          },
-          "docs": "Open UI for this player with default data populated.\n\n \u003cp\u003eBy default, default data population is disabled, meaning that\n once the UI was opened, UI context\u0027s data will be empty. By enabling\n default data population, UI context\u0027s data gets filled with all\n component\u0027s default data.\u003c/p\u003e\n\n \u003cp\u003eThis is useful when you need to data to be present in the handler\n  at the start, so you wouldn\u0027t need to do extra checks.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var button \u003d ui.button(\"Push me\").id(\"button\");\n        var name \u003d ui.textbox(\"John\").id(\"name\");\n        var lastname \u003d ui.textbox(\"Smith\").id(\"lastname\");\n\n        // Place a button in the middle of the screen\n        button.rxy(0.5, 0.5).wh(80, 20).anchor(0.5);\n        name.rx(0.5).ry(0.5, 25).wh(80, 20).anchor(0.5);\n        lastname.rx(0.5).ry(0.5, 50).wh(80, 20).anchor(0.5);\n\n        // Open the UI with default data populated\n        c.getSubject().openUI(ui, true);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var data \u003d uiContext.getData();\n\n        // If false was passed into openUI as second argument\n        // Then name or last name wouldn\u0027t be immediately populated\n        // as John Smith\n        c.send(\"Your name is: \" + data.getString(\"name\") + \" \" + data.getString(\"lastname\"));\n    }\n }\u003c/pre\u003e"
-        }
-      ],
-      "closeUI": [
-        {
-          "docs": "Close the user interface.\n\n \u003cp\u003eYou can use this method to close any GUI that player has opened, inventory,\n chests, command block menu, Mappet dashboard, etc. However, Mappet won\u0027t close\n the in-game pause menu (to avoid potential griefing).\u003c/p\u003e"
-        }
-      ],
-      "getUIContext": [
-        {
-          "return": {
-            "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIContext"
-          },
-          "docs": "Get the UI context of currently opened user UI. See {@link IMappetUIContext}\n for code examples."
-        }
-      ],
-      "getCamera": [
-        {
-          "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IScriptCamera"
-          }
-        }
-      ],
-      "getFactions": [
-        {
-          "return": {
-            "type": "java.util.Set"
-          },
-          "docs": "Returns the faction of the npc as a string\n\n \u003cpre\u003e{@code\n for each (var faction in c.getSubject().getFactions()){\n    c.send(faction)\n }\n }\u003c/pre\u003e"
-        }
-      ],
-      "setupHUD": [
-        {
-          "parameters": [
-            {
-              "name": "id",
-              "type": "java.lang.String",
-              "docs": "HUD scene\u0027s ID/filename."
-            }
-          ],
-          "return": {
-            "type": "boolean"
-          },
-          "docs": "Setup (initiate) an HUD scene for this player."
-        }
-      ],
-      "changeHUDMorph": [
-        {
-          "parameters": [
-            {
-              "name": "id",
-              "type": "java.lang.String",
-              "docs": "HUD scene\u0027s ID/filename."
-            },
-            {
-              "name": "index",
-              "type": "int",
-              "docs": "Index of the morph in the scene that should be changed (0 is the first and so on)."
-            },
-            {
-              "name": "morph",
-              "type": "AbstractMorph"
-            }
-          ],
-          "docs": "Change a morph in a HUD scene at given index with given morph."
-        }
-      ],
-      "closeAllHUDs": [
-        {
-          "docs": "Close all HUD scenes."
-        },
-        {
-          "parameters": [
-            {
-              "name": "ignores",
-              "type": "java.util.List"
-            }
-          ]
-        }
-      ],
-      "closeHUD": [
-        {
-          "parameters": [
-            {
-              "name": "id",
-              "type": "java.lang.String",
-              "docs": "HUD scene\u0027s ID/filename."
-            }
-          ],
-          "docs": "Close specific HUD scene for this player."
-        }
-      ],
-      "getDisplayedHUDs": [
-        {
-          "return": {
-            "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
-          },
-          "docs": "Get all HUD scenes (including global HUDs) that are currently displayed for this player.\n\n \u003cpre\u003e{@code\n   var player \u003d c.getSubject();\n   var huds \u003d player.getDisplayedHUDs();\n   print(huds);\n }\u003c/pre\u003e"
-        }
-      ],
-      "getGlobalDisplayedHUDs": [
-        {
-          "return": {
-            "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
-          },
-          "docs": "Get all global HUD scenes that are currently saved on player and displayed for him and other players.\n\n \u003cpre\u003e{@code\n   var player \u003d c.getSubject();\n   var huds \u003d player.getGlobalDisplayedHUDs();\n   print(huds);\n }\u003c/pre\u003e"
-        }
-      ],
-      "playScene": [
-        {
-          "parameters": [
-            {
-              "name": "sceneName",
-              "type": "java.lang.String",
-              "docs": "Scene\u0027s ID."
-            }
-          ],
-          "docs": "Plays an Aperture scene for this player.\n\n \u003cpre\u003e{@code\n c.getSubject().playScene(\"scene_name\");\n }\u003c/pre\u003e"
-        }
-      ],
-      "stopScene": [
-        {
-          "docs": "Plays Aperture scenes for this player.\n\n \u003cpre\u003e{@code\n c.getSubject().stopScene();\n }\u003c/pre\u003e"
-        }
-      ]
-    }
-  },
   "mchorse.mappet.api.scripts.user.entities.IScriptNpc": {
     "name": "IScriptNpc",
     "docs": "Mappet\u0027s NPC entity interface.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        if (c.getSubject().isNpc())\n        {\n            // Do something with the NPC...\n        }\n    }\n }\u003c/pre\u003e",
@@ -2536,7 +1503,7 @@
           "parameters": [
             {
               "name": "player",
-              "type": "mchorse.mappet.api.scripts.user.entities.IScriptPlayer"
+              "type": "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer"
             }
           ],
           "return": {
@@ -2549,7 +1516,7 @@
           "parameters": [
             {
               "name": "player",
-              "type": "mchorse.mappet.api.scripts.user.entities.IScriptPlayer"
+              "type": "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer"
             }
           ]
         }
@@ -2557,7 +1524,7 @@
       "getOwner": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IScriptPlayer"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer"
           }
         }
       ],
@@ -2889,7 +1856,7 @@
           "parameters": [
             {
               "name": "player",
-              "type": "mchorse.mappet.api.scripts.user.entities.IScriptPlayer"
+              "type": "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer"
             }
           ],
           "docs": "Damage this entity as given player was the source of the attack with its equipment.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var player \u003d c.getSubject();\n     var result \u003d player.rayTrace(32);\n\n     if (result.isEntity())\n     {\n         result.getEntity().damageWithItemsAs(player);\n     }\n }\n }\u003c/pre\u003e"
@@ -3333,7 +2300,7 @@
             },
             {
               "name": "player",
-              "type": "mchorse.mappet.api.scripts.user.entities.IScriptPlayer",
+              "type": "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer",
               "docs": "The player that only should see the morph, or null for everyone."
             }
           ],
@@ -3628,14 +2595,89 @@
       ]
     }
   },
-  "mchorse.mappet.api.scripts.user.entities.IScriptCamera": {
-    "name": "IScriptCamera",
-    "docs": "",
+  "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer": {
+    "name": "IScriptPlayer",
+    "docs": "Player entity interface.\n\n \u003cp\u003eThis interface represents a player entity.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        if (c.getSubject().isPlayer())\n        {\n            // Do something with the player...\n        }\n    }\n }\u003c/pre\u003e",
+    "superTypes": [
+      "mchorse.mappet.api.scripts.user.entities.IScriptEntity"
+    ],
     "methods": {
-      "removeCamera": [
-        {}
+      "getMinecraftPlayer": [
+        {
+          "return": {
+            "type": "EntityPlayerMP"
+          },
+          "annotations": [
+            "java.lang.Deprecated"
+          ],
+          "docs": "Use {@link #asMinecraft()}\n @deprecated"
+        }
       ],
-      "setPosition": [
+      "asMinecraft": [
+        {
+          "return": {
+            "type": "EntityPlayerMP"
+          },
+          "docs": "Get Minecraft player entity instance.\n \u003cb\u003eBEWARE:\u003c/b\u003e you need to know the MCP mappings to directly call methods on this instance!"
+        }
+      ],
+      "isOperator": [
+        {
+          "return": {
+            "docs": "Whether player is an operator",
+            "type": "boolean"
+          }
+        }
+      ],
+      "getGameMode": [
+        {
+          "return": {
+            "docs": "Player\u0027s game mode as an integer, \u003ccode\u003e0\u003c/code\u003e is survival, \u003ccode\u003e1\u003c/code\u003e\n is creative, \u003ccode\u003e2\u003c/code\u003e is adventure, and \u003ccode\u003e3\u003c/code\u003e is spectator.",
+            "type": "int"
+          },
+          "docs": "Get player\u0027s game mode.\n\n \u003cpre\u003e{@code\n    // Assuming that c.getSubject() is a player\n    var player \u003d c.getSubject();\n    var gamemode \u003d player.getGameMode();\n\n    if (gamemode \u003d\u003d\u003d 0)\n    {\n        player.send(\"You\u0027re in survival mode!\");\n    }\n }\u003c/pre\u003e\n\n is creative, \u003ccode\u003e2\u003c/code\u003e is adventure, and \u003ccode\u003e3\u003c/code\u003e is spectator."
+        }
+      ],
+      "setGameMode": [
+        {
+          "parameters": [
+            {
+              "name": "gameMode",
+              "type": "int",
+              "docs": "Player\u0027s game mode \u003ccode\u003e0\u003c/code\u003e is survival, \u003ccode\u003e1\u003c/code\u003e\n                 is creative, \u003ccode\u003e2\u003c/code\u003e is adventure, and \u003ccode\u003e3\u003c/code\u003e is spectator."
+            }
+          ],
+          "docs": "Set player\u0027s game mode.\n\n \u003cpre\u003e{@code\n    // Assuming that c.getSubject() is a player\n    var player \u003d c.getSubject();\n    var gamemode \u003d c.getSubject().getGameMode();\n\n    // When player exits the mining region, set their game mode back to adventure\n    if (gamemode \u003d\u003d\u003d 0 \u0026\u0026 !player.getStates().has(\"region.mining_factory\"))\n    {\n        player.setGameMode(2);\n    }\n }\u003c/pre\u003e\n\n                 is creative, \u003ccode\u003e2\u003c/code\u003e is adventure, and \u003ccode\u003e3\u003c/code\u003e is spectator."
+        }
+      ],
+      "getInventory": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptInventory"
+          },
+          "docs": "Get player\u0027s inventory.\n\n \u003cpre\u003e{@code\n    // Assuming that c.getSubject() is a player\n    var inventory \u003d c.getSubject().getInventory();\n    var item \u003d mappet.createItem(\"minecraft:diamond_sword\");\n\n    // This will change the first slot in the hotbar to a diamond sword\n    inventory.setStack(0, item);\n }\u003c/pre\u003e"
+        }
+      ],
+      "getEnderChest": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptInventory"
+          },
+          "docs": "Get player\u0027s ender chest inventory.\n\n \u003cpre\u003e{@code\n    // Assuming that c.getSubject() is a player\n    var inventory \u003d c.getSubject().getEnderChest();\n    var item \u003d mappet.createItem(\"minecraft:diamond_sword\");\n\n    // This will change the first slot in player\u0027s ender chest to a diamond sword\n    inventory.setStack(0, item);\n }\u003c/pre\u003e"
+        }
+      ],
+      "executeCommand": [
+        {
+          "parameters": [
+            {
+              "name": "command",
+              "type": "java.lang.String"
+            }
+          ],
+          "docs": "Executes a command as a player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        c.getSubject().executeCommand(\"/kill\");\n    }\n }\u003c/pre\u003e"
+        }
+      ],
+      "setSpawnPoint": [
         {
           "parameters": [
             {
@@ -3650,38 +2692,1087 @@
               "name": "z",
               "type": "double"
             }
-          ]
+          ],
+          "docs": "Sets the player\u0027s spawn point.\n\n \u003cpre\u003e{@code\n   c.getSubject().setSpawnPoint(0, 0, 0);\n }\u003c/pre\u003e"
         }
       ],
-      "setRotation": [
+      "getSpawnPoint": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          "docs": "Gets the player\u0027s spawn point.\n\n \u003cpre\u003e{@code\n   var spawnPoint \u003d c.getSubject().getSpawnPoint();\n   c.send(\"Spawn point: \" + spawnPoint.x + \", \" + spawnPoint.y + \", \" + spawnPoint.z);\n }\u003c/pre\u003e"
+        }
+      ],
+      "isFlying": [
+        {
+          "return": {
+            "type": "boolean"
+          },
+          "docs": "Returns if the player is flying.\n\n \u003cpre\u003e{@code\n    function main(c) {\n        c.send(\"Is the player flying? \" + c.getSubject().isFlying());\n    }\n }\u003c/pre\u003e"
+        }
+      ],
+      "getWalkSpeed": [
+        {
+          "return": {
+            "type": "float"
+          },
+          "docs": "Returns if the walk speed of the player.\n\n \u003cpre\u003e{@code\n    function main(c) {\n        c.send(\"The walk speed of the player is: \" + c.getSubject().getWalkSpeed());\n    }\n }\u003c/pre\u003e"
+        }
+      ],
+      "setFlyingEnabled": [
         {
           "parameters": [
             {
-              "name": "yaw",
+              "name": "enabled",
+              "type": "boolean",
+              "docs": "Whether the player can fly or not."
+            }
+          ],
+          "docs": "Allows the player to fly in whatever game mode they\u0027re in.\n\n \u003cpre\u003e{@code\n c.getSubject().setFlyingEnabled(true);\n }\u003c/pre\u003e"
+        }
+      ],
+      "getFlySpeed": [
+        {
+          "return": {
+            "type": "float"
+          },
+          "docs": "Returns if the flight speed of the player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        c.send(\"The flight speed of the player is: \" + c.getSubject().getFlySpeed());\n    }\n }\u003c/pre\u003e"
+        }
+      ],
+      "setWalkSpeed": [
+        {
+          "parameters": [
+            {
+              "name": "speed",
+              "type": "float"
+            }
+          ],
+          "docs": "Set the walk speed of the player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        c.getSubject().setWalkSpeed(0.5);\n    }\n }\u003c/pre\u003e"
+        }
+      ],
+      "setFlySpeed": [
+        {
+          "parameters": [
+            {
+              "name": "speed",
+              "type": "float"
+            }
+          ],
+          "docs": "Set the flight speed of the player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        c.getSubject().setFlySpeed(0.5);\n    }\n }\u003c/pre\u003e"
+        }
+      ],
+      "resetFlySpeed": [
+        {
+          "docs": "Reset the flight speed of the player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        c.getSubject().resetFlySpeed();\n    }\n }\u003c/pre\u003e"
+        }
+      ],
+      "resetWalkSpeed": [
+        {
+          "docs": "Reset the walking speed of the player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        c.getSubject().resetWalkSpeed();\n    }\n }\u003c/pre\u003e"
+        }
+      ],
+      "getCooldown": [
+        {
+          "parameters": [
+            {
+              "name": "inventorySlot",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "float"
+          },
+          "docs": "Get cooldown of a particular inventory index of the player.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var player \u003d c.getSubject();\n     var cooldown \u003d player.getCooldown(40); // tip: 40 is the offhand slot\n\n     c.send(The held item cooldown \" + ((1 - cooldown) * 100) + \" percent expired.\");\n }\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "item",
+              "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+            }
+          ],
+          "return": {
+            "type": "float"
+          },
+          "docs": "Get cooldown of a particular inventory index of the player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var player \u003d c.getSubject();\n        var item \u003d mappet.createItem(\"minecraft:diamond_sword\");\n        var cooldown \u003d player.getCooldown(item);\n\n        c.send(The held item cooldown \" + ((1 - cooldown) * 100) + \" percent expired.\");\n    }\n }\u003c/pre\u003e"
+        }
+      ],
+      "setCooldown": [
+        {
+          "parameters": [
+            {
+              "name": "inventorySlot",
+              "type": "int"
+            },
+            {
+              "name": "ticks",
+              "type": "int"
+            }
+          ],
+          "docs": "Set cooldown of a particular inventory index of the player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var player \u003d c.getSubject();\n\n        player.setCooldown(player.getHotbarIndex(), 100); // tip: 40 is the offhand slot\n    }\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "item",
+              "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+            },
+            {
+              "name": "ticks",
+              "type": "int"
+            }
+          ],
+          "docs": "Set cooldown for given item.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var player \u003d c.getSubject();\n        var item \u003d mappet.createItem(\"minecraft:diamond_sword\");\n\n        player.setCooldown(item, 100);\n    }\n }\u003c/pre\u003e"
+        }
+      ],
+      "resetCooldown": [
+        {
+          "parameters": [
+            {
+              "name": "inventorySlot",
+              "type": "int"
+            }
+          ],
+          "docs": "Reset cooldown for given item.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var player \u003d c.getSubject();\n\n        player.resetCooldown(player.getMainItemInventoryIndex()); // tip: 40 is the offhand slot\n    }\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "item",
+              "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+            }
+          ],
+          "docs": "Reset cooldown of a particular inventory index of the player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var player \u003d c.getSubject();\n        var item \u003d mappet.createItem(\"minecraft:diamond_sword\");\n\n        player.resetCooldown(item);\n    }\n }\u003c/pre\u003e"
+        }
+      ],
+      "getHotbarIndex": [
+        {
+          "return": {
+            "type": "int"
+          },
+          "docs": "Get the inventory index of the main item. Useful for e.g., main hand\u0027s cooldown methods.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var player \u003d c.getSubject();\n\n        player.setCooldown(player.getHotbarIndex(), 100); //tip: 40 is the offhand slot\n    }\n }\u003c/pre\u003e"
+        }
+      ],
+      "setHotbarIndex": [
+        {
+          "parameters": [
+            {
+              "name": "slot",
+              "type": "int"
+            }
+          ],
+          "docs": "Set forcefully player\u0027s current hotbar inventory index. Acceptable values are \u003ccode\u003e0\u003c/code\u003e - \u003ccode\u003e8\u003c/code\u003e."
+        }
+      ],
+      "send": [
+        {
+          "parameters": [
+            {
+              "name": "message",
+              "type": "java.lang.String"
+            }
+          ],
+          "docs": "Send a message to this player.\n\n \u003cpre\u003e{@code\n    // Assuming that c.getSubject() is a player\n    c.send(\"I love all my players equally.\");\n    c.getSubject().send(\"...but between you and me, you\u0027re my favorite player ;)\");\n }\u003c/pre\u003e"
+        }
+      ],
+      "sendRaw": [
+        {
+          "parameters": [
+            {
+              "name": "message",
+              "type": "mchorse.mappet.api.scripts.user.nbt.INBT"
+            }
+          ],
+          "docs": "Send a message to this player using a text component (like \u003ccode\u003e/tellraw\u003c/code\u003e command).\n\n \u003cpre\u003e{@code\n    var message \u003d mappet.createCompound();\n\n    message.setString(\"text\", \"This message displays an item...\");\n    message.setString(\"color\", \"gold\");\n    message.setNBT(\"hoverEvent\",\u0027{action:\"show_item\",value:\"{id:\\\\\"minecraft:diamond_hoe\\\\\",Count:1b}\"}\u0027);\n\n    c.getSubject().sendRaw(message);\n }\u003c/pre\u003e"
+        }
+      ],
+      "getSkin": [
+        {
+          "return": {
+            "type": "java.lang.String"
+          },
+          "docs": "Get skin texture URL for a player from Mojang\n\n \u003cpre\u003e{@code\n    var player \u003d c.getPlayer()\n    var skinUrl \u003d player.getSkin();\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "source",
+              "type": "java.lang.String",
+              "docs": "Source of skin data"
+            }
+          ],
+          "return": {
+            "type": "java.lang.String"
+          },
+          "docs": "Get skin texture URL for a player from the specific source\n\n \u003cp\u003eSource defines where the skin should be fetched from\u003c/p\u003e\n \u003cp\u003eValid sources: \u003ccode\u003eMinecraft / Mojang\u003c/code\u003e, \u003ccode\u003eElyBy / Ely.By\u003c/code\u003e, \u003ccode\u003eTL / TLauncher\u003c/code\u003e\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var player \u003d c.getPlayer()\n    var skinUrl \u003d player.getSkin(\"elyby\");\n }\u003c/pre\u003e"
+        }
+      ],
+      "getSkinObject": [
+        {
+          "return": {
+            "docs": "\u003ccode\u003eurl\u003c/code\u003e – URL to the player\u0027s skin texture\u003c/li\u003e, \u003ccode\u003eslim\u003c/code\u003e – boolean indicating if the model is Alex\u003c/li\u003e",
+            "type": "java.lang.Object"
+          },
+          "docs": "Get an object containing both the skin texture URL and whether the model is slim (Alex)\n\n \u003cpre\u003e{@code\n    var player \u003d c.getPlayer();\n    var skinObject \u003d player.getSkinObject();\n\n    if (skinObject.slim) {\n        c.send(player.getName(), \"is female or femboy!\");\n        c.send(\"Take fast her skin:\", skinObject.url);\n    }\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "source",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "docs": "\u003ccode\u003eurl\u003c/code\u003e – URL to the player\u0027s skin texture\u003c/li\u003e, \u003ccode\u003eslim\u003c/code\u003e – boolean indicating if the model is Alex\u003c/li\u003e",
+            "type": "java.lang.Object"
+          },
+          "docs": "Get an object containing both the skin texture URL and whether the model is slim (Alex)\n\n \u003cp\u003eSource defines where the skin should be fetched from\u003c/p\u003e\n \u003cp\u003eValid sources: \u003ccode\u003eMinecraft / Mojang\u003c/code\u003e, \u003ccode\u003eElyBy / Ely.By\u003c/code\u003e, \u003ccode\u003eTL / TLauncher\u003c/code\u003e\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var player \u003d c.getPlayer();\n    var skinObject \u003d player.getSkinObject(\"elyby\");\n }\u003c/pre\u003e"
+        }
+      ],
+      "sendTitleDurations": [
+        {
+          "parameters": [
+            {
+              "name": "fadeIn",
+              "type": "int",
+              "docs": "How many ticks it will take for title and subtitle to appear."
+            },
+            {
+              "name": "idle",
+              "type": "int",
+              "docs": "For how many ticks will title and subtitle stay after fading in."
+            },
+            {
+              "name": "fadeOut",
+              "type": "int",
+              "docs": "How many ticks it will take for title and subtitle to disappear after idling."
+            }
+          ],
+          "docs": "Send title and subtitle durations (in ticks, \u003ccode\u003e20\u003c/code\u003e ticks \u003d \u003ccode\u003e1\u003c/code\u003e second).\n These must be sent before sending title or subtitle.\n\n \u003cp\u003e\u003cb\u003eBEWARE\u003c/b\u003e: these durations will stay the same until the player logs out, so you may want\n to change them before every time you send title and subtitle.\u003c/p\u003e\n\n \u003cp\u003eDefault values are: fadeIn \u003d \u003ccode\u003e10\u003c/code\u003e ticks, idle \u003d \u003ccode\u003e70\u003c/code\u003e ticks,\n fadeOut \u003d \u003ccode\u003e20\u003c/code\u003e ticks.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var player \u003d c.getSubject();\n\n    player.sendTitleDurations(5, 10, 5);\n    player.sendTitle(\"Quick!\");\n    player.sendSubtitle(\"Get into cover!\");\n }\u003c/pre\u003e"
+        }
+      ],
+      "sendTitle": [
+        {
+          "parameters": [
+            {
+              "name": "title",
+              "type": "java.lang.String"
+            }
+          ],
+          "docs": "Send the title to this player that will be displayed in the middle of the screen.\n\n \u003cpre\u003e{@code\n    c.getSubject().sendTitle(\"Hello, world!\");\n }\u003c/pre\u003e"
+        }
+      ],
+      "sendSubtitle": [
+        {
+          "parameters": [
+            {
+              "name": "title",
+              "type": "java.lang.String"
+            }
+          ],
+          "docs": "Send the subtitle to this player that will be displayed in the middle of the\n screen. Title must be sent as well, using {@link #sendTitle(String)}, in order\n for subtitle to appear.\n\n \u003cpre\u003e{@code\n    c.getSubject().sendTitle(\"Hello,\");\n    c.getSubject().sendSubtitle(\"world!\");\n }\u003c/pre\u003e"
+        }
+      ],
+      "sendActionBar": [
+        {
+          "parameters": [
+            {
+              "name": "title",
+              "type": "java.lang.String"
+            }
+          ],
+          "docs": "Send a message to this player that will be displayed in the action bar. The duration\n of action bar line is \u003ccode\u003e60\u003c/code\u003e ticks (\u003ccode\u003e3\u003c/code\u003e seconds)."
+        }
+      ],
+      "setClipboard": [
+        {
+          "parameters": [
+            {
+              "name": "text",
+              "type": "java.lang.String"
+            }
+          ]
+        }
+      ],
+      "openLink": [
+        {
+          "parameters": [
+            {
+              "name": "url",
+              "type": "java.lang.String"
+            }
+          ]
+        }
+      ],
+      "openWebLink": [
+        {
+          "parameters": [
+            {
+              "name": "url",
+              "type": "java.lang.String"
+            }
+          ]
+        }
+      ],
+      "setXp": [
+        {
+          "parameters": [
+            {
+              "name": "level",
+              "type": "int",
+              "docs": "Experience level."
+            },
+            {
+              "name": "points",
+              "type": "int",
+              "docs": "Number of experience points in that particular level."
+            }
+          ],
+          "docs": "Set experience level and number of points for that level.\n\n \u003cpre\u003e{@code\n    // For more information of how levels work (i.e. how many points per\n    // level to level up) see this table:\n    // https://minecraft.fandom.com/wiki/Experience#Leveling_up\n\n    // Set player\u0027s XP level to 17 and half of the bar (level 17 has\n    // 42 points in total to level up)\n    c.getSubject().setXp(17, 21);\n }\u003c/pre\u003e"
+        }
+      ],
+      "addXp": [
+        {
+          "parameters": [
+            {
+              "name": "points",
+              "type": "int",
+              "docs": "Number of experience points to add to player."
+            }
+          ],
+          "docs": "Add experience points to this player. Inputting more points than player\u0027s\n current level can contain will result into leveling up one or more times.\n\n \u003cpre\u003e{@code\n    // For more information of how levels work (i.e. how many points per\n    // level to level up) see this table:\n    // https://minecraft.fandom.com/wiki/Experience#Leveling_up\n\n    // Add 1000 experience points\n    c.getSubject().addXp(1000);\n }\u003c/pre\u003e"
+        }
+      ],
+      "getXpLevel": [
+        {
+          "return": {
+            "type": "int"
+          },
+          "docs": "Get player\u0027s current experience level.\n\n \u003cpre\u003e{@code\n    // For more information of how levels work (i.e. how many points per\n    // level to level up) see this table:\n    // https://minecraft.fandom.com/wiki/Experience#Leveling_up\n\n    var s \u003d c.getSubject();\n\n    if (s.getXpLevel() \u003c 50)\n    {\n        var section \u003d \"§\";\n\n        // Teleport the player out of the area\n        s.setPosition(10, 4, -15);\n        s.send(\"Come back when you\u0027re level\" + section + \"7 50\" + section + \"r!\");\n    }\n }\u003c/pre\u003e"
+        }
+      ],
+      "getXpPoints": [
+        {
+          "return": {
+            "type": "int"
+          },
+          "docs": "Get player\u0027s experience points in their current level."
+        }
+      ],
+      "setHunger": [
+        {
+          "parameters": [
+            {
+              "name": "value",
+              "type": "int"
+            }
+          ]
+        }
+      ],
+      "getHunger": [
+        {
+          "return": {
+            "type": "int"
+          }
+        }
+      ],
+      "setSaturation": [
+        {
+          "parameters": [
+            {
+              "name": "value",
+              "type": "float"
+            }
+          ]
+        }
+      ],
+      "getSaturation": [
+        {
+          "return": {
+            "type": "float"
+          }
+        }
+      ],
+      "playSound": [
+        {
+          "parameters": [
+            {
+              "name": "event",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            }
+          ],
+          "docs": "Play a sound event only to this player.\n\n \u003cp\u003eFor all possible sound event IDs, please refer to either \u003ccode\u003e/playsound\u003c/code\u003e\n command, or script editor\u0027s sound picker.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var player \u003d c.getSubject();\n    var pos \u003d player.getPosition();\n\n    player.playSound(\"minecraft:entity.pig.ambient\", pos.x, pos.y, pos.z);\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "event",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "soundCategory",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            }
+          ],
+          "docs": "Play a sound event only to this player at the specific sound channel.\n\n \u003cpre\u003e{@code\n    var player \u003d c.getSubject();\n    var pos \u003d player.getPosition();\n\n    player.playSound(\"minecraft:entity.pig.ambient\", \"voice\", pos.x, pos.y, pos.z);\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "event",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "soundCategory",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            },
+            {
+              "name": "volume",
               "type": "float"
             },
             {
               "name": "pitch",
               "type": "float"
             }
-          ]
-        }
-      ],
-      "switchTo": [
+          ],
+          "docs": "Play a sound event only to this player with volume and pitch at the specific channel.\n\n \u003cpre\u003e{@code\n    var player \u003d c.getSubject();\n    var pos \u003d player.getPosition();\n\n    player.playSound(\"minecraft:entity.pig.ambient\", \"voice\", pos.x, pos.y, pos.z, 1.0, 0.8);\n }\u003c/pre\u003e"
+        },
         {
           "parameters": [
             {
-              "name": "entity",
-              "type": "mchorse.mappet.api.scripts.code.entities.ScriptEntity"
+              "name": "event",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            },
+            {
+              "name": "volume",
+              "type": "float"
+            },
+            {
+              "name": "pitch",
+              "type": "float"
+            }
+          ],
+          "docs": "Play a sound event only to this player with volume and pitch.\n\n \u003cpre\u003e{@code\n    var player \u003d c.getSubject();\n    var pos \u003d player.getPosition();\n\n    player.playSound(\"minecraft:entity.pig.ambient\", pos.x, pos.y, pos.z, 1.0, 0.8);\n }\u003c/pre\u003e"
+        }
+      ],
+      "getScoreboard": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.score.ScriptScoreboard"
+          }
+        }
+      ],
+      "join": [
+        {
+          "parameters": [
+            {
+              "name": "team",
+              "type": "mchorse.mappet.api.scripts.code.score.ScriptTeam"
+            }
+          ]
+        },
+        {
+          "parameters": [
+            {
+              "name": "name",
+              "type": "java.lang.String"
             }
           ]
         }
       ],
-      "switchToCamera": [
+      "leave": [
         {}
       ],
-      "switchToOwner": [
+      "setScore": [
+        {
+          "parameters": [
+            {
+              "name": "objective",
+              "type": "mchorse.mappet.api.scripts.code.score.ScriptScoreObjective"
+            },
+            {
+              "name": "value",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "parameters": [
+            {
+              "name": "name",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "value",
+              "type": "int"
+            }
+          ]
+        }
+      ],
+      "addScore": [
+        {
+          "parameters": [
+            {
+              "name": "objective",
+              "type": "mchorse.mappet.api.scripts.code.score.ScriptScoreObjective"
+            },
+            {
+              "name": "value",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "int"
+          }
+        },
+        {
+          "parameters": [
+            {
+              "name": "name",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "value",
+              "type": "int"
+            }
+          ],
+          "return": {
+            "type": "int"
+          }
+        }
+      ],
+      "getScore": [
+        {
+          "parameters": [
+            {
+              "name": "objective",
+              "type": "mchorse.mappet.api.scripts.code.score.ScriptScoreObjective"
+            }
+          ],
+          "return": {
+            "type": "int"
+          }
+        },
+        {
+          "parameters": [
+            {
+              "name": "name",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "type": "int"
+          }
+        }
+      ],
+      "resetScore": [
+        {
+          "parameters": [
+            {
+              "name": "objective",
+              "type": "mchorse.mappet.api.scripts.code.score.ScriptScoreObjective"
+            }
+          ]
+        },
+        {
+          "parameters": [
+            {
+              "name": "name",
+              "type": "java.lang.String"
+            }
+          ]
+        }
+      ],
+      "updateServerPack": [
+        {
+          "parameters": [
+            {
+              "name": "resourcePack",
+              "type": "mchorse.mappet.api.scripts.code.ScriptResourcePack"
+            }
+          ]
+        }
+      ],
+      "clearServerPack": [
         {}
+      ],
+      "enableBlackAndWhiteShader": [
+        {
+          "parameters": [
+            {
+              "name": "enable",
+              "type": "boolean"
+            }
+          ]
+        }
+      ],
+      "setPerspective": [
+        {
+          "parameters": [
+            {
+              "name": "perspective",
+              "type": "int"
+            }
+          ]
+        }
+      ],
+      "lockPerspective": [
+        {
+          "parameters": [
+            {
+              "name": "perspective",
+              "type": "int"
+            }
+          ]
+        }
+      ],
+      "unlockPerspective": [
+        {}
+      ],
+      "getModsList": [
+        {
+          "return": {
+            "type": "java.util.ArrayList"
+          },
+          "docs": "Returns array of mods on the client [id:version]"
+        }
+      ],
+      "getPing": [
+        {
+          "return": {
+            "type": "int"
+          }
+        }
+      ],
+      "getSettings": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
+          }
+        }
+      ],
+      "stopAllSounds": [
+        {
+          "docs": "Stop all playing sound events for this player.\n\n \u003cpre\u003e{@code\n    c.getWorld().stopAllSounds();\n }\u003c/pre\u003e"
+        }
+      ],
+      "stopSound": [
+        {
+          "parameters": [
+            {
+              "name": "event",
+              "type": "java.lang.String"
+            }
+          ],
+          "docs": "Stop specific sound event for this player.\n\n \u003cpre\u003e{@code\n    c.getWorld().stopSound(\"minecraft:entity.pig.ambient\");\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "event",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "category",
+              "type": "java.lang.String"
+            }
+          ],
+          "docs": "\u003cp\u003eStop specific sound event in given sound category for this player.\u003c/p\u003e\n\n \u003cp\u003eFor list of sound categories, type into chat\n \u003ccode\u003e/playsound minecraft:entity.pig.ambient\u003c/code\u003e, press space, and press\n Tab key. The list of sounds categories will be displayed.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    c.getWorld().stopSound(\"minecraft:entity.pig.ambient\", \"master\");\n }\u003c/pre\u003e"
+        }
+      ],
+      "playStaticSound": [
+        {
+          "parameters": [
+            {
+              "name": "event",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "volume",
+              "type": "float"
+            },
+            {
+              "name": "pitch",
+              "type": "float"
+            }
+          ],
+          "docs": "Play a sound event to this player stationary.\n\n \u003cp\u003eThe difference between this method and {@link #playSound(String, double, double, double, float, float)}\n is that if player gets teleported, the sound will continue playing.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var player \u003d c.getSubject();\n\n    player.playStaticSound(\"minecraft:block.portal.ambient\", 1.0, 0.8);\n\n    c.scheduleScript(20, function (c)\n    {\n        c.getSubject().setPosition(-15, 4, 561);\n    });\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "event",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "soundCategory",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "volume",
+              "type": "float"
+            },
+            {
+              "name": "pitch",
+              "type": "float"
+            }
+          ],
+          "docs": "Play a sound event to this player stationary at the specific channel.\n\n \u003cp\u003eThe difference between this method and {@link #playSound(String, double, double, double, float, float)}\n is that if player gets teleported, the sound will continue playing.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var player \u003d c.getSubject();\n\n    player.playStaticSound(\"minecraft:block.portal.ambient\", \"voice\", 1.0, 0.8);\n\n    c.scheduleScript(20, function (c)\n    {\n        c.getSubject().setPosition(-15, 4, 561);\n    });\n }\u003c/pre\u003e"
+        }
+      ],
+      "getQuests": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.mappet.IMappetQuests"
+          },
+          "docs": "Get entity\u0027s quests (if it has some, only players have quests).\n\n \u003cpre\u003e{@code\n    // Assuming that c.getSubject() is a player\n    var quests \u003d c.getSubject().getQuests();\n\n    if (!quests.has(\"important_quest\"))\n    {\n        c.getSubject().send(\"I think you should complete the main quest chain before attempting side quests...\");\n    }\n }\u003c/pre\u003e"
+        }
+      ],
+      "openUI": [
+        {
+          "parameters": [
+            {
+              "name": "builder",
+              "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
+            }
+          ],
+          "docs": "Open UI for this player.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI().background();\n        var button \u003d ui.button(\"Push me\").id(\"button\");\n\n        // Place a button in the middle of the screen\n        button.rxy(0.5, 0.5).wh(80, 20).anchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "builder",
+              "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
+            },
+            {
+              "name": "defaultData",
+              "type": "boolean"
+            }
+          ],
+          "return": {
+            "type": "boolean"
+          },
+          "docs": "Open UI for this player with default data populated.\n\n \u003cp\u003eBy default, default data population is disabled, meaning that\n once the UI was opened, UI context\u0027s data will be empty. By enabling\n default data population, UI context\u0027s data gets filled with all\n component\u0027s default data.\u003c/p\u003e\n\n \u003cp\u003eThis is useful when you need to data to be present in the handler\n  at the start, so you wouldn\u0027t need to do extra checks.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var button \u003d ui.button(\"Push me\").id(\"button\");\n        var name \u003d ui.textbox(\"John\").id(\"name\");\n        var lastname \u003d ui.textbox(\"Smith\").id(\"lastname\");\n\n        // Place a button in the middle of the screen\n        button.rxy(0.5, 0.5).wh(80, 20).anchor(0.5);\n        name.rx(0.5).ry(0.5, 25).wh(80, 20).anchor(0.5);\n        lastname.rx(0.5).ry(0.5, 50).wh(80, 20).anchor(0.5);\n\n        // Open the UI with default data populated\n        c.getSubject().openUI(ui, true);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var data \u003d uiContext.getData();\n\n        // If false was passed into openUI as second argument\n        // Then name or last name wouldn\u0027t be immediately populated\n        // as John Smith\n        c.send(\"Your name is: \" + data.getString(\"name\") + \" \" + data.getString(\"lastname\"));\n    }\n }\u003c/pre\u003e"
+        }
+      ],
+      "closeUI": [
+        {
+          "docs": "Close the user interface.\n\n \u003cp\u003eYou can use this method to close any GUI that player has opened, inventory,\n chests, command block menu, Mappet dashboard, etc. However, Mappet won\u0027t close\n the in-game pause menu (to avoid potential griefing).\u003c/p\u003e"
+        }
+      ],
+      "getUIContext": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.ui.IMappetUIContext"
+          },
+          "docs": "Get the UI context of currently opened user UI. See {@link IMappetUIContext}\n for code examples."
+        }
+      ],
+      "getCamera": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IScriptCamera"
+          }
+        }
+      ],
+      "getFactions": [
+        {
+          "return": {
+            "type": "java.util.Set"
+          },
+          "docs": "Returns the faction of the npc as a string\n\n \u003cpre\u003e{@code\n for each (var faction in c.getSubject().getFactions()){\n    c.send(faction)\n }\n }\u003c/pre\u003e"
+        }
+      ],
+      "getLanguage": [
+        {
+          "return": {
+            "type": "java.lang.String"
+          }
+        }
+      ],
+      "setupHUD": [
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String",
+              "docs": "HUD scene\u0027s ID/filename."
+            }
+          ],
+          "return": {
+            "type": "boolean"
+          },
+          "docs": "Setup (initiate) an HUD scene for this player."
+        }
+      ],
+      "changeHUDMorph": [
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String",
+              "docs": "HUD scene\u0027s ID/filename."
+            },
+            {
+              "name": "index",
+              "type": "int",
+              "docs": "Index of the morph in the scene that should be changed (0 is the first and so on)."
+            },
+            {
+              "name": "morph",
+              "type": "AbstractMorph"
+            }
+          ],
+          "docs": "Change a morph in a HUD scene at given index with given morph."
+        }
+      ],
+      "closeAllHUDs": [
+        {
+          "docs": "Close all HUD scenes."
+        },
+        {
+          "parameters": [
+            {
+              "name": "ignores",
+              "type": "java.util.List"
+            }
+          ]
+        }
+      ],
+      "closeHUD": [
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String",
+              "docs": "HUD scene\u0027s ID/filename."
+            }
+          ],
+          "docs": "Close specific HUD scene for this player."
+        }
+      ],
+      "getDisplayedHUDs": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
+          },
+          "docs": "Get all HUD scenes (including global HUDs) that are currently displayed for this player.\n\n \u003cpre\u003e{@code\n   var player \u003d c.getSubject();\n   var huds \u003d player.getDisplayedHUDs();\n   print(huds);\n }\u003c/pre\u003e"
+        }
+      ],
+      "getGlobalDisplayedHUDs": [
+        {
+          "return": {
+            "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
+          },
+          "docs": "Get all global HUD scenes that are currently saved on player and displayed for him and other players.\n\n \u003cpre\u003e{@code\n   var player \u003d c.getSubject();\n   var huds \u003d player.getGlobalDisplayedHUDs();\n   print(huds);\n }\u003c/pre\u003e"
+        }
+      ],
+      "playScene": [
+        {
+          "parameters": [
+            {
+              "name": "sceneName",
+              "type": "java.lang.String",
+              "docs": "Scene\u0027s ID."
+            }
+          ],
+          "docs": "Plays an Aperture scene for this player.\n\n \u003cpre\u003e{@code\n c.getSubject().playScene(\"scene_name\");\n }\u003c/pre\u003e"
+        }
+      ],
+      "stopScene": [
+        {
+          "docs": "Plays Aperture scenes for this player.\n\n \u003cpre\u003e{@code\n c.getSubject().stopScene();\n }\u003c/pre\u003e"
+        }
+      ]
+    }
+  },
+  "mchorse.mappet.api.scripts.user.entities.player.IScriptCamera": {
+    "name": "IScriptCamera",
+    "docs": "",
+    "methods": {
+      "getPitch": [
+        {
+          "return": {
+            "type": "java.lang.Float"
+          }
+        }
+      ],
+      "getRoll": [
+        {
+          "return": {
+            "type": "java.lang.Float"
+          }
+        }
+      ],
+      "getRotateX": [
+        {
+          "return": {
+            "type": "java.lang.Float"
+          }
+        }
+      ],
+      "getRotateY": [
+        {
+          "return": {
+            "type": "java.lang.Float"
+          }
+        }
+      ],
+      "getRotateZ": [
+        {
+          "return": {
+            "type": "java.lang.Float"
+          }
+        }
+      ],
+      "getTilt": [
+        {
+          "return": {
+            "type": "java.lang.Float"
+          }
+        }
+      ],
+      "getX": [
+        {
+          "return": {
+            "type": "java.lang.Float"
+          }
+        }
+      ],
+      "getY": [
+        {
+          "return": {
+            "type": "java.lang.Float"
+          }
+        }
+      ],
+      "rx": [
+        {
+          "parameters": [
+            {
+              "name": "x",
+              "type": "java.lang.Float"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+          }
+        }
+      ],
+      "ry": [
+        {
+          "parameters": [
+            {
+              "name": "y",
+              "type": "java.lang.Float"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+          }
+        }
+      ],
+      "rz": [
+        {
+          "parameters": [
+            {
+              "name": "z",
+              "type": "java.lang.Float"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+          }
+        }
+      ],
+      "getYaw": [
+        {
+          "return": {
+            "type": "java.lang.Float"
+          }
+        }
+      ],
+      "getZ": [
+        {
+          "return": {
+            "type": "java.lang.Float"
+          }
+        }
+      ],
+      "pitch": [
+        {
+          "parameters": [
+            {
+              "name": "pitch",
+              "type": "java.lang.Float"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+          }
+        }
+      ],
+      "roll": [
+        {
+          "parameters": [
+            {
+              "name": "roll",
+              "type": "java.lang.Float"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+          }
+        }
       ],
       "takeScreenshot": [
         {
@@ -3704,17 +3795,82 @@
             }
           ]
         }
+      ],
+      "tilt": [
+        {
+          "parameters": [
+            {
+              "name": "tilt",
+              "type": "java.lang.Float"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+          }
+        }
+      ],
+      "x": [
+        {
+          "parameters": [
+            {
+              "name": "x",
+              "type": "java.lang.Float"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+          }
+        }
+      ],
+      "y": [
+        {
+          "parameters": [
+            {
+              "name": "y",
+              "type": "java.lang.Float"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+          }
+        }
+      ],
+      "yaw": [
+        {
+          "parameters": [
+            {
+              "name": "yaw",
+              "type": "java.lang.Float"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+          }
+        }
+      ],
+      "z": [
+        {
+          "parameters": [
+            {
+              "name": "z",
+              "type": "java.lang.Float"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+          }
+        }
       ]
     }
   },
-  "mchorse.mappet.api.scripts.user.entities.IClientSettings": {
+  "mchorse.mappet.api.scripts.user.entities.player.IClientSettings": {
     "name": "IClientSettings",
     "docs": "",
     "methods": {
       "chatVisibility": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         },
         {
@@ -3725,14 +3881,14 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         }
       ],
       "fov": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         },
         {
@@ -3743,14 +3899,14 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         }
       ],
       "gamma": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         },
         {
@@ -3761,14 +3917,14 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         }
       ],
       "invertMouse": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         }
       ],
@@ -3781,7 +3937,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         },
         {
@@ -3796,14 +3952,14 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         }
       ],
       "keybinds": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         }
       ],
@@ -3816,7 +3972,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         },
         {
@@ -3831,35 +3987,35 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         }
       ],
       "language": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         }
       ],
       "mainHand": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         }
       ],
       "mouseSensitivity": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         }
       ],
       "renderDistance": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         },
         {
@@ -3870,14 +4026,14 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         }
       ],
       "screenSize": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         }
       ],
@@ -3886,7 +4042,7 @@
           "parameters": [
             {
               "name": "players",
-              "type": "mchorse.mappet.api.scripts.code.entities.ScriptPlayer"
+              "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
             }
           ]
         },
@@ -3898,7 +4054,7 @@
             },
             {
               "name": "players",
-              "type": "mchorse.mappet.api.scripts.code.entities.ScriptPlayer"
+              "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
             }
           ]
         },
@@ -3914,7 +4070,7 @@
             },
             {
               "name": "players",
-              "type": "mchorse.mappet.api.scripts.code.entities.ScriptPlayer"
+              "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
             }
           ]
         }
@@ -3922,7 +4078,7 @@
       "showSubtitles": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         },
         {
@@ -3933,14 +4089,14 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         }
       ],
       "vsync": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IClientSettings"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IClientSettings"
           }
         }
       ]
@@ -4017,7 +4173,7 @@
             }
           ],
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IScriptPlayer"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer"
           },
           "docs": "Get a player by their username.\n\n \u003cpre\u003e{@code\n    var player \u003d c.getServer().getPlayer(\"Notch\");\n\n    if (player)\n    {\n        // I\u0027m about to pull a prank on Notch... \u003e:)\n        //\n        // Or give a nice present... :)\n    }\n }\u003c/pre\u003e"
         }
@@ -4856,7 +5012,7 @@
       "getPlayer": [
         {
           "return": {
-            "type": "mchorse.mappet.api.scripts.user.entities.IScriptPlayer"
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer"
           },
           "docs": "Get the first player from either subject or object (or \u003ccode\u003enull\u003c/code\u003e, if there is no player)."
         }
@@ -5653,7 +5809,7 @@
   },
   "mchorse.mappet.api.scripts.user.mappet.IMappetStates": {
     "name": "IMappetStates",
-    "docs": "This interface represents Mappet states. Server ({@link mchorse.mappet.api.scripts.user.IScriptServer}),\n players ({@link mchorse.mappet.api.scripts.user.entities.IScriptPlayer})\n and NPCs ({@link mchorse.mappet.api.scripts.user.entities.IScriptNpc}) can have states.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var states \u003d c.getServer().getStates();\n\n        // Do something with global states...\n    }\n }\u003c/pre\u003e",
+    "docs": "This interface represents Mappet states. Server ({@link mchorse.mappet.api.scripts.user.IScriptServer}),\n players ({@link IScriptPlayer})\n and NPCs ({@link mchorse.mappet.api.scripts.user.entities.IScriptNpc}) can have states.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var states \u003d c.getServer().getStates();\n\n        // Do something with global states...\n    }\n }\u003c/pre\u003e",
     "methods": {
       "add": [
         {
@@ -8086,7 +8242,7 @@
           "parameters": [
             {
               "name": "player",
-              "type": "mchorse.mappet.api.scripts.code.entities.ScriptPlayer"
+              "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
             },
             {
               "name": "value",
@@ -8100,7 +8256,7 @@
           "parameters": [
             {
               "name": "player",
-              "type": "mchorse.mappet.api.scripts.code.entities.ScriptPlayer"
+              "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
             },
             {
               "name": "value",
@@ -8117,7 +8273,7 @@
           "parameters": [
             {
               "name": "player",
-              "type": "mchorse.mappet.api.scripts.code.entities.ScriptPlayer"
+              "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
             }
           ],
           "return": {
@@ -8130,7 +8286,7 @@
           "parameters": [
             {
               "name": "player",
-              "type": "mchorse.mappet.api.scripts.code.entities.ScriptPlayer"
+              "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
             }
           ]
         }
@@ -8140,7 +8296,7 @@
           "parameters": [
             {
               "name": "player",
-              "type": "mchorse.mappet.api.scripts.code.entities.ScriptPlayer"
+              "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
             }
           ],
           "return": {
@@ -9555,7 +9711,7 @@
           "parameters": [
             {
               "name": "player",
-              "type": "mchorse.mappet.api.scripts.user.entities.IScriptPlayer",
+              "type": "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer",
               "docs": "The player that you want to limit seeing the particle only to"
             },
             {
@@ -10926,7 +11082,7 @@
             },
             {
               "name": "player",
-              "type": "mchorse.mappet.api.scripts.user.entities.IScriptPlayer",
+              "type": "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer",
               "docs": "The player that only should see the morph, or null for everyone."
             }
           ],

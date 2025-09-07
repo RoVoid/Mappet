@@ -14,20 +14,18 @@ import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.utils.IExecutable;
 import mchorse.mappet.blocks.BlockRegion;
 import mchorse.mappet.blocks.BlockTrigger;
-import mchorse.mappet.capabilities.camera.CameraProvider;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.CharacterProvider;
 import mchorse.mappet.capabilities.character.ICharacter;
+import mchorse.mappet.client.CameraReflect;
 import mchorse.mappet.client.RenderingHandler;
 import mchorse.mappet.commands.data.CommandDataClear;
-import mchorse.mappet.entities.EntityCamera;
 import mchorse.mappet.entities.EntityNpc;
 import mchorse.mappet.entities.utils.MappetNpcRespawnManager;
 import mchorse.mappet.events.StateChangedEvent;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.client.ClientHandlerBlackAndWhiteShader;
 import mchorse.mappet.network.client.ClientHandlerPlayerPerspective;
-import mchorse.mappet.network.common.PacketCamera;
 import mchorse.mappet.network.common.hotkey.PacketSyncHotkeys;
 import mchorse.mappet.network.common.huds.PacketHUDScene;
 import mchorse.mappet.network.common.npc.PacketNpcJump;
@@ -48,6 +46,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -160,7 +159,6 @@ public class EventHandler {
     @SubscribeEvent
     public void attachPlayerCapability(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof EntityPlayer) event.addCapability(CAPABILITY, new CharacterProvider());
-        if (event.getObject() instanceof EntityCamera) event.addCapability(CAPABILITY, new CameraProvider());
     }
 
     @SubscribeEvent
@@ -180,8 +178,6 @@ public class EventHandler {
         }
 
         if (character != null) {
-//            UUID camera = character.getCamera();
-//            if(camera != null)Dispatcher.sendTo(new PacketCamera(player.world.get), );
 
             Map<String, List<HUDScene>> displayedHUDs = character.getDisplayedHUDs();
             for (Map.Entry<String, List<HUDScene>> entry : displayedHUDs.entrySet()) {
@@ -324,8 +320,8 @@ public class EventHandler {
                 IScriptEntity scriptEntity = ScriptEntity.create(entity);
                 if (scriptEntity == null) continue;
                 scriptEntity.setPosition(entity.getEntityData().getDouble("lockX"),
-                                         entity.getEntityData().getDouble("lockY"),
-                                         entity.getEntityData().getDouble("lockZ"));
+                        entity.getEntityData().getDouble("lockY"),
+                        entity.getEntityData().getDouble("lockZ"));
                 scriptEntity.setMotion(0.0, 0.0, 0.0);
             }
             //lock rotation if it should be locked
@@ -333,8 +329,8 @@ public class EventHandler {
                 IScriptEntity scriptEntity = ScriptEntity.create(entity);
                 if (scriptEntity == null) continue;
                 scriptEntity.setRotations(entity.getEntityData().getFloat("lockPitch"),
-                                          entity.getEntityData().getFloat("lockYaw"),
-                                          entity.getEntityData().getFloat("lockYawHead"));
+                        entity.getEntityData().getFloat("lockYaw"),
+                        entity.getEntityData().getFloat("lockYawHead"));
             }
         }
 
@@ -477,5 +473,11 @@ public class EventHandler {
             float jumpPower = ((EntityNpc) player.getRidingEntity()).getState().jumpPower.get();
             Dispatcher.sendToServer(new PacketNpcJump(player.getRidingEntity().getEntityId(), jumpPower));
         }
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
+        CameraReflect.onSetup(event);
     }
 }

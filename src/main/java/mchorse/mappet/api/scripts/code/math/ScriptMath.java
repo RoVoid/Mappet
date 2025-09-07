@@ -15,6 +15,11 @@ public class ScriptMath implements IScriptMath {
     }
 
     @Override
+    public double random() {
+        return random.nextDouble();
+    }
+
+    @Override
     public double random(double max) {
         return random.nextDouble() * max;
     }

@@ -1,7 +1,7 @@
 package mchorse.mappet.api.scripts.user.ui;
 
 import mchorse.mappet.api.scripts.code.ui.*;
-import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
+import mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 

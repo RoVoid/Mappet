@@ -39,8 +39,6 @@ public class CommandScriptExec extends CommandScriptBase {
         DataContext context = CommandMappet.createContext(server, sender, args[0]);
         String function = args.length > 2 ? args[2] : "main";
 
-        System.out.println("Executing " + function);
-
         if (args.length > 3) {
             context.parse(String.join(" ", SubCommandBase.dropFirstArguments(args, 3)));
         }

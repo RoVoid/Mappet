@@ -1,6 +1,6 @@
-package mchorse.mappet.api.scripts.user.entities;
+package mchorse.mappet.api.scripts.user.entities.player;
 
-import mchorse.mappet.api.scripts.code.entities.ScriptPlayer;
+import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
 
 public interface IClientSettings {
     IClientSettings chatVisibility();

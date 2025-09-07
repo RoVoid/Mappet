@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.user.ui;
 
-import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
+import mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.nbt.INBTCompound;
 import mchorse.mappet.api.scripts.code.ui.UIComponent;
 import net.minecraft.nbt.NBTTagCompound;

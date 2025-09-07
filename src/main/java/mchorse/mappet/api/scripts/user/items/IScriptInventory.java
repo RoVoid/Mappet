@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.user.items;
 
-import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
+import mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import net.minecraft.inventory.IInventory;
 

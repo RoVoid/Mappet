@@ -1,10 +1,12 @@
 package mchorse.mappet.api.scripts.user.mappet;
 
+import mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer;
+
 import java.util.Set;
 
 /**
  * This interface represents Mappet states. Server ({@link mchorse.mappet.api.scripts.user.IScriptServer}),
- * players ({@link mchorse.mappet.api.scripts.user.entities.IScriptPlayer})
+ * players ({@link IScriptPlayer})
  * and NPCs ({@link mchorse.mappet.api.scripts.user.entities.IScriptNpc}) can have states.
  *
  * <pre>{@code

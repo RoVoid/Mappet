@@ -74,6 +74,7 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
 
         DocEntry top = new DocEntry();
         DocEntry entities = new DocEntry("/ Entities");
+        DocEntry player = new DocEntry("/ Player");
         DocEntry nbt = new DocEntry("/ NBT");
         DocEntry items = new DocEntry("/ Items");
         DocEntry blocks = new DocEntry("/ Blocks");
@@ -85,6 +86,7 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
         for (DocEntry docClass : docs.classes) {
             if (docClass.name.contains(".ui") || docClass.displayName.equals("Graphic")) docClass.setParent(ui);
             else if (docClass.name.contains(".math")) docClass.setParent(math);
+            else if (docClass.name.contains(".entities.player")) docClass.setParent(player);
             else if (docClass.name.contains(".entities")) docClass.setParent(entities);
             else if (docClass.name.contains(".nbt")) docClass.setParent(nbt);
             else if (docClass.name.contains(".items")) docClass.setParent(items);
@@ -93,6 +95,8 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
             else if (docClass.name.contains(".world")) docClass.setParent(world);
             else docClass.setParent(top);
         }
+
+        player.setParent(entities);
 
         top.addChildren(entities, nbt, items, blocks, ui, score, world, math);
         pickedEntry = top;

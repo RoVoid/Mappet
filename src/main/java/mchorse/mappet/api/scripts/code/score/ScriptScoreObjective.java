@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.code.score;
 
-import mchorse.mappet.api.scripts.code.entities.ScriptPlayer;
+import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
 import mchorse.mappet.api.scripts.user.score.IScriptScoreObjective;
 import net.minecraft.scoreboard.IScoreCriteria;
 import net.minecraft.scoreboard.Score;

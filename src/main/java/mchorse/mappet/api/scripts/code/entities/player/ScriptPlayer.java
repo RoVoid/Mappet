@@ -1,11 +1,10 @@
-package mchorse.mappet.api.scripts.code.entities;
+package mchorse.mappet.api.scripts.code.entities.player;
 
 import io.netty.buffer.Unpooled;
 import mchorse.aperture.network.common.PacketCameraState;
 import mchorse.mappet.api.scripts.code.ScriptResourcePack;
-import mchorse.mappet.api.scripts.code.entities.utils.ScriptCamera;
+import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.math.ScriptVector;
-import mchorse.mappet.api.scripts.code.entities.utils.ClientSettings;
 import mchorse.mappet.api.scripts.code.items.ScriptInventory;
 import mchorse.mappet.api.scripts.code.mappet.MappetQuests;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
@@ -14,9 +13,9 @@ import mchorse.mappet.api.scripts.code.score.ScriptScoreboard;
 import mchorse.mappet.api.scripts.code.score.ScriptTeam;
 import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.scripts.code.ui.MappetUIContext;
-import mchorse.mappet.api.scripts.user.entities.IClientSettings;
-import mchorse.mappet.api.scripts.user.entities.IScriptCamera;
-import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
+import mchorse.mappet.api.scripts.user.entities.player.IClientSettings;
+import mchorse.mappet.api.scripts.user.entities.player.IScriptCamera;
+import mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.items.IScriptInventory;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
 import mchorse.mappet.api.scripts.user.mappet.IMappetQuests;
@@ -607,6 +606,11 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
         }
 
         return factions;
+    }
+
+    @Override
+    public String getLanguage() {
+        return entity.language;
     }
 
 

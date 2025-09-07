@@ -193,7 +193,6 @@ public class Script extends AbstractData {
         if (function.isEmpty()) function = "main";
 
         engine.put("context", context);
-        System.out.println("Script's Executing " + function);
         try {
             return ((Invocable) engine).invokeFunction(function, args);
         } catch (ScriptException e) {
