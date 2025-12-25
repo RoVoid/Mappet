@@ -119,7 +119,7 @@ public class GuiUserInterface extends GuiBase {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         if (context.isDirty()) context.sendToServer();
         if (context.ui.background) drawDefaultBackground();
-        System.out.println(getCurrent().tick + " " + context.ui.mouseDelay + " " + (getCurrent().tick % context.ui.mouseDelay == 0));
+        //        System.out.println(getCurrent().tick + " " + context.ui.mouseDelay + " " + (getCurrent().tick % context.ui.mouseDelay == 0));
         if (context.ui.mouseFlags != 0 && (context.ui.mouseDelay == 0 || getCurrent().tick % context.ui.mouseDelay == 0)) {
             NBTTagCompound tag = context.getMouse();
             if ((context.ui.mouseFlags & 1) != 0) {
