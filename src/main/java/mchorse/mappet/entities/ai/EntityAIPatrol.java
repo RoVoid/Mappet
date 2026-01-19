@@ -63,13 +63,6 @@ public class EntityAIPatrol extends EntityAIBase {
         BlockPos pos = state.patrol.get(index);
 
         if (target.getDistanceSq(pos) < 3) {
-            if (state.patrolCirculate.get()) {
-                index = MathUtils.cycler(index + direction, 0, state.patrol.size() - 1);
-            } else {
-                if (index + direction < 0 || index + direction >= target.getState().patrol.size()) direction = -direction;
-                index += direction;
-            }
-
             if (index >= 0 && index < state.patrolTriggers.size()) {
                 Trigger triggerPatrol = state.patrolTriggers.get(index);
                 DataContext context = new DataContext(target)
@@ -78,6 +71,13 @@ public class EntityAIPatrol extends EntityAIBase {
                         .set("count", state.patrol.size());
 
                 triggerPatrol.trigger(context);
+            }
+
+            if (state.patrolCirculate.get()) {
+                index = MathUtils.cycler(index + direction, 0, state.patrol.size() - 1);
+            } else {
+                if (index + direction < 0 || index + direction >= target.getState().patrol.size()) direction = -direction;
+                index += direction;
             }
 
             cooldown = 0;

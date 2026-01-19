@@ -731,6 +731,68 @@
           "docs": "Sets the status of the NPC\u0027s behavior to look at the player.\n\n \u003cpre\u003e{@code\n c.getSubject().setLookAtPlayer(true);\n }\u003c/pre\u003e"
         }
       ],
+      "addPatrolPoints": [
+        {
+          "parameters": [
+            {
+              "name": "x",
+              "type": "float"
+            },
+            {
+              "name": "y",
+              "type": "float"
+            },
+            {
+              "name": "z",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "parameters": [
+            {
+              "name": "x",
+              "type": "float"
+            },
+            {
+              "name": "y",
+              "type": "float"
+            },
+            {
+              "name": "z",
+              "type": "float"
+            },
+            {
+              "name": "script",
+              "type": "java.lang.String"
+            }
+          ]
+        },
+        {
+          "parameters": [
+            {
+              "name": "x",
+              "type": "float"
+            },
+            {
+              "name": "y",
+              "type": "float"
+            },
+            {
+              "name": "z",
+              "type": "float"
+            },
+            {
+              "name": "script",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "function",
+              "type": "java.lang.String"
+            }
+          ]
+        }
+      ],
       "removePatrolPoint": [
         {
           "parameters": [
@@ -5983,6 +6045,51 @@
             "type": "double"
           },
           "docs": "Get a numeric value of a state by given ID.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getServer().getStates();\n\n    c.send(\"Total spending is \" + states.getNumber(\"total_spending\"));\n }\u003c/pre\u003e"
+        },
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "defaultValue",
+              "type": "double"
+            }
+          ],
+          "return": {
+            "type": "double"
+          }
+        }
+      ],
+      "getString": [
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "defaultValue",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "type": "java.lang.String"
+          }
+        },
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "docs": "state value, or empty string if no state found",
+            "type": "java.lang.String"
+          },
+          "docs": "Get a string value of a state by given ID.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getSubject().getStates();\n\n    c.send(\"Your RPG class is: \" + states.getString(\"class\"));\n }\u003c/pre\u003e"
         }
       ],
       "getJson": [
@@ -5998,6 +6105,21 @@
             "type": "java.lang.Object"
           },
           "docs": "Experimental"
+        },
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "defaultValue",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "type": "java.lang.Object"
+          }
         }
       ],
       "isNumber": [
@@ -6014,7 +6136,22 @@
           "docs": "Check if a state instance of number.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getServer().getStates();\n\n    c.send(\"State is number: \" + states.isNumber(\"state_number\"));\n }\u003c/pre\u003e"
         }
       ],
-      "getString": [
+      "getBoolean": [
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "defaultValue",
+              "type": "boolean"
+            }
+          ],
+          "return": {
+            "type": "boolean"
+          }
+        },
         {
           "parameters": [
             {
@@ -6023,10 +6160,8 @@
             }
           ],
           "return": {
-            "docs": "state value, or empty string if no state found",
-            "type": "java.lang.String"
-          },
-          "docs": "Get a string value of a state by given ID.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getSubject().getStates();\n\n    c.send(\"Your RPG class is: \" + states.getString(\"class\"));\n }\u003c/pre\u003e"
+            "type": "boolean"
+          }
         }
       ],
       "isString": [
@@ -6041,19 +6176,6 @@
             "type": "boolean"
           },
           "docs": "Check if a state instance of string.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getServer().getStates();\n\n    c.send(\"State is string: \" + states.isString(\"state_string\"));\n }\u003c/pre\u003e"
-        }
-      ],
-      "getBoolean": [
-        {
-          "parameters": [
-            {
-              "name": "id",
-              "type": "java.lang.String"
-            }
-          ],
-          "return": {
-            "type": "boolean"
-          }
         }
       ],
       "isBoolean": [

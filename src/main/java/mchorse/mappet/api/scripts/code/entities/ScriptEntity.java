@@ -7,16 +7,16 @@ import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.mappet.CommonProxy;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.ScriptRayTrace;
-import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
-import mchorse.mappet.api.scripts.code.math.ScriptBox;
-import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.code.entities.ai.EntitiesAIPatrol;
 import mchorse.mappet.api.scripts.code.entities.ai.EntityAILookAtTarget;
 import mchorse.mappet.api.scripts.code.entities.ai.repeatingCommand.EntityAIRepeatingCommand;
 import mchorse.mappet.api.scripts.code.entities.ai.repeatingCommand.RepeatingCommandDataStorage;
 import mchorse.mappet.api.scripts.code.entities.ai.rotations.EntityAIRotations;
 import mchorse.mappet.api.scripts.code.entities.ai.rotations.RotationDataStorage;
+import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
+import mchorse.mappet.api.scripts.code.math.ScriptBox;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
 import mchorse.mappet.api.scripts.code.world.ScriptWorld;
 import mchorse.mappet.api.scripts.user.IScriptRayTrace;
@@ -370,10 +370,14 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             boolean flag = player.inventory.addItemStackToInventory(itemStack);
 
             if (flag) {
-                if (playSound)
-                    player.world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRNG()
-                                                                                                                                                             .nextFloat() - player.getRNG()
-                                                                                                                                                                                  .nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                if (playSound) player.world.playSound(null,
+                        player.posX,
+                        player.posY,
+                        player.posZ,
+                        SoundEvents.ENTITY_ITEM_PICKUP,
+                        SoundCategory.PLAYERS,
+                        0.2F,
+                        ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F);
 
                 player.inventoryContainer.detectAndSendChanges();
             }
@@ -388,10 +392,8 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         else if (isLivingBase()) {
             EntityLivingBase living = (EntityLivingBase) entity;
 
-            if (living.getHeldItemMainhand().isEmpty())
-                living.setHeldItem(EnumHand.MAIN_HAND, stack.asMinecraft().copy());
-            else if (living.getHeldItemOffhand().isEmpty())
-                living.setHeldItem(EnumHand.OFF_HAND, stack.asMinecraft().copy());
+            if (living.getHeldItemMainhand().isEmpty()) living.setHeldItem(EnumHand.MAIN_HAND, stack.asMinecraft().copy());
+            else if (living.getHeldItemOffhand().isEmpty()) living.setHeldItem(EnumHand.OFF_HAND, stack.asMinecraft().copy());
             else living.entityDropItem(stack.asMinecraft().copy(), getEyeHeight());
         }
     }
@@ -411,15 +413,14 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
                 if (count > 0 && deleteCount >= count) return deleteCount;
                 ItemStack _stack = player.inventory.getStackInSlot(i);
-                if (_stack.isItemEqualIgnoreDurability(itemStack))
-                    if (count > 0 && deleteCount + _stack.getCount() > count) {
-                        _stack.setCount(_stack.getCount() - (count - deleteCount));
-                        deleteCount = count;
-                    }
-                    else {
-                        deleteCount += _stack.getCount();
-                        player.inventory.removeStackFromSlot(i);
-                    }
+                if (_stack.isItemEqualIgnoreDurability(itemStack)) if (count > 0 && deleteCount + _stack.getCount() > count) {
+                    _stack.setCount(_stack.getCount() - (count - deleteCount));
+                    deleteCount = count;
+                }
+                else {
+                    deleteCount += _stack.getCount();
+                    player.inventory.removeStackFromSlot(i);
+                }
             }
         }
         else if (isLivingBase()) {
@@ -427,8 +428,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
             if (living.getHeldItemMainhand().isItemEqualIgnoreDurability(itemStack))
                 if (count > 0 && deleteCount + living.getHeldItemMainhand().getCount() > count) {
-                    living.getHeldItemMainhand()
-                          .setCount(living.getHeldItemMainhand().getCount() - (count - deleteCount));
+                    living.getHeldItemMainhand().setCount(living.getHeldItemMainhand().getCount() - (count - deleteCount));
                     deleteCount = count;
                 }
                 else {
@@ -438,8 +438,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
             if (living.getHeldItemOffhand().isItemEqualIgnoreDurability(itemStack))
                 if (count > 0 && deleteCount + living.getHeldItemOffhand().getCount() > count) {
-                    living.getHeldItemOffhand()
-                          .setCount(living.getHeldItemOffhand().getCount() - (count - deleteCount));
+                    living.getHeldItemOffhand().setCount(living.getHeldItemOffhand().getCount() - (count - deleteCount));
                     deleteCount = count;
                 }
                 else {
@@ -475,8 +474,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     @Override
     public IScriptItemStack getHelmet() {
         if (isLivingBase())
-            return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.HEAD)
-                                                                     .copy());
+            return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.HEAD).copy());
 
         return null;
     }
@@ -484,8 +482,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     @Override
     public IScriptItemStack getChestplate() {
         if (isLivingBase())
-            return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.CHEST)
-                                                                     .copy());
+            return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.CHEST).copy());
 
         return null;
     }
@@ -493,16 +490,14 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     @Override
     public IScriptItemStack getLeggings() {
         if (isLivingBase())
-            return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.LEGS)
-                                                                     .copy());
+            return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.LEGS).copy());
         return null;
     }
 
     @Override
     public IScriptItemStack getBoots() {
         if (isLivingBase())
-            return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.FEET)
-                                                                     .copy());
+            return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.FEET).copy());
         return null;
     }
 
@@ -550,8 +545,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     public IScriptPlayer getOwner() {
         if (!(entity instanceof EntityTameable)) return null;
         EntityTameable _entity = (EntityTameable) entity;
-        if (_entity.isTamed() && _entity.getOwner() != null)
-            return new ScriptPlayer((EntityPlayerMP) _entity.getOwner());
+        if (_entity.isTamed() && _entity.getOwner() != null) return new ScriptPlayer((EntityPlayerMP) _entity.getOwner());
         return null;
     }
 
@@ -559,59 +553,50 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
     @Override
     public void setSpeed(float speed) {
-        if (isLivingBase())
-            ((EntityLivingBase) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(speed);
+        if (isLivingBase()) ((EntityLivingBase) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(speed);
     }
 
     @Override
     public IScriptEntity getTarget() {
         if (entity instanceof EntityLiving) return ScriptEntity.create(((EntityLiving) entity).getAttackTarget());
-
         return null;
     }
 
     @Override
     public void setTarget(IScriptEntity entity) {
+        System.out.println("-------");
+        if (!(this.entity instanceof EntityLiving)) return;
+        EntityLiving living = (EntityLiving) this.entity;
 
-        if (this.entity instanceof EntityLiving && entity == null) {
-            EntityLiving livingBase = (EntityLiving) this.entity;
+        System.out.println("setTarget: " + this.entity + " " + living + " " + entity);
 
-            /* This should be enough, but it does not work most of the time for some reason. */
-            livingBase.setAttackTarget(null);
-            livingBase.setRevengeTarget(null);
 
-            /* So I solved it by spawning an armor stand and making the entity focus on it and removing it after 1 tick. */
-            String id = "minecraft:armor_stand";
-            double x = this.entity.getPosition().getX();
-            double y = this.entity.getPosition().getY() - 1;
-            double z = this.entity.getPosition().getZ();
-            String nbt = "{Marker:1b,NoGravity:1,Invisible:1b,CustomName:\"target_canceler\"}";
-            NBTTagCompound tag = new NBTTagCompound();
+        if (entity == null) {
+            // сброс текущих целей
+            living.setAttackTarget(null);
+            living.setRevengeTarget(null);
 
-            try {
-                tag = JsonToNBT.getTagFromJson(nbt);
-            } catch (Exception ignored) {
-            }
+            // сброс причины атаки
+            living.setLastAttackedEntity(null);
 
-            INBTCompound compound = new ScriptNBTCompound(tag);
-            ScriptWorld world = new ScriptWorld(this.entity.world);
+            // сброс навигации и движения
+            living.getNavigator().clearPath();
+            living.getMoveHelper().setMoveTo(living.posX, living.posY, living.posZ, 0.0D);
 
-            IScriptEntity targetCanceller = world.spawnEntity(id, x, y, z, compound);
-            livingBase.setAttackTarget((EntityLivingBase) targetCanceller.asMinecraft());
-            livingBase.setRevengeTarget((EntityLivingBase) targetCanceller.asMinecraft());
-            targetCanceller.remove();
+            System.out.println("null1");
+            return;
         }
-        else if (this.entity instanceof EntityLiving && entity.isLivingBase()) {
-            EntityLiving livingBase = (EntityLiving) this.entity;
 
-            livingBase.setAttackTarget((EntityLivingBase) entity.asMinecraft());
+        if (entity.isLivingBase()) {
+            living.setAttackTarget((EntityLivingBase) entity.asMinecraft());
+            System.out.println("getTarget: " + entity.asMinecraft() + " " + (living.getAttackTarget() == null ? "null"
+                    : living.getAttackTarget().getName()));
         }
     }
 
     @Override
     public boolean isAIEnabled() {
         if (isLivingBase()) return !((EntityLiving) entity).isAIDisabled();
-
         return false;
     }
 
@@ -1099,8 +1084,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             Mappet.logger.error("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
             //throw new RuntimeException("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage(), e);
         } catch (Exception e) {
-            Mappet.logger.error("Script Empty: " + scriptName + " - Error: " + e.getClass()
-                                                                                .getSimpleName() + ": " + e.getMessage());
+            Mappet.logger.error("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage());
             //throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
         }
     }
@@ -1116,8 +1100,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             Mappet.logger.error("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
             //throw new RuntimeException("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage(), e);
         } catch (Exception e) {
-            Mappet.logger.error("Script Empty: " + scriptName + " - Error: " + e.getClass()
-                                                                                .getSimpleName() + ": " + e.getMessage());
+            Mappet.logger.error("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage());
             //throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
         }
     }
@@ -1263,8 +1246,11 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
                 patrolTask.addPatrolPoint(new BlockPos(x, y, z), shouldCirculate, executeCommandOnArrival);
             }
-            else
-                patrolTask = new EntitiesAIPatrol((EntityLiving) entity, speed, new BlockPos[]{new BlockPos(x, y, z)}, new boolean[]{shouldCirculate}, new String[]{executeCommandOnArrival});
+            else patrolTask = new EntitiesAIPatrol((EntityLiving) entity,
+                    speed,
+                    new BlockPos[]{new BlockPos(x, y, z)},
+                    new boolean[]{shouldCirculate},
+                    new String[]{executeCommandOnArrival});
 
             entityLiving.tasks.addTask(1, patrolTask);
         }
@@ -1293,8 +1279,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             EntityAITasks.EntityAITaskEntry taskToRemove = removeTaskIfExists(entityLiving, EntityAIRotations.class);
             entityLiving.tasks.addTask(9, new EntityAIRotations(entityLiving, yaw, pitch, yawHead, 1.0F));
 
-            RotationDataStorage.getRotationDataStorage(entity.world)
-                               .addRotationData(entityLiving.getUniqueID(), yaw, pitch, yawHead);
+            RotationDataStorage.getRotationDataStorage(entity.world).addRotationData(entityLiving.getUniqueID(), yaw, pitch, yawHead);
         }
     }
 
@@ -1329,7 +1314,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             EntityLiving entityLiving = (EntityLiving) entity;
             entityLiving.tasks.addTask(10, new EntityAIRepeatingCommand(entityLiving, command, frequency));
             RepeatingCommandDataStorage.getRepeatingCommandDataStorage(entity.world)
-                                       .addRepeatingCommandData(entityLiving.getUniqueID(), command, frequency);
+                    .addRepeatingCommandData(entityLiving.getUniqueID(), command, frequency);
         }
     }
 
@@ -1339,8 +1324,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             EntityLiving entityLiving = (EntityLiving) entity;
 
             removeTaskIfExists(entityLiving, EntityAIRepeatingCommand.class);
-            RepeatingCommandDataStorage.getRepeatingCommandDataStorage(entity.world)
-                                       .removeRepeatingCommandData(entityLiving.getUniqueID());
+            RepeatingCommandDataStorage.getRepeatingCommandDataStorage(entity.world).removeRepeatingCommandData(entityLiving.getUniqueID());
         }
     }
 
@@ -1351,7 +1335,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
             removeSpecificRepeatingCommandTaskIfExists(entityLiving, command);
             RepeatingCommandDataStorage.getRepeatingCommandDataStorage(entity.world)
-                                       .removeSpecificRepeatingCommandData(entityLiving.getUniqueID(), command);
+                    .removeSpecificRepeatingCommandData(entityLiving.getUniqueID(), command);
         }
     }
 
@@ -1359,8 +1343,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         List<EntityAITasks.EntityAITaskEntry> tasksToRemove = new ArrayList<>();
 
         for (EntityAITasks.EntityAITaskEntry task : entityLiving.tasks.taskEntries)
-            if (task.action instanceof EntityAIRepeatingCommand && ((EntityAIRepeatingCommand) task.action).getCommand()
-                                                                                                           .equals(command))
+            if (task.action instanceof EntityAIRepeatingCommand && ((EntityAIRepeatingCommand) task.action).getCommand().equals(command))
                 tasksToRemove.add(task);
         for (EntityAITasks.EntityAITaskEntry taskToRemove : tasksToRemove)
             entityLiving.tasks.removeTask(taskToRemove.action);

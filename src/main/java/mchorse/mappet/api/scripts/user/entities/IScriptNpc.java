@@ -520,6 +520,10 @@ public interface IScriptNpc extends IScriptEntity
 
     /* Triggers */
 
+    void addPatrolPoints(float x, float y, float z);
+    void addPatrolPoints(float x, float y, float z, String script);
+    void addPatrolPoints(float x, float y, float z, String script, String function);
+
     /**
      * Removes a patrol point at a certain indext from the NPC.
      *
