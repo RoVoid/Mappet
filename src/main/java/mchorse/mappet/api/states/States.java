@@ -217,7 +217,7 @@ public class States implements IMappetStates, INBTSerializable<NBTTagCompound> {
     @Override
     public double getNumber(String id, double defaultValue) {
         Object val = values.get(id);
-        return val instanceof Number ? ((Number) val).doubleValue() : 0;
+        return val instanceof Number ? ((Number) val).doubleValue() : defaultValue;
     }
 
     @Override
@@ -227,7 +227,7 @@ public class States implements IMappetStates, INBTSerializable<NBTTagCompound> {
 
     @Override
     public boolean getBoolean(String id, boolean defaultValue) {
-        return Boolean.TRUE.equals(values.get(id)) && defaultValue;
+        return Boolean.TRUE.equals(values.get(id)) || defaultValue;
     }
 
     @Override
