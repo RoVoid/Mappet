@@ -1,7 +1,6 @@
-package mchorse.mappet.api.scripts.code.entities.utils;
+package mchorse.mappet.api.scripts.code.entities.player;
 
-import mchorse.mappet.api.scripts.code.entities.ScriptPlayer;
-import mchorse.mappet.api.scripts.user.entities.IClientSettings;
+import mchorse.mappet.api.scripts.user.entities.player.IClientSettings;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.common.scripts.PacketClientSettings;
 import net.minecraft.entity.player.EntityPlayerMP;

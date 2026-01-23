@@ -1,8 +1,6 @@
-package mchorse.mappet.api.scripts.code;
+package mchorse.mappet.api.scripts.code.math;
 
-import mchorse.mappet.api.scripts.code.data.ScriptBox;
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
-import mchorse.mappet.api.scripts.user.IScriptMath;
+import mchorse.mappet.api.scripts.user.math.IScriptMath;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Random;
@@ -14,6 +12,11 @@ public class ScriptMath implements IScriptMath {
     public ScriptMath() {
         seed = System.nanoTime() ^ System.currentTimeMillis();
         random = new Random(seed);
+    }
+
+    @Override
+    public double random() {
+        return random.nextDouble();
     }
 
     @Override
@@ -87,6 +90,11 @@ public class ScriptMath implements IScriptMath {
     }
 
     @Override
+    public ScriptVector vector() {
+        return ScriptVector.EMPTY;
+    }
+
+    @Override
     public ScriptVector vector(double x, double y, double z) {
         return new ScriptVector(x, y, z);
     }
@@ -94,6 +102,11 @@ public class ScriptMath implements IScriptMath {
     @Override
     public ScriptVector vector(BlockPos pos) {
         return new ScriptVector(pos);
+    }
+
+    @Override
+    public ScriptBox box() {
+        return ScriptBox.EMPTY;
     }
 
     @Override

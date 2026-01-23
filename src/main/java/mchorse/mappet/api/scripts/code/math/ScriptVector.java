@@ -1,12 +1,14 @@
-package mchorse.mappet.api.scripts.code.data;
+package mchorse.mappet.api.scripts.code.math;
 
-import mchorse.mappet.api.scripts.user.data.IScriptVector;
+import mchorse.mappet.api.scripts.user.math.IScriptVector;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 public class ScriptVector implements IScriptVector {
 
     public double x, y, z;
+
+    public static ScriptVector EMPTY = new ScriptVector(0, 0, 0);
 
     public ScriptVector(double x, double y, double z) {
         this.x = x;
@@ -137,7 +139,9 @@ public class ScriptVector implements IScriptVector {
 
     @Override
     public double angleBetween(ScriptVector other) {
-        return other == null || isZero() || other.isZero() ? -1 : Math.acos(Math.max(-1.0, Math.min(1.0, normalize().dotProduct(other.normalize()))));
+        return other == null || isZero() || other.isZero() ? -1 : Math.acos(Math.max(-1.0,
+                                                                                     Math.min(1.0,
+                                                                                              normalize().dotProduct(other.normalize()))));
     }
 
     @Override
@@ -153,5 +157,14 @@ public class ScriptVector implements IScriptVector {
     @Override
     public String toString() {
         return "ScriptVector(" + x + ", " + y + ", " + z + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ScriptVector) {
+            ScriptVector other =  (ScriptVector) obj;
+            return x == other.x && y == other.y && z == other.z;
+        }
+        return super.equals(obj);
     }
 }

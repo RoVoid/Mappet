@@ -40,15 +40,15 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2860'
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2859'
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    compileOnly files("run/libs/blockbuster-${blockbuster}-${mcversion}-dev.jar")
-    compileOnly files("run/libs/metamorph-${metamorph}-${mcversion}-dev.jar")
-    compileOnly files("run/libs/mclib-${mclib}-${mcversion}-dev.jar")
-    compileOnly files("run/libs/aperture-${aperture}-${mcversion}-dev.jar")
-    compileOnly files("run/libs/chameleon-${chameleon}-${mcversion}-dev.jar")
+    compileOnly files("run/libs/blockbuster-${blockbuster}.jar")
+    compileOnly files("run/libs/metamorph-${metamorph}.jar")
+    compileOnly files("run/libs/mclib-${mclib}.jar")
+    compileOnly files("run/libs/aperture-${aperture}.jar")
+    compileOnly files("run/libs/chameleon-${chameleon}.jar")
     compileOnly files("run/libs/nashorn.jar")
 
     implementation ('org.reflections:reflections:0.9.12')

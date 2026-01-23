@@ -1,7 +1,7 @@
 package mchorse.mappet.api.scripts.user.ui;
 
 import mchorse.mappet.api.scripts.code.ui.*;
-import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
+import mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 
@@ -86,6 +86,10 @@ public interface IMappetUIBuilder
      * @param paused Whether this UI screen is paused when opened.
      */
     public IMappetUIBuilder paused(boolean paused);
+
+    IMappetUIBuilder mouse(int flags);
+
+    IMappetUIBuilder mouse(int flags, int delay);
 
     /**
      * Create and insert a UI component based on its ID into UI being built by this builder.

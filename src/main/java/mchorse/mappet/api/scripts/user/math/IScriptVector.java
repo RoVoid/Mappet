@@ -1,11 +1,11 @@
-package mchorse.mappet.api.scripts.user.data;
+package mchorse.mappet.api.scripts.user.math;
 
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import net.minecraft.util.math.BlockPos;
 
 /**
  * Script Vector
- * <p> CREATE: {@link mchorse.mappet.api.scripts.user.IScriptMath#vector(double, double, double)} </p>
+ * <p> CREATE: {@link IScriptMath#vector(double, double, double)} </p>
  */
 public interface IScriptVector {
     ScriptVector add(ScriptVector other);

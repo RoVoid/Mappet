@@ -15,13 +15,13 @@ public class EntityAIHurtByTargetNpc extends EntityAIHurtByTarget
     @Override
     public boolean shouldContinueExecuting()
     {
-        if (this.reset)
+        if (reset)
         {
-            this.reset = false;
-
+            reset = false;
             return false;
         }
-
         return super.shouldContinueExecuting();
     }
+    // true -> false
+    // false -> super.shouldContinueExecuting();
 }

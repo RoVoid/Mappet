@@ -1,64 +1,60 @@
 package mchorse.mappet.api.scripts.code.ui;
 
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
-import mchorse.mappet.api.scripts.user.ui.IMappetUIContext;
 import mchorse.mappet.api.scripts.user.nbt.INBTCompound;
+import mchorse.mappet.api.scripts.user.ui.IMappetUIContext;
 import mchorse.mappet.api.ui.UIContext;
+import net.minecraft.nbt.NBTTagCompound;
 
-public class MappetUIContext implements IMappetUIContext
-{
-    private UIContext context;
+public class MappetUIContext implements IMappetUIContext {
+    private final UIContext context;
     private INBTCompound data;
 
-    public MappetUIContext(UIContext context)
-    {
+    public MappetUIContext(UIContext context) {
         this.context = context;
     }
 
     @Override
-    public INBTCompound getData()
-    {
-        if (this.data == null)
-        {
-            this.data = new ScriptNBTCompound(this.context.data);
+    public INBTCompound getData() {
+        if (data == null) {
+            data = new ScriptNBTCompound(context.data);
         }
 
-        return this.data;
+        return data;
     }
 
     @Override
-    public boolean isClosed()
-    {
-        return this.context.isClosed();
+    public boolean isClosed() {
+        return context.isClosed();
     }
 
     @Override
-    public String getLast()
-    {
-        return this.context.getLast();
+    public String getLast() {
+        return context.getLast();
     }
 
     @Override
-    public String getHotkey()
-    {
-        return this.context.getHotkey();
+    public String getHotkey() {
+        return context.getHotkey();
     }
 
     @Override
-    public String getContext()
-    {
-        return this.context.getContext();
+    public String getContext() {
+        return context.getContext();
     }
 
     @Override
-    public UIComponent get(String id)
-    {
-        return this.context.getById(id);
+    public NBTTagCompound getMouse() {
+        return context.getMouse();
     }
 
     @Override
-    public void sendToPlayer()
-    {
-        this.context.sendToPlayer();
+    public UIComponent get(String id) {
+        return context.getById(id);
+    }
+
+    @Override
+    public void sendToPlayer() {
+        context.sendToPlayer();
     }
 }

@@ -1,10 +1,12 @@
 package mchorse.mappet.api.scripts.user.mappet;
 
+import mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer;
+
 import java.util.Set;
 
 /**
  * This interface represents Mappet states. Server ({@link mchorse.mappet.api.scripts.user.IScriptServer}),
- * players ({@link mchorse.mappet.api.scripts.user.entities.IScriptPlayer})
+ * players ({@link IScriptPlayer})
  * and NPCs ({@link mchorse.mappet.api.scripts.user.entities.IScriptNpc}) can have states.
  *
  * <pre>{@code
@@ -100,11 +102,15 @@ public interface IMappetStates {
      */
     double getNumber(String id);
 
+    String getString(String id, String defaultValue);
+
     /**
      * @return JsonSerializable
      * Experimental
      */
     Object getJson(String id);
+
+    Object getJson(String id, String defaultValue);
 
     /**
      * Check if a state instance of number.
@@ -116,6 +122,8 @@ public interface IMappetStates {
      * }</pre>
      */
     boolean isNumber(String id);
+
+    boolean getBoolean(String id, boolean defaultValue);
 
     /**
      * Get a string value of a state by given ID.
@@ -140,6 +148,8 @@ public interface IMappetStates {
      * }</pre>
      */
     boolean isString(String id);
+
+    double getNumber(String id, double defaultValue);
 
     boolean getBoolean(String id);
 

@@ -3,15 +3,17 @@ package mchorse.mappet.api.scripts.code.entities;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.npcs.Npc;
 import mchorse.mappet.api.npcs.NpcState;
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.user.entities.IScriptNpc;
 import mchorse.mappet.api.triggers.Trigger;
+import mchorse.mappet.api.triggers.blocks.ScriptTriggerBlock;
 import mchorse.mappet.entities.EntityNpc;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ScriptNpc extends ScriptEntity<EntityNpc> implements IScriptNpc {
@@ -106,7 +108,8 @@ public class ScriptNpc extends ScriptEntity<EntityNpc> implements IScriptNpc {
         NpcState state = entity.getState();
         if (index >= 0 && index < state.steeringOffset.size()) {
             state.steeringOffset.set(index, new BlockPos(x, y, z));
-        } else Mappet.logger.error("Invalid index: " + index);
+        }
+        else Mappet.logger.error("Invalid index: " + index);
         entity.sendNpcStateChangePacket();
     }
 
@@ -116,7 +119,7 @@ public class ScriptNpc extends ScriptEntity<EntityNpc> implements IScriptNpc {
         state.steeringOffset.add(new BlockPos(x, y, z));
         entity.sendNpcStateChangePacket();
     }
-    
+
     @Override
     public List<ScriptVector> getSteeringOffsets() {
         NpcState state = entity.getState();
@@ -354,10 +357,24 @@ public class ScriptNpc extends ScriptEntity<EntityNpc> implements IScriptNpc {
         entity.setState(state, false);
     }
 
+    @Override
     public void addPatrolPoints(float x, float y, float z) {
         NpcState npcState = entity.getState();
         npcState.patrol.add(new BlockPos(x, y, z));
         npcState.patrolTriggers.add(new Trigger());
+        entity.setState(npcState, true);
+    }
+
+    @Override
+    public void addPatrolPoints(float x, float y, float z, String script) {
+        addPatrolPoints(x, y, z, script, "main");
+    }
+
+    @Override
+    public void addPatrolPoints(float x, float y, float z, String script, String function) {
+        NpcState npcState = entity.getState();
+        npcState.patrol.add(new BlockPos(x, y, z));
+        npcState.patrolTriggers.add(new Trigger(Collections.singletonList(new ScriptTriggerBlock(script.trim(), function.trim()))));
         entity.setState(npcState, true);
     }
 

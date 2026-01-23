@@ -7,18 +7,14 @@ import mchorse.mappet.network.common.ui.PacketUIData;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-public class ServerHandlerUIData extends ServerMessageHandler<PacketUIData>
-{
+public class ServerHandlerUIData extends ServerMessageHandler<PacketUIData> {
     @Override
-    public void run(EntityPlayerMP player, PacketUIData message)
-    {
+    public void run(EntityPlayerMP player, PacketUIData message) {
         ICharacter character = Character.get(player);
-        UIContext context = character.getUIContext();
+        if (character == null) return;
 
-        if (context == null)
-        {
-            return;
-        }
+        UIContext context = character.getUIContext();
+        if (context == null) return;
 
         context.handleNewData(message.data);
     }

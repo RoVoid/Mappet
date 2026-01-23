@@ -23,7 +23,7 @@ public class EntityAILookAtTarget extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        return !(entity.getRNG().nextFloat() >= chance);
+        return entity.getRNG().nextFloat() < chance;
     }
 
     @Override

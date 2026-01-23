@@ -4,7 +4,7 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.ScriptEvent;
 import mchorse.mappet.api.scripts.code.ScriptFactory;
-import mchorse.mappet.api.scripts.code.ScriptMath;
+import mchorse.mappet.api.scripts.code.math.ScriptMath;
 import mchorse.mappet.api.utils.AbstractData;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.events.RegisterScriptVariablesEvent;
@@ -193,7 +193,6 @@ public class Script extends AbstractData {
         if (function.isEmpty()) function = "main";
 
         engine.put("context", context);
-
         try {
             return ((Invocable) engine).invokeFunction(function, args);
         } catch (ScriptException e) {

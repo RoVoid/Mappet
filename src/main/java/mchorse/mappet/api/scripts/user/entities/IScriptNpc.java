@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.user.entities;
 
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.entities.EntityNpc;
 
 import java.util.List;
@@ -519,6 +519,10 @@ public interface IScriptNpc extends IScriptEntity
     void setLookAtPlayer(boolean lookAtPlayer);
 
     /* Triggers */
+
+    void addPatrolPoints(float x, float y, float z);
+    void addPatrolPoints(float x, float y, float z, String script);
+    void addPatrolPoints(float x, float y, float z, String script, String function);
 
     /**
      * Removes a patrol point at a certain indext from the NPC.

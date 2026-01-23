@@ -2,12 +2,12 @@ package mchorse.mappet.api.scripts.code;
 
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
-import mchorse.mappet.api.scripts.code.entities.ScriptPlayer;
+import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
 import mchorse.mappet.api.scripts.code.score.ScriptScoreboard;
 import mchorse.mappet.api.scripts.code.world.ScriptWorld;
 import mchorse.mappet.api.scripts.user.IScriptServer;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
-import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
+import mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.mappet.IMappetStates;
 import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import mchorse.mappet.api.utils.DataContext;

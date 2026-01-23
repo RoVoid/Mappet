@@ -15,52 +15,55 @@ import net.minecraftforge.common.util.INBTSerializable;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public interface ICharacter extends INBTSerializable<NBTTagCompound> {
-    public States getStates();
+    UUID getCamera();
 
-    public Quests getQuests();
+    States getStates();
+
+    Quests getQuests();
 
     /* Dialogue */
 
-    public void setDialogue(Dialogue dialogue, DialogueContext context);
+    void setDialogue(Dialogue dialogue, DialogueContext context);
 
-    public Dialogue getDialogue();
+    Dialogue getDialogue();
 
-    public DialogueContext getDialogueContext();
+    DialogueContext getDialogueContext();
 
     /* Last clear */
 
-    public Instant getLastClear();
+    Instant getLastClear();
 
-    public void updateLastClear(Instant instant);
+    void updateLastClear(Instant instant);
 
     /* Prev position */
 
-    public PositionCache getPositionCache();
+    PositionCache getPositionCache();
 
     /* Admin editing */
 
-    public CurrentSession getCurrentSession();
+    CurrentSession getCurrentSession();
 
-    public void copy(ICharacter character, EntityPlayer player);
+    void copy(ICharacter character, EntityPlayer player);
 
     /* GUIs */
 
-    public UIContext getUIContext();
+    UIContext getUIContext();
 
-    public void setUIContext(UIContext context);
+    void setUIContext(UIContext context);
 
     /* HUDs */
-    public boolean setupHUD(String id, boolean addToDisplayedList);
+    boolean setupHUD(String id, boolean addToDisplayedList);
 
-    public void changeHUDMorph(String id, int index, NBTTagCompound tag);
+    void changeHUDMorph(String id, int index, NBTTagCompound tag);
 
-    public void closeHUD(String id);
+    void closeHUD(String id);
 
-    public void closeAllHUDs();
+    void closeAllHUDs();
 
     void closeAllHUDs(List<String> ignores);
 
-    public Map<String, List<HUDScene>> getDisplayedHUDs();
+    Map<String, List<HUDScene>> getDisplayedHUDs();
 }

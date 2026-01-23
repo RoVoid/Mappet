@@ -16,7 +16,7 @@ import mchorse.mappet.client.SoundPack;
 import mchorse.mappet.entities.EntityNpc;
 import mchorse.mappet.items.ModItems;
 import mchorse.mappet.network.client.ClientHandlerBlackAndWhiteShader;
-import mchorse.mappet.network.client.ClientHandlerLockPerspective;
+import mchorse.mappet.network.client.ClientHandlerPlayerPerspective;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
@@ -62,7 +62,7 @@ public class ModEventHandler {
 
         KeyboardHandler.hotkeysNeedLoad = true;
 
-        ClientHandlerLockPerspective.setLockedPerspective(-1);
+        ClientHandlerPlayerPerspective.setPerspective(-1);
         ClientHandlerBlackAndWhiteShader.enableBlackAndWhiteShader(false);
     }
 

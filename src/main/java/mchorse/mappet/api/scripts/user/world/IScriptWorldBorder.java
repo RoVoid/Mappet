@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.user.world;
 
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import net.minecraft.world.border.WorldBorder;
 
 public interface IScriptWorldBorder {

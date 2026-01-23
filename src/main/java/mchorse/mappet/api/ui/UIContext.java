@@ -35,6 +35,7 @@ public class UIContext {
     private boolean closed;
     private String hotkey = "";
     private String context = "";
+    private NBTTagCompound mouse = new NBTTagCompound();
     private Long dirty;
 
     public UIContext(UI ui) {
@@ -51,41 +52,35 @@ public class UIContext {
     /* Data sync code */
 
     public UIComponent getById(String id) {
-        return this.getByIdRecursive(id, this.ui.root);
+        return getByIdRecursive(id, ui.root);
     }
 
     private UIComponent getByIdRecursive(String id, UIComponent component) {
         for (UIComponent child : component.getChildComponents()) {
-            if (child.id.equals(id)) {
-                return child;
-            }
+            if (child.id.equals(id)) return child;
 
-            UIComponent result = this.getByIdRecursive(id, child);
-
-            if (result != null) {
-                return result;
-            }
+            UIComponent result = getByIdRecursive(id, child);
+            if (result != null) return result;
         }
 
         return null;
     }
 
     public void clearChanges() {
-        this.clearChangesRecursive(this.ui.root);
+        clearChangesRecursive(ui.root);
     }
 
     private void clearChangesRecursive(UIComponent component) {
         for (UIComponent child : component.getChildComponents()) {
             child.clearChanges();
-
-            this.clearChangesRecursive(child);
+            clearChangesRecursive(child);
         }
     }
 
     public NBTTagCompound compileChanges() {
         NBTTagCompound tag = new NBTTagCompound();
 
-        this.compileChangesRecursive(tag, this.ui.root);
+        compileChangesRecursive(tag, ui.root);
 
         return tag;
     }
@@ -93,99 +88,108 @@ public class UIContext {
     private void compileChangesRecursive(NBTTagCompound tag, UIComponent component) {
         for (UIComponent child : component.getChildComponents()) {
             if (!child.id.isEmpty()) {
-                this.compileComponent(tag, child);
+                compileComponent(tag, child);
             }
 
-            this.compileChangesRecursive(tag, child);
+            compileChangesRecursive(tag, child);
         }
     }
 
     private void compileComponent(NBTTagCompound tag, UIComponent component) {
         Set<String> changes = component.getChanges();
 
-        if (changes.isEmpty()) {
-            return;
-        }
+        if (changes.isEmpty()) return;
 
         NBTTagCompound full = component.serializeNBT();
         NBTTagCompound partial = new NBTTagCompound();
 
         for (String key : changes) {
-            if (full.hasKey(key)) {
-                partial.setTag(key, full.getTag(key));
-            }
+            if (full.hasKey(key)) partial.setTag(key, full.getTag(key));
         }
 
         tag.setTag(component.id, partial);
     }
 
     public void populateDefaultData() {
-        this.populateDefaultDataRecursive(this.ui.root);
+        populateDefaultDataRecursive(ui.root);
     }
 
     private void populateDefaultDataRecursive(UIComponent component) {
         for (UIComponent child : component.getChildComponents()) {
-            child.populateData(this.data);
-
-            this.populateDefaultDataRecursive(child);
+            child.populateData(data);
+            populateDefaultDataRecursive(child);
         }
     }
 
     /* Getters */
 
     public String getLast() {
-        return this.last;
+        return last;
     }
 
     public String getHotkey() {
-        return this.hotkey;
+        return hotkey;
     }
 
     public String getContext() {
-        return this.context;
+        return context;
     }
 
     public boolean isClosed() {
-        return this.closed;
+        return closed;
+    }
+
+    public NBTTagCompound getMouse() {
+        return mouse;
+    }
+
+    public void setMouse(NBTTagCompound mouse) {
+        this.mouse = mouse;
     }
 
     public boolean isDirty() {
-        return this.dirty != null && System.currentTimeMillis() >= this.dirty;
+        return dirty != null && System.currentTimeMillis() >= dirty;
     }
 
     public boolean isDirtyInProgress() {
-        return this.dirty != null;
+        return dirty != null;
     }
 
     /* Client side code */
 
     @SideOnly(Side.CLIENT)
     public void registerElement(String id, GuiElement element, boolean reserved) {
-        if (this.elements == null) {
-            this.elements = new HashMap<>();
+        if (elements == null) {
+            elements = new HashMap<>();
         }
 
-        this.elements.put(id, element);
+        elements.put(id, element);
 
         if (reserved) {
-            if (this.reservedData == null) {
-                this.reservedData = new HashSet<>();
+            if (reservedData == null) {
+                reservedData = new HashSet<>();
             }
 
-            this.reservedData.add(id);
+            reservedData.add(id);
         }
     }
 
     @SideOnly(Side.CLIENT)
     public GuiElement getElement(String target) {
-        return this.elements == null ? null : this.elements.get(target);
+        return elements == null ? null : elements.get(target);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public Set<String> getElementKeys() {
+        return elements.keySet();
     }
 
     @SideOnly(Side.CLIENT)
     public void sendKey(String action) {
-        if (this.dirty != null) {
-            this.sendToServer();
-        } else {
+        if (dirty != null) {
+            sendToServer();
+        }
+        else {
             NBTTagCompound tag = new NBTTagCompound();
 
             tag.setString("Hotkey", action);
@@ -196,9 +200,10 @@ public class UIContext {
 
     @SideOnly(Side.CLIENT)
     public void sendContext(String action) {
-        if (this.dirty != null) {
-            this.sendToServer();
-        } else {
+        if (dirty != null) {
+            sendToServer();
+        }
+        else {
             NBTTagCompound tag = new NBTTagCompound();
 
             tag.setString("Context", action);
@@ -208,43 +213,57 @@ public class UIContext {
     }
 
     @SideOnly(Side.CLIENT)
+    public void sendMouse() {
+        if (dirty != null) {
+            sendToServer();
+        }
+        else {
+            NBTTagCompound tag = new NBTTagCompound();
+
+            tag.setTag("Mouse", mouse);
+            mouse = new NBTTagCompound();
+
+            Dispatcher.sendToServer(new PacketUIData(tag));
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
     public void dirty(String id, long delay) {
-        this.last = id;
+        last = id;
 
         if (delay <= 0) {
-            this.dirty = null;
-            this.sendToServer();
-        } else {
-            this.dirty = System.currentTimeMillis() + delay;
+            dirty = null;
+            sendToServer();
+        }
+        else {
+            dirty = System.currentTimeMillis() + delay;
         }
     }
 
     @SideOnly(Side.CLIENT)
     public void sendToServer() {
-        this.dirty = null;
+        dirty = null;
 
         NBTTagCompound tag = new NBTTagCompound();
 
-        tag.setTag("Data", this.data);
-        tag.setString("Last", this.last);
-        tag.setString("Hotkey", this.hotkey);
-        tag.setString("Context", this.context);
+        tag.setTag("Data", data);
+        tag.setString("Last", last);
+        tag.setString("Hotkey", hotkey);
+        tag.setString("Context", context);
+        tag.setTag("Mouse", mouse);
 
-        NBTTagCompound oldData = this.data;
+        NBTTagCompound oldData = data;
 
-        this.data = new NBTTagCompound();
+        data = new NBTTagCompound();
 
-        if (this.reservedData != null) {
-            for (String key : this.reservedData) {
-                if (!oldData.hasKey(key)) {
-                    continue;
-                }
-
-                this.data.setTag(key, oldData.getTag(key));
+        if (reservedData != null) {
+            for (String key : reservedData) {
+                if (oldData.hasKey(key)) data.setTag(key, oldData.getTag(key));
             }
         }
 
-        this.hotkey = "";
+        hotkey = "";
+        mouse = new NBTTagCompound();
 
         Dispatcher.sendToServer(new PacketUIData(tag));
     }
@@ -252,48 +271,42 @@ public class UIContext {
     /* Server side code */
 
     public void handleNewData(NBTTagCompound data) {
-        if (this.player == null) {
-            return;
-        }
+        if (player == null) return;
 
         this.data.merge(data.getCompoundTag("Data"));
-        this.last = data.getString("Last");
-        this.hotkey = data.getString("Hotkey");
-        this.context = data.getString("Context");
+        last = data.getString("Last");
+        hotkey = data.getString("Hotkey");
+        context = data.getString("Context");
+        mouse = data.getCompoundTag("Mouse");
 
-        if (this.handleScript(this.player)) {
-            this.sendToPlayer();
-        } else {
-            this.clearChanges();
-        }
+        if (handleScript(player)) sendToPlayer();
+        else clearChanges();
     }
 
     public void sendToPlayer() {
-        NBTTagCompound changes = this.compileChanges();
+        NBTTagCompound changes = compileChanges();
 
         if (!changes.getKeySet().isEmpty()) {
-            Dispatcher.sendTo(new PacketUIData(changes), (EntityPlayerMP) this.player);
+            Dispatcher.sendTo(new PacketUIData(changes), (EntityPlayerMP) player);
         }
 
-        this.clearChanges();
+        clearChanges();
     }
 
     public void close() {
-        if (this.player == null) return;
+        if (player == null) return;
 
+        closed = true;
+        last = "";
 
-        this.closed = true;
-        this.last = "";
-
-        this.handleScript(this.player);
+        handleScript(player);
     }
 
     private boolean handleScript(EntityPlayer player) {
-        if (this.script.isEmpty() || this.function.isEmpty()) return false;
+        if (script.isEmpty() || function.isEmpty()) return false;
 
         try {
-            Mappet.scripts.execute(this.script, this.function, new DataContext(player));
-
+            Mappet.scripts.execute(script, function, new DataContext(player));
             return true;
         } catch (Exception e) {
             Mappet.logger.error(e.getMessage());

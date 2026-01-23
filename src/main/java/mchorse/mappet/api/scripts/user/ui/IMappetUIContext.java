@@ -1,8 +1,9 @@
 package mchorse.mappet.api.scripts.user.ui;
 
-import mchorse.mappet.api.scripts.user.entities.IScriptPlayer;
+import mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.nbt.INBTCompound;
 import mchorse.mappet.api.scripts.code.ui.UIComponent;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * This interface represents an UI context, which is an object that
@@ -67,7 +68,7 @@ public interface IMappetUIContext
      *    }
      * }</pre>
      */
-    public INBTCompound getData();
+    INBTCompound getData();
 
     /**
      * Returns whether the UI was just closed.
@@ -99,7 +100,7 @@ public interface IMappetUIContext
      *    }
      * }</pre>
      */
-    public boolean isClosed();
+    boolean isClosed();
 
     /**
      * Get the ID of last edited UI component.
@@ -141,7 +142,7 @@ public interface IMappetUIContext
      *    }
      * }</pre>
      */
-    public String getLast();
+    String getLast();
 
     /**
      * Get the ID of the last pressed hot key.
@@ -150,7 +151,7 @@ public interface IMappetUIContext
      * See {@link UIComponent#keybind(int, String, String, boolean, boolean, boolean)} method
      * for an example.</p>
      */
-    public String getHotkey();
+    String getHotkey();
 
     /**
      * Get the ID of the last context menu item.
@@ -158,9 +159,11 @@ public interface IMappetUIContext
      * <p>If no context menu was activated, it will be an empty string (<code>""</code>).
      * See {@link UIComponent#context(String, String, String, int)} method for an example.</p>
      */
-    public String getContext();
+    String getContext();
 
     /* Server side modification */
+
+    NBTTagCompound getMouse();
 
     /**
      * Returns a UI component by given ID or <code>null</code>. You can use this
@@ -188,7 +191,7 @@ public interface IMappetUIContext
      *    }
      * }</pre>
      */
-    public UIComponent get(String id);
+    UIComponent get(String id);
 
     /**
      * Sends UI changes to the player.
@@ -224,5 +227,5 @@ public interface IMappetUIContext
      *    }
      * }</pre>
      */
-    public void sendToPlayer();
+    void sendToPlayer();
 }

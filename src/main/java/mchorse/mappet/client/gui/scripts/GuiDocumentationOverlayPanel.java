@@ -53,7 +53,15 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
         pickedEntry = null;
         updatePanel = false;
 
-        docs.copyMethods("UILabelBaseComponent", "UIButtonComponent", "UILabelComponent", "UITextComponent", "UITextareaComponent", "UITextboxComponent", "UIToggleComponent");
+        docs.copyMethods("UILabelBaseComponent",
+                         "UIButtonComponent",
+                         "UILabelComponent",
+                         "UITextComponent",
+                         "UITextareaComponent",
+                         "UITextboxComponent",
+                         "UIToggleComponent");
+        docs.remove("MappetUIBuilder");
+        docs.remove("MappetUIContext");
         docs.remove("UIParentComponent");
         docs.remove("UILabelBaseComponent");
 
@@ -66,6 +74,7 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
 
         DocEntry top = new DocEntry();
         DocEntry entities = new DocEntry("/ Entities");
+        DocEntry player = new DocEntry("/ Player");
         DocEntry nbt = new DocEntry("/ NBT");
         DocEntry items = new DocEntry("/ Items");
         DocEntry blocks = new DocEntry("/ Blocks");
@@ -76,8 +85,8 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
 
         for (DocEntry docClass : docs.classes) {
             if (docClass.name.contains(".ui") || docClass.displayName.equals("Graphic")) docClass.setParent(ui);
-            else if (docClass.displayName.equals("IScriptMath") || docClass.displayName.equals("IScriptVector") || docClass.displayName.equals("IScriptBox"))
-                docClass.setParent(math);
+            else if (docClass.name.contains(".math")) docClass.setParent(math);
+            else if (docClass.name.contains(".entities.player")) docClass.setParent(player);
             else if (docClass.name.contains(".entities")) docClass.setParent(entities);
             else if (docClass.name.contains(".nbt")) docClass.setParent(nbt);
             else if (docClass.name.contains(".items")) docClass.setParent(items);
@@ -86,6 +95,8 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
             else if (docClass.name.contains(".world")) docClass.setParent(world);
             else docClass.setParent(top);
         }
+
+        player.setParent(entities);
 
         top.addChildren(entities, nbt, items, blocks, ui, score, world, math);
         pickedEntry = top;
@@ -135,14 +146,15 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
             searchList.list.sort();
 
             if (isMethod) searchList.list.setCurrentScroll(entry);
-        } else {
+        }
+        else {
             pickedEntry = entry;
             updatePanel = !isMethod;
         }
 
         documentation.scroll.scrollTo(0);
         documentation.removeAll();
-        if(!pickedEntry.name.isEmpty()) entry.render(mc, documentation);
+        if (!pickedEntry.name.isEmpty()) entry.render(mc, documentation);
 
         resize();
     }
@@ -150,7 +162,7 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
     private void setupDocs(DocMethod method) {
         initDocs();
         updatePanel = true;
-        if(method != null) pickedEntry = method;
+        if (method != null) pickedEntry = method;
         pick(pickedEntry);
     }
 
@@ -159,9 +171,7 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
     }
 
     private void copyName() {
-        String rawName = searchList.list.getCurrentFirst() == null
-                ? pickedEntry.displayName
-                : searchList.list.getCurrentFirst().displayName;
+        String rawName = searchList.list.getCurrentFirst() == null ? pickedEntry.displayName : searchList.list.getCurrentFirst().displayName;
 
         rawName = rawName.replaceAll(".*/", "");
 //        rawName = rawName.replaceAll("\\(.*?\\)", "");

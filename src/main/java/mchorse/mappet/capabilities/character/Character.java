@@ -52,72 +52,76 @@ public class Character implements ICharacter {
 
     private Map<String, List<HUDScene>> displayedHUDs = new HashMap<>();
 
+    private UUID cameraUuid;
+
     @Override
     public States getStates() {
-        return this.states;
+        return states;
     }
 
     @Override
     public Quests getQuests() {
-        return this.quests;
+        return quests;
     }
 
     @Override
     public void setDialogue(Dialogue dialogue, DialogueContext context) {
         if (dialogue == null && this.dialogue != null) {
-            this.dialogue.onClose.trigger(this.dialogueContext.data);
+            this.dialogue.onClose.trigger(dialogueContext.data);
         }
 
         this.dialogue = dialogue;
-        this.dialogueContext = context;
+        dialogueContext = context;
     }
 
     @Override
     public Dialogue getDialogue() {
-        return this.dialogue;
+        return dialogue;
     }
 
     @Override
     public DialogueContext getDialogueContext() {
-        return this.dialogueContext;
+        return dialogueContext;
     }
 
     @Override
     public Instant getLastClear() {
-        return this.lastClear;
+        return lastClear;
     }
 
     @Override
     public void updateLastClear(Instant instant) {
-        this.lastClear = instant;
+        lastClear = instant;
     }
 
     @Override
     public PositionCache getPositionCache() {
-        return this.positionCache;
+        return positionCache;
     }
 
     @Override
     public CurrentSession getCurrentSession() {
-        return this.session;
+        return session;
     }
 
     @Override
     public void copy(ICharacter character, EntityPlayer player) {
-        this.quests.copy(character.getQuests());
-        this.states.copy(character.getStates());
-        this.lastClear = character.getLastClear();
-        this.displayedHUDs = character.getDisplayedHUDs();
+        quests.copy(character.getQuests());
+        states.copy(character.getStates());
+        lastClear = character.getLastClear();
+        displayedHUDs = character.getDisplayedHUDs();
+        cameraUuid = character.getCamera();
     }
 
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
 
-        tag.setTag("Quests", this.quests.serializeNBT());
-        tag.setTag("States", this.states.serializeNBT());
-        tag.setString("LastClear", this.lastClear.toString());
+        tag.setTag("Quests", quests.serializeNBT());
+        tag.setTag("States", states.serializeNBT());
+        tag.setString("LastClear", lastClear.toString());
         tag.setTag("DisplayedHUDs", serializeDisplayedHUDs());
+        if(cameraUuid != null) tag.setUniqueId("Camera", cameraUuid);
 
         return tag;
     }
@@ -125,16 +129,16 @@ public class Character implements ICharacter {
     @Override
     public void deserializeNBT(NBTTagCompound tag) {
         if (tag.hasKey("Quests")) {
-            this.quests.deserializeNBT(tag.getCompoundTag("Quests"));
+            quests.deserializeNBT(tag.getCompoundTag("Quests"));
         }
 
         if (tag.hasKey("States")) {
-            this.states.deserializeNBT(tag.getCompoundTag("States"));
+            states.deserializeNBT(tag.getCompoundTag("States"));
         }
 
         if (tag.hasKey("LastClear")) {
             try {
-                this.lastClear = Instant.parse(tag.getString("LastClear"));
+                lastClear = Instant.parse(tag.getString("LastClear"));
             } catch (Exception ignored) {
             }
         }
@@ -142,18 +146,22 @@ public class Character implements ICharacter {
         if (tag.hasKey("DisplayedHUDs")) {
             deserializeDisplayedHUDs(tag.getCompoundTag("DisplayedHUDs"));
         }
+
+        if (tag.hasUniqueId("Camera")) {
+            cameraUuid = tag.getUniqueId("Camera");
+        }
     }
 
     /* GUIs */
 
     @Override
     public UIContext getUIContext() {
-        return this.uiContext;
+        return uiContext;
     }
 
     @Override
     public void setUIContext(UIContext context) {
-        this.uiContext = context;
+        uiContext = context;
     }
 
     /* HUDs */
@@ -162,11 +170,11 @@ public class Character implements ICharacter {
         HUDScene scene = Mappet.huds.load(id);
 
         if (scene != null) {
-            Dispatcher.sendTo(new PacketHUDScene(scene.getId(), scene.serializeNBT()), (EntityPlayerMP) this.player);
+            Dispatcher.sendTo(new PacketHUDScene(scene.getId(), scene.serializeNBT()), (EntityPlayerMP) player);
 
             //if the hud is global, display it to all players as well
             if (scene.global) {
-                for (EntityPlayer player : this.player.world.playerEntities) {
+                for (EntityPlayer player : player.world.playerEntities) {
                     if (player != this.player) {
                         Dispatcher.sendTo(new PacketHUDScene(scene.getId(), scene.serializeNBT()), (EntityPlayerMP) player);
                     }
@@ -185,13 +193,13 @@ public class Character implements ICharacter {
 
     @Override
     public void changeHUDMorph(String id, int index, NBTTagCompound tag) {
-        Dispatcher.sendTo(new PacketHUDMorph(id, index, tag), (EntityPlayerMP) this.player);
+        Dispatcher.sendTo(new PacketHUDMorph(id, index, tag), (EntityPlayerMP) player);
 
         //if the hud is global, display change it for all players as well
         HUDScene scene = Mappet.huds.load(id);
 
         if (scene.global) {
-            for (EntityPlayer player : this.player.world.playerEntities) {
+            for (EntityPlayer player : player.world.playerEntities) {
                 if (player != this.player) {
                     Dispatcher.sendTo(new PacketHUDMorph(id, index, tag), (EntityPlayerMP) player);
                 }
@@ -218,9 +226,10 @@ public class Character implements ICharacter {
     public void closeHUD(String id) {
         HUDScene scene = Mappet.huds.load(id);
         if (scene.global) {
-            for (EntityPlayer player : this.player.world.playerEntities)
+            for (EntityPlayer player : player.world.playerEntities)
                 Dispatcher.sendTo(new PacketHUDScene(id == null ? "" : id, null), (EntityPlayerMP) player);
-        } else Dispatcher.sendTo(new PacketHUDScene(id == null ? "" : id, null), (EntityPlayerMP) this.player);
+        }
+        else Dispatcher.sendTo(new PacketHUDScene(id == null ? "" : id, null), (EntityPlayerMP) player);
         getDisplayedHUDs().remove(id);
     }
 
@@ -234,9 +243,10 @@ public class Character implements ICharacter {
         for (Map.Entry<String, List<HUDScene>> entry : getDisplayedHUDs().entrySet()) {
             if (ignores.contains(entry.getKey())) continue;
             if (entry.getValue().get(0).global) {
-                for (EntityPlayer player : this.player.world.playerEntities)
+                for (EntityPlayer player : player.world.playerEntities)
                     Dispatcher.sendTo(new PacketHUDScene(entry.getKey(), null), (EntityPlayerMP) player);
-            } else Dispatcher.sendTo(new PacketHUDScene(entry.getKey(), null), (EntityPlayerMP) player);
+            }
+            else Dispatcher.sendTo(new PacketHUDScene(entry.getKey(), null), (EntityPlayerMP) player);
         }
         getDisplayedHUDs().clear();
     }
@@ -327,5 +337,10 @@ public class Character implements ICharacter {
                 iterator.remove();
             }
         }
+    }
+
+    @Override
+    public UUID getCamera() {
+        return cameraUuid;
     }
 }

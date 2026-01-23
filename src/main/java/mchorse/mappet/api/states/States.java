@@ -211,24 +211,45 @@ public class States implements IMappetStates, INBTSerializable<NBTTagCompound> {
 
     @Override
     public double getNumber(String id) {
+        return getNumber(id, 0);
+    }
+
+    @Override
+    public double getNumber(String id, double defaultValue) {
         Object val = values.get(id);
-        return val instanceof Number ? ((Number) val).doubleValue() : 0;
+        return val instanceof Number ? ((Number) val).doubleValue() : defaultValue;
     }
 
     @Override
     public boolean getBoolean(String id) {
-        return Boolean.TRUE.equals(values.get(id));
+        return getBoolean(id, false);
+    }
+
+    @Override
+    public boolean getBoolean(String id, boolean defaultValue) {
+        return Boolean.TRUE.equals(values.get(id)) || defaultValue;
     }
 
     @Override
     public String getString(String id) {
+        return getString(id, "");
+    }
+
+    @Override
+    public String getString(String id, String defaultValue) {
         Object val = values.get(id);
-        return val instanceof String ? (String) val : "";
+        return val instanceof String ? (String) val : defaultValue;
     }
 
     @Override
     public Object getJson(String id) {
-        return NativeJSON.parse(null, getString(id), null);
+        return getJson(id, "{}");
+    }
+
+    @Override
+    public Object getJson(String id, String defaultValue) {
+        String raw = getString(id, defaultValue);
+        return NativeJSON.parse(null, raw, null);
     }
 
     @Override

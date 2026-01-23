@@ -1,10 +1,11 @@
-package mchorse.mappet.api.scripts.user.entities;
+package mchorse.mappet.api.scripts.user.entities.player;
 
 import mchorse.mappet.api.scripts.code.ScriptResourcePack;
 import mchorse.mappet.api.scripts.code.score.ScriptScoreObjective;
 import mchorse.mappet.api.scripts.code.score.ScriptScoreboard;
 import mchorse.mappet.api.scripts.code.score.ScriptTeam;
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
+import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.user.items.IScriptInventory;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
 import mchorse.mappet.api.scripts.user.mappet.IMappetQuests;
@@ -642,6 +643,7 @@ public interface IScriptPlayer extends IScriptEntity {
 
     void enableBlackAndWhiteShader(boolean enable);
 
+    void setPerspective(int perspective);
     void lockPerspective(int perspective);
 
     void unlockPerspective();
@@ -833,6 +835,8 @@ public interface IScriptPlayer extends IScriptEntity {
      */
     IMappetUIContext getUIContext();
 
+    IScriptCamera getCamera();
+
     /**
      * Returns the faction of the npc as a string
      *
@@ -845,6 +849,8 @@ public interface IScriptPlayer extends IScriptEntity {
     Set<String> getFactions();
 
     /* HUD scenes API */
+
+    String getLanguage();
 
     /**
      * Setup (initiate) an HUD scene for this player.

@@ -1,7 +1,7 @@
 package mchorse.mappet;
 
 import mchorse.mappet.api.scripts.code.entities.ScriptEntityItem;
-import mchorse.mappet.api.scripts.code.entities.ScriptPlayer;
+import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
 import mchorse.mappet.api.scripts.code.items.ScriptInventory;
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
 import mchorse.mappet.api.triggers.Trigger;

@@ -1,11 +1,13 @@
-package mchorse.mappet.api.scripts.user;
+package mchorse.mappet.api.scripts.user.math;
 
-import mchorse.mappet.api.scripts.code.data.ScriptBox;
-import mchorse.mappet.api.scripts.code.data.ScriptVector;
+import mchorse.mappet.api.scripts.code.math.ScriptBox;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import net.minecraft.util.math.BlockPos;
 
 public interface IScriptMath {
     ScriptBox box(ScriptVector vec1, ScriptVector vec2);
+
+    double random();
 
     /**
      * Generate a number between 0 and the given max value (but not including the max value)
@@ -77,9 +79,12 @@ public interface IScriptMath {
     /**
      * Create a scripted vector.
      */
+    ScriptVector vector();
     ScriptVector vector(double x, double y, double z);
 
     ScriptVector vector(BlockPos pos);
+
+    ScriptBox box();
 
     /**
      * Create a bounding box.

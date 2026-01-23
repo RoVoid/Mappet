@@ -1,8 +1,8 @@
-package mchorse.mappet.api.scripts.code.data;
+package mchorse.mappet.api.scripts.code.math;
 
 import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
 import mchorse.mappet.api.scripts.code.world.ScriptWorld;
-import mchorse.mappet.api.scripts.user.data.IScriptBox;
+import mchorse.mappet.api.scripts.user.math.IScriptBox;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -17,6 +17,8 @@ public class ScriptBox implements IScriptBox {
     public double maxX;
     public double maxY;
     public double maxZ;
+
+    public static ScriptBox EMPTY = new ScriptBox(0, 0, 0, 0, 0, 0);
 
     public ScriptBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
         this.minX = Math.min(minX, maxX);

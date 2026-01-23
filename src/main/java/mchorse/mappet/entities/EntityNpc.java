@@ -158,7 +158,13 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
             // Check side and execute appropriate code
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
                 // This is a client
-                passenger.setPositionAndRotationDirect(finalPosX, offsetY, finalPosZ, passenger.rotationYaw, passenger.rotationPitch, 3, true);
+                passenger.setPositionAndRotationDirect(finalPosX,
+                        offsetY,
+                        finalPosZ,
+                        passenger.rotationYaw,
+                        passenger.rotationPitch,
+                        3,
+                        true);
             }
             else {
                 // This is a server
@@ -217,9 +223,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
 
     @Override
     protected PathNavigate createNavigator(World world) {
-        if (state != null && state.canFly.get()) {
-            return new PathNavigateFlying(this, world);
-        }
+        if (state != null && state.canFly.get()) return new PathNavigateFlying(this, world);
         return new PathNavigateGround(this, world);
     }
 
@@ -270,57 +274,38 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
             }
         }
 
-        targetTasks.addTask(1, targetAI = new EntityAIHurtByTargetNpc(this, false));
-        targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 10, true, false, this::targetCheck));
+        targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 10, false, false, this::targetCheck));
+        targetTasks.addTask(2, targetAI = new EntityAIHurtByTargetNpc(this, false));
 
-        if (state != null) {
-            tasks.addTask(4, new EntityAIAttackNpcMelee(this, speed, false, state.damageDelay.get()));
-        }
+        if (state != null) tasks.addTask(4, new EntityAIAttackNpcMelee(this, speed, false, state.damageDelay.get()));
     }
 
     private boolean targetCheck(EntityLivingBase entity) {
-        if (isEntityOutOfPostDistance(entity)) {
-            return false;
-        }
+        if (isEntityOutOfPostDistance(entity)) return false;
 
         Faction faction = getFaction();
+        if (faction == null) return false;
 
         if (entity instanceof EntityNpc) {
             EntityNpc npc = (EntityNpc) entity;
-
-            if (faction != null) {
-                return faction.get(npc.getState().faction.get()) == FactionAttitude.AGGRESSIVE;
-            }
+            return faction.get(npc.getState().faction.get()) == FactionAttitude.AGGRESSIVE;
         }
 
         if (entity instanceof EntityPlayerMP) {
             EntityPlayerMP player = (EntityPlayerMP) entity;
+            if (player.isSpectator() || player.isCreative()) return false;
 
-            if (player.isSpectator() || player.isCreative()) {
-                return false;
-            }
-
-            FactionAttitude attitude = getPlayerAttitude(faction, entity);
-
-            if (attitude != null) {
-                return attitude == FactionAttitude.AGGRESSIVE;
-            }
+            FactionAttitude attitude = getPlayerAttitude(faction, player);
+            if (attitude != null) return attitude == FactionAttitude.AGGRESSIVE;
         }
 
-        return faction != null && faction.othersAttitude == FactionAttitude.AGGRESSIVE;
+        return faction.othersAttitude == FactionAttitude.AGGRESSIVE;
     }
 
-    private FactionAttitude getPlayerAttitude(Faction faction, Entity entity) {
-        if (entity instanceof EntityPlayerMP) {
-            EntityPlayerMP player = (EntityPlayerMP) entity;
-            ICharacter character = Character.get(player);
-
-            if (faction != null && character != null) {
-                return faction.get(character.getStates());
-            }
-        }
-
-        return null;
+    private FactionAttitude getPlayerAttitude(Faction faction, EntityPlayerMP player) {
+        if (player == null) return null;
+        ICharacter character = Character.get(player);
+        return faction == null || character == null ? null : faction.get(character.getStates());
     }
 
     public void initialize() {
@@ -336,7 +321,6 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     public Faction getFaction() {
         if (faction == null) {
             String faction = state.faction.get();
-
             this.faction = faction.isEmpty() ? null : Mappet.factions.load(faction);
         }
 
@@ -346,9 +330,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     public void setNpc(Npc npc, NpcState state) {
         setState(state, false);
 
-        if (this.state.id.get().isEmpty()) {
-            this.state.id.set(npc.getId());
-        }
+        if (this.state.id.get().isEmpty()) this.state.id.set(npc.getId());
     }
 
     public String getId() {
@@ -392,9 +374,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     }
 
     public void sendNpcStateChangePacket() {
-        if (world instanceof WorldServer) {
-            Dispatcher.sendToTracked(this, new PacketNpcStateChange(this));
-        }
+        if (world instanceof WorldServer) Dispatcher.sendToTracked(this, new PacketNpcStateChange(this));
     }
 
     @Override
@@ -404,9 +384,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
 
 
     public EntityLivingBase getFollowTarget() {
-        if (state.follow.get().isEmpty()) {
-            return null;
-        }
+        if (state.follow.get().isEmpty()) return null;
 
         if (state.follow.get().equals("@r")) {
             List<EntityPlayer> players = world.playerEntities;
@@ -420,9 +398,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
                 ICommandSender sender = CommandNpc.getCommandSender(this);
                 List<Entity> entities = EntitySelector.matchEntities(sender, state.follow.get(), Entity.class);
                 for (Entity entity : entities) {
-                    if (entity instanceof EntityLivingBase) {
-                        return (EntityLivingBase) entity;
-                    }
+                    if (entity instanceof EntityLivingBase) return (EntityLivingBase) entity;
                 }
             } catch (Exception e) {
                 Mappet.logger.error(e.getMessage());
@@ -455,7 +431,6 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     public void onUpdate() {
         if (lastTarget != getAttackTarget()) {
             lastTarget = getAttackTarget();
-
             state.triggerTarget.trigger(new DataContext(this, lastTarget));
         }
 
@@ -509,25 +484,20 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     }
 
     private void updateAttackTarget() {
-        if (state != null && getAttackTarget() != null && state.postPosition != null && state.hasPost.get() && isEntityOutOfPostDistance(getAttackTarget())) {
+        EntityLivingBase entity = getAttackTarget();
+        if (state != null && entity != null && state.postPosition != null && state.hasPost.get() && isEntityOutOfPostDistance(entity)) {
             targetAI.reset = true;
             setAttackTarget(null);
         }
 
-        if (faction == null || ticksExisted % 10 != 0) {
-            return;
-        }
-
-        Entity entity = getAttackTarget();
+        if (faction == null || ticksExisted % 10 != 0) return;
 
         if (entity instanceof EntityPlayerMP) {
             EntityPlayerMP player = (EntityPlayerMP) entity;
             Faction faction = getFaction();
             FactionAttitude attitude = getPlayerAttitude(faction, player);
 
-            if (attitude == FactionAttitude.FRIENDLY || player.isCreative()) {
-                setAttackTarget(null);
-            }
+            if (attitude == FactionAttitude.FRIENDLY || player.isSpectator() || player.isCreative()) setAttackTarget(null);
         }
     }
 
@@ -584,9 +554,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
             Faction faction = getFaction();
             FactionAttitude attitude = getPlayerAttitude(faction, player);
 
-            if (attitude == FactionAttitude.FRIENDLY && !player.isCreative()) {
-                return true;
-            }
+            if (attitude == FactionAttitude.FRIENDLY && !player.isCreative()) return true;
         }
 
         if (state.invincible.get()) {
@@ -638,9 +606,8 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
             }
 
             // Start riding the NPC when interacted with
-            if ((getPassengers().size() < state.steeringOffset.size() || state.steeringOffset.isEmpty()) && canBeSteered() && !(player
-                    .getHeldItem(hand)
-                    .getItem() instanceof ItemNpcTool)) {
+            if ((getPassengers().size() < state.steeringOffset.size() || state.steeringOffset.isEmpty()) && canBeSteered() && !(player.getHeldItem(
+                    hand).getItem() instanceof ItemNpcTool)) {
                 player.startRiding(this, true);
             }
         }
