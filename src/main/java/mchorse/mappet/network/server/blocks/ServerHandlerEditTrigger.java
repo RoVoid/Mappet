@@ -1,6 +1,6 @@
 package mchorse.mappet.network.server.blocks;
 
-import mchorse.mappet.network.common.blocks.PacketEditTrigger;
+import mchorse.mappet.network.packets.blocks.PacketEditTrigger;
 import mchorse.mappet.tile.TileTrigger;
 import mchorse.mappet.utils.WorldUtils;
 import mchorse.mclib.network.ServerMessageHandler;

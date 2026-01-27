@@ -1,6 +1,6 @@
 package mchorse.mappet.network.client.items;
 
-import mchorse.mappet.network.common.items.PacketScriptedItemInfo;
+import mchorse.mappet.network.packets.items.PacketScriptedItemInfo;
 import mchorse.mappet.utils.NBTUtils;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;

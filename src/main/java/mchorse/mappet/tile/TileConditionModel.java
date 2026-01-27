@@ -7,7 +7,7 @@ import mchorse.mappet.Mappet;
 import mchorse.mappet.api.conditions.Checker;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.blocks.PacketEditConditionModel;
+import mchorse.mappet.network.packets.blocks.PacketEditConditionModel;
 import mchorse.mappet.utils.ConditionModel;
 import mchorse.mclib.math.Constant;
 import mchorse.metamorph.api.morphs.AbstractMorph;

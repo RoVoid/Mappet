@@ -2,8 +2,8 @@ package mchorse.mappet.api.scripts.code.entities.player;
 
 import mchorse.mappet.api.scripts.user.entities.player.IScriptCamera;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.PacketCamera;
-import mchorse.mappet.network.common.PacketScreenshot;
+import mchorse.mappet.network.packets.PacketCamera;
+import mchorse.mappet.network.packets.PacketScreenshot;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;

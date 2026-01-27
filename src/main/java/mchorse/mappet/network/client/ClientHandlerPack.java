@@ -1,6 +1,6 @@
 package mchorse.mappet.network.client;
 
-import mchorse.mappet.network.common.PacketPack;
+import mchorse.mappet.network.packets.PacketPack;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

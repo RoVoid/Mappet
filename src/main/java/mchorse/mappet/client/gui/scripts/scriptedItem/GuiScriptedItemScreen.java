@@ -5,7 +5,7 @@ import mchorse.mappet.client.gui.triggers.GuiTriggerElement;
 import mchorse.mappet.client.gui.utils.text.GuiText;
 import mchorse.mappet.common.ScriptedItemProps;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.items.PacketScriptedItemInfo;
+import mchorse.mappet.network.packets.items.PacketScriptedItemInfo;
 import mchorse.mappet.utils.NBTUtils;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;

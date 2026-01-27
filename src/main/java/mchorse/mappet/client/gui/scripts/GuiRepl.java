@@ -4,7 +4,7 @@ import mchorse.mappet.client.gui.panels.GuiScriptPanel;
 import mchorse.mappet.client.gui.utils.text.GuiText;
 import mchorse.mappet.client.gui.utils.text.utils.Cursor;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.scripts.PacketRepl;
+import mchorse.mappet.network.packets.scripts.PacketRepl;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;

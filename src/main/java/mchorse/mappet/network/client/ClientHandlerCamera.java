@@ -1,7 +1,7 @@
 package mchorse.mappet.network.client;
 
 import mchorse.mappet.client.CameraReflect;
-import mchorse.mappet.network.common.PacketCamera;
+import mchorse.mappet.network.packets.PacketCamera;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 

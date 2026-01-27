@@ -10,13 +10,13 @@ import mchorse.mappet.api.scripts.code.ScriptFactory;
 import mchorse.mappet.api.scripts.code.ScriptRayTrace;
 import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
 import mchorse.mappet.api.scripts.code.blocks.ScriptTileEntity;
-import mchorse.mappet.api.scripts.code.math.ScriptBox;
-import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.ScriptNpc;
 import mchorse.mappet.api.scripts.code.items.ScriptInventory;
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
 import mchorse.mappet.api.scripts.code.mappet.MappetSchematic;
+import mchorse.mappet.api.scripts.code.math.ScriptBox;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
 import mchorse.mappet.api.scripts.user.IScriptRayTrace;
 import mchorse.mappet.api.scripts.user.blocks.IScriptBlockState;
@@ -34,7 +34,7 @@ import mchorse.mappet.client.gui.scripts.scriptedItem.util.Pair;
 import mchorse.mappet.client.morphs.WorldMorph;
 import mchorse.mappet.entities.EntityNpc;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.scripts.PacketWorldMorph;
+import mchorse.mappet.network.packets.scripts.PacketWorldMorph;
 import mchorse.mappet.utils.WorldUtils;
 import mchorse.mclib.utils.MathUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -96,7 +96,8 @@ public class ScriptWorld implements IScriptWorld {
     public void setGameRule(String name, Object value) {
         if (value instanceof Boolean || value instanceof String || value instanceof Integer) {
             world.getGameRules().setOrCreateGameRule(name, String.valueOf(value));
-        } else Mappet.logger.error("Unsupported game rule value type: " + value.getClass());
+        }
+        else Mappet.logger.error("Unsupported game rule value type: " + value.getClass());
     }
 
     @Override
@@ -227,8 +228,7 @@ public class ScriptWorld implements IScriptWorld {
         for (int x = (int) Math.floor(box.minX); x <= (int) box.maxX; x++) {
             for (int y = (int) Math.floor(box.minY); y <= (int) box.maxY; y++) {
                 for (int z = (int) Math.floor(box.minZ); z <= (int) box.maxZ; z++) {
-                    if (isBlockLoaded(x, y, z) && getBlock(x, y, z).isSame(block))
-                        setTileEntity(newBlock, x, y, z, tileData);
+                    if (isBlockLoaded(x, y, z) && getBlock(x, y, z).isSame(block)) setTileEntity(newBlock, x, y, z, tileData);
                 }
             }
         }
@@ -303,7 +303,18 @@ public class ScriptWorld implements IScriptWorld {
 
     public void spawnParticles(IScriptPlayer entity, EnumParticleTypes type, boolean longDistance, ScriptVector pos, int number, ScriptVector offset, double speed, int... args) {
         if (entity == null) return;
-        ((WorldServer) world).spawnParticle(entity.asMinecraft(), type, longDistance, pos.x, pos.y, pos.z, number, offset.x, offset.y, offset.z, speed, args);
+        ((WorldServer) world).spawnParticle(entity.asMinecraft(),
+                type,
+                longDistance,
+                pos.x,
+                pos.y,
+                pos.z,
+                number,
+                offset.x,
+                offset.y,
+                offset.z,
+                speed,
+                args);
     }
 
     @Override
@@ -392,7 +403,12 @@ public class ScriptWorld implements IScriptWorld {
             for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ++) {
                 if (!world.isChunkGeneratedAt(chunkX, chunkZ)) continue;
                 Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
-                AxisAlignedBB chunkAABB = new AxisAlignedBB(Math.max(chunk.getPos().getXStart(), box.minX), box.minY, Math.max(chunk.getPos().getZStart(), box.minZ), Math.min(chunk.getPos().getXEnd(), box.maxX), box.maxY, Math.min(chunk.getPos().getZEnd(), box.maxZ));
+                AxisAlignedBB chunkAABB = new AxisAlignedBB(Math.max(chunk.getPos().getXStart(), box.minX),
+                        box.minY,
+                        Math.max(chunk.getPos().getZStart(), box.minZ),
+                        Math.min(chunk.getPos().getXEnd(), box.maxX),
+                        box.maxY,
+                        Math.min(chunk.getPos().getZEnd(), box.maxZ));
 
                 List<Entity> chunkEntities = new ArrayList<>();
                 chunk.getEntitiesWithinAABBForEntity(null, chunkAABB, chunkEntities, Objects::nonNull);
@@ -686,9 +702,14 @@ public class ScriptWorld implements IScriptWorld {
         worldMorph.pitch = pitch;
 
         if (player == null) {
-            NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, MathUtils.clamp(range, 1, 256));
-            Dispatcher.DISPATCHER.get().sendToAllAround(new PacketWorldMorph(worldMorph), point);
-        } else Dispatcher.sendTo(new PacketWorldMorph(worldMorph), player.asMinecraft());
+            NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(world.provider.getDimension(),
+                    x,
+                    y,
+                    z,
+                    MathUtils.clamp(range, 1, 256));
+            Dispatcher.sendToAllAround(new PacketWorldMorph(worldMorph), point);
+        }
+        else Dispatcher.sendTo(new PacketWorldMorph(worldMorph), player.asMinecraft());
     }
 
     @Override
@@ -726,7 +747,9 @@ public class ScriptWorld implements IScriptWorld {
         ScriptFactory factory = new ScriptFactory();
 
         EntityLivingBase entityLivingBase = (EntityLivingBase) shooter.asMinecraft();
-        GunProps gunProps = new GunProps((factory.createCompound(gunPropsNbtString)).getCompound("Gun").getCompound("Projectile").asMinecraft());
+        GunProps gunProps = new GunProps((factory.createCompound(gunPropsNbtString)).getCompound("Gun")
+                .getCompound("Projectile")
+                .asMinecraft());
 
         gunProps.fromNBT(factory.createCompound(gunPropsNbtString).getCompound("Gun").asMinecraft());
 

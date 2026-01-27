@@ -7,7 +7,7 @@ import mchorse.mappet.client.gui.utils.GuiScrollLogsElement;
 import mchorse.mappet.client.gui.utils.GuiTextLabeledElement;
 import mchorse.mappet.client.gui.utils.text.GuiText;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.logs.PacketRequestLogs;
+import mchorse.mappet.network.packets.logs.PacketRequestLogs;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;

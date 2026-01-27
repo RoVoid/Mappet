@@ -1,7 +1,7 @@
 package mchorse.mappet.network.client.npc;
 
 import mchorse.mappet.entities.EntityNpc;
-import mchorse.mappet.network.common.npc.PacketNpcStateChange;
+import mchorse.mappet.network.packets.npc.PacketNpcStateChange;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;

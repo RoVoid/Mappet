@@ -1,6 +1,6 @@
 package mchorse.mappet.network.server.blocks;
 
-import mchorse.mappet.network.common.blocks.PacketEditConditionModel;
+import mchorse.mappet.network.packets.blocks.PacketEditConditionModel;
 import mchorse.mappet.tile.TileConditionModel;
 import mchorse.mappet.utils.WorldUtils;
 import mchorse.mclib.network.ServerMessageHandler;

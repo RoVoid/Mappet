@@ -1,7 +1,7 @@
 package mchorse.mappet.network.client;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.network.common.PacketBlackAndWhiteShader;
+import mchorse.mappet.network.packets.PacketBlackAndWhiteShader;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

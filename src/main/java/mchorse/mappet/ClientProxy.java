@@ -12,7 +12,7 @@ import mchorse.mappet.client.renders.tile.TileRegionRenderer;
 import mchorse.mappet.client.renders.tile.TileTriggerRenderer;
 import mchorse.mappet.entities.EntityNpc;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.content.PacketContentRequestNames;
+import mchorse.mappet.network.packets.content.PacketContentRequestNames;
 import mchorse.mappet.tile.TileConditionModel;
 import mchorse.mappet.tile.TileRegion;
 import mchorse.mappet.tile.TileTrigger;
@@ -40,6 +40,11 @@ public class ClientProxy extends CommonProxy {
     private static final Map<Integer, Consumer<List<String>>> consumers = new HashMap<>();
 
     public static File sounds;
+
+    @Override
+    public void runClient(Runnable task) {
+        Minecraft.getMinecraft().addScheduledTask(task);
+    }
 
     public static void requestNames(IContentType type, Consumer<List<String>> consumer) {
         consumers.put(requestId, consumer);

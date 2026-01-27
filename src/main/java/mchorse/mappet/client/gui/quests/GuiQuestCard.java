@@ -10,7 +10,7 @@ import mchorse.mappet.api.quests.rewards.ItemStackReward;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.client.gui.utils.text.GuiText;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.quests.PacketQuestVisibility;
+import mchorse.mappet.network.packets.quests.PacketQuestVisibility;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiSlotElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;

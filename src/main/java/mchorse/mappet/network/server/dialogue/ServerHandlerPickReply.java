@@ -7,7 +7,7 @@ import mchorse.mappet.api.dialogues.nodes.ReactionNode;
 import mchorse.mappet.api.events.nodes.EventBaseNode;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
-import mchorse.mappet.network.common.dialogue.PacketPickReply;
+import mchorse.mappet.network.packets.dialogue.PacketPickReply;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 

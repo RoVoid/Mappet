@@ -1,8 +1,8 @@
 package mchorse.mappet.client.gui;
 
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.npc.PacketNpcList;
-import mchorse.mappet.network.common.npc.PacketNpcTool;
+import mchorse.mappet.network.packets.npc.PacketNpcList;
+import mchorse.mappet.network.packets.npc.PacketNpcTool;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;

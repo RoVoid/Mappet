@@ -3,7 +3,7 @@ package mchorse.mappet.network.server.dialogue;
 import mchorse.mappet.api.dialogues.nodes.ReactionNode;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
-import mchorse.mappet.network.common.dialogue.PacketFinishDialogue;
+import mchorse.mappet.network.packets.dialogue.PacketFinishDialogue;
 import mchorse.mappet.utils.WorldUtils;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;

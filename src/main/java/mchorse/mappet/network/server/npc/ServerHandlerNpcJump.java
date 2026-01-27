@@ -1,7 +1,7 @@
 package mchorse.mappet.network.server.npc;
 
 import mchorse.mappet.entities.EntityNpc;
-import mchorse.mappet.network.common.npc.PacketNpcJump;
+import mchorse.mappet.network.packets.npc.PacketNpcJump;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;

@@ -1,6 +1,6 @@
 package mchorse.mappet.network.server.blocks;
 
-import mchorse.mappet.network.common.blocks.PacketEditRegion;
+import mchorse.mappet.network.packets.blocks.PacketEditRegion;
 import mchorse.mappet.tile.TileRegion;
 import mchorse.mappet.utils.WorldUtils;
 import mchorse.mclib.network.ServerMessageHandler;

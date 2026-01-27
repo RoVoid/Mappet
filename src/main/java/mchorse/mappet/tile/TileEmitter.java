@@ -3,7 +3,7 @@ package mchorse.mappet.tile;
 import mchorse.mappet.api.conditions.Checker;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.blocks.BlockEmitter;
-import mchorse.mappet.network.common.blocks.PacketEditEmitter;
+import mchorse.mappet.network.packets.blocks.PacketEditEmitter;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;

@@ -1,6 +1,6 @@
 package mchorse.mappet.network.client.utils;
 
-import mchorse.mappet.network.common.utils.PacketChangedBoundingBox;
+import mchorse.mappet.network.packets.utils.PacketChangedBoundingBox;
 import mchorse.mappet.tile.TileTrigger;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.Minecraft;

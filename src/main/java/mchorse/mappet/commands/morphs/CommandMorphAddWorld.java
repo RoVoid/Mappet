@@ -4,7 +4,7 @@ import joptsimple.internal.Strings;
 import mchorse.mappet.client.morphs.WorldMorph;
 import mchorse.mappet.commands.MappetCommandBase;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.scripts.PacketWorldMorph;
+import mchorse.mappet.network.packets.scripts.PacketWorldMorph;
 import mchorse.mclib.commands.SubCommandBase;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -17,47 +17,39 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
-public class CommandMorphAddWorld extends MappetCommandBase
-{
+public class CommandMorphAddWorld extends MappetCommandBase {
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "world";
     }
 
     @Override
-    public String getUsage(ICommandSender sender)
-    {
+    public String getUsage(ICommandSender sender) {
         return "mappet.commands.mp.morph.add.world";
     }
 
     @Override
-    public String getSyntax()
-    {
+    public String getSyntax() {
         return "{l}{6}/{r}mp {8}morph add world{r} {7}<expiration> <x> <y> <z> <yaw> <pitch> <morph>{r}";
     }
 
     @Override
-    public int getRequiredArgs()
-    {
+    public int getRequiredArgs() {
         return 7;
     }
 
     @Override
-    public boolean isUsernameIndex(String[] args, int index)
-    {
+    public boolean isUsernameIndex(String[] args, int index) {
         return index == 0;
     }
 
     @Override
-    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         Vec3d pos = sender.getPositionVector();
         double baseYaw = 0;
         double basePitch = 0;
 
-        if (sender instanceof EntityLivingBase)
-        {
+        if (sender instanceof EntityLivingBase) {
             EntityLivingBase entity = (EntityLivingBase) sender;
 
             baseYaw = entity.rotationYaw;
@@ -73,17 +65,13 @@ public class CommandMorphAddWorld extends MappetCommandBase
         String nbt = Strings.join(SubCommandBase.dropFirstArguments(args, 6), " ");
         AbstractMorph morph;
 
-        try
-        {
+        try {
             morph = MorphManager.INSTANCE.morphFromNBT(JsonToNBT.getTagFromJson(nbt));
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new CommandException("morph.nbt");
         }
 
-        if (morph == null)
-        {
+        if (morph == null) {
             throw new CommandException("morph.unrecognized", nbt);
         }
 
@@ -102,6 +90,6 @@ public class CommandMorphAddWorld extends MappetCommandBase
         int dimension = sender.getEntityWorld().provider.getDimension();
         NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(dimension, x, y, z, 64);
 
-        Dispatcher.DISPATCHER.get().sendToAllAround(message, point);
+        Dispatcher.sendToAllAround(message, point);
     }
 }

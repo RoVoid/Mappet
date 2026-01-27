@@ -1,7 +1,7 @@
 package mchorse.mappet.network.client.logs;
 
 import mchorse.mappet.client.gui.GuiMappetDashboard;
-import mchorse.mappet.network.common.logs.PacketLogs;
+import mchorse.mappet.network.packets.logs.PacketLogs;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

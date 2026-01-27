@@ -3,7 +3,7 @@ package mchorse.mappet.network.server.npc;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.npcs.Npc;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.npc.PacketNpcList;
+import mchorse.mappet.network.packets.npc.PacketNpcList;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 

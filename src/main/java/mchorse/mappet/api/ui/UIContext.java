@@ -4,7 +4,7 @@ import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.ui.UIComponent;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.ui.PacketUIData;
+import mchorse.mappet.network.packets.ui.PacketUIData;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

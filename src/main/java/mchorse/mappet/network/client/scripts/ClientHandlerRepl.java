@@ -1,7 +1,7 @@
 package mchorse.mappet.network.client.scripts;
 
 import mchorse.mappet.client.gui.GuiMappetDashboard;
-import mchorse.mappet.network.common.scripts.PacketRepl;
+import mchorse.mappet.network.packets.scripts.PacketRepl;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

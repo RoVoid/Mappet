@@ -3,7 +3,7 @@ package mchorse.mappet.network.client.huds;
 import mchorse.mappet.api.huds.HUDMorph;
 import mchorse.mappet.api.huds.HUDScene;
 import mchorse.mappet.client.RenderingHandler;
-import mchorse.mappet.network.common.huds.PacketHUDMorph;
+import mchorse.mappet.network.packets.huds.PacketHUDMorph;
 import mchorse.mclib.network.ClientMessageHandler;
 import mchorse.metamorph.api.MorphManager;
 import net.minecraft.client.entity.EntityPlayerSP;

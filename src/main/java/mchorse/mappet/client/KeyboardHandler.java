@@ -10,7 +10,7 @@ import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.hotkey.GuiClientHotkeyScreen;
 import mchorse.mappet.client.gui.scripts.scriptedItem.GuiScriptedItemScreen;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.hotkey.PacketTriggeredHotkeys;
+import mchorse.mappet.network.packets.hotkey.PacketTriggeredHotkeys;
 import mchorse.mappet.utils.NBTToJsonLike;
 import mchorse.mclib.utils.OpHelper;
 import net.minecraft.client.Minecraft;

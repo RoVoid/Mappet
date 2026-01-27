@@ -5,7 +5,7 @@ import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
 import mchorse.mappet.commands.MappetCommandBase;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.quests.PacketQuests;
+import mchorse.mappet.network.packets.quests.PacketQuests;
 import mchorse.mclib.commands.McCommandBase;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;

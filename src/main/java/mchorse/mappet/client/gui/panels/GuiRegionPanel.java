@@ -3,7 +3,7 @@ package mchorse.mappet.client.gui.panels;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.regions.GuiRegionEditor;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.blocks.PacketEditRegion;
+import mchorse.mappet.network.packets.blocks.PacketEditRegion;
 import mchorse.mappet.tile.TileRegion;
 import mchorse.mappet.utils.ReflectionUtils;
 import mchorse.mclib.client.gui.framework.GuiBase;

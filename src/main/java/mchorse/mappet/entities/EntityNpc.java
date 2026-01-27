@@ -21,7 +21,7 @@ import mchorse.mappet.entities.utils.MappetNpcRespawnManager;
 import mchorse.mappet.entities.utils.NpcDamageSource;
 import mchorse.mappet.items.ItemNpcTool;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.npc.PacketNpcStateChange;
+import mchorse.mappet.network.packets.npc.PacketNpcStateChange;
 import mchorse.mappet.utils.EntityUtils;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.metamorph.api.Morph;

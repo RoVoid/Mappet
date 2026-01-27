@@ -3,11 +3,9 @@ package mchorse.mappet.network.server;
 import mchorse.mappet.CommonProxy;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.PacketScreenshot;
-import mchorse.mclib.network.ClientMessageHandler;
+import mchorse.mappet.network.packets.PacketScreenshot;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ScreenShotHelper;
 

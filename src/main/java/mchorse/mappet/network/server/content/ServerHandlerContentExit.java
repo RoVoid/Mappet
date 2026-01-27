@@ -2,8 +2,8 @@ package mchorse.mappet.network.server.content;
 
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.content.PacketContentData;
-import mchorse.mappet.network.common.content.PacketContentExit;
+import mchorse.mappet.network.packets.content.PacketContentData;
+import mchorse.mappet.network.packets.content.PacketContentExit;
 import mchorse.mappet.utils.CurrentSession;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;

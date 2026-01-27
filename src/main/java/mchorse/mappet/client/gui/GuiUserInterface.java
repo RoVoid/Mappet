@@ -3,7 +3,7 @@ package mchorse.mappet.client.gui;
 import mchorse.mappet.api.ui.UI;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.ui.PacketUI;
+import mchorse.mappet.network.packets.ui.PacketUI;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import net.minecraft.client.Minecraft;

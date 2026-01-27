@@ -3,7 +3,7 @@ package mchorse.mappet.network.client.content;
 import mchorse.mappet.ClientProxy;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.panels.GuiMappetDashboardPanel;
-import mchorse.mappet.network.common.content.PacketContentNames;
+import mchorse.mappet.network.packets.content.PacketContentNames;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

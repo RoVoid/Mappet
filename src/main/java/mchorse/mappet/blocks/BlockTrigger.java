@@ -4,7 +4,7 @@ import mchorse.mappet.Mappet;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.items.ModItems;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.blocks.PacketEditTrigger;
+import mchorse.mappet.network.packets.blocks.PacketEditTrigger;
 import mchorse.mappet.tile.TileTrigger;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;

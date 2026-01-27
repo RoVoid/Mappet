@@ -2,8 +2,8 @@ package mchorse.mappet.network.server.content;
 
 import mchorse.mappet.Mappet;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.content.PacketServerSettings;
-import mchorse.mappet.network.common.hotkey.PacketSyncHotkeys;
+import mchorse.mappet.network.packets.content.PacketServerSettings;
+import mchorse.mappet.network.packets.hotkey.PacketSyncHotkeys;
 import mchorse.mclib.network.ServerMessageHandler;
 import mchorse.mclib.utils.OpHelper;
 import net.minecraft.entity.player.EntityPlayerMP;

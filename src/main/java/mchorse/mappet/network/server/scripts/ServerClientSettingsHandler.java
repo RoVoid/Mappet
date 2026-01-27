@@ -4,7 +4,7 @@ import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.ScriptEvent;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
 import mchorse.mappet.api.utils.DataContext;
-import mchorse.mappet.network.common.scripts.PacketClientSettings;
+import mchorse.mappet.network.packets.scripts.PacketClientSettings;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 

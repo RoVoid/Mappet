@@ -1,6 +1,6 @@
 package mchorse.mappet.network.client.scripts;
 
-import mchorse.mappet.network.common.scripts.PacketEntityRotations;
+import mchorse.mappet.network.packets.scripts.PacketEntityRotations;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;

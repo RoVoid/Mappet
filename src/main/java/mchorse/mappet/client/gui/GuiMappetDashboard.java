@@ -3,7 +3,7 @@ package mchorse.mappet.client.gui;
 import mchorse.mappet.client.RenderingHandler;
 import mchorse.mappet.client.gui.panels.*;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.content.PacketContentExit;
+import mchorse.mappet.network.packets.content.PacketContentExit;
 import mchorse.mappet.utils.MPIcons;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;

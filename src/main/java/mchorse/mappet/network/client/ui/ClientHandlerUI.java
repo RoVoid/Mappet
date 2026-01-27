@@ -1,7 +1,7 @@
 package mchorse.mappet.network.client.ui;
 
 import mchorse.mappet.client.gui.GuiUserInterface;
-import mchorse.mappet.network.common.ui.PacketUI;
+import mchorse.mappet.network.packets.ui.PacketUI;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

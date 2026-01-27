@@ -3,7 +3,7 @@ package mchorse.mappet.client.gui;
 import mchorse.mappet.api.npcs.NpcState;
 import mchorse.mappet.client.gui.npc.GuiNpcEditor;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.npc.PacketNpcState;
+import mchorse.mappet.network.packets.npc.PacketNpcState;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import net.minecraft.client.Minecraft;
 

@@ -1,8 +1,8 @@
 package mchorse.mappet.network.server.content;
 
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.content.PacketContentNames;
-import mchorse.mappet.network.common.content.PacketContentRequestNames;
+import mchorse.mappet.network.packets.content.PacketContentNames;
+import mchorse.mappet.network.packets.content.PacketContentRequestNames;
 import mchorse.mclib.network.ServerMessageHandler;
 import mchorse.mclib.utils.OpHelper;
 import net.minecraft.entity.player.EntityPlayerMP;

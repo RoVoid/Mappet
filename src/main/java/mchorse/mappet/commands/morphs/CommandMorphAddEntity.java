@@ -4,7 +4,7 @@ import joptsimple.internal.Strings;
 import mchorse.mappet.client.morphs.WorldMorph;
 import mchorse.mappet.commands.MappetCommandBase;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.scripts.PacketWorldMorph;
+import mchorse.mappet.network.packets.scripts.PacketWorldMorph;
 import mchorse.mclib.commands.SubCommandBase;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;

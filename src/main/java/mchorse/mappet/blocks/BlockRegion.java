@@ -3,7 +3,7 @@ package mchorse.mappet.blocks;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.items.ModItems;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.blocks.PacketEditRegion;
+import mchorse.mappet.network.packets.blocks.PacketEditRegion;
 import mchorse.mappet.tile.TileRegion;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;

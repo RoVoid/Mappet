@@ -11,7 +11,7 @@ import mchorse.mappet.capabilities.character.ICharacter;
 import mchorse.mappet.entities.EntityNpc;
 import mchorse.mappet.events.StateChangedEvent;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.scripts.PacketClick;
+import mchorse.mappet.network.packets.scripts.PacketClick;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;

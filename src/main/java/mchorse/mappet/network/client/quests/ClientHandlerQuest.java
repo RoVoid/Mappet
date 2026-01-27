@@ -2,7 +2,7 @@ package mchorse.mappet.network.client.quests;
 
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
-import mchorse.mappet.network.common.quests.PacketQuest;
+import mchorse.mappet.network.packets.quests.PacketQuest;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;

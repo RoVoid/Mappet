@@ -1,6 +1,6 @@
 package mchorse.mappet.network.server.npc;
 
-import mchorse.mappet.network.common.npc.PacketNpcTool;
+import mchorse.mappet.network.packets.npc.PacketNpcTool;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;

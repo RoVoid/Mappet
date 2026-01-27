@@ -1,7 +1,7 @@
 package mchorse.mappet.network.client.scripts;
 
 import mchorse.mappet.client.RenderingHandler;
-import mchorse.mappet.network.common.scripts.PacketWorldMorph;
+import mchorse.mappet.network.packets.scripts.PacketWorldMorph;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;

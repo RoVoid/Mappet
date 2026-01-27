@@ -2,7 +2,7 @@ package mchorse.mappet.network.client;
 
 import mchorse.mappet.api.hotkeys.Hotkey;
 import mchorse.mappet.client.KeyboardHandler;
-import mchorse.mappet.network.common.hotkey.PacketSyncHotkeys;
+import mchorse.mappet.network.packets.hotkey.PacketSyncHotkeys;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;

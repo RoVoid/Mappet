@@ -2,7 +2,7 @@ package mchorse.mappet.client.gui;
 
 import mchorse.mappet.client.gui.conditions.GuiCheckerElement;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.blocks.PacketEditEmitter;
+import mchorse.mappet.network.packets.blocks.PacketEditEmitter;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;

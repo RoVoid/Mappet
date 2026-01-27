@@ -3,8 +3,9 @@ package mchorse.mappet.utils;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
-import mchorse.mappet.network.common.blocks.PacketEditConditionModel;
-import mchorse.mappet.network.common.blocks.PacketEditRegion;
+import mchorse.mappet.network.Dispatcher;
+import mchorse.mappet.network.packets.blocks.PacketEditConditionModel;
+import mchorse.mappet.network.packets.blocks.PacketEditRegion;
 import mchorse.mappet.tile.TileConditionModel;
 import mchorse.mappet.tile.TileRegion;
 import net.minecraft.block.Block;
@@ -26,24 +27,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static mchorse.mappet.network.Dispatcher.DISPATCHER;
-
-public class ScriptUtils
-{
+public class ScriptUtils {
     private static ScriptEngineManager manager;
 
-    public static List<ScriptEngine> getAllEngines()
-    {
+    public static List<ScriptEngine> getAllEngines() {
         return getManager().getEngineFactories().stream()
                 .filter(factory -> !factory.getExtensions().contains("scala"))
                 .map(factory ->
                 {
-                    try
-                    {
+                    try {
                         return factory.getScriptEngine();
-                    }
-                    catch (Exception | NoClassDefFoundError ignored)
-                    {
+                    } catch (Exception | NoClassDefFoundError ignored) {
                         return null;
                     }
                 })
@@ -51,16 +45,13 @@ public class ScriptUtils
                 .collect(Collectors.toList());
     }
 
-    public static ScriptEngine getEngineByExtension(String extension)
-    {
+    public static ScriptEngine getEngineByExtension(String extension) {
         extension = extension.replace(".", "");
 
         ScriptEngine engine = getManager().getEngineByExtension(extension);
 
-        if (extension.equals("py"))
-        {
-            try
-            {
+        if (extension.equals("py")) {
+            try {
                 Field fieldInterpreter = Class.forName("org.python.jsr223.PyScriptEngine").getDeclaredField("interp");
                 fieldInterpreter.setAccessible(true);
                 Object interpreter = fieldInterpreter.get(engine);
@@ -72,9 +63,7 @@ public class ScriptUtils
                 Class.forName("org.python.core.CompilerFlags").getDeclaredField("source_is_utf8").setBoolean(cFlags, true);
 
                 return engine;
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -85,45 +74,33 @@ public class ScriptUtils
     /**
      * Run something to avoid it loading first time
      */
-    public static void initiateScriptEngines()
-    {
+    public static void initiateScriptEngines() {
         List<ScriptEngine> engineList = getAllEngines();
 
-        for (ScriptEngine engine : engineList)
-        {
-            try
-            {
-                if (!engine.eval(Objects.equals(engine.getFactory().getLanguageName(), "python") ? "True" : "true").equals(Boolean.TRUE))
-                {
+        for (ScriptEngine engine : engineList) {
+            try {
+                if (!engine.eval(Objects.equals(engine.getFactory().getLanguageName(), "python") ? "True" : "true").equals(Boolean.TRUE)) {
                     throw new Exception("Something went wrong with " + engine.getFactory().getEngineName());
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public static ScriptEngineManager getManager()
-    {
-        try
-        {
-            if (manager == null)
-            {
+    public static ScriptEngineManager getManager() {
+        try {
+            if (manager == null) {
                 manager = new ScriptEngineManager();
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return manager;
     }
 
-    public static ScriptEngine sanitize(ScriptEngine engine)
-    {
+    public static ScriptEngine sanitize(ScriptEngine engine) {
         /* Remove */
         Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
 
@@ -175,37 +152,30 @@ public class ScriptUtils
     /**
      * This method sends the packet informing about the model block update
      */
-    public static <T> void sendTileUpdatePacket(T tile)
-    {
-        try
-        {
-            if (tile instanceof TileEntityModel)
-            {
+    public static <T> void sendTileUpdatePacket(T tile) {
+        try {
+            if (tile instanceof TileEntityModel) {
                 TileEntityModel bbModelBlock = (TileEntityModel) tile;
                 PacketModifyModelBlock message = new PacketModifyModelBlock(bbModelBlock.getPos(), bbModelBlock, true);
-                DISPATCHER.get().sendToAll(message);
+                Dispatcher.sendToAll(message);
             }
-            else if (tile instanceof TileConditionModel)
-            {
+            else if (tile instanceof TileConditionModel) {
                 TileConditionModel conditionModelBlock = (TileConditionModel) tile;
                 NBTTagCompound tag = new NBTTagCompound();
-                PacketEditConditionModel message = new PacketEditConditionModel(conditionModelBlock.getPos(), conditionModelBlock.toNBT(tag));
-                DISPATCHER.get().sendToAll(message);
+                PacketEditConditionModel message = new PacketEditConditionModel(conditionModelBlock.getPos(),
+                        conditionModelBlock.toNBT(tag));
+                Dispatcher.sendToAll(message);
             }
-            else if (tile instanceof TileRegion)
-            {
+            else if (tile instanceof TileRegion) {
                 TileRegion region = (TileRegion) tile;
                 NBTTagCompound tag = new NBTTagCompound();
                 PacketEditRegion message = new PacketEditRegion(region.getPos(), region.region.serializeNBT());
-                DISPATCHER.get().sendToAll(message);
+                Dispatcher.sendToAll(message);
             }
-            else
-            {
+            else {
                 throw new IllegalArgumentException("Invalid tile type");
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -227,15 +197,15 @@ public class ScriptUtils
     /**
      * Places a block of type T at a given position and performs post-placement operations on the associated TileEntity.
      *
-     * @param <T> The type of Block to be placed.
-     * @param <U> The type of TileEntity associated with the block.
-     * @param <V> The return type of the method.
-     * @param mcWorld The Minecraft world where the block is to be placed.
-     * @param pos The position where the block is to be placed.
-     * @param blockType The type of block to place.
+     * @param <T>            The type of Block to be placed.
+     * @param <U>            The type of TileEntity associated with the block.
+     * @param <V>            The return type of the method.
+     * @param mcWorld        The Minecraft world where the block is to be placed.
+     * @param pos            The position where the block is to be placed.
+     * @param blockType      The type of block to place.
      * @param tileEntityType The type of TileEntity associated with the block.
-     * @param postPlace An instance of the PostPlace interface to perform operations on the TileEntity after the block is placed.
-     * @param returnVal A Supplier functional interface instance that supplies the return value of the method.
+     * @param postPlace      An instance of the PostPlace interface to perform operations on the TileEntity after the block is placed.
+     * @param returnVal      A Supplier functional interface instance that supplies the return value of the method.
      * @return Returns a value of type V, supplied by the returnVal parameter.
      */
     public static <T extends Block, U extends TileEntity, V> V place(World mcWorld, BlockPos pos, T blockType, Class<U> tileEntityType, PostPlace<U> postPlace, Supplier<V> returnVal) {

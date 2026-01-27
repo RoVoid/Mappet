@@ -2,7 +2,7 @@ package mchorse.mappet.network.server.scripts;
 
 import mchorse.mappet.Mappet;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.scripts.PacketRepl;
+import mchorse.mappet.network.packets.scripts.PacketRepl;
 import mchorse.mclib.network.ServerMessageHandler;
 import mchorse.mclib.utils.OpHelper;
 import net.minecraft.entity.player.EntityPlayerMP;

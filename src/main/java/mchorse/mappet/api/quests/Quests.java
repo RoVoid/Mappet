@@ -2,7 +2,7 @@ package mchorse.mappet.api.quests;
 
 import mchorse.mappet.Mappet;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.quests.PacketQuest;
+import mchorse.mappet.network.packets.quests.PacketQuest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;

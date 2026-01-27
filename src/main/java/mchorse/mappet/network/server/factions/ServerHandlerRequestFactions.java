@@ -6,8 +6,8 @@ import mchorse.mappet.api.states.States;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.factions.PacketFactions;
-import mchorse.mappet.network.common.factions.PacketRequestFactions;
+import mchorse.mappet.network.packets.factions.PacketFactions;
+import mchorse.mappet.network.packets.factions.PacketRequestFactions;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 

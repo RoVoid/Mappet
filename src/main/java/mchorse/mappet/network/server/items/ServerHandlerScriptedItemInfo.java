@@ -1,7 +1,7 @@
 package mchorse.mappet.network.server.items;
 
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.items.PacketScriptedItemInfo;
+import mchorse.mappet.network.packets.items.PacketScriptedItemInfo;
 import mchorse.mappet.utils.NBTUtils;
 import mchorse.mclib.network.ServerMessageHandler;
 import mchorse.mclib.utils.OpHelper;

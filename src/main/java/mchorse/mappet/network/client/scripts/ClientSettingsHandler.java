@@ -2,7 +2,7 @@ package mchorse.mappet.network.client.scripts;
 
 import mchorse.mappet.api.utils.ClientSettingsAccessor;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.scripts.PacketClientSettings;
+import mchorse.mappet.network.packets.scripts.PacketClientSettings;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.nbt.NBTTagCompound;

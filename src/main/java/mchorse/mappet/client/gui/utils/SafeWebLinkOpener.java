@@ -4,7 +4,7 @@ import com.google.common.collect.Sets;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.MappetConfig;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.common.scripts.PacketOpenLink;
+import mchorse.mappet.network.packets.scripts.PacketOpenLink;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiYesNoCallback;

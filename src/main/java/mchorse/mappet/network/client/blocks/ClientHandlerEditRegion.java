@@ -1,7 +1,7 @@
 package mchorse.mappet.network.client.blocks;
 
 import mchorse.mappet.client.gui.GuiMappetDashboard;
-import mchorse.mappet.network.common.blocks.PacketEditRegion;
+import mchorse.mappet.network.packets.blocks.PacketEditRegion;
 import mchorse.mappet.tile.TileRegion;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.Minecraft;

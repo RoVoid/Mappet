@@ -2,7 +2,7 @@ package mchorse.mappet.network.server.scripts;
 
 import mchorse.mappet.CommonProxy;
 import mchorse.mappet.Mappet;
-import mchorse.mappet.network.common.scripts.PacketClick;
+import mchorse.mappet.network.packets.scripts.PacketClick;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 

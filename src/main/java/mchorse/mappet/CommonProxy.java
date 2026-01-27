@@ -18,6 +18,7 @@ import mchorse.mappet.utils.Colors;
 import mchorse.mappet.utils.MappetNpcSelector;
 import mchorse.mappet.utils.MetamorphHandler;
 import mchorse.mappet.utils.ScriptUtils;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -30,7 +31,7 @@ import java.io.File;
 /**
  * Common proxy
  */
-public class CommonProxy {
+public abstract class CommonProxy {
     private static IFactory<EventBaseNode> events;
     private static IFactory<EventBaseNode> dialogues;
     private static IFactory<QuestNode> chains;
@@ -72,6 +73,8 @@ public class CommonProxy {
     public static EventHandler eventHandler;
     public static ScriptedItemEventHandler scriptedItemEventHandler;
 
+    public abstract void runClient(Runnable task);
+
     public void preInit(FMLPreInitializationEvent event) {
         /* Setup config folder path */
         String path = event.getModConfigurationDirectory().getAbsolutePath();
@@ -84,7 +87,9 @@ public class CommonProxy {
         MinecraftForge.EVENT_BUS.register(eventHandler = new EventHandler());
         MinecraftForge.EVENT_BUS.register(scriptedItemEventHandler = new ScriptedItemEventHandler());
 
-        GameRegistry.registerEntitySelector(new MappetNpcSelector(), MappetNpcSelector.ARGUMENT_MAPPET_NPC_ID, MappetNpcSelector.ARGUMENT_MAPPET_STATES);
+        GameRegistry.registerEntitySelector(new MappetNpcSelector(),
+                MappetNpcSelector.ARGUMENT_MAPPET_NPC_ID,
+                MappetNpcSelector.ARGUMENT_MAPPET_STATES);
 
         CapabilityManager.INSTANCE.register(ICharacter.class, new CharacterStorage(), Character::new);
     }
@@ -119,11 +124,11 @@ public class CommonProxy {
 
         /* Register dialogue nodes */
         MapFactory<EventBaseNode> dialogueNodes = eventNodes.copy()
-                                                            .register("reply", ReplyNode.class, Colors.REPLY)
-                                                            .register("reaction", ReactionNode.class, Colors.STATE)
-                                                            .register("quest_chain", QuestChainNode.class, Colors.QUEST)
-                                                            .register("quest", QuestDialogueNode.class, Colors.QUEST)
-                                                            .unregister("timer");
+                .register("reply", ReplyNode.class, Colors.REPLY)
+                .register("reaction", ReactionNode.class, Colors.STATE)
+                .register("quest_chain", QuestChainNode.class, Colors.QUEST)
+                .register("quest", QuestDialogueNode.class, Colors.QUEST)
+                .unregister("timer");
 
         dialogues = dialogueNodes;
         Mappet.EVENT_BUS.post(new RegisterDialogueNodeEvent(dialogueNodes));

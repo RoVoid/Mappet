@@ -3,7 +3,7 @@ package mchorse.mappet.network.server.content;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.states.States;
 import mchorse.mappet.capabilities.character.Character;
-import mchorse.mappet.network.common.content.PacketStates;
+import mchorse.mappet.network.packets.content.PacketStates;
 import mchorse.mclib.network.ServerMessageHandler;
 import mchorse.mclib.utils.OpHelper;
 import net.minecraft.entity.player.EntityPlayerMP;

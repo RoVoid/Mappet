@@ -25,33 +25,33 @@ import mchorse.mappet.network.client.ui.ClientHandlerCloseUI;
 import mchorse.mappet.network.client.ui.ClientHandlerUI;
 import mchorse.mappet.network.client.ui.ClientHandlerUIData;
 import mchorse.mappet.network.client.utils.ClientHandlerChangedBoundingBox;
-import mchorse.mappet.network.common.*;
-import mchorse.mappet.network.common.blocks.PacketEditConditionModel;
-import mchorse.mappet.network.common.blocks.PacketEditEmitter;
-import mchorse.mappet.network.common.blocks.PacketEditRegion;
-import mchorse.mappet.network.common.blocks.PacketEditTrigger;
-import mchorse.mappet.network.common.content.*;
-import mchorse.mappet.network.common.dialogue.PacketDialogueFragment;
-import mchorse.mappet.network.common.dialogue.PacketFinishDialogue;
-import mchorse.mappet.network.common.dialogue.PacketPickReply;
-import mchorse.mappet.network.common.factions.PacketRequestFactions;
-import mchorse.mappet.network.common.hotkey.PacketSyncHotkeys;
-import mchorse.mappet.network.common.hotkey.PacketTriggeredHotkeys;
-import mchorse.mappet.network.common.huds.PacketHUDMorph;
-import mchorse.mappet.network.common.huds.PacketHUDScene;
-import mchorse.mappet.network.common.items.PacketScriptedItemInfo;
-import mchorse.mappet.network.common.logs.PacketLogs;
-import mchorse.mappet.network.common.logs.PacketRequestLogs;
-import mchorse.mappet.network.common.npc.*;
-import mchorse.mappet.network.common.quests.PacketQuest;
-import mchorse.mappet.network.common.quests.PacketQuestAction;
-import mchorse.mappet.network.common.quests.PacketQuestVisibility;
-import mchorse.mappet.network.common.quests.PacketQuests;
-import mchorse.mappet.network.common.scripts.*;
-import mchorse.mappet.network.common.ui.PacketCloseUI;
-import mchorse.mappet.network.common.ui.PacketUI;
-import mchorse.mappet.network.common.ui.PacketUIData;
-import mchorse.mappet.network.common.utils.PacketChangedBoundingBox;
+import mchorse.mappet.network.packets.*;
+import mchorse.mappet.network.packets.blocks.PacketEditConditionModel;
+import mchorse.mappet.network.packets.blocks.PacketEditEmitter;
+import mchorse.mappet.network.packets.blocks.PacketEditRegion;
+import mchorse.mappet.network.packets.blocks.PacketEditTrigger;
+import mchorse.mappet.network.packets.content.*;
+import mchorse.mappet.network.packets.dialogue.PacketDialogueFragment;
+import mchorse.mappet.network.packets.dialogue.PacketFinishDialogue;
+import mchorse.mappet.network.packets.dialogue.PacketPickReply;
+import mchorse.mappet.network.packets.factions.PacketRequestFactions;
+import mchorse.mappet.network.packets.hotkey.PacketSyncHotkeys;
+import mchorse.mappet.network.packets.hotkey.PacketTriggeredHotkeys;
+import mchorse.mappet.network.packets.huds.PacketHUDMorph;
+import mchorse.mappet.network.packets.huds.PacketHUDScene;
+import mchorse.mappet.network.packets.items.PacketScriptedItemInfo;
+import mchorse.mappet.network.packets.logs.PacketLogs;
+import mchorse.mappet.network.packets.logs.PacketRequestLogs;
+import mchorse.mappet.network.packets.npc.*;
+import mchorse.mappet.network.packets.quests.PacketQuest;
+import mchorse.mappet.network.packets.quests.PacketQuestAction;
+import mchorse.mappet.network.packets.quests.PacketQuestVisibility;
+import mchorse.mappet.network.packets.quests.PacketQuests;
+import mchorse.mappet.network.packets.scripts.*;
+import mchorse.mappet.network.packets.ui.PacketCloseUI;
+import mchorse.mappet.network.packets.ui.PacketUI;
+import mchorse.mappet.network.packets.ui.PacketUIData;
+import mchorse.mappet.network.packets.utils.PacketChangedBoundingBox;
 import mchorse.mappet.network.server.ServerHandlerHotkeys;
 import mchorse.mappet.network.server.blocks.ServerHandlerEditConditionModel;
 import mchorse.mappet.network.server.blocks.ServerHandlerEditEmitter;
@@ -74,152 +74,149 @@ import mchorse.mappet.network.server.scripts.ServerHandlerClick;
 import mchorse.mappet.network.server.scripts.ServerHandlerRepl;
 import mchorse.mappet.network.server.ui.ServerHandlerUI;
 import mchorse.mappet.network.server.ui.ServerHandlerUIData;
-import mchorse.mclib.network.AbstractDispatcher;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Network dispatcher
  */
 public class Dispatcher {
-    public static final AbstractDispatcher DISPATCHER = new AbstractDispatcher(Mappet.MOD_ID) {
-        @Override
-        public void register() {
-            /* Dialogue */
-            register(PacketDialogueFragment.class, ClientHandlerDialogueFragment.class, Side.CLIENT);
-            register(PacketPickReply.class, ServerHandlerPickReply.class, Side.SERVER);
-            register(PacketFinishDialogue.class, ServerHandlerFinishDialogue.class, Side.SERVER);
+    private static final SimpleNetworkWrapper dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(Mappet.MOD_ID);
+    private static byte size = 0;
 
-            /* Blocks */
-            register(PacketEditEmitter.class, ClientHandlerEditEmitter.class, Side.CLIENT);
-            register(PacketEditEmitter.class, ServerHandlerEditEmitter.class, Side.SERVER);
+    public static <REQ extends IMessage, REPLY extends IMessage> void push(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side) {
+        dispatcher.registerMessage(handler, message, size++, side);
+    }
 
-            register(PacketEditTrigger.class, ClientHandlerEditTrigger.class, Side.CLIENT);
-            register(PacketEditTrigger.class, ServerHandlerEditTrigger.class, Side.SERVER);
-
-            register(PacketEditRegion.class, ClientHandlerEditRegion.class, Side.CLIENT);
-            register(PacketEditRegion.class, ServerHandlerEditRegion.class, Side.SERVER);
-
-            register(PacketEditConditionModel.class, ClientHandlerEditConditionModel.class, Side.CLIENT);
-            register(PacketEditConditionModel.class, ServerHandlerEditConditionModel.class, Side.SERVER);
-
-            /* Scripted item */
-            register(PacketScriptedItemInfo.class, ClientHandlerScriptedItemInfo.class, Side.CLIENT);
-            register(PacketScriptedItemInfo.class, ServerHandlerScriptedItemInfo.class, Side.SERVER);
-
-            /* Creative editing */
-            register(PacketContentRequestNames.class, ServerHandlerContentRequestNames.class, Side.SERVER);
-            register(PacketContentRequestData.class, ServerHandlerContentRequestData.class, Side.SERVER);
-            register(PacketContentData.class, ClientHandlerContentData.class, Side.CLIENT);
-            register(PacketContentData.class, ServerHandlerContentData.class, Side.SERVER);
-            register(PacketContentFolder.class, ServerHandlerContentFolder.class, Side.SERVER);
-            register(PacketContentNames.class, ClientHandlerContentNames.class, Side.CLIENT);
-            register(PacketContentExit.class, ServerHandlerContentExit.class, Side.SERVER);
-
-            register(PacketServerSettings.class, ClientHandlerServerSettings.class, Side.CLIENT);
-            register(PacketServerSettings.class, ServerHandlerServerSettings.class, Side.SERVER);
-            register(PacketRequestServerSettings.class, ServerHandlerRequestServerSettings.class, Side.SERVER);
-            register(PacketStates.class, ClientHandlerStates.class, Side.CLIENT);
-            register(PacketStates.class, ServerHandlerStates.class, Side.SERVER);
-            register(PacketRequestStates.class, ServerHandlerRequestStates.class, Side.SERVER);
-
-            /* NPCs */
-            register(PacketNpcStateChange.class, ClientHandlerNpcStateChange.class, Side.CLIENT);
-            register(PacketNpcState.class, ClientHandlerNpcState.class, Side.CLIENT);
-            register(PacketNpcState.class, ServerHandlerNpcState.class, Side.SERVER);
-            register(PacketNpcList.class, ClientHandlerNpcList.class, Side.CLIENT);
-            register(PacketNpcList.class, ServerHandlerNpcList.class, Side.SERVER);
-            register(PacketNpcTool.class, ServerHandlerNpcTool.class, Side.SERVER);
-            register(PacketNpcJump.class, ServerHandlerNpcJump.class, Side.SERVER);
-
-            /* Quests */
-            register(PacketQuest.class, ClientHandlerQuest.class, Side.CLIENT);
-            register(PacketQuests.class, ClientHandlerQuests.class, Side.CLIENT);
-            register(PacketQuestAction.class, ServerHandlerQuestAction.class, Side.SERVER);
-            register(PacketQuestVisibility.class, ServerHandlerQuestVisibility.class, Side.SERVER);
-
-            /* Factions */
-            register(PacketRequestFactions.class, ServerHandlerRequestFactions.class, Side.SERVER);
-
-            /* Events */
-            register(PacketSyncHotkeys.class, ClientHandlerSyncHotkeys.class, Side.CLIENT);
-            register(PacketTriggeredHotkeys.class, ServerHandlerHotkeys.class, Side.SERVER);
-            register(PacketCamera.class, ClientHandlerCamera.class, Side.CLIENT);
-            register(PacketScreenshot.class, ClientHandlerScreenshot.class, Side.CLIENT);
-            //  register(PacketScreenshot.class, ServerHandlerScre.class, Side.CLIENT);
-
-            /* Scripts */
-            register(PacketEntityRotations.class, ClientHandlerEntityRotations.class, Side.CLIENT);
-            register(PacketClick.class, ServerHandlerClick.class, Side.SERVER);
-            register(PacketClipboard.class, ClientHandlerClipboard.class, Side.CLIENT);
-            register(PacketRepl.class, ClientHandlerRepl.class, Side.CLIENT);
-            register(PacketRepl.class, ServerHandlerRepl.class, Side.SERVER);
-            register(PacketSound.class, ClientHandlerSound.class, Side.CLIENT);
-            register(PacketWorldMorph.class, ClientHandlerWorldMorph.class, Side.CLIENT);
-            register(PacketPlayAnimation.class, PacketPlayAnimation.ClientHandler.class, Side.CLIENT);
-            register(PacketOpenLink.class, ClientHandlerOpenLink.class, Side.CLIENT);
-
-
-            register(PacketClientSettings.class, ClientSettingsHandler.class, Side.CLIENT);
-            register(PacketClientSettings.class, ServerClientSettingsHandler.class, Side.SERVER);
-
-            /* HUD & UI */
-            register(PacketHUDScene.class, ClientHandlerHUDScene.class, Side.CLIENT);
-            register(PacketHUDMorph.class, ClientHandlerHUDMorph.class, Side.CLIENT);
-
-            register(PacketUI.class, ClientHandlerUI.class, Side.CLIENT);
-            register(PacketUI.class, ServerHandlerUI.class, Side.SERVER);
-            register(PacketUIData.class, ClientHandlerUIData.class, Side.CLIENT);
-            register(PacketUIData.class, ServerHandlerUIData.class, Side.SERVER);
-            register(PacketCloseUI.class, ClientHandlerCloseUI.class, Side.CLIENT);
-
-            /* Logs */
-            register(PacketRequestLogs.class, ServerHandlerLogs.class, Side.SERVER);
-            register(PacketLogs.class, ClientHandlerLogs.class, Side.CLIENT);
-
-            /* Utils */
-            register(PacketChangedBoundingBox.class, ClientHandlerChangedBoundingBox.class, Side.CLIENT);
-
-            register(PacketPack.class, ClientHandlerPack.class, Side.CLIENT);
-            register(PacketBlackAndWhiteShader.class, ClientHandlerBlackAndWhiteShader.class, Side.CLIENT);
-            register(PacketPlayerPerspective.class, ClientHandlerPlayerPerspective.class, Side.CLIENT);
-        }
-    };
+    public static <REQ extends IMessage, REPLY extends IMessage> void push(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> clientHandler, Class<? extends IMessageHandler<REQ, REPLY>> serverHandler) {
+        dispatcher.registerMessage(clientHandler, message, size++, Side.CLIENT);
+        dispatcher.registerMessage(serverHandler, message, size++, Side.SERVER);
+    }
 
     /**
      * Send message to players who are tracking given entity
      */
     public static void sendToTracked(Entity entity, IMessage message) {
         EntityTracker tracker = ((WorldServer) entity.world).getEntityTracker();
-
-        for (EntityPlayer player : tracker.getTrackingPlayers(entity)) {
-            sendTo(message, (EntityPlayerMP) player);
-        }
+        for (EntityPlayer player : tracker.getTrackingPlayers(entity)) sendTo(message, (EntityPlayerMP) player);
     }
 
     /**
      * Send message to given player
      */
     public static void sendTo(IMessage message, EntityPlayerMP player) {
-        DISPATCHER.sendTo(message, player);
+        dispatcher.sendTo(message, player);
     }
 
     /**
      * Send message to the server
      */
     public static void sendToServer(IMessage message) {
-        DISPATCHER.sendToServer(message);
+        dispatcher.sendToServer(message);
+    }
+
+    /**
+     * Send message to all players
+     */
+    public static void sendToAll(IMessage message) {
+        dispatcher.sendToAll(message);
+    }
+
+    public static void sendToAllAround(IMessage message, NetworkRegistry.TargetPoint point) {
+        dispatcher.sendToAllAround(message, point);
     }
 
     /**
      * Register all the networking messages and message handlers
      */
     public static void register() {
-        DISPATCHER.register();
+        /* Dialogue */
+        push(PacketDialogueFragment.class, ClientHandlerDialogueFragment.class, Side.CLIENT);
+        push(PacketPickReply.class, ServerHandlerPickReply.class, Side.SERVER);
+        push(PacketFinishDialogue.class, ServerHandlerFinishDialogue.class, Side.SERVER);
+
+        /* Blocks */
+        push(PacketEditEmitter.class, ClientHandlerEditEmitter.class, ServerHandlerEditEmitter.class);
+        push(PacketEditTrigger.class, ClientHandlerEditTrigger.class, ServerHandlerEditTrigger.class);
+        push(PacketEditRegion.class, ClientHandlerEditRegion.class, ServerHandlerEditRegion.class);
+        push(PacketEditConditionModel.class, ClientHandlerEditConditionModel.class, ServerHandlerEditConditionModel.class);
+
+        /* Scripted item */
+        push(PacketScriptedItemInfo.class, ClientHandlerScriptedItemInfo.class, ServerHandlerScriptedItemInfo.class);
+
+        /* Creative editing */
+        push(PacketContentRequestNames.class, ServerHandlerContentRequestNames.class, Side.SERVER);
+        push(PacketContentRequestData.class, ServerHandlerContentRequestData.class, Side.SERVER);
+        push(PacketContentData.class, ClientHandlerContentData.class, ServerHandlerContentData.class);
+        push(PacketContentFolder.class, ServerHandlerContentFolder.class, Side.SERVER);
+        push(PacketContentNames.class, ClientHandlerContentNames.class, Side.CLIENT);
+        push(PacketContentExit.class, ServerHandlerContentExit.class, Side.SERVER);
+
+        push(PacketServerSettings.class, ClientHandlerServerSettings.class, ServerHandlerServerSettings.class);
+        push(PacketRequestServerSettings.class, ServerHandlerRequestServerSettings.class, Side.SERVER);
+        push(PacketStates.class, ClientHandlerStates.class, ServerHandlerStates.class);
+        push(PacketRequestStates.class, ServerHandlerRequestStates.class, Side.SERVER);
+
+        /* NPCs */
+        push(PacketNpcStateChange.class, ClientHandlerNpcStateChange.class, Side.CLIENT);
+        push(PacketNpcState.class, ClientHandlerNpcState.class, ServerHandlerNpcState.class);
+        push(PacketNpcList.class, ClientHandlerNpcList.class, ServerHandlerNpcList.class);
+        push(PacketNpcTool.class, ServerHandlerNpcTool.class, Side.SERVER);
+        push(PacketNpcJump.class, ServerHandlerNpcJump.class, Side.SERVER);
+
+        /* Quests */
+        push(PacketQuest.class, ClientHandlerQuest.class, Side.CLIENT);
+        push(PacketQuests.class, ClientHandlerQuests.class, Side.CLIENT);
+        push(PacketQuestAction.class, ServerHandlerQuestAction.class, Side.SERVER);
+        push(PacketQuestVisibility.class, ServerHandlerQuestVisibility.class, Side.SERVER);
+
+        /* Factions */
+        push(PacketRequestFactions.class, ServerHandlerRequestFactions.class, Side.SERVER);
+
+        /* Events */
+        push(PacketSyncHotkeys.class, ClientHandlerSyncHotkeys.class, Side.CLIENT);
+        push(PacketTriggeredHotkeys.class, ServerHandlerHotkeys.class, Side.SERVER);
+        push(PacketCamera.class, ClientHandlerCamera.class, Side.CLIENT);
+        push(PacketScreenshot.class, ClientHandlerScreenshot.class, Side.CLIENT);
+        //  push(PacketScreenshot.class, ServerHandlerScre.class, Side.CLIENT);
+
+        /* Scripts */
+        push(PacketEntityRotations.class, ClientHandlerEntityRotations.class, Side.CLIENT);
+        push(PacketClick.class, ServerHandlerClick.class, Side.SERVER);
+        push(PacketClipboard.class, ClientHandlerClipboard.class, Side.CLIENT);
+        push(PacketRepl.class, ClientHandlerRepl.class, ServerHandlerRepl.class);
+        push(PacketSound.class, ClientHandlerSound.class, Side.CLIENT);
+        push(PacketWorldMorph.class, ClientHandlerWorldMorph.class, Side.CLIENT);
+        push(PacketPlayAnimation.class, PacketPlayAnimation.ClientHandler.class, Side.CLIENT);
+        push(PacketOpenLink.class, ClientHandlerOpenLink.class, Side.CLIENT);
+
+        push(PacketClientSettings.class, ClientSettingsHandler.class, ServerClientSettingsHandler.class);
+
+        /* HUD & UI */
+        push(PacketHUDScene.class, ClientHandlerHUDScene.class, Side.CLIENT);
+        push(PacketHUDMorph.class, ClientHandlerHUDMorph.class, Side.CLIENT);
+
+        push(PacketUI.class, ClientHandlerUI.class, ServerHandlerUI.class);
+        push(PacketUIData.class, ClientHandlerUIData.class, ServerHandlerUIData.class);
+        push(PacketCloseUI.class, ClientHandlerCloseUI.class, Side.CLIENT);
+
+        /* Logs */
+        push(PacketRequestLogs.class, ServerHandlerLogs.class, Side.SERVER);
+        push(PacketLogs.class, ClientHandlerLogs.class, Side.CLIENT);
+
+        /* Utils */
+        push(PacketChangedBoundingBox.class, ClientHandlerChangedBoundingBox.class, Side.CLIENT);
+
+        push(PacketPack.class, ClientHandlerPack.class, Side.CLIENT);
+        push(PacketBlackAndWhiteShader.class, ClientHandlerBlackAndWhiteShader.class, Side.CLIENT);
+        push(PacketPlayerPerspective.class, ClientHandlerPlayerPerspective.class, Side.CLIENT);
     }
 }
