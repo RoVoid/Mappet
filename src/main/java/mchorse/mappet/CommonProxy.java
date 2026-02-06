@@ -18,7 +18,6 @@ import mchorse.mappet.utils.Colors;
 import mchorse.mappet.utils.MappetNpcSelector;
 import mchorse.mappet.utils.MetamorphHandler;
 import mchorse.mappet.utils.ScriptUtils;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -87,8 +86,7 @@ public abstract class CommonProxy {
         MinecraftForge.EVENT_BUS.register(eventHandler = new EventHandler());
         MinecraftForge.EVENT_BUS.register(scriptedItemEventHandler = new ScriptedItemEventHandler());
 
-        GameRegistry.registerEntitySelector(new MappetNpcSelector(),
-                MappetNpcSelector.ARGUMENT_MAPPET_NPC_ID,
+        GameRegistry.registerEntitySelector(new MappetNpcSelector(), MappetNpcSelector.ARGUMENT_MAPPET_NPC_ID,
                 MappetNpcSelector.ARGUMENT_MAPPET_STATES);
 
         CapabilityManager.INSTANCE.register(ICharacter.class, new CharacterStorage(), Character::new);
@@ -106,15 +104,13 @@ public abstract class CommonProxy {
 
     public void postInit(FMLPostInitializationEvent event) {
         /* Register event nodes */
-        MapFactory<EventBaseNode> eventNodes = new MapFactory<EventBaseNode>()
-                .register("command", CommandNode.class, Colors.COMMAND)
+        MapFactory<EventBaseNode> eventNodes = new MapFactory<EventBaseNode>().register("command", CommandNode.class, Colors.COMMAND)
                 .register("comment", CommentNode.class, Colors.COMMENT)
                 .register("condition", ConditionNode.class, Colors.CONDITION)
                 .register("switch", SwitchNode.class, Colors.FACTION)
                 .register("timer", TimerNode.class, Colors.TIME)
                 .register("trigger", TriggerNode.class, Colors.STATE)
-                /* Backward compatibility with gamma build */
-                .alias("trigger", "event")
+                /* Backward compatibility with gamma build */.alias("trigger", "event")
                 .alias("trigger", "dialogue")
                 .alias("trigger", "script")
                 .register("cancel", CancelNode.class, Colors.CANCEL);
@@ -134,15 +130,14 @@ public abstract class CommonProxy {
         Mappet.EVENT_BUS.post(new RegisterDialogueNodeEvent(dialogueNodes));
 
         /* Register quest chain blocks */
-        MapFactory<QuestNode> questChainNodes = new MapFactory<QuestNode>()
-                .register("quest", QuestNode.class, Colors.QUEST);
+        MapFactory<QuestNode> questChainNodes = new MapFactory<QuestNode>().register("quest", QuestNode.class, Colors.QUEST);
 
         chains = questChainNodes;
         Mappet.EVENT_BUS.post(new RegisterQuestChainNodeEvent(questChainNodes));
 
         /* Register condition blocks */
-        MapFactory<AbstractConditionBlock> conditions = new MapFactory<AbstractConditionBlock>()
-                .register("quest", QuestConditionBlock.class, Colors.QUEST)
+        MapFactory<AbstractConditionBlock> conditions = new MapFactory<AbstractConditionBlock>().register("quest",
+                        QuestConditionBlock.class, Colors.QUEST)
                 .register("state", StateConditionBlock.class, Colors.STATE)
                 .register("dialogue", DialogueConditionBlock.class, Colors.DIALOGUE)
                 .register("faction", FactionConditionBlock.class, Colors.FACTION)
@@ -157,8 +152,8 @@ public abstract class CommonProxy {
         Mappet.EVENT_BUS.post(new RegisterConditionBlockEvent(conditions));
 
         /* Register condition blocks */
-        MapFactory<AbstractTriggerBlock> triggers = new MapFactory<AbstractTriggerBlock>()
-                .register("command", CommandTriggerBlock.class, Colors.COMMAND)
+        MapFactory<AbstractTriggerBlock> triggers = new MapFactory<AbstractTriggerBlock>().register("command", CommandTriggerBlock.class,
+                        Colors.COMMAND)
                 .register("sound", SoundTriggerBlock.class, Colors.REPLY)
                 .register("event", EventTriggerBlock.class, Colors.STATE)
                 .register("dialogue", DialogueTriggerBlock.class, Colors.DIALOGUE)
@@ -171,8 +166,7 @@ public abstract class CommonProxy {
         Mappet.EVENT_BUS.post(new RegisterTriggerBlockEvent(triggers));
 
         /* Register UI components */
-        MapFactory<UIComponent> ui = new MapFactory<UIComponent>()
-                .register("graphics", UIGraphicsComponent.class, 0xffffff)
+        MapFactory<UIComponent> ui = new MapFactory<UIComponent>().register("graphics", UIGraphicsComponent.class, 0xffffff)
                 .register("button", UIButtonComponent.class, 0xffffff)
                 .register("icon", UIIconButtonComponent.class, 0xffffff)
                 .register("keybind", UIKeybindComponent.class, 0xffffff)
@@ -183,6 +177,7 @@ public abstract class CommonProxy {
                 .register("toggle", UIToggleComponent.class, 0xffffff)
                 .register("trackpad", UITrackpadComponent.class, 0xffffff)
                 .register("strings", UIStringListComponent.class, 0xffffff)
+                .register("dropdown", UIDropdownComponent.class, 0xffffff)
                 .register("item", UIStackComponent.class, 0xffffff)
                 .register("layout", UILayoutComponent.class, 0xffffff)
                 .register("morph", UIMorphComponent.class, 0xffffff)

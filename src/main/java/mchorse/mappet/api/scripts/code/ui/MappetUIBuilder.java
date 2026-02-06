@@ -196,6 +196,17 @@ public class MappetUIBuilder implements IMappetUIBuilder {
         return component;
     }
 
+    public UIDropdownComponent dropdown(List<String> values, int selected) {
+        UIDropdownComponent component = new UIDropdownComponent();
+
+        current.getChildComponents().add(component);
+        component.values(values);
+
+        if (selected >= 0) component.selected(selected);
+
+        return component;
+    }
+
     @Override
     public UIStackComponent item(IScriptItemStack stack) {
         UIStackComponent component = new UIStackComponent();
