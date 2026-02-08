@@ -90,12 +90,8 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
 
     @Override
     protected String getFromChar(char typedChar) {
-        if (wasDoubleInsert(typedChar, ')', '(') || wasDoubleInsert(typedChar, ']', '[') || wasDoubleInsert(typedChar,
-                                                                                                            '}',
-                                                                                                            '{') || wasDoubleInsert(
-                typedChar,
-                '"',
-                '"') || wasDoubleInsert(typedChar, '\'', '\'')) {
+        if (wasDoubleInsert(typedChar, ')', '(') || wasDoubleInsert(typedChar, ']', '[') || wasDoubleInsert(typedChar, '}',
+                '{') || wasDoubleInsert(typedChar, '"', '"') || wasDoubleInsert(typedChar, '\'', '\'')) {
             moveCursor(1, 0);
             playSound(SoundEvents.BLOCK_STONE_PLACE);
             return "";
@@ -124,15 +120,15 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
 
         String line = text.get(cursor.line).text;
 
-        return line.length() >= 2 && cursor.offset > 0 && cursor.offset < line.length() && line.charAt(cursor.offset) == target && line.charAt(
-                cursor.offset - 1) == supplementary;
+        return line.length() >= 2 && cursor.offset > 0 && cursor.offset < line.length() && line.charAt(
+                cursor.offset) == target && line.charAt(cursor.offset - 1) == supplementary;
     }
 
     @Override
     protected void keyNewLine(TextEditUndo undo) {
         String line = text.get(cursor.line).text;
-        boolean unwrap = line.length() >= 2 && cursor.offset > 0 && cursor.offset < line.length() && line.charAt(cursor.offset) == '}' && line.charAt(
-                cursor.offset - 1) == '{';
+        boolean unwrap = line.length() >= 2 && cursor.offset > 0 && cursor.offset < line.length() && line.charAt(
+                cursor.offset) == '}' && line.charAt(cursor.offset - 1) == '{';
 
         int indent = getIndent(line) + (unwrap ? 4 : 0);
 
@@ -282,8 +278,7 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
             if (i > 0 && text.get(i - 1) != null) lastSegments = text.get(i - 1).segments;
 
             TextSegment lastSegment = null;
-            if (lastSegments != null && !lastSegments.isEmpty())
-                lastSegment = lastSegments.get(lastSegments.size() - 1);
+            if (lastSegments != null && !lastSegments.isEmpty()) lastSegment = lastSegments.get(lastSegments.size() - 1);
 
             textLine.setSegments(highlighter.parse(font, textLine.text, lastSegment));
 

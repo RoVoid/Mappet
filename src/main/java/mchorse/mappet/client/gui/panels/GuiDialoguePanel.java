@@ -33,7 +33,7 @@ public class GuiDialoguePanel extends GuiMappetRunPanel<Dialogue>
     {
         super(mc, dashboard);
 
-        this.namesList.setFileIcon(Icons.BUBBLE);
+        this.list.setFileIcon(Icons.BUBBLE);
 
         this.graph = new GuiEventNodeGraph(mc, CommonProxy.getDialogues(), this::pickNode);
         this.graph.notifyAboutMain().flex().relative(this.editor).wh(1F, 1F);
@@ -44,7 +44,7 @@ public class GuiDialoguePanel extends GuiMappetRunPanel<Dialogue>
         this.closable = new GuiToggleElement(mc, IKey.lang("mappet.gui.nodes.dialogue.closable"), (b) -> this.data.closable = b.isToggled());
         this.onClose = new GuiTriggerElement(mc);
 
-        this.names.flex().hTo(this.bottom.area, -5);
+        this.search.flex().hTo(this.bottom.area, -5);
 
         this.editor.add(this.graph);
         this.bottom.add(Elements.label(IKey.str("On close trigger")), this.onClose, this.closable);

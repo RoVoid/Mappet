@@ -20,28 +20,28 @@ public class GuiNpcEditor extends GuiScrollElement {
     public GuiNpcEditor(Minecraft mc, boolean id) {
         super(mc, ScrollDirection.HORIZONTAL);
 
-        this.scroll.scrollSpeed *= 2;
+        scroll.scrollSpeed *= 2;
 
-        this.meta = new GuiNpcMetaPanel(mc, id);
-        this.general = new GuiNpcGeneralPanel(mc);
-        this.health = new GuiNpcHealthPanel(mc);
-        this.damage = new GuiNpcDamagePanel(mc);
-        this.movement = new GuiNpcMovementPanel(mc);
-        this.behavior = new GuiNpcBehaviorPanel(mc);
-        this.triggers = new GuiNpcTriggersPanel(mc);
-        this.respawn = new GuiNpcRespawnPanel(mc);
+        meta = new GuiNpcMetaPanel(mc, id);
+        general = new GuiNpcGeneralPanel(mc);
+        health = new GuiNpcHealthPanel(mc);
+        damage = new GuiNpcDamagePanel(mc);
+        movement = new GuiNpcMovementPanel(mc);
+        behavior = new GuiNpcBehaviorPanel(mc);
+        triggers = new GuiNpcTriggersPanel(mc);
+        respawn = new GuiNpcRespawnPanel(mc);
 
         float width = 0.2f;
-        this.meta.flex().relative(this).w(width).h(1F);
-        this.general.flex().relative(this).w(width).h(0.625F);
-        this.health.flex().relative(this).w(width).h(1F);
-        this.damage.flex().relative(this).w(width).h(0.525F);
-        this.movement.flex().relative(this).w(width).h(1F);
-        this.behavior.flex().relative(this).w(width).h(1F);
-        this.triggers.flex().relative(this).w(width).h(1F);
-        this.respawn.flex().relative(this).w(width).h(0.6F);
+        meta.flex().relative(this).w(width).h(1F);
+        general.flex().relative(this).w(width).h(0.625F);
+        health.flex().relative(this).w(width).h(1F);
+        damage.flex().relative(this).w(width).h(0.525F);
+        movement.flex().relative(this).w(width).h(1F);
+        behavior.flex().relative(this).w(width).h(1F);
+        triggers.flex().relative(this).w(width).h(1F);
+        respawn.flex().relative(this).w(width).h(0.6F);
 
-        this.flex().column(5).scroll().width(180).padding(15);
+        flex().column(5).scroll().width(180).padding(15);
 
         meta.add(general);
         health.add(damage);
@@ -52,19 +52,19 @@ public class GuiNpcEditor extends GuiScrollElement {
     public void set(NpcState state) {
         this.state = state;
 
-        this.meta.set(state);
-        this.general.set(state);
-        this.health.set(state);
-        this.damage.set(state);
-        this.movement.set(state);
-        this.behavior.set(state);
-        this.triggers.set(state);
-        this.respawn.set(state);
+        meta.set(state);
+        general.set(state);
+        health.set(state);
+        damage.set(state);
+        movement.set(state);
+        behavior.set(state);
+        triggers.set(state);
+        respawn.set(state);
 
-        this.resize();
+        resize();
     }
 
     public NpcState get() {
-        return this.state;
+        return state;
     }
 }

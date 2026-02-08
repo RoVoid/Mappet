@@ -51,7 +51,7 @@ public class GuiEventPanel extends GuiMappetRunPanel<NodeSystem<EventBaseNode>> 
     public GuiEventPanel(Minecraft mc, GuiMappetDashboard dashboard) {
         super(mc, dashboard);
 
-        this.namesList.setFileIcon(Icons.FILE);
+        this.list.setFileIcon(Icons.FILE);
 
         this.graph = new GuiEventNodeGraph(mc, CommonProxy.getEvents(), this::pickNode);
         this.graph.notifyAboutMain().flex().relative(this.editor).wh(1F, 1F);

@@ -48,7 +48,7 @@ public class GuiHUDScenePanel extends GuiMappetDashboardPanel<HUDScene>
     {
         super(mc, dashboard);
 
-        this.namesList.setFileIcon(Icons.POSE);
+        this.list.setFileIcon(Icons.POSE);
 
         this.morphs = new GuiIconElement(mc, Icons.MORE, (b) -> this.openMorphs());
         this.morph = new GuiNestedEdit(mc, this::openMorphMenu);

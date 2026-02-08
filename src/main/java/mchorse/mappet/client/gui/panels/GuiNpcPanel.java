@@ -16,8 +16,7 @@ import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.ColorUtils;
 import net.minecraft.client.Minecraft;
 
-public class GuiNpcPanel extends GuiMappetDashboardPanel<Npc>
-{
+public class GuiNpcPanel extends GuiMappetDashboardPanel<Npc> {
     public static final IKey EMPTY = IKey.lang("mappet.gui.npcs.info.empty");
 
     public GuiIconElement states;
@@ -25,93 +24,78 @@ public class GuiNpcPanel extends GuiMappetDashboardPanel<Npc>
 
     private String state = "";
 
-    public GuiNpcPanel(Minecraft mc, GuiMappetDashboard dashboard)
-    {
+    public GuiNpcPanel(Minecraft mc, GuiMappetDashboard dashboard) {
         super(mc, dashboard);
 
-        this.namesList.setFileIcon(Icons.PROCESSOR);
+        list.setFileIcon(Icons.PROCESSOR);
 
-        this.states = new GuiIconElement(mc, Icons.MORE, (b) -> this.openNpcStates());
-        this.states.flex().relative(this);
+        states = new GuiIconElement(mc, Icons.MORE, (b) -> openNpcStates());
+        states.flex().relative(editor);
 
-        this.npcEditor = new GuiNpcEditor(mc, false);
-        this.npcEditor.flex().relative(this).y(10).wTo(this.editor.area, 1F).h(1F, -10);
-        this.npcEditor.setVisible(false);
+        npcEditor = new GuiNpcEditor(mc, false);
+        npcEditor.flex().relative(editor).y(10).w(1F, 220).h(1F, -10);
+        npcEditor.setVisible(false);
 
-        this.editor.add(this.npcEditor, this.states);
+        editor.add(npcEditor, states);
 
-        this.fill(null);
+        fill(null);
     }
 
-    private void openNpcStates()
-    {
-        GuiNpcStatesOverlayPanel overlay = new GuiNpcStatesOverlayPanel(this.mc, this.data, this::pickState);
-
-        GuiOverlay.addOverlay(GuiBase.getCurrent(), overlay.set(this.state), 0.4F, 0.6F);
+    private void openNpcStates() {
+        GuiNpcStatesOverlayPanel overlay = new GuiNpcStatesOverlayPanel(mc, data, this::pickState);
+        GuiOverlay.addOverlay(GuiBase.getCurrent(), overlay.set(state), 0.4F, 0.6F);
     }
 
-    private void pickState(String name)
-    {
-        this.state = name;
+    private void pickState(String name) {
+        state = name;
 
-        NpcState state = this.data.states.get(name);
+        NpcState state = data.states.get(name);
 
-        this.npcEditor.setVisible(state != null);
+        npcEditor.setVisible(state != null);
 
-        if (state != null)
-        {
-            this.npcEditor.set(state);
-        }
+        if (state != null) npcEditor.set(state);
 
-        this.resize();
+        resize();
     }
 
     @Override
-    public void fill(Npc data, boolean allowed)
-    {
+    public void fill(Npc data, boolean allowed) {
         super.fill(data, allowed);
 
-        this.npcEditor.setVisible(data != null);
-        this.states.setVisible(data != null);
+        npcEditor.setVisible(data != null);
+        states.setVisible(data != null);
 
-        if (data != null)
-        {
+        if (data != null) {
             String key = "default";
 
-            if (!data.states.containsKey(key) && !data.states.isEmpty())
-            {
+            if (!data.states.containsKey(key) && !data.states.isEmpty()) {
                 key = data.states.keySet().iterator().next();
             }
 
-            this.pickState(key);
+            pickState(key);
         }
     }
 
     @Override
-    public ContentType getType()
-    {
+    public ContentType getType() {
         return ContentType.NPC;
     }
 
     @Override
-    public String getTitle()
-    {
+    public String getTitle() {
         return "mappet.gui.panels.npcs";
     }
 
     @Override
-    public void draw(GuiContext context)
-    {
-        if (this.npcEditor.isVisible())
-        {
-            GuiDraw.drawTextBackground(this.font, this.state, this.states.area.ex() + 3, this.states.area.my() - 4, 0xffffff, ColorUtils.HALF_BLACK, 2);
+    public void draw(GuiContext context) {
+        if (npcEditor.isVisible()) {
+            GuiDraw.drawTextBackground(font, state, states.area.ex() + 3, states.area.my() - 4, 0xffffff, ColorUtils.HALF_BLACK, 2);
         }
-        else
-        {
-            int w = (this.editor.area.ex() - this.area.x) / 2;
-            int x = (this.area.x + this.editor.area.ex()) / 2 - w / 2;
+        else {
+            int w = (editor.area.ex() - area.x) / 2;
+            int x = (area.x + editor.area.ex()) / 2 - w / 2;
 
-            GuiDraw.drawMultiText(this.font, EMPTY.get(), x, this.area.my(), 0xffffff, w, 12, 0.5F, 0.5F);
+            GuiDraw.drawMultiText(font, EMPTY.get(), x, area.my(), 0xffffff, w, 12, 0.5F, 0.5F);
         }
 
         super.draw(context);

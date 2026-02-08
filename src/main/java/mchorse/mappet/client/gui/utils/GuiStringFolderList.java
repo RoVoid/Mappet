@@ -6,270 +6,153 @@ import mchorse.mclib.client.gui.utils.Icons;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
-public class GuiStringFolderList extends GuiStringListElement
-{
-    public GuiStringFolderList(Minecraft mc, Consumer<List<String>> callback)
-    {
-        super(mc, callback);
+public class GuiStringFolderList extends GuiStringListElement {
 
-        this.callback = (l) -> this.fileCallback(callback, l);
-    }
-
-    /**
-     * A list of paths.
-     */
-    private List<String> hierarchy = new ArrayList<String>();
-
-    /**
-     * Path in which current list is located. It's expected to be
-     * something like "abc/def/ghi" (i.e. without trailing slash).
-     */
+    private final Set<String> hierarchy = new HashSet<>();
     private String path = "";
-
-    /**
-     * Icon that is used to render "files."
-     */
     private Icon fileIcon = Icons.FILE;
 
-    private void fileCallback(Consumer<List<String>> callback, List<String> strings)
-    {
-        String path = strings.get(0);
-
-        if (path.endsWith("/"))
-        {
-            String newPath;
-
-            if (path.equals("../"))
-            {
-                int index = this.path.lastIndexOf('/');
-
-                newPath = index == -1 ? "" : this.path.substring(0, index);
-            }
-            else
-            {
-                path = path.substring(0, path.length() - 1);
-                newPath = this.getPath(path);
-            }
-
-            this.goTo(newPath);
-        }
-        else
-        {
-            strings.clear();
-            strings.add(this.getPath(path));
-
-            callback.accept(strings);
-        }
+    public GuiStringFolderList(Minecraft mc, Consumer<List<String>> callback) {
+        super(mc, null);
+        this.callback = l -> handleClick(callback, l);
     }
 
-    public void setFileIcon(Icon icon)
-    {
-        this.fileIcon = icon;
-    }
+    private void handleClick(Consumer<List<String>> callback, List<String> list) {
+        String entry = list.get(0);
 
-    public String getPath()
-    {
-        return this.path;
-    }
-
-    public String getPath(String name)
-    {
-        if (this.path.isEmpty())
-        {
-            return name;
-        }
-
-        return this.path + "/" + name;
-    }
-
-    public void fill(Collection<String> hierarchy)
-    {
-        this.hierarchy.clear();
-        this.hierarchy.addAll(hierarchy);
-
-        this.goTo("");
-    }
-
-    private void goTo(String path)
-    {
-        this.path = path;
-
-        this.filter("");
-        this.setIndex(-1);
-        this.updateStrings();
-    }
-
-    private void updateStrings()
-    {
-        Set<String> files = new HashSet<String>();
-
-        if (!this.path.isEmpty())
-        {
-            files.add("../");
-        }
-
-        for (String path : this.hierarchy)
-        {
-            if (this.path.isEmpty())
-            {
-                int i = path.indexOf('/');
-
-                if (i < 0)
-                {
-                    files.add(path);
-                }
-                else
-                {
-                    files.add(path.substring(0, i + 1));
-                }
-            }
-            else if (path.startsWith(this.path + '/') && path.indexOf('/') > 0)
-            {
-                String newPath = path.substring(this.path.length() + 1);
-                int index = newPath.indexOf('/');
-
-                if (index >= 0)
-                {
-                    newPath = newPath.substring(0, index + 1);
-                }
-
-                if (newPath.equals(""))
-                {
-                    continue;
-                }
-
-                files.add(newPath);
-            }
-        }
-
-        this.list.clear();
-        this.list.addAll(files);
-
-        this.sort();
-        this.update();
-    }
-
-    public boolean hasInHierarchy(String path)
-    {
-        return this.hierarchy.contains(path);
-    }
-
-    /**
-     * Add file path to this hierarchy.
-     */
-    public void addFile(String path)
-    {
-        String filename = this.getFilename(path);
-
-        if (filename != null)
-        {
-            this.hierarchy.add(path);
-
-            this.add(filename);
-            this.sort();
-            this.setCurrentFile(path);
-        }
-    }
-
-    /**
-     * Removes given path from the hierarchy and currently displayed list.
-     */
-    public void removeFile(String path)
-    {
-        String filename = this.getFilename(path);
-
-        if (filename != null && this.hasInHierarchy(path))
-        {
-            this.hierarchy.remove(path);
-
-            this.remove(filename);
-            this.setIndex(-1);
-        }
-    }
-
-    /**
-     * Get the filename of the path. It returns filename only if
-     * given path matches the current path in the hierarchy, otherwise
-     * it will return {@code null}.
-     */
-    private String getFilename(String path)
-    {
-        int lastIndex = path.lastIndexOf('/');
-
-        if (this.path.isEmpty() && lastIndex < 0)
-        {
-            return path;
-        }
-        else if (path.startsWith(this.path))
-        {
-            String filename = path.substring(this.path.length() + 1);
-
-            if (filename.indexOf('/') < 0)
-            {
-                return filename;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * It's like {@link #setCurrentScroll(Object)} but using file paths
-     * listed in {@link #hierarchy}.
-     */
-    public void setCurrentFile(String path)
-    {
-        if (path == null)
-        {
+        if (entry.endsWith("/")) {
+            goTo(entry.endsWith("../") ? parent(path) : resolve(entry.substring(0, entry.length() - 1)));
             return;
         }
 
-        int lastIndex = path.lastIndexOf('/');
+        list.clear();
+        list.add(resolve(entry));
+        callback.accept(list);
+    }
 
-        if (lastIndex < 0)
-        {
-            this.goTo("");
-            this.setCurrentScroll(path);
+    public void setFileIcon(Icon icon) {
+        fileIcon = icon;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public String getPath(String name) {
+        return resolve(name);
+    }
+
+    public void fill(Collection<String> files) {
+        hierarchy.clear();
+        hierarchy.addAll(files);
+        goTo("");
+    }
+
+    public void root() {
+        goTo("");
+    }
+
+    public void up() {
+        if (!path.isEmpty()) goTo(parent(path));
+    }
+
+    public void down(String folder) {
+        goTo(resolve(folder));
+    }
+
+    private void goTo(String path) {
+        this.path = path;
+        filter("");
+        setIndex(-1);
+        rebuild();
+    }
+
+    private void rebuild() {
+        list.clear();
+
+        if (!path.isEmpty()) list.add(getPath("../"));
+
+        Set<String> entries = new HashSet<>();
+        int baseLen = path.length();
+
+        for (String p : hierarchy) {
+            if (!path.isEmpty() && !p.startsWith(path + "/")) continue;
+
+            String rest = path.isEmpty() ? p : p.substring(baseLen + 1);
+            if (rest.isEmpty()) continue;
+
+            int i = rest.indexOf('/');
+            entries.add(i < 0 ? rest : rest.substring(0, i + 1));
         }
-        else
-        {
-            this.goTo(path.substring(0, lastIndex));
-            this.setCurrentScroll(path.substring(lastIndex + 1));
+
+        list.addAll(entries);
+        sort();
+        update();
+    }
+
+    public boolean notInHierarchy(String path) {
+        return !hierarchy.contains(path);
+    }
+
+    public void addFile(String path) {
+        if (hierarchy.add(path)) {
+            String name = filename(path);
+            if (name != null) {
+                add(name);
+                sort();
+                setCurrentFile(path);
+            }
         }
     }
 
-    @Override
-    protected void drawElementPart(String element, int i, int x, int y, boolean hover, boolean selected)
-    {
-        GlStateManager.color(1, 1, 1, 1);
-        (element.endsWith("/") ? Icons.FOLDER : this.fileIcon).render(x, y);
+    public void removeFile(String path) {
+        if (hierarchy.remove(path)) {
+            String name = filename(path);
+            if (name != null) {
+                remove(name);
+                setIndex(-1);
+            }
+        }
+    }
 
+    public String filename(String fullPath) {
+        if (!fullPath.startsWith(path)) return null;
+
+        String rest = path.isEmpty() ? fullPath : fullPath.substring(path.length() + 1);
+
+        return rest.indexOf('/') < 0 ? rest : null;
+    }
+
+    public void setCurrentFile(String path) {
+        if (path == null) return;
+
+        int i = path.lastIndexOf('/');
+        goTo(i < 0 ? "" : path.substring(0, i));
+        setCurrentScroll(i < 0 ? path : path.substring(i + 1));
+    }
+
+    private static String parent(String path) {
+        int i = path.lastIndexOf('/');
+        return i < 0 ? "" : path.substring(0, i);
+    }
+
+    private String resolve(String name) {
+        return path.isEmpty() ? name : path + "/" + name;
+    }
+
+    @Override
+    protected void drawElementPart(String element, int i, int x, int y, boolean hover, boolean selected) {
+        GlStateManager.color(1, 1, 1, 1);
+        (element.endsWith("/") ? element.endsWith("../") ? Icons.LEFTLOAD : Icons.FOLDER : fileIcon).render(x, y);
         super.drawElementPart(element, i, x + 12, y, hover, selected);
     }
 
     @Override
-    protected boolean sortElements()
-    {
-        this.list.sort((p1, p2) ->
-        {
-            int isP1Folder = p1.equals("../") ? Integer.MAX_VALUE : p1.endsWith("/") ? 1 : 0;
-            int isP2Folder = p2.equals("../") ? Integer.MAX_VALUE : p2.endsWith("/") ? 1 : 0;
-
-            if (isP1Folder == isP2Folder)
-            {
-                return p1.compareTo(p2);
-            }
-
-            return (isP2Folder) - (isP1Folder);
-        });
-
+    protected boolean sortElements() {
+        list.sort(Comparator.comparingInt((String s) -> s.endsWith("../") ? 0 : s.endsWith("/") ? 1 : 2).thenComparing(String::compareTo));
         return true;
     }
 }

@@ -18,6 +18,8 @@ public class GuiOverlayPanel extends GuiElement
     public GuiIconElement close;
     public GuiElement content;
 
+    public int background;
+
     public GuiOverlayPanel(Minecraft mc, IKey title)
     {
         super(mc);

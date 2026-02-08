@@ -15,7 +15,7 @@ import java.util.List;
 public class ValueCodeEditor extends ValueString implements IConfigGuiProvider {
     protected GuiCodeEditor code;
     public ValueCodeEditor(String id) {
-        this(id, "function main(event) {\n    var subject = event.getSubject();\n    var states = event.getServer().getStates();\n}");
+        this(id, "function main(event) {\n    var subject = event.getSubject();\n    var states = subject.getStates();\n    var States = event.getServer().getStates();\n}");
     }
 
     public ValueCodeEditor(String id, String defaultValue) {

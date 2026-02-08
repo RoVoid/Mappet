@@ -49,7 +49,7 @@ public class GuiContentNamesOverlayPanel extends GuiStringOverlayPanel
 
             dashboard.panels.setPanel(panel);
             panel.pickData(text);
-            panel.names.list.setCurrentScroll(text);
+            panel.search.list.setCurrentScroll(text);
         }
     }
 

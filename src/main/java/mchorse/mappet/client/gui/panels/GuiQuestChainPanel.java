@@ -25,7 +25,7 @@ public class GuiQuestChainPanel extends GuiMappetDashboardPanel<QuestChain>
     {
         super(mc, dashboard);
 
-        this.namesList.setFileIcon(Icons.COPY);
+        this.list.setFileIcon(Icons.COPY);
 
         this.graph = new GuiNodeGraph<QuestNode>(mc, CommonProxy.getChains(), this::pickNode);
         this.graph.flex().relative(this.editor).wh(1F, 1F);

@@ -69,7 +69,7 @@ public class GuiFactionPanel extends GuiMappetDashboardPanel<Faction>
     {
         super(mc, dashboard);
 
-        this.namesList.setFileIcon(Icons.BOOKMARK);
+        this.list.setFileIcon(Icons.BOOKMARK);
 
         this.title = new GuiTextElement(mc, 1000, (t) -> this.data.title = t);
         this.visible = new GuiCheckerElement(mc);
@@ -101,7 +101,7 @@ public class GuiFactionPanel extends GuiMappetDashboardPanel<Faction>
         GuiLabel label = Elements.label(IKey.lang("mappet.gui.factions.relations.label")).background();
         GuiIconElement add = new GuiIconElement(mc, Icons.ADD, (button) ->
         {
-            List<String> keys = new ArrayList<String>(this.names.list.getList());
+            List<String> keys = new ArrayList<String>(this.search.list.getList());
 
             keys.removeIf((key) -> this.data.relations.containsKey(key));
             keys.remove(this.data.getId());

@@ -74,8 +74,8 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
     public static GuiContextMenu createScriptContextMenu(Minecraft mc, GuiCodeEditor editor) {
         /* These GUI QoL features are getting out of hand... */
-        GuiSimpleContextMenu menu = new GuiSimpleContextMenu(mc)
-                .action(Icons.BLOCK, IKey.lang("mappet.gui.scripts.context.paste_block_pos"), () -> pasteBlockPosition(editor))
+        GuiSimpleContextMenu menu = new GuiSimpleContextMenu(mc).action(Icons.BLOCK,
+                        IKey.lang("mappet.gui.scripts.context.paste_block_pos"), () -> pasteBlockPosition(editor))
                 .action(Icons.POSE, IKey.lang("mappet.gui.scripts.context.paste_player_pos"), () -> pastePlayerPosition(editor))
                 .action(Icons.REVERSE, IKey.lang("mappet.gui.scripts.context.paste_player_rot"), () -> pastePlayerRotation(editor))
                 .action(Icons.WRENCH, IKey.lang("mappet.gui.scripts.context.paste_item"), () -> openItemPicker(editor))
@@ -96,7 +96,8 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         List<DocMethod> searched = GuiDocumentationOverlayPanel.searchMethod(text);
         if (searched.isEmpty()) return;
         for (DocMethod docMethod : searched) {
-            menu.action(Icons.SEARCH, IKey.format("mappet.gui.scripts.context.docs", docMethod.parent.getName()), () -> searchDocumentation(docMethod));
+            menu.action(Icons.SEARCH, IKey.format("mappet.gui.scripts.context.docs", docMethod.parent.getName()),
+                    () -> searchDocumentation(docMethod));
         }
     }
 
@@ -108,7 +109,9 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
             morph = MorphManager.INSTANCE.morphFromNBT(tag);
         }
 
-        GuiOverlay.addOverlay(GuiBase.getCurrent(), new GuiMorphOverlayPanel(Minecraft.getMinecraft(), IKey.lang("mappet.gui.scripts.overlay.title_morph"), editor, morph), 240, 54);
+        GuiOverlay.addOverlay(GuiBase.getCurrent(),
+                new GuiMorphOverlayPanel(Minecraft.getMinecraft(), IKey.lang("mappet.gui.scripts.overlay.title_morph"), editor, morph), 240,
+                54);
     }
 
     private static void openItemPicker(GuiCodeEditor editor) {
@@ -119,7 +122,9 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
             stack = new ItemStack(tag);
         }
 
-        GuiOverlay.addOverlay(GuiBase.getCurrent(), new GuiItemStackOverlayPanel(Minecraft.getMinecraft(), IKey.lang("mappet.gui.scripts.overlay.title_item"), editor, stack), 240, 54);
+        GuiOverlay.addOverlay(GuiBase.getCurrent(),
+                new GuiItemStackOverlayPanel(Minecraft.getMinecraft(), IKey.lang("mappet.gui.scripts.overlay.title_item"), editor, stack),
+                240, 54);
     }
 
     private static NBTTagCompound readFromSelected(GuiCodeEditor editor) {
@@ -149,7 +154,8 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         EntityPlayer player = Minecraft.getMinecraft().player;
         DecimalFormat format = GuiTrackpadElement.FORMAT;
 
-        editor.pasteText(format.format(player.rotationPitch) + ",  " + format.format(player.rotationYaw) + ", " + format.format(player.getRotationYawHead()));
+        editor.pasteText(format.format(player.rotationPitch) + ",  " + format.format(player.rotationYaw) + ", " + format.format(
+                player.getRotationYawHead()));
     }
 
     private static void pasteBlockPosition(GuiCodeEditor editor) {
@@ -157,11 +163,8 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         DecimalFormat format = GuiTrackpadElement.FORMAT;
         RayTraceResult result = RayTracing.rayTrace(player, 128, 0F);
 
-        if (result != null && result.typeOfHit == RayTraceResult.Type.BLOCK) {
-            BlockPos pos = result.getBlockPos();
-
-            editor.pasteText(format.format(pos.getX()) + ", " + format.format(pos.getY()) + ", " + format.format(pos.getZ()));
-        }
+        BlockPos pos = result == null || result.typeOfHit != RayTraceResult.Type.BLOCK ? player.getPosition() : result.getBlockPos();
+        editor.pasteText(format.format(pos.getX()) + ", " + format.format(pos.getY()) + ", " + format.format(pos.getZ()));
     }
 
     private static void openSoundPicker(GuiCodeEditor editor) {
@@ -172,7 +175,8 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
     private static void openColorPicker(GuiCodeEditor editor, boolean isArgb) {
         ValueInt valueInt = isArgb ? new ValueInt("color_picker", 0).colorAlpha() : new ValueInt("color_picker", 0).color();
-        GuiOverlayPanel panel = new GuiOverlayPanel(Minecraft.getMinecraft(), IKey.lang("mappet.gui.scripts.context.paste_color" + (isArgb ? "A" : "") + "RGB")) {
+        GuiOverlayPanel panel = new GuiOverlayPanel(Minecraft.getMinecraft(),
+                IKey.lang("mappet.gui.scripts.context.paste_color" + (isArgb ? "A" : "") + "RGB")) {
 
             @Override
             public void onClose() {
@@ -200,26 +204,25 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
     public GuiScriptPanel(Minecraft mc, GuiMappetDashboard dashboard) {
         super(mc, dashboard);
 
-        namesList.setFileIcon(MMIcons.PROPERTIES);
+        list.setFileIcon(MMIcons.PROPERTIES);
 
         toggleRepl = new GuiIconElement(mc, MPIcons.get(MPIcons.CONSOLE), (b) -> setRepl(!repl.isVisible()));
-        toggleRepl.tooltip(IKey.lang("mappet.gui.scripts.repl.title"), Direction.LEFT);
+        toggleRepl.tooltip(IKey.lang("mappet.gui.scripts.repl.title"), Direction.RIGHT);
         docs = new GuiIconElement(mc, Icons.HELP, this::openDocumentation);
-        docs.tooltip(IKey.lang("mappet.gui.scripts.documentation.title"), Direction.LEFT);
+        docs.tooltip(IKey.lang("mappet.gui.scripts.documentation.title"), Direction.RIGHT);
         libraries = new GuiIconElement(mc, Icons.MORE, this::openLibraries);
-        libraries.tooltip(IKey.lang("mappet.gui.scripts.libraries.tooltip"), Direction.LEFT);
+        libraries.tooltip(IKey.lang("mappet.gui.scripts.libraries.tooltip"), Direction.RIGHT);
         run = new GuiIconElement(mc, Icons.PLAY, this::runScript);
-        run.tooltip(IKey.lang("mappet.gui.scripts.run"), Direction.LEFT);
+        run.tooltip(IKey.lang("mappet.gui.scripts.run"), Direction.RIGHT);
         beautifier = new GuiIconElement(mc, MPIcons.get(MPIcons.BRUSH), (b) -> beautifierScript(code));
-        beautifier.tooltip(IKey.lang("mappet.gui.scripts.beautifier"), Direction.LEFT);
+        beautifier.tooltip(IKey.lang("mappet.gui.scripts.beautifier"), Direction.RIGHT);
 
         iconBar.add(toggleRepl, docs, libraries, run, beautifier);
 
         code = new GuiCodeEditor(mc, null);
         code.withHints();
         code.background().context(() -> createScriptContextMenu(this.mc, code));
-        code
-                .keys()
+        code.keys()
                 .ignoreFocus()
                 .register(IKey.lang("mappet.gui.scripts.keys.word_wrap"), Keyboard.KEY_P, this::toggleWordWrap)
                 .category(GuiMappetDashboardPanel.KEYS_CATEGORY)
@@ -233,7 +236,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         GuiElement sideBarToggles = Elements.column(mc, 2, unique, globalLibrary);
         sideBarToggles.flex().relative(sidebar).x(10).y(1F, -10).w(1F, -20).anchorY(1F);
 
-        names.flex().hTo(sideBarToggles.area, -5);
+        search.flex().hTo(sideBarToggles.area, -5);
 
         code.flex().relative(editor).wh(1F, 1F);
         repl.flex().relative(editor).wh(1F, 1F);

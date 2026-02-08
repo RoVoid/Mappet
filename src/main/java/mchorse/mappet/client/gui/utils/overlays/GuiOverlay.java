@@ -32,9 +32,13 @@ public class GuiOverlay extends GuiElement
         context.screen.root.resize();
     }
 
+    private int background = ColorUtils.HALF_BLACK;
+
     public GuiOverlay(Minecraft mc, GuiOverlayPanel overlay)
     {
         super(mc);
+
+        if(overlay.background > 0) background = overlay.background;
 
         overlay.flex().relative(this).xy(0.5F, 0.5F).wh(0.5F, 0.5F).anchor(0.5F, 0.5F);
         this.markContainer().add(overlay);
@@ -110,7 +114,7 @@ public class GuiOverlay extends GuiElement
     @Override
     public void draw(GuiContext context)
     {
-        this.area.draw(ColorUtils.HALF_BLACK);
+        this.area.draw(background);
 
         super.draw(context);
     }
