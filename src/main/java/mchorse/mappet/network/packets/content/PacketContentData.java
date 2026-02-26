@@ -1,7 +1,7 @@
 package mchorse.mappet.network.packets.content;
 
 import io.netty.buffer.ByteBuf;
-import mchorse.mappet.api.utils.IContentType;
+import mchorse.mappet.api.utils.content.IContentTypeBase;
 import mchorse.mclib.utils.NBTUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -18,14 +18,14 @@ public class PacketContentData extends PacketContentBase
         super();
     }
 
-    public PacketContentData(IContentType type, String name)
+    public PacketContentData(IContentTypeBase type, String name)
     {
         super(type);
 
         this.name = name;
     }
 
-    public PacketContentData(IContentType type, String name, NBTTagCompound data)
+    public PacketContentData(IContentTypeBase type, String name, NBTTagCompound data)
     {
         this(type, name);
 

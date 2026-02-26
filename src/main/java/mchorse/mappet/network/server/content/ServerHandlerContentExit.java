@@ -37,7 +37,7 @@ public class ServerHandlerContentExit extends ServerMessageHandler<PacketContent
             {
                 if (data == null)
                 {
-                    data = session.type.getManager().load(session.id).serializeNBT();
+                    data = session.type.manager().load(session.id).serializeNBT();
                 }
 
                 PacketContentData packet = new PacketContentData(session.type, session.id, data);

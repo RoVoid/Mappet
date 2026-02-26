@@ -1,7 +1,9 @@
 package mchorse.mappet.client.gui.triggers.panels;
 
+import mchorse.mappet.api.scripts.Script;
 import mchorse.mappet.api.triggers.blocks.ScriptTriggerBlock;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
+import mchorse.mappet.api.utils.content.IContentType;
 import mchorse.mappet.client.gui.panels.GuiScriptPanel;
 import mchorse.mappet.client.gui.scripts.GuiCodeEditor;
 import mchorse.mappet.client.gui.triggers.GuiTriggerOverlayPanel;
@@ -96,8 +98,8 @@ public class GuiScriptTriggerBlockPanel extends GuiDataTriggerBlockPanel<ScriptT
     }
 
     @Override
-    protected ContentType getType()
+    protected IContentType<Script> getType()
     {
-        return ContentType.SCRIPTS;
+        return ContentTypes.SCRIPT;
     }
 }

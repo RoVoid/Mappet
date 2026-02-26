@@ -1,7 +1,9 @@
 package mchorse.mappet.client.gui.triggers.panels;
 
+import mchorse.mappet.api.dialogues.Dialogue;
 import mchorse.mappet.api.triggers.blocks.DialogueTriggerBlock;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
+import mchorse.mappet.api.utils.content.IContentType;
 import mchorse.mappet.client.gui.triggers.GuiTriggerOverlayPanel;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
@@ -23,8 +25,8 @@ public class GuiDialogueTriggerBlockPanel extends GuiDataTriggerBlockPanel<Dialo
     }
 
     @Override
-    protected ContentType getType()
+    protected IContentType<Dialogue> getType()
     {
-        return ContentType.DIALOGUE;
+        return ContentTypes.DIALOGUE;
     }
 }

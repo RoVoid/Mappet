@@ -1,7 +1,10 @@
 package mchorse.mappet.client.gui.triggers.panels;
 
+import mchorse.mappet.api.events.nodes.EventBaseNode;
 import mchorse.mappet.api.triggers.blocks.EventTriggerBlock;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
+import mchorse.mappet.api.utils.content.IContentType;
+import mchorse.mappet.api.utils.nodes.NodeSystem;
 import mchorse.mappet.client.gui.triggers.GuiTriggerOverlayPanel;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
@@ -23,8 +26,8 @@ public class GuiEventTriggerBlockPanel extends GuiDataTriggerBlockPanel<EventTri
     }
 
     @Override
-    protected ContentType getType()
+    protected IContentType<NodeSystem<EventBaseNode>> getType()
     {
-        return ContentType.EVENT;
+        return ContentTypes.EVENT;
     }
 }

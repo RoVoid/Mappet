@@ -13,6 +13,7 @@ import mchorse.mappet.api.quests.chains.QuestChainManager;
 import mchorse.mappet.api.schematics.SchematicManager;
 import mchorse.mappet.api.scripts.ScriptManager;
 import mchorse.mappet.api.states.States;
+import mchorse.mappet.api.translations.TranslationManager;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.api.utils.logs.MappetLogger;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
@@ -100,6 +101,7 @@ public final class Mappet {
     public static ScriptManager scripts;
 
     public static HUDManager huds;
+    public static TranslationManager translations;
 
     public Mappet() {
         MinecraftForge.EVENT_BUS.register(new ModEventHandler());
@@ -169,11 +171,10 @@ public final class Mappet {
         chains = new QuestChainManager(new File(mappetWorldFolder, "chains"));
         scripts = new ScriptManager(new File(mappetWorldFolder, "scripts"));
         huds = new HUDManager(new File(mappetWorldFolder, "huds"));
+        translations = new TranslationManager(new File(mappetWorldFolder, "translations"));
 
         /* Initiate */
-        if (!settings.serverLoad.isEmpty()) {
-            settings.serverLoad.trigger(new DataContext(event.getServer()));
-        }
+        if (!settings.serverLoad.isEmpty()) settings.serverLoad.trigger(new DataContext(event.getServer()));
 
         ScriptUtils.initiateScriptEngines();
         scripts.initiateAllScripts();
@@ -201,6 +202,7 @@ public final class Mappet {
             chains = null;
             scripts = null;
             huds = null;
+            translations = null;
         }
 
         CommonProxy.eventHandler.reset();

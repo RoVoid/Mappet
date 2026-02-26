@@ -32,9 +32,11 @@ public class TextSegment {
         OPERATOR,       // +-><=?!&|^ и другие
         NUMBER,         // 0.1 0x7 3 -8
         CONSTANT,       // true false null undefined
-        IDENTIFIER,     // const function var let prototype
-        KEYWORD,        // break continue switch case default try catch delete do while finally if else for each in instanceof new throw typeof with yield return import
-        SPECIAL,        // math mappet this Math JSON
+        IDENTIFIER,     // const var let prototype function
+        KEYWORD,        // break continue switch case default try catch delete do while finally if else for each in instanceof new throw typeof with yield return
+        IMPORT,         // import
+        PARAMETER,      // function(param)
+        SPECIAL,        // math mappet this Math JSON Date Java
         OTHER           // всё остальное
     }
 }

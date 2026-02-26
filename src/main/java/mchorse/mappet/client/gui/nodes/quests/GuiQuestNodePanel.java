@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.nodes.quests;
 
 import mchorse.mappet.api.quests.chains.QuestNode;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
 import mchorse.mappet.client.gui.conditions.GuiCheckerElement;
 import mchorse.mappet.client.gui.nodes.GuiNodePanel;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
@@ -42,7 +42,7 @@ public class GuiQuestNodePanel extends GuiNodePanel<QuestNode>
 
     private void openQuests()
     {
-        GuiMappetUtils.openPicker(ContentType.QUEST, this.node.quest, (name) -> this.node.quest = name);
+        GuiMappetUtils.openPicker(ContentTypes.QUEST, this.node.quest, (name) -> this.node.quest = name);
     }
 
     @Override

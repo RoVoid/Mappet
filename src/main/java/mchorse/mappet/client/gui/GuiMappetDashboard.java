@@ -33,6 +33,7 @@ public class GuiMappetDashboard extends GuiAbstractDashboard {
     public GuiScriptPanel script;
     public GuiHUDScenePanel hud;
     public GuiUIConstructorPanel ui;
+    public GuiTranslationPanel translation;
     public GuiLogPanel logs;
     public GuiSnippetsPanel snippets;
 
@@ -87,6 +88,7 @@ public class GuiMappetDashboard extends GuiAbstractDashboard {
         script = new GuiScriptPanel(mc, this);
         hud = new GuiHUDScenePanel(mc, this);
         ui = new GuiUIConstructorPanel(mc, this);
+        translation = new GuiTranslationPanel(mc, this);
         logs = new GuiLogPanel(mc, this);
         snippets = new GuiSnippetsPanel(mc, this);
 
@@ -102,6 +104,7 @@ public class GuiMappetDashboard extends GuiAbstractDashboard {
         panels.registerPanel(script, IKey.lang("mappet.gui.panels.scripts"), MMIcons.PROPERTIES);
         panels.registerPanel(hud, IKey.lang("mappet.gui.panels.huds"), Icons.POSE);
         panels.registerPanel(ui, IKey.lang("mappet.gui.panels.ui"), Icons.POSE);
+        panels.registerPanel(translation, IKey.lang("mappet.gui.panels.ui"), MPIcons.get(MPIcons.LETTER_A));
         panels.registerPanel(logs, IKey.lang("mappet.gui.panels.logs"), MPIcons.get(MPIcons.CONSOLE));
         panels.registerPanel(snippets, IKey.lang("mappet.gui.panels.snippets"), MPIcons.get(MPIcons.GLASSES));
 

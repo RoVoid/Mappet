@@ -4,6 +4,7 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
+import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTList;
@@ -72,8 +73,7 @@ public class ScriptFactory implements IScriptFactory {
         if (object instanceof String) return new NBTTagString((String) object);
         if (object instanceof Double) return new NBTTagDouble((Double) object);
         if (object instanceof Integer) return new NBTTagInt((Integer) object);
-        if (object instanceof Boolean)
-            return new NBTTagByte((Boolean) object ? Byte.valueOf("1") : Byte.valueOf("0"));
+        if (object instanceof Boolean) return new NBTTagByte((Boolean) object ? Byte.valueOf("1") : Byte.valueOf("0"));
         if (object instanceof ScriptObjectMirror) {
             ScriptObjectMirror mirror = (ScriptObjectMirror) object;
 
@@ -356,5 +356,15 @@ public class ScriptFactory implements IScriptFactory {
     @Override
     public List<String> getAllIcons() {
         return MPIcons.getAllNames();
+    }
+
+    @Override
+    public String translate(String locale, String key, Object... args) {
+        return Mappet.translations.getString(locale, key, args);
+    }
+
+    @Override
+    public String translate(ScriptPlayer player, String key, Object... args) {
+        return translate(player.getLanguage().toLowerCase(), key, args);
     }
 }

@@ -20,14 +20,14 @@ public class ServerHandlerContentData extends ServerMessageHandler<PacketContent
     public void run(EntityPlayerMP player, PacketContentData message)
     {
         boolean isEditing = !Character.get(player).getCurrentSession().isEditing(message.type, message.name);
-        boolean exists = message.type.getManager().exists(message.name);
+        boolean exists = message.type.manager().exists(message.name);
 
         if (!OpHelper.isPlayerOp(player) || (isEditing && exists))
         {
             return;
         }
 
-        IManager<? extends AbstractData> manager = message.type.getManager();
+        IManager<?> manager = message.type.manager();
 
         if (message.rename != null)
         {
@@ -56,7 +56,7 @@ public class ServerHandlerContentData extends ServerMessageHandler<PacketContent
         }
 
         /* Synchronize names to other players */
-        List<String> names = new ArrayList<>(message.type.getManager().getKeys());
+        List<String> names = new ArrayList<>(message.type.manager().getKeys());
 
         for (EntityPlayerMP otherPlayer : player.getServer().getPlayerList().getPlayers())
         {

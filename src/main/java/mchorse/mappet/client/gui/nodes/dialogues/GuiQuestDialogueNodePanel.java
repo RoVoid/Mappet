@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.nodes.dialogues;
 
 import mchorse.mappet.api.dialogues.nodes.QuestDialogueNode;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
 import mchorse.mappet.client.gui.nodes.GuiEventBaseNodePanel;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
@@ -27,6 +27,6 @@ public class GuiQuestDialogueNodePanel extends GuiEventBaseNodePanel<QuestDialog
 
     private void openQuests()
     {
-        GuiMappetUtils.openPicker(ContentType.QUEST, this.node.quest, (name) -> this.node.quest = name);
+        GuiMappetUtils.openPicker(ContentTypes.QUEST, this.node.quest, (name) -> this.node.quest = name);
     }
 }

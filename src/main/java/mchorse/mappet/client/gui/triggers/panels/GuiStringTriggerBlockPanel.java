@@ -1,7 +1,8 @@
 package mchorse.mappet.client.gui.triggers.panels;
 
 import mchorse.mappet.api.triggers.blocks.StringTriggerBlock;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
+import mchorse.mappet.api.utils.content.IContentTypeBase;
 import mchorse.mappet.client.gui.triggers.GuiTriggerOverlayPanel;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
@@ -26,7 +27,7 @@ public abstract class GuiStringTriggerBlockPanel <T extends StringTriggerBlock> 
 
     protected abstract IKey getLabel();
 
-    protected abstract ContentType getType();
+    protected abstract IContentTypeBase getType();
 
     protected void openOverlay()
     {

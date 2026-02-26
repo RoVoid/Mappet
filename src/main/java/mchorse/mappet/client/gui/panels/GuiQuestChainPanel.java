@@ -3,7 +3,8 @@ package mchorse.mappet.client.gui.panels;
 import mchorse.mappet.CommonProxy;
 import mchorse.mappet.api.quests.chains.QuestChain;
 import mchorse.mappet.api.quests.chains.QuestNode;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
+import mchorse.mappet.api.utils.content.IContentType;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.nodes.GuiNodeGraph;
 import mchorse.mappet.client.gui.nodes.GuiNodePanel;
@@ -25,7 +26,7 @@ public class GuiQuestChainPanel extends GuiMappetDashboardPanel<QuestChain>
     {
         super(mc, dashboard);
 
-        this.list.setFileIcon(Icons.COPY);
+        this.folderList.setFileIcon(Icons.COPY);
 
         this.graph = new GuiNodeGraph<QuestNode>(mc, CommonProxy.getChains(), this::pickNode);
         this.graph.flex().relative(this.editor).wh(1F, 1F);
@@ -66,9 +67,9 @@ public class GuiQuestChainPanel extends GuiMappetDashboardPanel<QuestChain>
     }
 
     @Override
-    public ContentType getType()
+    public IContentType<QuestChain> getType()
     {
-        return ContentType.CHAINS;
+        return ContentTypes.CHAIN;
     }
 
     @Override

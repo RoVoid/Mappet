@@ -312,9 +312,7 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
     public List<Cursor> findGroup(int direction, Cursor cursor) {
         String line = text.get(cursor.line).text;
 
-        if (line.isEmpty() || this.cursor.offset >= line.length() - 1) {
-            return Collections.emptyList();
-        }
+        if (line.isEmpty() || this.cursor.offset >= line.length() - 1) return Collections.emptyList();
 
         int offset = cursor.offset;
         int first = direction < 0 && offset > 0 ? offset - 1 : offset;
@@ -329,12 +327,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
 
         if (direction <= 0) {
             while (min > 0) {
-                if (matchSelectGroup(group, String.valueOf(line.charAt(min - 1)))) {
-                    min -= 1;
-                }
-                else {
-                    break;
-                }
+                if (matchSelectGroup(group, String.valueOf(line.charAt(min - 1)))) min -= 1;
+                else break;
             }
         }
 
@@ -342,12 +336,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
 
         if (direction >= 0) {
             while (max < line.length()) {
-                if (matchSelectGroup(group, String.valueOf(line.charAt(max)))) {
-                    max += 1;
-                }
-                else {
-                    break;
-                }
+                if (matchSelectGroup(group, String.valueOf(line.charAt(max)))) max += 1;
+                else break;
             }
         }
 

@@ -1,6 +1,6 @@
 package mchorse.mappet.network.server.content;
 
-import mchorse.mappet.api.utils.IContentType;
+import mchorse.mappet.api.utils.content.IContentTypeBase;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.content.PacketContentData;
@@ -13,7 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class ServerHandlerContentRequestData extends ServerMessageHandler<PacketContentRequestData>
 {
-    public static boolean isOtherPlayerEdits(EntityPlayerMP except, IContentType type, String id)
+    public static boolean isOtherPlayerEdits(EntityPlayerMP except, IContentTypeBase type, String id)
     {
         for (EntityPlayerMP player : except.getServer().getPlayerList().getPlayers())
         {
@@ -41,7 +41,7 @@ public class ServerHandlerContentRequestData extends ServerMessageHandler<Packet
 
         boolean otherEdit = isOtherPlayerEdits(player, message.type, message.name);
 
-        NBTTagCompound tag = message.type.getManager().load(message.name).serializeNBT();
+        NBTTagCompound tag = message.type.manager().load(message.name).serializeNBT();
         PacketContentData packet = new PacketContentData(message.type, message.name, tag);
         CurrentSession session = Character.get(player).getCurrentSession();
 

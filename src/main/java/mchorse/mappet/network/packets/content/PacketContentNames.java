@@ -1,7 +1,7 @@
 package mchorse.mappet.network.packets.content;
 
 import io.netty.buffer.ByteBuf;
-import mchorse.mappet.api.utils.IContentType;
+import mchorse.mappet.api.utils.content.IContentTypeBase;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.ArrayList;
@@ -16,14 +16,14 @@ public class PacketContentNames extends PacketContentBase
         super();
     }
 
-    public PacketContentNames(IContentType type, List<String> names)
+    public PacketContentNames(IContentTypeBase type, List<String> names)
     {
         super(type);
 
         this.names.addAll(names);
     }
 
-    public PacketContentNames(IContentType type, List<String> names, int requestId)
+    public PacketContentNames(IContentTypeBase type, List<String> names, int requestId)
     {
         super(type, requestId);
 

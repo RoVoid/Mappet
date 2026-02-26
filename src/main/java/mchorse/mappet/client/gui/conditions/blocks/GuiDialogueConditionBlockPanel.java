@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.conditions.blocks;
 
 import mchorse.mappet.api.conditions.blocks.DialogueConditionBlock;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
 import mchorse.mappet.api.utils.TargetMode;
 import mchorse.mappet.client.gui.conditions.GuiConditionOverlayPanel;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
@@ -36,6 +36,6 @@ public class GuiDialogueConditionBlockPanel extends GuiAbstractConditionBlockPan
 
     private void openDialogues()
     {
-        GuiMappetUtils.openPicker(ContentType.DIALOGUE, this.block.id, (name) -> this.block.id = name);
+        GuiMappetUtils.openPicker(ContentTypes.DIALOGUE, this.block.id, (name) -> this.block.id = name);
     }
 }

@@ -3,14 +3,12 @@ package mchorse.mappet.client.gui.utils.text.utils;
 import java.util.regex.Pattern;
 
 public enum StringGroup {
-    SPACE("[\\s]"), ALPHANUMERIC("[\\w\\d]"), OTHER("[^\\w\\d\\s]");
+    SPACE("[\\s]"), ALPHANUMERIC("[\\p{L}\\d_]"), OTHER("[^\\p{L}\\d\\s_]");
 
     private final Pattern regex;
 
     public static StringGroup get(String character) {
-        for (StringGroup group : values()) {
-            if (group.match(character)) return group;
-        }
+        for (StringGroup group : values()) if (group.match(character)) return group;
         return OTHER;
     }
 

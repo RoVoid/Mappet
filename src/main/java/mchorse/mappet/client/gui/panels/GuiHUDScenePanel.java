@@ -3,7 +3,8 @@ package mchorse.mappet.client.gui.panels;
 import mchorse.mappet.api.huds.HUDMorph;
 import mchorse.mappet.api.huds.HUDScene;
 import mchorse.mappet.api.huds.HUDStage;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
+import mchorse.mappet.api.utils.content.IContentType;
 import mchorse.mappet.client.RenderingHandler;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.huds.GuiHUDMorphTransformations;
@@ -48,7 +49,7 @@ public class GuiHUDScenePanel extends GuiMappetDashboardPanel<HUDScene>
     {
         super(mc, dashboard);
 
-        this.list.setFileIcon(Icons.POSE);
+        this.folderList.setFileIcon(Icons.POSE);
 
         this.morphs = new GuiIconElement(mc, Icons.MORE, (b) -> this.openMorphs());
         this.morph = new GuiNestedEdit(mc, this::openMorphMenu);
@@ -105,9 +106,9 @@ public class GuiHUDScenePanel extends GuiMappetDashboardPanel<HUDScene>
     }
 
     @Override
-    public ContentType getType()
+    public IContentType<HUDScene> getType()
     {
-        return ContentType.HUDS;
+        return ContentTypes.HUD;
     }
 
     @Override

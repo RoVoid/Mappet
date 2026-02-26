@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.npc;
 
 import mchorse.mappet.api.npcs.NpcState;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.npc.utils.GuiNpcDrops;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
@@ -46,7 +46,7 @@ public class GuiNpcGeneralPanel extends GuiNpcPanel
 
     private void openFactions()
     {
-        GuiMappetUtils.openPicker(ContentType.FACTION, this.state.faction.get(), (name) -> this.state.faction.set(name));
+        GuiMappetUtils.openPicker(ContentTypes.FACTION, this.state.faction.get(), (name) -> this.state.faction.set(name));
     }
 
     private void openMorphMenu(boolean editing)

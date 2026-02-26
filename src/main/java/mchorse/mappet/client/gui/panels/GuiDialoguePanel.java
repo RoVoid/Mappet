@@ -3,7 +3,8 @@ package mchorse.mappet.client.gui.panels;
 import mchorse.mappet.CommonProxy;
 import mchorse.mappet.api.dialogues.Dialogue;
 import mchorse.mappet.api.events.nodes.EventBaseNode;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
+import mchorse.mappet.api.utils.content.IContentType;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.nodes.GuiEventBaseNodePanel;
 import mchorse.mappet.client.gui.nodes.GuiEventNodeGraph;
@@ -33,7 +34,7 @@ public class GuiDialoguePanel extends GuiMappetRunPanel<Dialogue>
     {
         super(mc, dashboard);
 
-        this.list.setFileIcon(Icons.BUBBLE);
+        this.folderList.setFileIcon(Icons.BUBBLE);
 
         this.graph = new GuiEventNodeGraph(mc, CommonProxy.getDialogues(), this::pickNode);
         this.graph.notifyAboutMain().flex().relative(this.editor).wh(1F, 1F);
@@ -44,7 +45,7 @@ public class GuiDialoguePanel extends GuiMappetRunPanel<Dialogue>
         this.closable = new GuiToggleElement(mc, IKey.lang("mappet.gui.nodes.dialogue.closable"), (b) -> this.data.closable = b.isToggled());
         this.onClose = new GuiTriggerElement(mc);
 
-        this.search.flex().hTo(this.bottom.area, -5);
+        this.folderSearch.flex().hTo(this.bottom.area, -5);
 
         this.editor.add(this.graph);
         this.bottom.add(Elements.label(IKey.str("On close trigger")), this.onClose, this.closable);
@@ -100,9 +101,9 @@ public class GuiDialoguePanel extends GuiMappetRunPanel<Dialogue>
     }
 
     @Override
-    public ContentType getType()
+    public IContentType<Dialogue> getType()
     {
-        return ContentType.DIALOGUE;
+        return ContentTypes.DIALOGUE;
     }
 
     @Override

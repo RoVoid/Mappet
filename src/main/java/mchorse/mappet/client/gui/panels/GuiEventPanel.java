@@ -3,7 +3,8 @@ package mchorse.mappet.client.gui.panels;
 import mchorse.mappet.CommonProxy;
 import mchorse.mappet.api.dialogues.nodes.*;
 import mchorse.mappet.api.events.nodes.*;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
+import mchorse.mappet.api.utils.content.IContentType;
 import mchorse.mappet.api.utils.nodes.NodeSystem;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.nodes.GuiEventBaseNodePanel;
@@ -51,7 +52,7 @@ public class GuiEventPanel extends GuiMappetRunPanel<NodeSystem<EventBaseNode>> 
     public GuiEventPanel(Minecraft mc, GuiMappetDashboard dashboard) {
         super(mc, dashboard);
 
-        this.list.setFileIcon(Icons.FILE);
+        this.folderList.setFileIcon(Icons.FILE);
 
         this.graph = new GuiEventNodeGraph(mc, CommonProxy.getEvents(), this::pickNode);
         this.graph.notifyAboutMain().flex().relative(this.editor).wh(1F, 1F);
@@ -100,8 +101,8 @@ public class GuiEventPanel extends GuiMappetRunPanel<NodeSystem<EventBaseNode>> 
     }
 
     @Override
-    public ContentType getType() {
-        return ContentType.EVENT;
+    public IContentType<NodeSystem<EventBaseNode>> getType() {
+        return ContentTypes.EVENT;
     }
 
     @Override

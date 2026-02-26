@@ -2,7 +2,8 @@ package mchorse.mappet.client.gui.scripts;
 
 import mchorse.mappet.ClientProxy;
 import mchorse.mappet.api.scripts.Script;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
+import mchorse.mappet.api.utils.content.IContentType;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
 import mchorse.mappet.client.gui.utils.overlays.GuiContentNamesOverlayPanel;
 import mchorse.mappet.client.gui.utils.overlays.GuiOverlay;
@@ -50,7 +51,7 @@ public class GuiLibrariesOverlayPanel extends GuiStringOverlayPanel
 
     private void addLibrary()
     {
-        ContentType type = ContentType.SCRIPTS;
+        IContentType<Script> type = ContentTypes.SCRIPT;
 
         ClientProxy.requestNames(type, (names) ->
         {
@@ -74,7 +75,7 @@ public class GuiLibrariesOverlayPanel extends GuiStringOverlayPanel
 
             names.remove(this.main);
 
-            GuiContentNamesOverlayPanel overlay = new GuiContentNamesOverlayPanel(Minecraft.getMinecraft(), type.getPickLabel(), type, names, null)
+            GuiContentNamesOverlayPanel overlay = new GuiContentNamesOverlayPanel(Minecraft.getMinecraft(), type.label(), type, names, null)
             {
                 @Override
                 public void onClose()

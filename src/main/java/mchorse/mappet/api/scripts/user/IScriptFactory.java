@@ -1,6 +1,7 @@
 package mchorse.mappet.api.scripts.user;
 
 import mchorse.mappet.api.scripts.code.ScriptResourcePack;
+import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
 import mchorse.mappet.api.scripts.user.blocks.IScriptBlockState;
 import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer;
@@ -679,4 +680,8 @@ public interface IScriptFactory {
     String decrypt(String text, String secretKey);
 
     ScriptResourcePack pack(String name);
+
+    String translate(String locale, String key, Object... args);
+
+    String translate(ScriptPlayer player, String key, Object... args);
 }

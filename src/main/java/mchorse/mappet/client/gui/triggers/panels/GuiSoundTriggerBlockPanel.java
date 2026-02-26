@@ -1,8 +1,9 @@
 package mchorse.mappet.client.gui.triggers.panels;
 
 import mchorse.mappet.api.triggers.blocks.SoundTriggerBlock;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
 import mchorse.mappet.api.utils.TargetMode;
+import mchorse.mappet.api.utils.content.IContentTypeBase;
 import mchorse.mappet.client.gui.triggers.GuiTriggerOverlayPanel;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
 import mchorse.mappet.client.gui.utils.overlays.GuiOverlay;
@@ -45,7 +46,7 @@ public class GuiSoundTriggerBlockPanel extends GuiStringTriggerBlockPanel<SoundT
     }
 
     @Override
-    protected ContentType getType()
+    protected IContentTypeBase getType()
     {
         return null;
     }

@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.utils;
 
 import mchorse.mappet.ClientProxy;
-import mchorse.mappet.api.utils.IContentType;
+import mchorse.mappet.api.utils.content.IContentTypeBase;
 import mchorse.mappet.api.utils.TargetMode;
 import mchorse.mappet.client.gui.utils.overlays.GuiContentNamesOverlayPanel;
 import mchorse.mappet.client.gui.utils.overlays.GuiOverlay;
@@ -46,11 +46,11 @@ public class GuiMappetUtils
         return text;
     }
 
-    public static void openPicker(IContentType type, String value, Consumer<String> callback)
+    public static void openPicker(IContentTypeBase type, String value, Consumer<String> callback)
     {
         ClientProxy.requestNames(type, (names) ->
         {
-            GuiContentNamesOverlayPanel overlay = new GuiContentNamesOverlayPanel(Minecraft.getMinecraft(), type.getPickLabel(), type, names, callback);
+            GuiContentNamesOverlayPanel overlay = new GuiContentNamesOverlayPanel(Minecraft.getMinecraft(), type.label(), type, names, callback);
 
             overlay.set(value);
             GuiOverlay.addOverlay(GuiBase.getCurrent(), overlay, 0.5F, 0.7F);

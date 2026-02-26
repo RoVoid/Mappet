@@ -18,7 +18,7 @@ public class ServerHandlerContentFolder extends ServerMessageHandler<PacketConte
     @Override
     public void run(EntityPlayerMP player, PacketContentFolder message)
     {
-        IManager manager = message.type.getManager();
+        IManager manager = message.type.manager();
         Path folder = manager.getFolder().toPath();
 
         if (message.rename != null && !message.path.isEmpty())
@@ -45,7 +45,7 @@ public class ServerHandlerContentFolder extends ServerMessageHandler<PacketConte
         }
 
         /* Synchronize names to players */
-        List<String> names = new ArrayList<String>(message.type.getManager().getKeys());
+        List<String> names = new ArrayList<String>(message.type.manager().getKeys());
 
         for (EntityPlayerMP otherPlayer : player.getServer().getPlayerList().getPlayers())
         {

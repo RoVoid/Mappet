@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.conditions.blocks;
 
 import mchorse.mappet.api.conditions.blocks.FactionConditionBlock;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
 import mchorse.mappet.api.utils.TargetMode;
 import mchorse.mappet.client.gui.conditions.GuiConditionOverlayPanel;
 import mchorse.mappet.client.gui.utils.GuiComparisonElement;
@@ -44,7 +44,7 @@ public class GuiFactionConditionBlockPanel extends GuiAbstractConditionBlockPane
 
     private void openFactions()
     {
-        GuiMappetUtils.openPicker(ContentType.FACTION, this.block.id, (name) -> this.block.id = name);
+        GuiMappetUtils.openPicker(ContentTypes.FACTION, this.block.id, (name) -> this.block.id = name);
     }
 
     private void toggleFaction(GuiCirculateElement b)

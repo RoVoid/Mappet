@@ -21,11 +21,11 @@ public class ClientHandlerContentData extends ClientMessageHandler<PacketContent
         if (screen instanceof GuiMappetDashboard)
         {
             GuiMappetDashboard dashboard = (GuiMappetDashboard) screen;
-            GuiMappetDashboardPanel panel = message.type.get(dashboard);
+            GuiMappetDashboardPanel panel = message.type.panel(dashboard);
 
             if (panel != null)
             {
-                panel.fill(message.type.getManager().create(message.name, message.data), message.allowed);
+                panel.fill(message.type.manager().create(message.name, message.data), message.allowed);
             }
         }
     }

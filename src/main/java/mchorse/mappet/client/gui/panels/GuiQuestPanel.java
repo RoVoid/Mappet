@@ -1,7 +1,8 @@
 package mchorse.mappet.client.gui.panels;
 
 import mchorse.mappet.api.quests.Quest;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
+import mchorse.mappet.api.utils.content.IContentType;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.quests.GuiObjectives;
 import mchorse.mappet.client.gui.quests.GuiRewards;
@@ -41,7 +42,7 @@ public class GuiQuestPanel extends GuiMappetRunPanel<Quest>
     {
         super(mc, dashboard);
 
-        this.list.setFileIcon(Icons.EXCLAMATION);
+        this.folderList.setFileIcon(Icons.EXCLAMATION);
 
         this.title = new GuiTextElement(mc, 1000, (text) -> this.data.title = text);
         this.story = new GuiMultiTextElement<TextLine>(mc, (text) -> this.data.story = text);
@@ -94,9 +95,9 @@ public class GuiQuestPanel extends GuiMappetRunPanel<Quest>
     }
 
     @Override
-    public ContentType getType()
+    public IContentType<Quest> getType()
     {
-        return ContentType.QUEST;
+        return ContentTypes.QUEST;
     }
 
     @Override

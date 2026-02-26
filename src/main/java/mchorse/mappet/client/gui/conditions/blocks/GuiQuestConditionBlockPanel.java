@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.conditions.blocks;
 
 import mchorse.mappet.api.conditions.blocks.QuestConditionBlock;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
 import mchorse.mappet.api.utils.TargetMode;
 import mchorse.mappet.client.gui.conditions.GuiConditionOverlayPanel;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
@@ -42,7 +42,7 @@ public class GuiQuestConditionBlockPanel extends GuiAbstractConditionBlockPanel<
 
     private void openQuests()
     {
-        GuiMappetUtils.openPicker(ContentType.QUEST, this.block.id, (name) -> this.block.id = name);
+        GuiMappetUtils.openPicker(ContentTypes.QUEST, this.block.id, (name) -> this.block.id = name);
     }
 
     private void toggleQuest(GuiCirculateElement b)

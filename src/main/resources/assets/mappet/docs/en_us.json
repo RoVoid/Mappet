@@ -5032,6 +5032,46 @@
             "type": "mchorse.mappet.api.scripts.code.ScriptResourcePack"
           }
         }
+      ],
+      "translate": [
+        {
+          "parameters": [
+            {
+              "name": "locale",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "key",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "args",
+              "type": "java.lang.Object"
+            }
+          ],
+          "return": {
+            "type": "java.lang.String"
+          }
+        },
+        {
+          "parameters": [
+            {
+              "name": "player",
+              "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
+            },
+            {
+              "name": "key",
+              "type": "java.lang.String"
+            },
+            {
+              "name": "args",
+              "type": "java.lang.Object"
+            }
+          ],
+          "return": {
+            "type": "java.lang.String"
+          }
+        }
       ]
     }
   },

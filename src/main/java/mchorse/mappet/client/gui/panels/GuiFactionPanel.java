@@ -2,7 +2,8 @@ package mchorse.mappet.client.gui.panels;
 
 import mchorse.mappet.api.factions.Faction;
 import mchorse.mappet.api.factions.FactionAttitude;
-import mchorse.mappet.api.utils.ContentType;
+import mchorse.mappet.api.utils.content.ContentTypes;
+import mchorse.mappet.api.utils.content.IContentType;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.conditions.GuiCheckerElement;
 import mchorse.mappet.client.gui.factions.GuiFactionRelationOverlayPanel;
@@ -69,7 +70,7 @@ public class GuiFactionPanel extends GuiMappetDashboardPanel<Faction>
     {
         super(mc, dashboard);
 
-        this.list.setFileIcon(Icons.BOOKMARK);
+        this.folderList.setFileIcon(Icons.BOOKMARK);
 
         this.title = new GuiTextElement(mc, 1000, (t) -> this.data.title = t);
         this.visible = new GuiCheckerElement(mc);
@@ -101,7 +102,7 @@ public class GuiFactionPanel extends GuiMappetDashboardPanel<Faction>
         GuiLabel label = Elements.label(IKey.lang("mappet.gui.factions.relations.label")).background();
         GuiIconElement add = new GuiIconElement(mc, Icons.ADD, (button) ->
         {
-            List<String> keys = new ArrayList<String>(this.search.list.getList());
+            List<String> keys = new ArrayList<String>(this.folderSearch.list.getList());
 
             keys.removeIf((key) -> this.data.relations.containsKey(key));
             keys.remove(this.data.getId());
@@ -142,9 +143,9 @@ public class GuiFactionPanel extends GuiMappetDashboardPanel<Faction>
     }
 
     @Override
-    public ContentType getType()
+    public IContentType<Faction> getType()
     {
-        return ContentType.FACTION;
+        return ContentTypes.FACTION;
     }
 
     @Override

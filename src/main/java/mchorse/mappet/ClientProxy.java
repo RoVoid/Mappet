@@ -1,6 +1,6 @@
 package mchorse.mappet;
 
-import mchorse.mappet.api.utils.IContentType;
+import mchorse.mappet.api.utils.content.IContentTypeBase;
 import mchorse.mappet.client.KeyboardHandler;
 import mchorse.mappet.client.RenderingHandler;
 import mchorse.mappet.client.ResourceReloadHandler;
@@ -46,7 +46,7 @@ public class ClientProxy extends CommonProxy {
         Minecraft.getMinecraft().addScheduledTask(task);
     }
 
-    public static void requestNames(IContentType type, Consumer<List<String>> consumer) {
+    public static void requestNames(IContentTypeBase type, Consumer<List<String>> consumer) {
         consumers.put(requestId, consumer);
         Dispatcher.sendToServer(new PacketContentRequestNames(type, requestId));
 

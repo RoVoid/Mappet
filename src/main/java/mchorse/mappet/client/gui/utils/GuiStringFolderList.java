@@ -134,6 +134,10 @@ public class GuiStringFolderList extends GuiStringListElement {
         setCurrentScroll(i < 0 ? path : path.substring(i + 1));
     }
 
+    public void clearCurrentFile(){
+        setCurrent("");
+    }
+
     private static String parent(String path) {
         int i = path.lastIndexOf('/');
         return i < 0 ? "" : path.substring(0, i);
