@@ -2,6 +2,7 @@ package mchorse.mappet.client.gui.panels;
 
 import mchorse.mappet.api.huds.HUDMorph;
 import mchorse.mappet.api.huds.HUDScene;
+import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.ui.UI;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.utils.content.ContentTypes;
@@ -34,7 +35,7 @@ public class GuiUIConstructorPanel extends GuiMappetDashboardPanel<HUDScene>
     public GuiUIConstructorPanel(Minecraft mc, GuiMappetDashboard dashboard)
     {
         super(mc, dashboard);
-
+        MappetUIBuilder d;
         this.folderList.setFileIcon(Icons.MAZE);
 
         this.morphs = new GuiIconElement(mc, Icons.MORE, (b) -> this.openMorphs());

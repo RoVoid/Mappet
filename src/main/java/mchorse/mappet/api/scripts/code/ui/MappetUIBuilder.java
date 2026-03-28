@@ -7,6 +7,8 @@ import mchorse.mappet.api.ui.UI;
 import mchorse.mappet.api.ui.utils.LayoutType;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 
 public class MappetUIBuilder implements IMappetUIBuilder {

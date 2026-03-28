@@ -22,7 +22,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class GuiTranslationPanel extends GuiMappetDashboardPanel<Translation> {
@@ -61,7 +60,7 @@ public class GuiTranslationPanel extends GuiMappetDashboardPanel<Translation> {
             locale = TranslationManager.localesCodes.stream().filter(l -> !data.entries.containsKey(l)).findFirst().orElse(null);
         if (locale == null) return; // Всё-таки языков конечное число
 
-        inputs.add(new GuiInputElement(mc, data, locale).setRemoveCallback((s) -> add.setVisible(true)));
+        inputs.add(new GuiInputElement(mc, data, locale).setRemoveCallback(() -> add.setVisible(true)));
 
         add.setVisible(data.entries.size() < TranslationManager.localesCodes.size());
         editor.resize();
@@ -87,7 +86,8 @@ public class GuiTranslationPanel extends GuiMappetDashboardPanel<Translation> {
 
         if (data == null) return;
 
-        for (String locale : data.entries.keySet()) inputs.add(new GuiInputElement(mc, data, locale));
+        for (String locale : data.entries.keySet())
+            inputs.add(new GuiInputElement(mc, data, locale).setRemoveCallback(() -> add.setVisible(true)));
         inputs.getChildren().sort(Comparator.comparing(a -> ((GuiInputElement) a).getLocale()));
 
         editor.resize();
@@ -102,7 +102,7 @@ public class GuiTranslationPanel extends GuiMappetDashboardPanel<Translation> {
 
         String id;
 
-        public Consumer<String> removeCallback = null;
+        public Runnable removeCallback = null;
 
         public GuiInputElement(Minecraft mc, Translation data, String locale) {
             super(mc);
@@ -127,7 +127,7 @@ public class GuiTranslationPanel extends GuiMappetDashboardPanel<Translation> {
             add(remove, this.locale, value);
         }
 
-        public GuiInputElement setRemoveCallback(Consumer<String> callback) {
+        public GuiInputElement setRemoveCallback(Runnable callback) {
             removeCallback = callback;
             return this;
         }
@@ -164,7 +164,7 @@ public class GuiTranslationPanel extends GuiMappetDashboardPanel<Translation> {
         private void removeLocale(GuiIconElement element) {
             data.entries.remove(id);
 
-            if (removeCallback != null) removeCallback.accept(id);
+            if (removeCallback != null) removeCallback.run();
 
             GuiElement parent = getParentContainer();
             removeFromParent();

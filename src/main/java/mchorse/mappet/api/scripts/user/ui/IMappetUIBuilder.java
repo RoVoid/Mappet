@@ -23,6 +23,8 @@ import java.util.List;
  */
 public interface IMappetUIBuilder
 {
+    UIComponent get(String id);
+
     /**
      * Get current UI component on to which it adds children components.
      *

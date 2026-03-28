@@ -10,6 +10,7 @@ import mchorse.mappet.api.quests.Quest;
 import mchorse.mappet.api.quests.chains.QuestChain;
 import mchorse.mappet.api.scripts.Script;
 import mchorse.mappet.api.translations.Translation;
+import mchorse.mappet.api.ui.UI;
 import mchorse.mappet.api.utils.manager.IManager;
 import mchorse.mappet.api.utils.nodes.NodeSystem;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
@@ -152,6 +153,22 @@ public class ContentTypes // Registry
         @Override
         @SideOnly(Side.CLIENT)
         public IKey label() {return IKey.lang("mappet.gui.overlays.hud");}
+    };
+
+    public static final IContentType<UI> UI = new IContentType<UI>() {
+        @Override
+        public String name() {return "UI";}
+
+        @Override
+        public IManager<UI> manager() {return Mappet.ui;}
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public GuiMappetDashboardPanel<UI> panel(GuiMappetDashboard dashboard) {return dashboard.ui;}
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public IKey label() {return IKey.lang("mappet.gui.overlays.ui");}
     };
 
     public static final IContentType<Translation> TRANSLATION = new IContentType<Translation>() {

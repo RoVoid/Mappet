@@ -93,21 +93,21 @@ public class GuiMappetDashboard extends GuiAbstractDashboard {
         snippets = new GuiSnippetsPanel(mc, this);
 
         panels.registerPanel(settings, IKey.lang("mappet.gui.panels.settings"), Icons.GEAR);
-        panels.registerPanel(quest, IKey.lang("mappet.gui.panels.quests"), Icons.EXCLAMATION);
-        panels.registerPanel(event, IKey.lang("mappet.gui.panels.events"), Icons.FILE);
-        panels.registerPanel(dialogue, IKey.lang("mappet.gui.panels.dialogues"), Icons.BUBBLE);
-        panels.registerPanel(region, IKey.lang("mappet.gui.panels.regions"), Icons.FULLSCREEN);
-        panels.registerPanel(conditionModel, IKey.lang("mappet.gui.panels.condition_models"), Icons.BLOCK);
-        panels.registerPanel(npc, IKey.lang("mappet.gui.panels.npcs"), Icons.PROCESSOR);
-        panels.registerPanel(faction, IKey.lang("mappet.gui.panels.factions"), Icons.BOOKMARK);
-        panels.registerPanel(chain, IKey.lang("mappet.gui.panels.chains"), Icons.FOLDER);
-        panels.registerPanel(script, IKey.lang("mappet.gui.panels.scripts"), MMIcons.PROPERTIES);
-        panels.registerPanel(hud, IKey.lang("mappet.gui.panels.huds"), Icons.POSE);
-        panels.registerPanel(ui, IKey.lang("mappet.gui.panels.ui"), Icons.POSE);
-        panels.registerPanel(translation, IKey.lang("mappet.gui.panels.ui"), MPIcons.get(MPIcons.LETTER_A));
+        panels.registerPanel(quest, IKey.lang(quest.getTitle()), Icons.EXCLAMATION);
+        panels.registerPanel(event, IKey.lang(event.getTitle()), Icons.FILE);
+        panels.registerPanel(dialogue, IKey.lang(dialogue.getTitle()), Icons.BUBBLE);
+        panels.registerPanel(region, IKey.lang(region.getTitle()), Icons.FULLSCREEN);
+        panels.registerPanel(conditionModel, IKey.lang(conditionModel.getTitle()), Icons.BLOCK);
+        panels.registerPanel(npc, IKey.lang(npc.getTitle()), Icons.PROCESSOR);
+        panels.registerPanel(faction, IKey.lang(faction.getTitle()), Icons.BOOKMARK);
+        panels.registerPanel(chain, IKey.lang(chain.getTitle()), Icons.FOLDER);
+        panels.registerPanel(script, IKey.lang(script.getTitle()), MMIcons.PROPERTIES);
+        panels.registerPanel(hud, IKey.lang(hud.getTitle()), Icons.POSE);
+        panels.registerPanel(ui, IKey.lang(ui.getTitle()), Icons.POSE);
+        panels.registerPanel(translation, IKey.lang(translation.getTitle()), MPIcons.get(MPIcons.LETTER_A));
         panels.registerPanel(logs, IKey.lang("mappet.gui.panels.logs"), MPIcons.get(MPIcons.CONSOLE));
         panels.registerPanel(snippets, IKey.lang("mappet.gui.panels.snippets"), MPIcons.get(MPIcons.GLASSES));
-
+        
         panels.setPanel(settings);
     }
 
