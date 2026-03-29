@@ -8648,6 +8648,19 @@
     "name": "IMappetUIBuilder",
     "docs": "This is user interface builder interface. You can create GUIs with this thing.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI();\n\n        // Build a UI using ui...\n\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e",
     "methods": {
+      "get": [
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
+          }
+        }
+      ],
       "getCurrent": [
         {
           "return": {
@@ -15574,6 +15587,22 @@
       "mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder"
     ],
     "methods": {
+      "get": [
+        {
+          "parameters": [
+            {
+              "name": "id",
+              "type": "java.lang.String"
+            }
+          ],
+          "return": {
+            "type": "mchorse.mappet.api.scripts.code.ui.UIComponent"
+          },
+          "annotations": [
+            "java.lang.Override"
+          ]
+        }
+      ],
       "getCurrent": [
         {
           "return": {

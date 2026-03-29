@@ -155,21 +155,21 @@ public class ContentTypes // Registry
         public IKey label() {return IKey.lang("mappet.gui.overlays.hud");}
     };
 
-    public static final IContentType<UI> UI = new IContentType<UI>() {
-        @Override
-        public String name() {return "UI";}
-
-        @Override
-        public IManager<UI> manager() {return Mappet.ui;}
-
-        @Override
-        @SideOnly(Side.CLIENT)
-        public GuiMappetDashboardPanel<UI> panel(GuiMappetDashboard dashboard) {return dashboard.ui;}
-
-        @Override
-        @SideOnly(Side.CLIENT)
-        public IKey label() {return IKey.lang("mappet.gui.overlays.ui");}
-    };
+//    public static final IContentType<UI> UI = new IContentType<UI>() {
+//        @Override
+//        public String name() {return "UI";}
+//
+//        @Override
+//        public IManager<UI> manager() {return Mappet.ui;}
+//
+//        @Override
+//        @SideOnly(Side.CLIENT)
+//        public GuiMappetDashboardPanel<UI> panel(GuiMappetDashboard dashboard) {return dashboard.ui;}
+//
+//        @Override
+//        @SideOnly(Side.CLIENT)
+//        public IKey label() {return IKey.lang("mappet.gui.overlays.ui");}
+//    };
 
     public static final IContentType<Translation> TRANSLATION = new IContentType<Translation>() {
         @Override

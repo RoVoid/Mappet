@@ -51,6 +51,7 @@ public class UIContext {
 
     /* Data sync code */
 
+    // TODO: Перенести в UI + Map
     public UIComponent getById(String id) {
         return getByIdRecursive(id, ui.root);
     }

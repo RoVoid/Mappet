@@ -28,6 +28,23 @@ public class MappetUIBuilder implements IMappetUIBuilder {
         current = component;
     }
 
+    // TODO: Перенести в UI + Map
+    @Override
+    public UIComponent get(String id) {
+        return getByIdRecursive(id, current);
+    }
+
+    private UIComponent getByIdRecursive(String id, UIComponent component) {
+        for (UIComponent child : component.getChildComponents()) {
+            if (child.id.equals(id)) return child;
+
+            UIComponent result = getByIdRecursive(id, child);
+            if (result != null) return result;
+        }
+
+        return null;
+    }
+
     @Override
     public UIComponent getCurrent() {
         return current;
