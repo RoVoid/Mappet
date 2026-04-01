@@ -49,7 +49,7 @@ public class GuiHUDScenePanel extends GuiMappetDashboardPanel<HUDScene>
     {
         super(mc, dashboard);
 
-        this.folderList.setFileIcon(Icons.POSE);
+        folderList.setFileIcon(Icons.POSE);
 
         this.morphs = new GuiIconElement(mc, Icons.MORE, (b) -> this.openMorphs());
         this.morph = new GuiNestedEdit(mc, this::openMorphMenu);
@@ -82,7 +82,6 @@ public class GuiHUDScenePanel extends GuiMappetDashboardPanel<HUDScene>
     private void openMorphs()
     {
         GuiHUDMorphsOverlayPanel overlay = new GuiHUDMorphsOverlayPanel(this.mc, this.data, this::pickMorph);
-
         GuiOverlay.addOverlay(GuiBase.getCurrent(), overlay.set(this.current), 0.4F, 0.6F);
     }
 
@@ -94,7 +93,6 @@ public class GuiHUDScenePanel extends GuiMappetDashboardPanel<HUDScene>
     private void setMorph(AbstractMorph morph)
     {
         morph = MorphUtils.copy(morph);
-
         this.current.morph.setDirect(morph);
         this.morph.setMorph(morph);
     }
@@ -105,10 +103,14 @@ public class GuiHUDScenePanel extends GuiMappetDashboardPanel<HUDScene>
         return false;
     }
 
+    /**
+     * ИСПРАВЛЕНО: Теперь возвращает IContentType из реестра ContentTypes.
+     * Мы используем приведение к IContentType, чтобы избежать конфликта типов (clashes).
+     */
     @Override
-    public IContentType<HUDScene> getType()
+    public IContentType getType()
     {
-        return ContentTypes.HUD;
+        return (IContentType) ContentTypes.HUD;
     }
 
     @Override
@@ -118,10 +120,24 @@ public class GuiHUDScenePanel extends GuiMappetDashboardPanel<HUDScene>
     }
 
     @Override
+    protected void preSave()
+    {
+        if (this.data != null)
+        {
+            for (HUDMorph morph : this.data.morphs)
+            {
+                if (morph.ortho)
+                {
+                    morph.captureResolution();
+                }
+            }
+        }
+    }
+
+    @Override
     public void fill(HUDScene data, boolean allowed)
     {
         super.fill(data, allowed);
-
         this.editor.setVisible(data != null);
 
         if (data != null)
@@ -140,7 +156,6 @@ public class GuiHUDScenePanel extends GuiMappetDashboardPanel<HUDScene>
     private void pickMorph(HUDMorph current)
     {
         this.current = current;
-
         this.column.setVisible(current != null);
         this.transformations.setVisible(current != null);
 
@@ -159,7 +174,6 @@ public class GuiHUDScenePanel extends GuiMappetDashboardPanel<HUDScene>
     public void appear()
     {
         super.appear();
-
         RenderingHandler.currentStage = this.stage;
     }
 
@@ -167,7 +181,6 @@ public class GuiHUDScenePanel extends GuiMappetDashboardPanel<HUDScene>
     public void disappear()
     {
         super.disappear();
-
         RenderingHandler.currentStage = null;
     }
 
@@ -178,7 +191,6 @@ public class GuiHUDScenePanel extends GuiMappetDashboardPanel<HUDScene>
         {
             GuiDraw.drawTextBackground(this.font, this.current.morph.get().getDisplayName(), this.morphs.area.ex() + 3, this.morphs.area.my() - 4, 0xffffff, ColorUtils.HALF_BLACK, 2);
         }
-
         super.draw(context);
     }
 }

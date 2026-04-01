@@ -25,6 +25,12 @@ public class HUDMorph implements INBTSerializable<NBTTagCompound>
     public Vector3f scale = new Vector3f(1, 1, 1);
     public Vector3f rotate = new Vector3f();
 
+    /**
+     * Разрешение экрана при котором было сохранено это положение.
+     */
+    public int savedW;
+    public int savedH;
+
     @SideOnly(Side.CLIENT)
     private DummyEntity entity;
 
@@ -66,8 +72,17 @@ public class HUDMorph implements INBTSerializable<NBTTagCompound>
 
         if (this.ortho)
         {
-            tx = resolution.getScaledWidth() * this.orthoX + tx;
-            ty = resolution.getScaledHeight() * this.orthoY + ty;
+            int curW = resolution.getScaledWidth();
+            int curH = resolution.getScaledHeight();
+
+            if (this.savedW > 0 && this.savedH > 0)
+            {
+                tx = tx * curW / (float) this.savedW;
+                ty = ty * curH / (float) this.savedH;
+            }
+
+            tx = curW * this.orthoX + tx;
+            ty = curH * this.orthoY + ty;
         }
 
         GlStateManager.pushMatrix();
@@ -103,6 +118,17 @@ public class HUDMorph implements INBTSerializable<NBTTagCompound>
         return this.expire > 0 && this.tick >= this.expire;
     }
 
+    /**
+     * Вызывать перед сохранением в редакторе — запоминает текущее разрешение.
+     */
+    @SideOnly(Side.CLIENT)
+    public void captureResolution()
+    {
+        ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
+        this.savedW = res.getScaledWidth();
+        this.savedH = res.getScaledHeight();
+    }
+
     @Override
     public NBTTagCompound serializeNBT()
     {
@@ -118,6 +144,9 @@ public class HUDMorph implements INBTSerializable<NBTTagCompound>
         tag.setFloat("OrthoX", this.orthoX);
         tag.setFloat("OrthoY", this.orthoY);
         tag.setInteger("Expire", this.expire);
+
+        if (this.savedW > 0) tag.setInteger("SavedW", this.savedW);
+        if (this.savedH > 0) tag.setInteger("SavedH", this.savedH);
 
         if (this.translate.x != 0 || this.translate.y != 0 || this.translate.z != 0)
         {
@@ -149,6 +178,8 @@ public class HUDMorph implements INBTSerializable<NBTTagCompound>
         this.orthoX = tag.getFloat("OrthoX");
         this.orthoY = tag.getFloat("OrthoY");
         this.expire = tag.getInteger("Expire");
+        this.savedW = tag.hasKey("SavedW") ? tag.getInteger("SavedW") : 0;
+        this.savedH = tag.hasKey("SavedH") ? tag.getInteger("SavedH") : 0;
 
         NBTUtils.readFloatList(tag.getTagList("Translate", 5), this.translate);
         NBTUtils.readFloatList(tag.getTagList("Scale", 5), this.scale);
@@ -162,6 +193,8 @@ public class HUDMorph implements INBTSerializable<NBTTagCompound>
         this.orthoX = other.orthoX;
         this.orthoY = other.orthoY;
         this.expire = other.expire;
+        this.savedW = other.savedW;
+        this.savedH = other.savedH;
         this.translate.set(other.translate);
         this.scale.set(other.scale);
         this.rotate.set(other.rotate);

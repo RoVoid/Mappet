@@ -24,6 +24,8 @@ public class HUDStage
     private List<HUDMorph> renderPerpsective = new ArrayList<HUDMorph>();
     private boolean ignoreF1;
 
+    private static final float FIXED_ASPECT = 16.0F / 9.0F;
+
     public HUDStage(boolean ignoreF1)
     {
         this.ignoreF1 = ignoreF1;
@@ -52,9 +54,6 @@ public class HUDStage
         float lastX = OpenGlHelper.lastBrightnessX;
         float lastY = OpenGlHelper.lastBrightnessY;
 
-        /* Changing projection mode to perspective. In order for this to
-         * work, depth buffer must also be cleared. Thanks to Gegy for
-         * pointing this out (depth buffer)! */
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
 
         float rx = (float) Math.ceil(mc.displayWidth / (double) w);
@@ -65,17 +64,16 @@ public class HUDStage
         int vw = (int) (w * rx);
         int vh = (int) (h * ry);
 
-        float aspect = (float) vw / (float) vh;
+        float aspect = FIXED_ASPECT;
+
         float lastFov = Float.MIN_VALUE;
 
         GlStateManager.viewport(vx, vy, vw, vh);
 
-        /* Default camera transformations */
         GlStateManager.pushMatrix();
         GlStateManager.loadIdentity();
         GlStateManager.translate(0, -1, -2);
 
-        /* Drawing begins */
         for (HUDScene scene : this.scenes.values())
         {
             if (mc.gameSettings.hideGUI && scene.hide && !this.ignoreF1)
@@ -152,7 +150,6 @@ public class HUDStage
 
     private void setupOrtho(Minecraft mc, int w, int h, boolean flip)
     {
-        /* Return back to orthographic projection */
         GlStateManager.viewport(0, 0, mc.displayWidth, mc.displayHeight);
         GlStateManager.matrixMode(GL11.GL_PROJECTION);
         GlStateManager.loadIdentity();
@@ -171,7 +168,6 @@ public class HUDStage
 
     private void enableGLStates()
     {
-        /* Enable rendering states */
         RenderHelper.enableStandardItemLighting();
         GlStateManager.enableAlpha();
         GlStateManager.enableRescaleNormal();
@@ -182,7 +178,6 @@ public class HUDStage
 
     private void disableGLStates()
     {
-        /* Disable rendering states */
         GlStateManager.enableCull();
         GlStateManager.disableDepth();
         GlStateManager.disableRescaleNormal();
