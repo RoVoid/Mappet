@@ -7,6 +7,7 @@ import mchorse.mappet.api.utils.content.ContentTypes;
 import mchorse.mappet.api.utils.content.IContentType;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.scripts.*;
+import mchorse.mappet.client.gui.scripts.codeEditor.SearchPanel;
 import mchorse.mappet.client.gui.scripts.style.SyntaxStyle;
 import mchorse.mappet.client.gui.scripts.utils.GuiItemStackOverlayPanel;
 import mchorse.mappet.client.gui.scripts.utils.GuiMorphOverlayPanel;
@@ -61,6 +62,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
     public GuiIconElement run;
     public GuiIconElement beautifier;
     public GuiCodeEditor code;
+    public SearchPanel searchPanel;
     public GuiRepl repl;
     public GuiToggleElement unique;
     public GuiToggleElement globalLibrary;
@@ -93,6 +95,10 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         code = new GuiCodeEditor(mc, null);
         code.withHints();
         code.background().context(() -> createScriptContextMenu(this.mc, code));
+        searchPanel = new SearchPanel(mc, code);
+        searchPanel.flex().relative(editor).x(0).y(1F, 0).w(1F).h(72).anchorY(1F);
+        searchPanel.setVisible(false);
+        code.setSearchPanel(searchPanel);
         code.keys()
                 .ignoreFocus()
                 .register(IKey.lang("mappet.gui.scripts.keys.word_wrap"), Keyboard.KEY_P, this::toggleWordWrap)
@@ -117,9 +123,11 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
         editor.add(tabs);
         editor.add(code);
+        editor.add(searchPanel);
         sidebar.prepend(sideBarToggles);
         add(repl);
 
+        updateSearchPanelPosition();
         fill(null);
     }
 
@@ -288,15 +296,34 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
     }
 
     private void setRepl(boolean showRepl) {
+        if (showRepl) searchPanel.closeSearch();
         repl.setVisible(showRepl);
         code.setVisible(!showRepl);
+        searchPanel.setVisible(!showRepl && searchPanel.isVisible());
         updateButtons();
     }
 
     @Override
     public boolean keyTyped(GuiContext context) {
+        if (searchPanel.isVisible() && (context.keyCode == Keyboard.KEY_RETURN || context.keyCode == Keyboard.KEY_NUMPADENTER))
+        {
+            searchPanel.navigateByKeyboard(GuiScreen.isShiftKeyDown());
+            return true;
+        }
+
+        if (searchPanel.isVisible() && context.keyCode == Keyboard.KEY_ESCAPE)
+        {
+            searchPanel.closeSearch();
+            return true;
+        }
+
         if (super.keyTyped(context)) return true;
         boolean ctrl = GuiScreen.isCtrlKeyDown();
+        if (ctrl && context.keyCode == Keyboard.KEY_F && code.isVisible() && (code.isFocused() || searchPanel.isVisible())) {
+            updateSearchPanelPosition();
+            searchPanel.toggleSearch();
+            return true;
+        }
         if (context.keyCode == Keyboard.KEY_S && ctrl) save();
         else if (context.keyCode == Keyboard.KEY_TAB && ctrl) {
             if (GuiScreen.isShiftKeyDown()) tabs.prevTab();
@@ -367,6 +394,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
             if (last != null) lastScrolls.put(last, code.vertical.scroll);
 
             code.setText(data.code);
+            searchPanel.onEditorChanged();
             setRepl(false);
 
             if (last != null) {
@@ -389,6 +417,12 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
     public void open() {
         super.open();
         updateStyle();
+        updateSearchPanelPosition();
+    }
+
+    private void updateSearchPanelPosition()
+    {
+        searchPanel.flex().relative(editor).x(0).y(1F, 0).w(1F).h(72).anchorY(1F);
     }
 
     public void updateStyle() {

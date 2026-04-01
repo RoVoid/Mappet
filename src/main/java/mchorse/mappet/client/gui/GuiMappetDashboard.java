@@ -103,7 +103,7 @@ public class GuiMappetDashboard extends GuiAbstractDashboard {
         panels.registerPanel(chain, IKey.lang(chain.getTitle()), Icons.FOLDER);
         panels.registerPanel(script, IKey.lang(script.getTitle()), MMIcons.PROPERTIES);
         panels.registerPanel(hud, IKey.lang(hud.getTitle()), Icons.POSE);
-        panels.registerPanel(ui, IKey.lang(ui.getTitle()), Icons.POSE);
+        panels.registerPanel(ui, IKey.lang(ui.getTitle()), Icons.PROCESSOR);
         panels.registerPanel(translation, IKey.lang(translation.getTitle()), MPIcons.get(MPIcons.LETTER_A));
         panels.registerPanel(logs, IKey.lang("mappet.gui.panels.logs"), MPIcons.get(MPIcons.CONSOLE));
         panels.registerPanel(snippets, IKey.lang("mappet.gui.panels.snippets"), MPIcons.get(MPIcons.GLASSES));

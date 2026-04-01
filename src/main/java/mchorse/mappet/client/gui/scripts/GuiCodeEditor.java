@@ -1,5 +1,7 @@
 package mchorse.mappet.client.gui.scripts;
 
+import mchorse.mappet.client.gui.scripts.codeEditor.GuiTextEditorSearchable;
+import mchorse.mappet.client.gui.scripts.codeEditor.SearchPanel;
 import mchorse.mappet.client.gui.scripts.style.SyntaxHighlighter;
 import mchorse.mappet.client.gui.scripts.utils.HighlightedTextLine;
 import mchorse.mappet.client.gui.scripts.utils.TextLineNumber;
@@ -19,8 +21,11 @@ import net.minecraft.init.SoundEvents;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
+public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> implements GuiTextEditorSearchable
+{
     private SyntaxHighlighter highlighter;
     private int placements;
     private boolean lines = true;
@@ -28,9 +33,20 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
     private final List<TextLineNumber> numbers = new ArrayList<>(40);
     private int lineNumber = 0;
 
+    private SearchPanel searchPanel;
+    private Pattern pattern;
+    private boolean searching;
+    private final List<SearchMatch> searchMatches = new ArrayList<>();
+    private int currentSearchMatch = -1;
+
     public GuiCodeEditor(Minecraft mc, Consumer<String> callback) {
         super(mc, callback);
         highlighter = new SyntaxHighlighter();
+    }
+
+    public void setSearchPanel(SearchPanel searchPanel)
+    {
+        this.searchPanel = searchPanel;
     }
 
     @Override
@@ -60,6 +76,12 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
     public void setText(String text) {
         super.setText(text);
         resetHighlight();
+
+        if (this.searching)
+        {
+            if (this.searchPanel != null) this.searchPanel.onEditorChanged();
+            else refreshSearchResults(false);
+        }
     }
 
     @Override
@@ -78,12 +100,24 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
             super.changedLine(i);
             text.get(i).resetSegments();
         }
+
+        if (this.searching)
+        {
+            if (this.searchPanel != null) this.searchPanel.onEditorChanged();
+            else refreshSearchResults(false);
+        }
     }
 
     @Override
     protected void changedLineAfter(int index) {
         super.changedLineAfter(index);
         while (index < text.size()) text.get(index++).resetSegments();
+
+        if (this.searching)
+        {
+            if (this.searchPanel != null) this.searchPanel.onEditorChanged();
+            else refreshSearchResults(false);
+        }
     }
 
     /* Change input behavior */
@@ -340,6 +374,286 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> {
             if (a > 0) {
                 GuiDraw.drawHorizontalGradientRect(x, area.y, x + 10, area.ey(), a << 24, 0);
             }
+        }
+    }
+
+    @Override
+    public void setSearching(boolean searching)
+    {
+        this.searching = searching;
+
+        if (!searching)
+        {
+            this.pattern = null;
+            this.searchMatches.clear();
+            this.currentSearchMatch = -1;
+            this.deselect();
+            return;
+        }
+
+        refreshSearchResults(true);
+    }
+
+    @Override
+    public boolean isSearching()
+    {
+        return this.searching;
+    }
+
+    @Override
+    public Pattern getPattern()
+    {
+        return this.pattern;
+    }
+
+    @Override
+    public void setPattern(Pattern pattern)
+    {
+        this.pattern = pattern;
+    }
+
+    @Override
+    public int refreshSearchResults(boolean jumpToFirst)
+    {
+        int keepOffset = -1;
+
+        if (this.currentSearchMatch >= 0 && this.currentSearchMatch < this.searchMatches.size())
+        {
+            keepOffset = this.searchMatches.get(this.currentSearchMatch).start;
+        }
+
+        this.searchMatches.clear();
+        this.currentSearchMatch = -1;
+
+        if (!this.searching || this.pattern == null)
+        {
+            return 0;
+        }
+
+        Matcher matcher = this.pattern.matcher(this.getText());
+
+        while (matcher.find())
+        {
+            if (matcher.start() == matcher.end())
+            {
+                continue;
+            }
+
+            this.searchMatches.add(new SearchMatch(matcher.start(), matcher.end()));
+        }
+
+        if (this.searchMatches.isEmpty())
+        {
+            return 0;
+        }
+
+        if (jumpToFirst || keepOffset < 0)
+        {
+            this.currentSearchMatch = 0;
+        }
+        else
+        {
+            this.currentSearchMatch = this.findNearestMatch(keepOffset);
+        }
+
+        this.focusCurrentMatch();
+
+        return this.searchMatches.size();
+    }
+
+    @Override
+    public boolean navigateMatch(boolean backwards)
+    {
+        if (this.searchMatches.isEmpty())
+        {
+            return false;
+        }
+
+        if (this.currentSearchMatch < 0)
+        {
+            this.currentSearchMatch = 0;
+        }
+        else
+        {
+            int amount = backwards ? -1 : 1;
+            this.currentSearchMatch = (this.currentSearchMatch + amount + this.searchMatches.size()) % this.searchMatches.size();
+        }
+
+        this.focusCurrentMatch();
+
+        return true;
+    }
+
+    @Override
+    public int getMatchCount()
+    {
+        return this.searchMatches.size();
+    }
+
+    @Override
+    public int getCurrentMatchIndex()
+    {
+        return this.currentSearchMatch;
+    }
+
+    @Override
+    public boolean replaceCurrentMatch(Pattern pattern, String replacement)
+    {
+        if (this.currentSearchMatch < 0 || this.currentSearchMatch >= this.searchMatches.size())
+        {
+            return false;
+        }
+
+        SearchMatch match = this.searchMatches.get(this.currentSearchMatch);
+        String fullText = this.getText();
+        String matched = fullText.substring(match.start, match.end);
+        String result = replacement;
+
+        if (pattern != null)
+        {
+            Matcher matcher = pattern.matcher(matched);
+
+            if (matcher.find())
+            {
+                result = matcher.replaceFirst(replacement);
+            }
+        }
+
+        String updated = fullText.substring(0, match.start) + result + fullText.substring(match.end);
+
+        this.selectAll();
+        this.pasteText(updated);
+
+        int caret = match.start + result.length();
+        Cursor caretCursor = this.toCursor(caret);
+        this.cursor.copy(caretCursor);
+        this.deselect();
+        this.moveViewportToCursor();
+
+        this.refreshSearchResults(false);
+
+        if (!this.searchMatches.isEmpty())
+        {
+            this.currentSearchMatch = this.findNearestMatch(match.start);
+            this.focusCurrentMatch();
+        }
+
+        return true;
+    }
+
+    @Override
+    public int replaceAllMatches(Pattern pattern, String replacement)
+    {
+        if (pattern == null)
+        {
+            return 0;
+        }
+
+        Matcher counter = pattern.matcher(this.getText());
+        int amount = 0;
+
+        while (counter.find())
+        {
+            if (counter.start() != counter.end())
+            {
+                amount += 1;
+            }
+        }
+
+        if (amount == 0)
+        {
+            return 0;
+        }
+
+        String replaced = pattern.matcher(this.getText()).replaceAll(replacement);
+
+        this.selectAll();
+        this.pasteText(replaced);
+
+        this.refreshSearchResults(false);
+
+        return amount;
+    }
+
+    private void focusCurrentMatch()
+    {
+        if (this.currentSearchMatch < 0 || this.currentSearchMatch >= this.searchMatches.size())
+        {
+            return;
+        }
+
+        SearchMatch match = this.searchMatches.get(this.currentSearchMatch);
+        this.selectRange(match.start, match.end);
+        this.moveViewportToCursor();
+    }
+
+    private void selectRange(int startIndex, int endIndex)
+    {
+        Cursor start = this.toCursor(startIndex);
+        Cursor end = this.toCursor(endIndex);
+
+        this.selection.copy(start);
+        this.cursor.copy(end);
+    }
+
+    private Cursor toCursor(int index)
+    {
+        int remaining = Math.max(index, 0);
+
+        if (this.text.isEmpty())
+        {
+            return new Cursor(0, 0);
+        }
+
+        for (int i = 0; i < this.text.size(); i++)
+        {
+            String line = this.text.get(i).text;
+            int length = line.length();
+
+            if (remaining <= length)
+            {
+                return new Cursor(i, remaining);
+            }
+
+            remaining -= length;
+
+            if (i < this.text.size() - 1)
+            {
+                if (remaining == 0)
+                {
+                    return new Cursor(i + 1, 0);
+                }
+
+                remaining -= 1;
+            }
+        }
+
+        int last = this.text.size() - 1;
+        return new Cursor(last, this.text.get(last).text.length());
+    }
+
+    private int findNearestMatch(int globalOffset)
+    {
+        for (int i = 0; i < this.searchMatches.size(); i++)
+        {
+            if (this.searchMatches.get(i).start >= globalOffset)
+            {
+                return i;
+            }
+        }
+
+        return this.searchMatches.size() - 1;
+    }
+
+    private static class SearchMatch
+    {
+        public final int start;
+        public final int end;
+
+        private SearchMatch(int start, int end)
+        {
+            this.start = start;
+            this.end = end;
         }
     }
 }

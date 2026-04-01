@@ -14,6 +14,7 @@ import mchorse.mappet.api.schematics.SchematicManager;
 import mchorse.mappet.api.scripts.ScriptManager;
 import mchorse.mappet.api.states.States;
 import mchorse.mappet.api.translations.TranslationManager;
+import mchorse.mappet.api.ui.UIManager;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.api.utils.logs.MappetLogger;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
@@ -101,6 +102,7 @@ public final class Mappet {
     public static ScriptManager scripts;
 
     public static HUDManager huds;
+    public static UIManager ui;
     public static TranslationManager translations;
 
     public Mappet() {
@@ -171,6 +173,7 @@ public final class Mappet {
         chains = new QuestChainManager(new File(mappetWorldFolder, "chains"));
         scripts = new ScriptManager(new File(mappetWorldFolder, "scripts"));
         huds = new HUDManager(new File(mappetWorldFolder, "huds"));
+        ui = new UIManager(new File(mappetWorldFolder, "ui"));
         translations = new TranslationManager(new File(mappetWorldFolder, "translations"));
 
         /* Initiate */
@@ -202,6 +205,7 @@ public final class Mappet {
             chains = null;
             scripts = null;
             huds = null;
+            ui = null;
             translations = null;
         }
 

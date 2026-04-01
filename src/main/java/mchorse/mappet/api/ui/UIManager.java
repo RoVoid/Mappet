@@ -12,6 +12,12 @@ public class UIManager extends BaseManager<UI> {
 
     @Override
     protected UI createData(String id, NBTTagCompound tag) {
-        return null;
+        UI ui = new UI();
+
+        if (tag != null && !tag.hasNoTags()) {
+            ui.deserializeNBT(tag);
+        }
+
+        return ui;
     }
 }

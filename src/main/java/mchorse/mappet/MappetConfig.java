@@ -3,6 +3,7 @@ package mchorse.mappet;
 import mchorse.mappet.utils.ValueButtons;
 import mchorse.mappet.utils.ValueCodeEditor;
 import mchorse.mappet.utils.ValueSyntaxStyle;
+import mchorse.mappet.modules.utils.UtilsModule;
 import mchorse.mclib.config.ConfigBuilder;
 import mchorse.mclib.config.values.ValueBoolean;
 import mchorse.mclib.config.values.ValueInt;
@@ -36,6 +37,7 @@ public final class MappetConfig {
     public static ValueBoolean scriptEditorSounds;
     public static ValueBoolean scriptUIDebug;
     public static ValueCodeEditor scriptCodeTemplate;
+    public static UtilsModule utilsModule;
 
     public static void register(RegisterConfigEvent event) {
         ConfigBuilder builder = event.createBuilder(MOD_ID);
@@ -66,5 +68,8 @@ public final class MappetConfig {
         scriptUIDebug = builder.getBoolean("ui_debug", false);
         builder.register(scriptCodeTemplate = new ValueCodeEditor("code_template"));
         builder.getCategory().markClientSide();
+
+        utilsModule = UtilsModule.getInstance();
+        utilsModule.addConfigOptions(builder);
     }
 }
