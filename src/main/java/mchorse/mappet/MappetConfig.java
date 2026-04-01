@@ -3,7 +3,6 @@ package mchorse.mappet;
 import mchorse.mappet.utils.ValueButtons;
 import mchorse.mappet.utils.ValueCodeEditor;
 import mchorse.mappet.utils.ValueSyntaxStyle;
-import mchorse.mappet.modules.utils.UtilsModule;
 import mchorse.mclib.config.ConfigBuilder;
 import mchorse.mclib.config.values.ValueBoolean;
 import mchorse.mclib.config.values.ValueInt;
@@ -37,7 +36,9 @@ public final class MappetConfig {
     public static ValueBoolean scriptEditorSounds;
     public static ValueBoolean scriptUIDebug;
     public static ValueCodeEditor scriptCodeTemplate;
-    public static UtilsModule utilsModule;
+    public static ValueInt codeSearchColor;
+    public static ValueInt codeSearchBackgroundColor;
+    public static ValueBoolean codeSearchOnTop;
 
     public static void register(RegisterConfigEvent event) {
         ConfigBuilder builder = event.createBuilder(MOD_ID);
@@ -66,10 +67,10 @@ public final class MappetConfig {
         builder.category("script_editor").register(scriptEditorSyntaxStyle = new ValueSyntaxStyle("syntax_style"));
         scriptEditorSounds = builder.getBoolean("sounds", true);
         scriptUIDebug = builder.getBoolean("ui_debug", false);
+        codeSearchColor = builder.getInt("code_search_color", 0x22FFFFAA).colorAlpha();
+        codeSearchBackgroundColor = builder.getInt("code_search_background_color", 0xCC000000).colorAlpha();
+        codeSearchOnTop = builder.getBoolean("code_search_on_top", false);
         builder.register(scriptCodeTemplate = new ValueCodeEditor("code_template"));
         builder.getCategory().markClientSide();
-
-        utilsModule = UtilsModule.getInstance();
-        utilsModule.addConfigOptions(builder);
     }
 }

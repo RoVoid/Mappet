@@ -1,6 +1,8 @@
 package mchorse.mappet.client.gui.scripts.codeEditor;
 
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.client.gui.scripts.GuiCodeEditor;
+import mchorse.mappet.utils.MPIcons;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
@@ -14,10 +16,7 @@ import org.lwjgl.input.Keyboard;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import mchorse.mappet.modules.utils.UtilsModule;
-
-public class SearchPanel extends GuiElement
-{
+public class SearchPanel extends GuiElement {
     public GuiTextElement search;
     public GuiTextElement replace;
 
@@ -44,79 +43,75 @@ public class SearchPanel extends GuiElement
     public static final int COLOR_ON = 0xFF00FF00;
     public static final int COLOR_OFF = 0xFF888888;
 
-    public SearchPanel(Minecraft mc, GuiCodeEditor code)
-    {
+    public SearchPanel(Minecraft mc, GuiCodeEditor code) {
         super(mc);
 
         this.code = code;
 
-        this.closeIcon = new GuiIconElement(mc, Icons.CLOSE, (b) -> this.closeSearch());
-        this.closeIcon.tooltip(IKey.lang("mappet.gui.scripts.search.close"));
+        closeIcon = new GuiIconElement(mc, Icons.CLOSE, (b) -> closeSearch());
+        closeIcon.tooltip(IKey.lang("mappet.gui.scripts.search.close"));
 
-        this.searchPrevIcon = new GuiIconElement(mc, Icons.MOVE_UP, (b) -> this.navigate(true));
-        this.searchPrevIcon.tooltip(IKey.lang("mappet.gui.scripts.search.prev"));
+        searchPrevIcon = new GuiIconElement(mc, Icons.MOVE_UP, (b) -> navigate(true));
+        searchPrevIcon.tooltip(IKey.lang("mappet.gui.scripts.search.prev"));
 
-        this.searchNextIcon = new GuiIconElement(mc, Icons.MOVE_DOWN, (b) -> this.navigate(false));
-        this.searchNextIcon.tooltip(IKey.lang("mappet.gui.scripts.search.next"));
+        searchNextIcon = new GuiIconElement(mc, Icons.MOVE_DOWN, (b) -> navigate(false));
+        searchNextIcon.tooltip(IKey.lang("mappet.gui.scripts.search.next"));
 
-        this.regexIcon = new GuiIconElement(mc, Icons.SEARCH, (b) -> {
-            this.toggleIcon(b);
-            this.regex = b.iconColor == COLOR_ON;
-            this.refreshSearch(true);
+        regexIcon = new GuiIconElement(mc, MPIcons.get(MPIcons.REGEX), (b) -> {
+            toggleIcon(b);
+            regex = b.iconColor == COLOR_ON;
+            refreshSearch(true);
         }).iconColor(COLOR_OFF).hoverColor(COLOR_OFF);
-        this.regexIcon.tooltip(IKey.lang("mappet.gui.scripts.search.regex"));
+        regexIcon.tooltip(IKey.lang("mappet.gui.scripts.search.regex"));
 
-        this.ignoreCaseIcon = new GuiIconElement(mc, Icons.HELP, (b) -> {
-            this.toggleIcon(b);
-            this.ignoreCase = b.iconColor == COLOR_ON;
-            this.refreshSearch(true);
+        ignoreCaseIcon = new GuiIconElement(mc, MPIcons.get(MPIcons.LETTER_CASE), (b) -> {
+            toggleIcon(b);
+            ignoreCase = b.iconColor == COLOR_ON;
+            refreshSearch(true);
         }).iconColor(COLOR_OFF).hoverColor(COLOR_OFF);
-        this.ignoreCaseIcon.tooltip(IKey.lang("mappet.gui.scripts.search.ignore_case"));
+        ignoreCaseIcon.tooltip(IKey.lang("mappet.gui.scripts.search.ignore_case"));
 
-        this.replaceOneIcon = new GuiIconElement(mc, Icons.REVERSE, (b) -> this.replaceOne());
-        this.replaceOneIcon.tooltip(IKey.lang("mappet.gui.scripts.search.replace_one"));
+        replaceOneIcon = new GuiIconElement(mc, Icons.REVERSE, (b) -> replaceOne());
+        replaceOneIcon.tooltip(IKey.lang("mappet.gui.scripts.search.replace_one"));
 
-        this.replaceAllIcon = new GuiIconElement(mc, Icons.DUPE, (b) -> this.replaceAll());
-        this.replaceAllIcon.tooltip(IKey.lang("mappet.gui.scripts.search.replace_all"));
+        replaceAllIcon = new GuiIconElement(mc, Icons.DUPE, (b) -> replaceAll());
+        replaceAllIcon.tooltip(IKey.lang("mappet.gui.scripts.search.replace_all"));
 
-        this.search = new GuiTextElement(mc, Integer.MAX_VALUE, (s) -> {
-            this.searchString = s;
-            this.refreshSearch(true);
+        search = new GuiTextElement(mc, Integer.MAX_VALUE, (s) -> {
+            searchString = s;
+            refreshSearch(true);
         });
-        this.search.field.setMaxStringLength(Integer.MAX_VALUE);
+        search.field.setMaxStringLength(Integer.MAX_VALUE);
 
-        this.replace = new GuiTextElement(mc, Integer.MAX_VALUE, (s) -> this.replaceString = s);
-        this.replace.field.setMaxStringLength(Integer.MAX_VALUE);
+        replace = new GuiTextElement(mc, Integer.MAX_VALUE, (s) -> replaceString = s);
+        replace.field.setMaxStringLength(Integer.MAX_VALUE);
 
-        GuiElement rowIcons = Elements.row(mc, 4, this.regexIcon, this.ignoreCaseIcon, this.searchPrevIcon, this.searchNextIcon, this.closeIcon);
-        GuiElement rowSearch = Elements.row(mc, 4, this.search, this.replaceOneIcon, this.replaceAllIcon);
-        GuiElement rowReplace = Elements.row(mc, 4, this.replace);
+        GuiElement rowIcons = Elements.row(mc, 4, regexIcon, ignoreCaseIcon, searchPrevIcon, searchNextIcon,
+                closeIcon);
+        GuiElement rowSearch = Elements.row(mc, 4, search, replaceOneIcon, replaceAllIcon);
+        GuiElement rowReplace = Elements.row(mc, 4, replace);
 
         rowIcons.flex().relative(this).x(5).y(5).w(1F, -10).h(16);
         rowSearch.flex().relative(this).x(5).y(25).w(1F, -10).h(20);
         rowReplace.flex().relative(this).x(5).y(49).w(1F, -10).h(20);
 
-        this.add(rowIcons, rowSearch, rowReplace);
-        this.setVisible(false);
+        add(rowIcons, rowSearch, rowReplace);
+        setVisible(false);
     }
 
     @Override
-    public boolean keyTyped(GuiContext context)
-    {
-        if (!this.isVisible())
-        {
+    public boolean keyTyped(GuiContext context) {
+        if (!isVisible()) {
             return false;
         }
 
-        if (context.keyCode == Keyboard.KEY_RETURN || context.keyCode == Keyboard.KEY_NUMPADENTER)
-        {
-            this.navigate(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT));
+        if (context.keyCode == Keyboard.KEY_RETURN || context.keyCode == Keyboard.KEY_NUMPADENTER) {
+            navigate(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT));
             return true;
         }
 
-        if (context.keyCode == Keyboard.KEY_ESCAPE)
-        {
-            this.closeSearch();
+        if (context.keyCode == Keyboard.KEY_ESCAPE) {
+            closeSearch();
             return true;
         }
 
@@ -124,159 +119,132 @@ public class SearchPanel extends GuiElement
     }
 
     @Override
-    public void draw(GuiContext context)
-    {
-        int backgroundColor = UtilsModule.getInstance().codeSearchBackgroundColor == null
-                ? 0xCC000000
-                : UtilsModule.getInstance().codeSearchBackgroundColor.get();
+    public void draw(GuiContext context) {
+        int backgroundColor = MappetConfig.codeSearchBackgroundColor == null ? 0xCC000000 : MappetConfig.codeSearchBackgroundColor.get();
 
-        this.area.draw(backgroundColor);
+        area.draw(backgroundColor);
         super.draw(context);
 
-        if (!this.search.field.isFocused() && this.search.field.getText().isEmpty())
-        {
-            this.font.drawStringWithShadow(IKey.lang("mappet.gui.scripts.search.search").get(), this.search.area.x + 5, this.search.area.y + 6, 0x888888);
+        if (!search.field.isFocused() && search.field.getText().isEmpty()) {
+            font.drawStringWithShadow(IKey.lang("mappet.gui.scripts.search.search").get(), search.area.x + 5,
+                    search.area.y + 6, 0x888888);
         }
 
-        if (!this.replace.field.isFocused() && this.replace.field.getText().isEmpty())
-        {
-            this.font.drawStringWithShadow(IKey.lang("mappet.gui.scripts.search.replace").get(), this.replace.area.x + 5, this.replace.area.y + 6, 0x888888);
+        if (!replace.field.isFocused() && replace.field.getText().isEmpty()) {
+            font.drawStringWithShadow(IKey.lang("mappet.gui.scripts.search.replace").get(), replace.area.x + 5,
+                    replace.area.y + 6, 0x888888);
         }
 
         String counter;
         int color;
 
-        if (this.invalidRegex)
-        {
+        if (invalidRegex) {
             counter = IKey.lang("mappet.gui.scripts.search.regex_error").get();
             color = 0xFFFF5555;
         }
-        else if (this.matchCount == 0)
-        {
+        else if (matchCount == 0) {
             counter = "0/0";
             color = 0xAAAAAA;
         }
-        else
-        {
-            counter = (this.currentMatch + 1) + "/" + this.matchCount;
-            color = UtilsModule.getInstance().codeSearchColor == null
-                    ? 0x22FFFFAA
-                    : UtilsModule.getInstance().codeSearchColor.get();
+        else {
+            counter = (currentMatch + 1) + "/" + matchCount;
+            color = MappetConfig.codeSearchColor == null ? 0x22FFFFAA : MappetConfig.codeSearchColor.get();
         }
 
-        int x = this.searchNextIcon.area.ex() + 6;
-        int y = this.searchNextIcon.area.y + 4;
-        this.font.drawStringWithShadow(counter, x, y, color);
+        int x = searchNextIcon.area.ex() + 6;
+        int y = searchNextIcon.area.y + 4;
+        font.drawStringWithShadow(counter, x, y, color);
     }
 
-    public void toggleSearch()
-    {
-        if (this.isVisible())
-        {
-            this.closeSearch();
+    public void toggleSearch() {
+        if (isVisible()) {
+            closeSearch();
             return;
         }
 
-        this.setVisible(true);
-        ((GuiTextEditorSearchable) this.code).setSearching(true);
-        this.search.field.setFocused(true);
-        this.refreshSearch(true);
+        setVisible(true);
+        ((GuiTextEditorSearchable) code).setSearching(true);
+        search.field.setFocused(true);
+        refreshSearch(true);
     }
 
-    public void closeSearch()
-    {
-        this.setVisible(false);
-        this.invalidRegex = false;
-        ((GuiTextEditorSearchable) this.code).setSearching(false);
+    public void closeSearch() {
+        setVisible(false);
+        invalidRegex = false;
+        ((GuiTextEditorSearchable) code).setSearching(false);
     }
 
-    public void refreshSearch(boolean jumpToFirst)
-    {
-        Pattern pattern = this.compilePattern();
-        GuiTextEditorSearchable searchable = (GuiTextEditorSearchable) this.code;
+    public void refreshSearch(boolean jumpToFirst) {
+        Pattern pattern = compilePattern();
+        GuiTextEditorSearchable searchable = (GuiTextEditorSearchable) code;
 
         searchable.setPattern(pattern);
-        this.matchCount = searchable.refreshSearchResults(jumpToFirst);
-        this.currentMatch = searchable.getCurrentMatchIndex();
+        matchCount = searchable.refreshSearchResults(jumpToFirst);
+        currentMatch = searchable.getCurrentMatchIndex();
     }
 
-    public void onEditorChanged()
-    {
-        if (!this.isVisible())
-        {
+    public void onEditorChanged() {
+        if (!isVisible()) {
             return;
         }
 
-        this.refreshSearch(false);
+        refreshSearch(false);
     }
 
-    private Pattern compilePattern()
-    {
-        this.invalidRegex = false;
+    private Pattern compilePattern() {
+        invalidRegex = false;
 
-        if (this.searchString == null || this.searchString.isEmpty())
-        {
+        if (searchString == null || searchString.isEmpty()) {
             return null;
         }
 
-        int flags = this.ignoreCase ? Pattern.CASE_INSENSITIVE : 0;
+        int flags = ignoreCase ? Pattern.CASE_INSENSITIVE : 0;
 
-        try
-        {
-            return Pattern.compile(this.searchString, flags + (this.regex ? Pattern.MULTILINE : Pattern.LITERAL));
-        }
-        catch (PatternSyntaxException e)
-        {
-            this.invalidRegex = true;
+        try {
+            return Pattern.compile(searchString, flags + (regex ? Pattern.MULTILINE : Pattern.LITERAL));
+        } catch (PatternSyntaxException e) {
+            invalidRegex = true;
             return null;
         }
     }
 
-    private void navigate(boolean backwards)
-    {
-        GuiTextEditorSearchable searchable = (GuiTextEditorSearchable) this.code;
+    private void navigate(boolean backwards) {
+        GuiTextEditorSearchable searchable = (GuiTextEditorSearchable) code;
 
-        if (searchable.navigateMatch(backwards))
-        {
-            this.currentMatch = searchable.getCurrentMatchIndex();
+        if (searchable.navigateMatch(backwards)) {
+            currentMatch = searchable.getCurrentMatchIndex();
         }
     }
 
-    public void navigateByKeyboard(boolean backwards)
-    {
-        this.navigate(backwards);
+    public void navigateByKeyboard(boolean backwards) {
+        navigate(backwards);
     }
 
-    private void replaceOne()
-    {
-        Pattern pattern = this.compilePattern();
+    private void replaceOne() {
+        Pattern pattern = compilePattern();
 
-        if (pattern == null || this.matchCount == 0 || this.invalidRegex)
-        {
+        if (pattern == null || matchCount == 0 || invalidRegex) {
             return;
         }
 
-        GuiTextEditorSearchable searchable = (GuiTextEditorSearchable) this.code;
-        searchable.replaceCurrentMatch(pattern, this.replaceString);
-        this.refreshSearch(false);
+        GuiTextEditorSearchable searchable = (GuiTextEditorSearchable) code;
+        searchable.replaceCurrentMatch(pattern, replaceString);
+        refreshSearch(false);
     }
 
-    private void replaceAll()
-    {
-        Pattern pattern = this.compilePattern();
+    private void replaceAll() {
+        Pattern pattern = compilePattern();
 
-        if (pattern == null || this.invalidRegex)
-        {
+        if (pattern == null || invalidRegex) {
             return;
         }
 
-        GuiTextEditorSearchable searchable = (GuiTextEditorSearchable) this.code;
-        searchable.replaceAllMatches(pattern, this.replaceString);
-        this.refreshSearch(false);
+        GuiTextEditorSearchable searchable = (GuiTextEditorSearchable) code;
+        searchable.replaceAllMatches(pattern, replaceString);
+        refreshSearch(false);
     }
 
-    private void toggleIcon(GuiIconElement icon)
-    {
+    private void toggleIcon(GuiIconElement icon) {
         int color = icon.iconColor == COLOR_ON ? COLOR_OFF : COLOR_ON;
         icon.iconColor(color);
         icon.hoverColor(color);
