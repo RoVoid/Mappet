@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.scripts;
 
-import mchorse.mappet.ClientProxy;
+import mchorse.mappet.proxy.ClientProxy;
 import mchorse.mappet.api.scripts.Script;
 import mchorse.mappet.api.utils.content.ContentTypes;
 import mchorse.mappet.api.utils.content.IContentType;
@@ -8,7 +8,7 @@ import mchorse.mappet.client.gui.utils.GuiMappetUtils;
 import mchorse.mappet.client.gui.utils.overlays.GuiContentNamesOverlayPanel;
 import mchorse.mappet.client.gui.utils.overlays.GuiOverlay;
 import mchorse.mappet.client.gui.utils.overlays.GuiStringOverlayPanel;
-import mchorse.mappet.utils.Colors;
+import mchorse.mappet.constants.Colors;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;

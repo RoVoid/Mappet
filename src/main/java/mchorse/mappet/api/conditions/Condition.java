@@ -1,6 +1,6 @@
 package mchorse.mappet.api.conditions;
 
-import mchorse.mappet.CommonProxy;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.api.conditions.blocks.AbstractConditionBlock;
 import mchorse.mappet.api.utils.DataContext;
 import net.minecraft.nbt.NBTTagCompound;

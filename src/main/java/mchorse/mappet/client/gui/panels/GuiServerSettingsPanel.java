@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.panels;
 
 import mchorse.mappet.MappetConfig;
-import mchorse.mappet.TriggerEventHandler;
+import mchorse.mappet.events.handlers.TriggerEventHandler;
 import mchorse.mappet.api.ServerSettings;
 import mchorse.mappet.api.states.States;
 import mchorse.mappet.api.triggers.Trigger;
@@ -20,7 +20,7 @@ import mchorse.mappet.network.packets.content.PacketRequestServerSettings;
 import mchorse.mappet.network.packets.content.PacketRequestStates;
 import mchorse.mappet.network.packets.content.PacketServerSettings;
 import mchorse.mappet.network.packets.content.PacketStates;
-import mchorse.mappet.utils.MPIcons;
+import mchorse.mappet.MappetIcons;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
@@ -135,7 +135,7 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
 
         forgeTriggersLabel.flex().relative(this).x(0.5F, 10).y(10).wh(120, 20);
 
-        hotkeys = new GuiIconElement(mc, MPIcons.get(MPIcons.KEYBOARD), (b) -> openHotkeysEditor());
+        hotkeys = new GuiIconElement(mc, MappetIcons.KEYBOARD, (b) -> openHotkeysEditor());
         hotkeys.tooltip(IKey.lang("mappet.gui.settings.hotkeys"), Direction.LEFT);
         hotkeys.flex().relative(this).x(1F, -16).y(20).wh(20, 20).anchor(0.5F, 0.5F);
 
@@ -155,7 +155,7 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
 
     public void toggleTriggerLayouts() {
         boolean trigger = globalTriggersLayout.isVisible();
-        triggersToggle.both(trigger ? MPIcons.get(MPIcons.ANVIL) : Icons.PROCESSOR);
+        triggersToggle.both(trigger ? MappetIcons.ANVIL : Icons.PROCESSOR);
         globalTriggersLayout.setVisible(!trigger);
         forgeTriggersLayout.setVisible(trigger);
     }

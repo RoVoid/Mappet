@@ -1,5 +1,7 @@
-package mchorse.mappet;
+package mchorse.mappet.events.handlers;
 
+import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntityItem;
 import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
 import mchorse.mappet.api.scripts.code.items.ScriptInventory;

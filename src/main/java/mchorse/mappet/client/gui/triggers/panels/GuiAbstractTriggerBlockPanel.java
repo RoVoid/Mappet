@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.triggers.panels;
 
-import mchorse.mappet.CommonProxy;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.api.triggers.blocks.AbstractTriggerBlock;
 import mchorse.mappet.client.gui.triggers.GuiTriggerOverlayPanel;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;

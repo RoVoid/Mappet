@@ -3,7 +3,7 @@ package mchorse.mappet.client;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import mchorse.mappet.CommonProxy;
+import mchorse.mappet.proxy.CommonProxy;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.MetadataSerializer;

@@ -3,7 +3,7 @@ package mchorse.mappet.client.gui.scripts.scriptedItem;
 import mchorse.mappet.api.triggers.Trigger;
 import mchorse.mappet.client.gui.triggers.GuiTriggerElement;
 import mchorse.mappet.client.gui.utils.text.GuiText;
-import mchorse.mappet.common.ScriptedItemProps;
+import mchorse.mappet.items.ScriptedItemProps;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.items.PacketScriptedItemInfo;
 import mchorse.mappet.utils.NBTUtils;

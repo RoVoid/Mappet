@@ -1,6 +1,6 @@
 package mchorse.mappet.utils;
 
-import mchorse.mappet.common.ScriptedItemProps;
+import mchorse.mappet.items.ScriptedItemProps;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;

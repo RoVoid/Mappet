@@ -1,7 +1,7 @@
 package mchorse.mappet.api.scripts.code;
 
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import mchorse.mappet.CommonProxy;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.ScriptExecutionFork;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;

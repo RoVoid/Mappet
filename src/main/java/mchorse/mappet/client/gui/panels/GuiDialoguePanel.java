@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.panels;
 
-import mchorse.mappet.CommonProxy;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.api.dialogues.Dialogue;
 import mchorse.mappet.api.events.nodes.EventBaseNode;
 import mchorse.mappet.api.utils.content.ContentTypes;

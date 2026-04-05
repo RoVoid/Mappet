@@ -1,5 +1,6 @@
-package mchorse.mappet;
+package mchorse.mappet.proxy;
 
+import mchorse.mappet.Mappet;
 import mchorse.mappet.api.conditions.blocks.*;
 import mchorse.mappet.api.dialogues.nodes.*;
 import mchorse.mappet.api.events.nodes.*;
@@ -13,8 +14,11 @@ import mchorse.mappet.capabilities.character.CharacterStorage;
 import mchorse.mappet.capabilities.character.ICharacter;
 import mchorse.mappet.client.gui.utils.Beautifier;
 import mchorse.mappet.events.*;
+import mchorse.mappet.events.handlers.EventHandler;
+import mchorse.mappet.events.handlers.ScriptedItemEventHandler;
+import mchorse.mappet.events.handlers.TriggerEventHandler;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.utils.Colors;
+import mchorse.mappet.constants.Colors;
 import mchorse.mappet.utils.MappetNpcSelector;
 import mchorse.mappet.utils.MetamorphHandler;
 import mchorse.mappet.utils.ScriptUtils;

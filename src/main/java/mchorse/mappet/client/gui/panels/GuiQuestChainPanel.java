@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.panels;
 
-import mchorse.mappet.CommonProxy;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.api.quests.chains.QuestChain;
 import mchorse.mappet.api.quests.chains.QuestNode;
 import mchorse.mappet.api.utils.content.ContentTypes;

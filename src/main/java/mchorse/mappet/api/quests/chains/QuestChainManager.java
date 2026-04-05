@@ -1,6 +1,6 @@
 package mchorse.mappet.api.quests.chains;
 
-import mchorse.mappet.CommonProxy;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.quests.Quest;
 import mchorse.mappet.api.utils.DataContext;

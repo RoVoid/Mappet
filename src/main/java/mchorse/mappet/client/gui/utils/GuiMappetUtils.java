@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.utils;
 
-import mchorse.mappet.ClientProxy;
+import mchorse.mappet.proxy.ClientProxy;
 import mchorse.mappet.api.utils.content.IContentTypeBase;
 import mchorse.mappet.api.utils.TargetMode;
 import mchorse.mappet.client.gui.utils.overlays.GuiContentNamesOverlayPanel;

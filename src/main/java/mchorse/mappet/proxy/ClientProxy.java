@@ -1,5 +1,6 @@
-package mchorse.mappet;
+package mchorse.mappet.proxy;
 
+import mchorse.mappet.Mappet;
 import mchorse.mappet.api.utils.content.IContentTypeBase;
 import mchorse.mappet.client.KeyboardHandler;
 import mchorse.mappet.client.RenderingHandler;

@@ -1,4 +1,4 @@
-package mchorse.mappet.common;
+package mchorse.mappet.items;
 
 import mchorse.mappet.api.triggers.Trigger;
 import net.minecraft.nbt.NBTTagCompound;

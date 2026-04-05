@@ -14,11 +14,21 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-
 group = "mchorse.mappet"
-archivesBaseName = "Mappet"
-sourceCompatibility = targetCompatibility = "1.8"
-compileJava.options.encoding = 'UTF-8'
+version = property('version')
+
+base {
+    archivesName.set("Mappet")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
 
 minecraft {
     mappings channel: 'snapshot', version: '20171003-1.12'
@@ -54,6 +64,7 @@ dependencies {
     implementation ('org.reflections:reflections:0.9.12')
     implementation ('org.slf4j:slf4j-api:1.7.32')
     implementation ('org.javassist:javassist:3.28.0-GA')
+
     implementation ('org.ow2.asm:asm:5.2') { force = true }
     implementation ('org.ow2.asm:asm-tree:5.2') { force = true }
     implementation ('org.ow2.asm:asm-util:5.2') { force = true }
@@ -61,9 +72,11 @@ dependencies {
     implementation("net.minecraftforge:mergetool:0.2.3.3") { force = true }
 }
 
-jar.finalizedBy('shadowJar')
-jar.finalizedBy('reobfJar')
-jar.finalizedBy('moveToExportFolder')
+tasks.named('jar', Jar).configure {
+    finalizedBy('shadowJar')
+    finalizedBy('reobfJar')
+    finalizedBy('moveToExportFolder')
+}
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
@@ -71,28 +84,30 @@ tasks.register('processSource', Sync) {
     outputs.upToDateWhen { false }
 
     from sourceSets.main.java
-    filter(ReplaceTokens, tokens: [MAPPET     : version,
-                                   MCLIB      : mclib,
-                                   METAMORPH  : metamorph,
-                                   BLOCKBUSTER: blockbuster,
-                                   APERTURE   : aperture,
-                                   CHAMELEON   : chameleon])
-    into "$buildDir/src"
+    filter(ReplaceTokens, tokens: [
+            MAPPET     : version,
+            MCLIB      : mclib,
+            METAMORPH  : metamorph,
+            BLOCKBUSTER: blockbuster,
+            APERTURE   : aperture,
+            CHAMELEON  : chameleon
+    ])
+
+    into layout.buildDirectory.dir("src")
 }
 
-compileJava {
-    source = processSource.outputs
+tasks.named('compileJava', JavaCompile).configure {
+    source = []
+    source(tasks.named('processSource').map { it.outputs })
 }
-
-//tasks.jar.enabled = false
 
 tasks.register('moveToExportFolder', Copy) {
-    from "build/libs/Mappet-${version}.jar"
-    into "exports"
+    dependsOn 'reobfJar'
+    from layout.buildDirectory.file("libs/Mappet-${project.version}.jar")
+    into project.file("exports")
 }
 
-
-shadowJar {
+tasks.named('shadowJar').configure {
     dependencies {
         include(dependency("org.reflections:reflections:0.9.12"))
         include(dependency("org.slf4j:slf4j-api:1.7.32"))
@@ -101,10 +116,7 @@ shadowJar {
 
     archiveClassifier.set("")
 
-    def dependenciesToRelocate = ["org.reflections",
-                                  "org.slf4j",
-                                  "javassist"]
-
+    def dependenciesToRelocate = ["org.reflections", "org.slf4j", "javassist"]
     for (dependency in dependenciesToRelocate) {
         relocate dependency, "mchorse.mappet.libs." + dependency
     }
@@ -113,73 +125,67 @@ shadowJar {
 tasks.register('prepareAssets', Copy) {
     group = 'build'
 
-    project.version = version
-
-    inputs.property 'version', version
-    inputs.property "mcversion", mcversion
+    def expansionProps = [
+            'version': version.toString(),
+            'mclib': mclib,
+            'blockbuster': blockbuster,
+            'metamorph': metamorph
+    ]
+    inputs.properties(expansionProps)
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-        expand(project.properties)
+        expand(expansionProps)
     }
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
 
-    into project.file('build/classes/java/main')
+    into layout.buildDirectory.dir("classes/java/main")
 }
 
-classes.dependsOn(prepareAssets)
+tasks.named('classes').configure {
+    dependsOn('prepareAssets')
+}
 
-tasks.withType(Jar).configureEach { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
+tasks.withType(Jar).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 
 /* Comparing keys */
 tasks.register('compareLangFiles') {
     doLast {
-        def help = file("src/main/resources/assets/${project.archivesBaseName}/lang/")
+        def help = project.file("src/main/resources/assets/${base.archivesName.get().toLowerCase()}/lang/")
         def parse = { File file ->
             def map = new HashMap()
             def splits = file.text.split("\n")
 
             for (split in splits) {
                 def index = split.indexOf("=")
-
-                if (index == -1) {
-                    continue
+                if (index != -1) {
+                    map.put(split.substring(0, index), true)
                 }
-
-                map.put(split.substring(0, index), true)
             }
-
             return map
         }
 
-        if (!help.exists()) {
-            return
-        }
+        if (!help.exists()) return
 
-        def en = file("${help.getAbsolutePath()}/en_US.lang")
+        def en = project.file("${help.getAbsolutePath()}/en_US.lang")
         def en_map = parse(en)
 
         for (lang_file in help.listFiles()) {
-            if (!lang_file.name.endsWith(".lang") || lang_file.name.startsWith("en_US")) {
-                continue
-            }
+            if (!lang_file.name.endsWith(".lang") || lang_file.name.startsWith("en_US")) continue
 
             def lang_map = parse(lang_file)
-            def missing = new ArrayList()
-            def extra = new ArrayList()
+            def missing = []
+            def extra = []
 
             for (key in en_map.keySet()) {
-                if (!lang_map.containsKey(key)) {
-                    missing.add(key)
-                }
+                if (!lang_map.containsKey(key)) missing.add(key)
             }
-
             for (key in lang_map.keySet()) {
-                if (!en_map.containsKey(key)) {
-                    extra.add(key)
-                }
+                if (!en_map.containsKey(key)) extra.add(key)
             }
 
             missing.sort()
@@ -190,18 +196,11 @@ tasks.register('compareLangFiles') {
             if (!missing.isEmpty() || !extra.isEmpty()) {
                 if (!missing.isEmpty()) {
                     print("Language file ${lang_file.getName()} misses following keys:\n")
-
-                    for (key in missing) {
-                        print("- ${key}\n")
-                    }
+                    for (key in missing) print("- ${key}\n")
                 }
-
                 if (!extra.isEmpty()) {
                     print("Language file ${lang_file.getName()} has additional keys:\n")
-
-                    for (key in extra) {
-                        print("- ${key}\n")
-                    }
+                    for (key in extra) print("- ${key}\n")
                 }
             } else {
                 print("Language file ${lang_file.getName()} fully matches ${en.getName()}!\n")
@@ -218,19 +217,15 @@ tasks.register('copyLangStrings') {
 
             for (split in splits) {
                 def index = split.indexOf("=")
-
-                if (index == -1) {
-                    continue
+                if (index != -1) {
+                    map.put(split.substring(0, index), split.substring(index + 1))
                 }
-
-                map.put(split.substring(0, index), split.substring(index + 1))
             }
-
             return map
         }
 
-        def help = file("src/main/resources/assets/${project.archivesBaseName}/lang/")
-        def en = file("${help.getAbsolutePath()}/en_US.lang")
+        def help = project.file("src/main/resources/assets/${base.archivesName.get().toLowerCase()}/lang/")
+        def en = project.file("${help.getAbsolutePath()}/en_US.lang")
 
         for (file in help.listFiles()) {
             if (file.name.endsWith(".lang") && !file.name.startsWith("en_")) {
@@ -239,7 +234,6 @@ tasks.register('copyLangStrings') {
 
                 for (def i = 0; i < splits.length; i++) {
                     def str = splits[i]
-
                     if (str.contains("=")) {
                         def index = str.indexOf("=")
                         def key = str.substring(0, index)
@@ -249,14 +243,11 @@ tasks.register('copyLangStrings') {
                         }
                     }
                 }
-
                 file.write(splits.join("\n"))
-
-                print("Wrote to ${file.name}...")
+                print("Wrote to ${file.name}...\n")
             }
         }
-
-        print("Done!")
+        print("Done!\n")
     }
 }
 
@@ -264,52 +255,23 @@ tasks.register('scriptingJavadocsJson', Exec) {
     group = "build"
 
     executable "javadoc"
-    args "-doclet", "robot.utils.doclets.JsonDoclet", "-docletpath", "./run/jsonDoclet-1.1.jar", "-sourcepath", "./src/main/java/", "-subpackages", "mchorse.mappet.api.scripts.user:mchorse.mappet.api.scripts.code.ui:mchorse.mappet.client.gui.utils.graphics"
+    args "-doclet", "robot.utils.doclets.JsonDoclet",
+            "-docletpath", "./run/jsonDoclet-1.1.jar",
+            "-sourcepath", "./src/main/java/",
+            "-subpackages", "mchorse.mappet.api.scripts.user:mchorse.mappet.api.scripts.code.ui:mchorse.mappet.client.gui.utils.graphics"
 
     doLast {
-        def tempJson = file("docs.json")
-        def targetJson = file("src/main/resources/assets/mappet/docs/en_us.json")
+        def tempJson = project.file("docs.json")
+        def targetJson = project.file("src/main/resources/assets/mappet/docs/en_us.json")
 
         if (tempJson.exists()) {
-            targetJson.setText(tempJson.text)
+            targetJson.parentFile.mkdirs()
+            targetJson.text = tempJson.text
             tempJson.delete()
         }
     }
 }
 
-tasks.processResources.dependsOn(scriptingJavadocsJson)
-
-
-import groovy.json.JsonOutput
-
-def iconsDir = file("src/main/resources/assets/mappet/textures/gui/icons")
-def iconsJson = file("src/main/resources/assets/mappet/icons.json")
-
-tasks.register('generateIconsJson') {
-    group = "build"
-
-    inputs.dir(iconsDir)
-    outputs.file(iconsJson)
-
-    doLast {
-        def iconsList = []
-
-        if (iconsDir.exists()) {
-            iconsDir.eachFileRecurse { file ->
-                if (file.isFile() && file.name.endsWith(".png")) {
-                    def relativePath = iconsDir.toPath().relativize(file.toPath()).toString().replace('\\', '/')
-                    iconsList << relativePath.substring(0, relativePath.length() - 4)
-                }
-            }
-        }
-
-        iconsList.sort()
-        def json = JsonOutput.prettyPrint(JsonOutput.toJson(iconsList))
-
-        iconsJson.parentFile.mkdirs()
-        iconsJson.text = json
-    }
+tasks.named('processResources').configure {
+    dependsOn('scriptingJavadocsJson')
 }
-
-tasks.processResources.dependsOn(tasks.generateIconsJson)
-

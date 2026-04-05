@@ -1,12 +1,16 @@
-package mchorse.mappet.utils;
+package mchorse.mappet.constants;
 
 public class Colors
 {
     /* General purpose colors */
     public static final int ACTIVE = 0x0088ff;
+    public static final int INACTIVE = 0xffbb00;
+
     public static final int POSITIVE = 0x00ff44;
     public static final int NEGATIVE = 0xff0033;
-    public static final int INACTIVE = 0xffbb00;
+
+    public static final int A = 0x00ff44;
+    public static final int WHITE = 0xeeeeee;
 
     /* Data element colors */
     public static final int CANCEL = 0xeeeeee;
@@ -19,7 +23,7 @@ public class Colors
     public static final int QUEST = 0xffaa00;
     public static final int REPLY = 0x00a0ff;
     public static final int COMMENT = 0xf1fa8c;
-    public static final int STATE = Colors.NEGATIVE;
+    public static final int STATE = 0xff0033;
     public static final int TIME = 0x0088ff;
     public static final int MORPH = 0x4f00e0;
 }

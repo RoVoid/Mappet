@@ -19,7 +19,9 @@ import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.api.utils.logs.MappetLogger;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.commands.CommandMappet;
-import mchorse.mappet.utils.MPIcons;
+import mchorse.mappet.events.handlers.ModEventHandler;
+import mchorse.mappet.events.handlers.TriggerEventHandler;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.utils.ScriptUtils;
 import mchorse.mclib.McLib;
 import mchorse.mclib.commands.utils.L10n;
@@ -65,7 +67,7 @@ public final class Mappet {
     @Mod.Instance
     public static Mappet instance;
 
-    @SidedProxy(serverSide = "mchorse.mappet.CommonProxy", clientSide = "mchorse.mappet.ClientProxy")
+    @SidedProxy(serverSide = "mchorse.mappet.proxy.CommonProxy", clientSide = "mchorse.mappet.proxy.ClientProxy")
     public static CommonProxy proxy;
 
     public static L10n l10n = new L10n(MOD_ID);
@@ -184,7 +186,7 @@ public final class Mappet {
 
         TriggerEventHandler.getRegisteredEvents();
 
-        if (event.getServer().isDedicatedServer()) MPIcons.initiate();
+        if (event.getServer().isDedicatedServer()) MappetIcons.initiate();
     }
 
     @Mod.EventHandler

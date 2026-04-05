@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.utils;
 
-import mchorse.mappet.utils.Colors;
+import mchorse.mappet.constants.Colors;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiSlotElement;

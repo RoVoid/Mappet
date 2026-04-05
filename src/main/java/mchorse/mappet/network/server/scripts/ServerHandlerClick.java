@@ -1,6 +1,6 @@
 package mchorse.mappet.network.server.scripts;
 
-import mchorse.mappet.CommonProxy;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.network.packets.scripts.PacketClick;
 import mchorse.mclib.network.ServerMessageHandler;

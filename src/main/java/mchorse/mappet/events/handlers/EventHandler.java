@@ -1,7 +1,8 @@
-package mchorse.mappet;
+package mchorse.mappet.events.handlers;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import mchorse.mappet.Mappet;
 import mchorse.mappet.api.huds.HUDScene;
 import mchorse.mappet.api.quests.Quest;
 import mchorse.mappet.api.quests.Quests;

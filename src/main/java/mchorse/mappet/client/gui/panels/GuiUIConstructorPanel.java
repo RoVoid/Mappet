@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.panels;
 
-import mchorse.mappet.CommonProxy;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.scripts.code.ui.UIButtonComponent;
 import mchorse.mappet.api.scripts.code.ui.UIComponent;

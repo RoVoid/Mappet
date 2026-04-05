@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.conditions;
 
-import mchorse.mappet.CommonProxy;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.api.conditions.Condition;
 import mchorse.mappet.api.conditions.blocks.AbstractConditionBlock;
 import mchorse.mappet.api.conditions.blocks.ConditionConditionBlock;
@@ -26,7 +26,7 @@ import mchorse.mappet.client.gui.conditions.blocks.GuiStateConditionBlockPanel;
 import mchorse.mappet.client.gui.conditions.blocks.GuiWorldTimeConditionBlockPanel;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
 import mchorse.mappet.client.gui.utils.overlays.GuiEditorOverlayPanel;
-import mchorse.mappet.utils.Colors;
+import mchorse.mappet.constants.Colors;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;

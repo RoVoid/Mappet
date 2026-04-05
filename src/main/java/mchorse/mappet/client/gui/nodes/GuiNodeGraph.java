@@ -6,7 +6,7 @@ import mchorse.mappet.api.utils.nodes.Node;
 import mchorse.mappet.api.utils.nodes.NodeRelation;
 import mchorse.mappet.api.utils.nodes.NodeSystem;
 import mchorse.mappet.api.utils.nodes.NodeUtils;
-import mchorse.mappet.utils.Colors;
+import mchorse.mappet.constants.Colors;
 import mchorse.mclib.McLib;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;

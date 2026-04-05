@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.scripts.themes;
 
-import mchorse.mappet.ClientProxy;
+import mchorse.mappet.proxy.ClientProxy;
 import mchorse.mappet.client.gui.scripts.style.SyntaxStyle;
 import mchorse.mappet.utils.NBTToJsonLike;
 import mchorse.mclib.client.gui.utils.GuiUtils;

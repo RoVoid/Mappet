@@ -5,7 +5,7 @@ import mchorse.mappet.client.gui.scripts.utils.documentation.DocEntry;
 import mchorse.mappet.client.gui.scripts.utils.documentation.DocMethod;
 import mchorse.mappet.client.gui.scripts.utils.documentation.Docs;
 import mchorse.mappet.client.gui.utils.overlays.GuiOverlayPanel;
-import mchorse.mappet.utils.MPIcons;
+import mchorse.mappet.MappetIcons;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
@@ -117,7 +117,7 @@ public class GuiDocumentationOverlayPanel extends GuiOverlayPanel {
         documentation.flex().relative(content).x(240).w(1F, -240).h(1F).column(4).vertical().stretch().scroll().padding(10);
 
         content.add(searchList, documentation);
-        javadocs = new GuiIconElement(mc, MPIcons.get(MPIcons.PLANET), (b) -> openJavadocs());
+        javadocs = new GuiIconElement(mc, MappetIcons.PLANET, (b) -> openJavadocs());
         javadocs.tooltip(IKey.lang("mappet.gui.scripts.documentation.javadocs")).flex().wh(16, 16);
         copy = new GuiIconElement(mc, Icons.COPY, (b) -> copyName());
         copy.tooltip(IKey.lang("mappet.gui.scripts.documentation.copy")).flex().wh(16, 16);

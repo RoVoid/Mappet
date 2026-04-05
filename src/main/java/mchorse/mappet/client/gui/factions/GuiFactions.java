@@ -2,7 +2,7 @@ package mchorse.mappet.client.gui.factions;
 
 import mchorse.mappet.api.factions.FactionAttitude;
 import mchorse.mappet.client.gui.panels.GuiFactionPanel;
-import mchorse.mappet.utils.Colors;
+import mchorse.mappet.constants.Colors;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;

@@ -18,7 +18,7 @@ import mchorse.mappet.client.gui.utils.overlays.GuiOverlay;
 import mchorse.mappet.client.gui.utils.overlays.GuiOverlayPanel;
 import mchorse.mappet.client.gui.utils.overlays.GuiSoundOverlayPanel;
 import mchorse.mappet.client.gui.utils.text.undo.TextEditUndo;
-import mchorse.mappet.utils.MPIcons;
+import mchorse.mappet.MappetIcons;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
@@ -75,7 +75,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
         folderList.setFileIcon(MMIcons.PROPERTIES);
 
-        toggleRepl = new GuiIconElement(mc, MPIcons.get(MPIcons.CONSOLE), (b) -> setRepl(!repl.isVisible()));
+        toggleRepl = new GuiIconElement(mc, MappetIcons.CONSOLE, (b) -> setRepl(!repl.isVisible()));
         toggleRepl.tooltip(IKey.lang("mappet.gui.scripts.repl.title"), Direction.RIGHT);
 
         docs = new GuiIconElement(mc, Icons.HELP, this::openDocumentation);
@@ -87,7 +87,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         run = new GuiIconElement(mc, Icons.PLAY, this::runScript);
         run.tooltip(IKey.lang("mappet.gui.scripts.run"), Direction.RIGHT);
 
-        beautifier = new GuiIconElement(mc, MPIcons.get(MPIcons.BRUSH), (b) -> beautifierScript(code));
+        beautifier = new GuiIconElement(mc, MappetIcons.BRUSH, (b) -> beautifierScript(code));
         beautifier.tooltip(IKey.lang("mappet.gui.scripts.beautifier"), Direction.RIGHT);
 
         iconBar.add(toggleRepl, docs, libraries, run, beautifier);

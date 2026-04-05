@@ -1,6 +1,6 @@
 package mchorse.mappet.utils;
 
-import mchorse.mappet.ClientProxy;
+import mchorse.mappet.proxy.ClientProxy;
 import mchorse.mappet.client.gui.utils.text.GuiText;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
@@ -14,7 +14,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

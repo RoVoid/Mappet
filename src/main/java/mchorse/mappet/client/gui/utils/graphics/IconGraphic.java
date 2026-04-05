@@ -1,16 +1,15 @@
 package mchorse.mappet.client.gui.utils.graphics;
 
+import mchorse.mappet.MappetIcons;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.Icon;
-import mchorse.mclib.client.gui.utils.IconRegistry;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.utils.ColorUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class IconGraphic extends Graphic
-{
+public class IconGraphic extends Graphic {
     public String id;
     public float anchorX;
     public float anchorY;
@@ -18,11 +17,9 @@ public class IconGraphic extends Graphic
     @SideOnly(Side.CLIENT)
     private Icon icon;
 
-    public IconGraphic()
-    {}
+    public IconGraphic() {}
 
-    public IconGraphic(String id, int x, int y, int primary, float anchorX, float anchorY)
-    {
+    public IconGraphic(String id, int x, int y, int primary, float anchorX, float anchorY) {
         this.pixels.set(x - 8, y - 8, 16, 16);
 
         this.primary = primary;
@@ -33,13 +30,11 @@ public class IconGraphic extends Graphic
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void drawGraphic(Area area)
-    {
+    public void drawGraphic(Area area) {
         ColorUtils.bindColor(this.primary);
 
-        if (this.icon == null)
-        {
-            this.icon = IconRegistry.icons.get(this.id);
+        if (this.icon == null) {
+            this.icon = MappetIcons.get(this.id);
             this.icon = this.icon == null ? Icons.NONE : this.icon;
         }
 
@@ -50,8 +45,7 @@ public class IconGraphic extends Graphic
     }
 
     @Override
-    public void serializeNBT(NBTTagCompound tag)
-    {
+    public void serializeNBT(NBTTagCompound tag) {
         super.serializeNBT(tag);
 
         tag.setString("Icon", this.id);
@@ -60,8 +54,7 @@ public class IconGraphic extends Graphic
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
-    {
+    public void deserializeNBT(NBTTagCompound tag) {
         super.deserializeNBT(tag);
 
         this.id = tag.getString("Icon");

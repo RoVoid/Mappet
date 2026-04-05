@@ -2,14 +2,18 @@
     {
         "modid": "mappet",
         "name": "Mappet",
-        "description": "Mod for scripting\\nThis is a fork of Mappet\\n Original: https://github.com/mchorse/mappet by McHorse",
+        "description": "Mod for scripting\\nThis is a fork of Mappet:\\n- Original: https://github.com/mchorse/mappet by McHorse",
         "version": "${version}",
-        "mcversion": "${mcversion}",
+        "mcversion": "1.12.2",
         "authorList": ["RoVoid"],
         "url": "https://github.com/RoVoid/MappetR",
-        "credits": "McHorse & OtakuGamerAds for mod, Demon for icons",
+        "credits": "McHorse & TorayLife & OtakuGamerAds for mod, Demon for icons",
         "logoFile": "assets/mappet/textures/banner.png",
         "screenshots": [],
-        "dependencies": []
+        "useDependencyInformation": true,
+        "requiredMods": [
+            "forge@[14.23.5.2847,)", "mclib@[${mclib},)", "blockbuster@[${blockbuster},)", "metamorph@[${metamorph},)"
+        ],
+        "dependencies": ["mclib", "blockbuster", "metamorph", "aperture", "chameleon"]
     }
 ]

@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.conditions.blocks;
 
-import mchorse.mappet.CommonProxy;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.api.conditions.blocks.AbstractConditionBlock;
 import mchorse.mappet.client.gui.conditions.GuiConditionOverlayPanel;
 import mchorse.mclib.McLib;

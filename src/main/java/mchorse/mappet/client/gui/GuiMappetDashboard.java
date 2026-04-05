@@ -4,7 +4,7 @@ import mchorse.mappet.client.RenderingHandler;
 import mchorse.mappet.client.gui.panels.*;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.content.PacketContentExit;
-import mchorse.mappet.utils.MPIcons;
+import mchorse.mappet.MappetIcons;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.mclib.GuiAbstractDashboard;
@@ -104,9 +104,10 @@ public class GuiMappetDashboard extends GuiAbstractDashboard {
         panels.registerPanel(script, IKey.lang(script.getTitle()), MMIcons.PROPERTIES);
         panels.registerPanel(hud, IKey.lang(hud.getTitle()), Icons.POSE);
         panels.registerPanel(ui, IKey.lang(ui.getTitle()), Icons.PROCESSOR);
-        panels.registerPanel(translation, IKey.lang(translation.getTitle()), MPIcons.get(MPIcons.LETTER_A));
-        panels.registerPanel(logs, IKey.lang("mappet.gui.panels.logs"), MPIcons.get(MPIcons.CONSOLE));
-        panels.registerPanel(snippets, IKey.lang("mappet.gui.panels.snippets"), MPIcons.get(MPIcons.GLASSES));
+        panels.registerPanel(translation, IKey.lang(translation.getTitle()), MappetIcons.LETTER_A);
+        panels.registerPanel(translation, IKey.lang(translation.getTitle()), MappetIcons.LETTER_A);
+        panels.registerPanel(logs, IKey.lang("mappet.gui.panels.logs"), MappetIcons.CONSOLE);
+        panels.registerPanel(snippets, IKey.lang("mappet.gui.panels.snippets"), MappetIcons.GLASSES);
         
         panels.setPanel(settings);
     }

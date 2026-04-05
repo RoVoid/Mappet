@@ -1,14 +1,12 @@
 package mchorse.mappet.api.scripts.code.ui;
 
-import mchorse.mappet.CommonProxy;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
 import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
 import mchorse.mappet.api.ui.UI;
 import mchorse.mappet.api.ui.utils.LayoutType;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.List;
 
 public class MappetUIBuilder implements IMappetUIBuilder {

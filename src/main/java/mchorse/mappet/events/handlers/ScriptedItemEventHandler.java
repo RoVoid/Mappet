@@ -1,11 +1,11 @@
-package mchorse.mappet.events;
+package mchorse.mappet.events.handlers;
 
-import mchorse.mappet.CommonProxy;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntityItem;
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
 import mchorse.mappet.api.triggers.Trigger;
 import mchorse.mappet.api.utils.DataContext;
-import mchorse.mappet.common.ScriptedItemProps;
+import mchorse.mappet.items.ScriptedItemProps;
 import mchorse.mappet.utils.NBTUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;

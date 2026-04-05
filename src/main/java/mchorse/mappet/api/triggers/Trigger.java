@@ -1,6 +1,6 @@
 package mchorse.mappet.api.triggers;
 
-import mchorse.mappet.CommonProxy;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.api.triggers.blocks.AbstractTriggerBlock;
 import mchorse.mappet.api.triggers.blocks.CommandTriggerBlock;
 import mchorse.mappet.api.triggers.blocks.DialogueTriggerBlock;

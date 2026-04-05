@@ -2,7 +2,7 @@ package mchorse.mappet.client.gui.scripts.codeEditor;
 
 import mchorse.mappet.MappetConfig;
 import mchorse.mappet.client.gui.scripts.GuiCodeEditor;
-import mchorse.mappet.utils.MPIcons;
+import mchorse.mappet.MappetIcons;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
@@ -57,14 +57,14 @@ public class SearchPanel extends GuiElement {
         searchNextIcon = new GuiIconElement(mc, Icons.MOVE_DOWN, (b) -> navigate(false));
         searchNextIcon.tooltip(IKey.lang("mappet.gui.scripts.search.next"));
 
-        regexIcon = new GuiIconElement(mc, MPIcons.get(MPIcons.REGEX), (b) -> {
+        regexIcon = new GuiIconElement(mc, MappetIcons.REGEX, (b) -> {
             toggleIcon(b);
             regex = b.iconColor == COLOR_ON;
             refreshSearch(true);
         }).iconColor(COLOR_OFF).hoverColor(COLOR_OFF);
         regexIcon.tooltip(IKey.lang("mappet.gui.scripts.search.regex"));
 
-        ignoreCaseIcon = new GuiIconElement(mc, MPIcons.get(MPIcons.LETTER_CASE), (b) -> {
+        ignoreCaseIcon = new GuiIconElement(mc, MappetIcons.LETTER_CASE, (b) -> {
             toggleIcon(b);
             ignoreCase = b.iconColor == COLOR_ON;
             refreshSearch(true);

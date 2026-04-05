@@ -1,5 +1,7 @@
-package mchorse.mappet;
+package mchorse.mappet.events.handlers;
 
+import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.dialogues.DialogueManager;
 import mchorse.mappet.api.events.EventManager;
 import mchorse.mappet.api.factions.FactionManager;

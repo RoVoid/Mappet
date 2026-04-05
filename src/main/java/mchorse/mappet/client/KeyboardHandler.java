@@ -1,6 +1,6 @@
 package mchorse.mappet.client;
 
-import mchorse.mappet.CommonProxy;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.hotkeys.Hotkey;

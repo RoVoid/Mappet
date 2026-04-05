@@ -1,5 +1,6 @@
 package mchorse.mappet.api.scripts.code.ui;
 
+import mchorse.mappet.MappetIcons;
 import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
@@ -192,7 +193,7 @@ public class UIIconButtonComponent extends UIComponent {
     @DiscardMethod
     @SideOnly(Side.CLIENT)
     private Icon getIcon() {
-        Icon icon = IconRegistry.icons.get(this.icon);
+        Icon icon = MappetIcons.get(this.icon);
         return icon == null ? Icons.NONE : icon;
     }
 

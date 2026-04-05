@@ -7,7 +7,7 @@ import mchorse.mappet.api.utils.content.IContentType;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.utils.overlays.GuiOverlay;
 import mchorse.mappet.client.gui.utils.overlays.GuiStringOverlayPanel;
-import mchorse.mappet.utils.MPIcons;
+import mchorse.mappet.MappetIcons;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
@@ -32,7 +32,7 @@ public class GuiTranslationPanel extends GuiMappetDashboardPanel<Translation> {
 
     public GuiTranslationPanel(Minecraft mc, GuiMappetDashboard dashboard) {
         super(mc, dashboard);
-        folderList.setFileIcon(MPIcons.get(MPIcons.LETTER_A));
+        folderList.setFileIcon(MappetIcons.LETTER_A);
 
         add = new GuiIconElement(mc, Icons.ADD, (e) -> addInput());
         inputs = new GuiScrollElement(mc);

@@ -1,6 +1,6 @@
 package mchorse.mappet.api.events;
 
-import mchorse.mappet.CommonProxy;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.events.nodes.EventBaseNode;
 import mchorse.mappet.api.utils.manager.BaseManager;
