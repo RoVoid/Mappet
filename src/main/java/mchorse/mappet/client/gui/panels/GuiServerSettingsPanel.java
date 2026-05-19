@@ -1,7 +1,6 @@
 package mchorse.mappet.client.gui.panels;
 
-import mchorse.mappet.MappetConfig;
-import mchorse.mappet.events.handlers.TriggerEventHandler;
+import mchorse.mappet.MappetIcons;
 import mchorse.mappet.api.ServerSettings;
 import mchorse.mappet.api.states.States;
 import mchorse.mappet.api.triggers.Trigger;
@@ -15,12 +14,13 @@ import mchorse.mappet.client.gui.utils.text.GuiText;
 import mchorse.mappet.client.gui.utils.triggers.TriggerDoc;
 import mchorse.mappet.client.gui.utils.triggers.TriggerDocs;
 import mchorse.mappet.client.gui.utils.triggers.TriggerVariable;
+import mchorse.mappet.config.MappetConfig;
+import mchorse.mappet.events.handlers.TriggerEventHandler;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.content.PacketRequestServerSettings;
 import mchorse.mappet.network.packets.content.PacketRequestStates;
 import mchorse.mappet.network.packets.content.PacketServerSettings;
 import mchorse.mappet.network.packets.content.PacketStates;
-import mchorse.mappet.MappetIcons;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
@@ -47,39 +47,22 @@ import java.util.stream.Collectors;
 
 public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard> {
     public GuiElement states;
-
     public GuiStatesEditor statesEditor;
-
     public GuiLabel statesTitle;
-
     public GuiIconElement statesSwitch;
-
     public GuiIconElement statesAdd;
-
     public GuiLabelListElement<String> triggers;
-
     public GuiTriggerElement trigger;
-
     public GuiIconElement hotkeys;
-
     public GuiIconElement triggersToggle;
-
     public GuiScrollElement editor;
-
     public GuiLabelListElement<String> forgeTriggers;
-
     public GuiTriggerElement forgeTrigger;
-
     public GuiElement globalTriggersLayout;
-
     public GuiElement forgeTriggersLayout;
-
     private ServerSettings settings;
-
     private static String lastTarget = "~";
-
     private String lastTrigger = "player_chat";
-
     private String lastForgeTrigger = "";
 
     public GuiServerSettingsPanel(Minecraft mc, GuiMappetDashboard dashboard) {
@@ -118,10 +101,10 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
 
         forgeTriggers = new GuiLabelListElement<>(mc, (l) -> fillForgeTrigger(l.get(0)));
         forgeTriggers.background().flex().relative(this).x(0.5F, 10).y(35).w(0.5F, -20).h(246);
-        forgeTriggers.context(() -> new GuiSimpleContextMenu(mc)
-                .action(Icons.ADD, IKey.lang("mappet.gui.settings.forge.add"), this::addForgeTrigger)
-                .action(Icons.ADD, IKey.lang("mappet.gui.settings.forge.add_from_list"), this::addForgeTriggerFromList)
-                .action(Icons.REMOVE, IKey.lang("mappet.gui.settings.forge.remove"), this::removeCurrentForgeTrigger));
+        forgeTriggers.context(
+                () -> new GuiSimpleContextMenu(mc).action(Icons.ADD, IKey.lang("mappet.gui.settings.forge.add"), this::addForgeTrigger)
+                        .action(Icons.ADD, IKey.lang("mappet.gui.settings.forge.add_from_list"), this::addForgeTriggerFromList)
+                        .action(Icons.REMOVE, IKey.lang("mappet.gui.settings.forge.remove"), this::removeCurrentForgeTrigger));
 
         forgeTrigger = new GuiTriggerElement(mc).onClose(this::updateCurrentForgeTrigger);
         forgeTrigger.flex().relative(this).x(1F, -10).y(1F, -10).wh(120, 20).anchor(1F, 1F);
@@ -165,9 +148,7 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
     }
 
     public void addForgeTrigger(String name) {
-        for (Label<String> l : forgeTriggers.getList()) {
-            if (l.title.get().equals(name)) return;
-        }
+        for (Label<String> l : forgeTriggers.getList()) if (l.title.get().equals(name)) return;
         forgeTriggers.add(IKey.str(name), name);
         settings.forgeTriggers.put(name, new Trigger());
     }
@@ -182,12 +163,12 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
     }
 
     public void addForgeTriggerFromList() {
-        Set<String> events = TriggerEventHandler
-                .getRegisteredEvents()
+        Set<String> events = TriggerEventHandler.getRegisteredEvents()
                 .stream()
                 .map(TriggerEventHandler::getEventClassName)
                 .collect(Collectors.toSet());
-        GuiStringOverlayPanel overlay = new GuiStringOverlayPanel(mc, IKey.lang("mappet.gui.forge.pick"), false, events, this::addForgeTrigger);
+        GuiStringOverlayPanel overlay = new GuiStringOverlayPanel(mc, IKey.lang("mappet.gui.forge.pick"), false, events,
+                this::addForgeTrigger);
 
         GuiOverlay.addOverlay(GuiBase.getCurrent(), overlay.set(lastTarget), 0.5F, 0.6F);
     }

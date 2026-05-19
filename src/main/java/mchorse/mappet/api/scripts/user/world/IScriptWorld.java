@@ -1,11 +1,8 @@
 package mchorse.mappet.api.scripts.user.world;
 
-import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
-import mchorse.mappet.api.scripts.code.math.ScriptBox;
-import mchorse.mappet.api.scripts.code.math.ScriptVector;
-import mchorse.mappet.api.scripts.code.mappet.MappetSchematic;
-import mchorse.mappet.api.scripts.code.world.ScriptStructure;
-import mchorse.mappet.api.scripts.code.world.ScriptWorldBorder;
+
+import mchorse.mappet.api.scripts.user.world.IScriptStructure;
+import mchorse.mappet.api.scripts.user.world.IScriptWorldBorder;
 import mchorse.mappet.api.scripts.user.IScriptFactory;
 import mchorse.mappet.api.scripts.user.IScriptRayTrace;
 import mchorse.mappet.api.scripts.user.blocks.IScriptBlockState;
@@ -17,6 +14,8 @@ import mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.items.IScriptInventory;
 import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
 import mchorse.mappet.api.scripts.user.mappet.IMappetSchematic;
+import mchorse.mappet.api.scripts.user.math.IScriptBox;
+import mchorse.mappet.api.scripts.user.math.IScriptVector;
 import mchorse.mappet.api.scripts.user.nbt.INBTCompound;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.util.EnumParticleTypes;
@@ -83,11 +82,26 @@ public interface IScriptWorld {
      */
     Object getGameRule(String name);
 
-    void setBlock(IScriptBlockState state, ScriptVector pos);
+    void setBlock(IScriptBlockState state, IScriptVector pos);
 
     boolean isBlockLoaded(int x, int y, int z);
 
-    boolean isBlockLoaded(ScriptVector newPos);
+    boolean isBlockLoaded(IScriptVector newPos);
+
+    /**
+     * Returns a list of positions for blocks in the box that match a given block state in a given world.
+     *
+     * <pre>{@code
+     * function main(c)
+     * {
+     *     var state = mappet.createBlockState("minecraft:stone");
+     *     var box = mappet.box(-10, 4, -10, 10, 6, 10);
+     *
+     *     c.send(box.getBlocksPositions(c.getWorld(), state));
+     * }
+     * }</pre>
+     */
+    List<IScriptVector> getBlocksPositions(IScriptBlockState state, IScriptBox box);
 
     /**
      * Set a block at XYZ, use {@link IScriptFactory#createBlock(String, int)}
@@ -110,7 +124,7 @@ public interface IScriptWorld {
      */
     void removeBlock(int x, int y, int z);
 
-    void removeBlock(ScriptVector pos);
+    void removeBlock(IScriptVector pos);
 
     /**
      * Get block state at given XYZ.
@@ -136,7 +150,7 @@ public interface IScriptWorld {
      *
      * @return a block state at given XYZ, or null if the chunk isn't loaded
      */
-    IScriptBlockState getBlock(ScriptVector pos);
+    IScriptBlockState getBlock(IScriptVector pos);
 
     /**
      * Whether a tile entity is present at given XYZ.
@@ -152,17 +166,17 @@ public interface IScriptWorld {
      */
     boolean hasTileEntity(int x, int y, int z);
 
-    boolean hasTileEntity(ScriptVector pos);
+    boolean hasTileEntity(IScriptVector pos);
 
     void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, int minX, int minY, int minZ, int maxX, int maxY, int maxZ);
 
-    void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, ScriptVector start, ScriptVector end);
+    void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, IScriptVector start, IScriptVector end);
 
     void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, ScriptBox box);
 
     void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, INBTCompound tileData, int minX, int minY, int minZ, int maxX, int maxY, int maxZ);
 
-    void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, INBTCompound tileData, ScriptVector start, ScriptVector end);
+    void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, INBTCompound tileData, IScriptVector start, IScriptVector end);
 
     void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, INBTCompound tileData, ScriptBox box);
 
@@ -182,7 +196,7 @@ public interface IScriptWorld {
      */
     IScriptTileEntity getTileEntity(int x, int y, int z);
 
-    IScriptTileEntity getTileEntity(ScriptVector pos);
+    IScriptTileEntity getTileEntity(IScriptVector pos);
 
     /**
      * Check whether there is an inventory tile entity at given XYZ.
@@ -205,7 +219,7 @@ public interface IScriptWorld {
      */
     boolean hasInventory(int x, int y, int z);
 
-    boolean hasInventory(ScriptVector pos);
+    boolean hasInventory(IScriptVector pos);
 
     /**
      * Get inventory tile entity at given XYZ.
@@ -341,7 +355,7 @@ public interface IScriptWorld {
      */
     void spawnParticles(EnumParticleTypes type, boolean longDistance, double x, double y, double z, int n, double dx, double dy, double dz, double speed, int... args);
 
-    void spawnParticles(EnumParticleTypes type, boolean longDistance, ScriptVector pos, int number, ScriptVector offset, double speed, int... args);
+    void spawnParticles(EnumParticleTypes type, boolean longDistance, IScriptVector pos, int number, IScriptVector offset, double speed, int... args);
 
     /**
      * Spawn vanilla particles only to a specific player.
@@ -410,7 +424,7 @@ public interface IScriptWorld {
         return this.spawnNpc(id, "default", x, y, z);
     }
 
-    IScriptEntity spawnEntity(String id, ScriptVector pos, INBTCompound compound);
+    IScriptEntity spawnEntity(String id, IScriptVector pos, INBTCompound compound);
 
     /**
      * Spawn an NPC at given position with given state.
@@ -434,9 +448,9 @@ public interface IScriptWorld {
      */
     IScriptNpc spawnNpc(String id, String state, double x, double y, double z, float yaw, float pitch, float headYaw);
 
-    IScriptNpc spawnNpc(String id, String state, ScriptVector pos);
+    IScriptNpc spawnNpc(String id, String state, IScriptVector pos);
 
-    IScriptNpc spawnNpc(String id, String state, ScriptVector pos, ScriptVector rot);
+    IScriptNpc spawnNpc(String id, String state, IScriptVector pos, IScriptVector rot);
 
     /**
      * Get entities within the box specified by given coordinates in this world.
@@ -537,7 +551,7 @@ public interface IScriptWorld {
         this.stopSound(event, "");
     }
 
-    void playSound(String event, ScriptVector pos, float volume, float pitch);
+    void playSound(String event, IScriptVector pos, float volume, float pitch);
 
     /**
      * <p>Stop specific sound event in given sound category for every player.</p>
@@ -640,7 +654,7 @@ public interface IScriptWorld {
      */
     void explode(IScriptEntity exploder, double x, double y, double z, float distance, boolean blazeGround, boolean destroyTerrain);
 
-    void explode(IScriptEntity exploder, ScriptVector pos, float distance, boolean blazeGround, boolean destroyTerrain);
+    void explode(IScriptEntity exploder, IScriptVector pos, float distance, boolean blazeGround, boolean destroyTerrain);
 
     /**
      * Ray trace in this world, between two given points (including any entity intersection).
@@ -677,19 +691,11 @@ public interface IScriptWorld {
      */
     boolean isActive(int x, int y, int z);
 
-    boolean isActive(ScriptVector pos);
+    boolean isActive(IScriptVector pos);
 
-    /**
-     * @setter
-     * @param block
-     * @param x
-     * @param y
-     * @param z
-     * @return
-     */
     boolean testForBlock(ScriptBlockState block, int x, int y, int z);
 
-    boolean testForBlock(ScriptBlockState block, ScriptVector pos);
+    boolean testForBlock(ScriptBlockState block, IScriptVector pos);
 
     /**
      * Fill a 3D area with a block.
@@ -710,13 +716,13 @@ public interface IScriptWorld {
      */
     void fill(IScriptBlockState state, int x1, int y1, int z1, int x2, int y2, int z2);
 
-    void fill(IScriptBlockState block, ScriptVector start, ScriptVector end);
+    void fill(IScriptBlockState block, IScriptVector start, IScriptVector end);
 
     void fill(IScriptBlockState block, ScriptBox box);
 
     IScriptEntity spawnFallingBlock(IScriptBlockState block, double x, double y, double z);
 
-    IScriptEntity spawnFallingBlock(IScriptBlockState block, ScriptVector pos);
+    IScriptEntity spawnFallingBlock(IScriptBlockState block, IScriptVector pos);
 
     /**
      * Use {@link #makeBlockFall(int, int, int)} instead
@@ -735,11 +741,11 @@ public interface IScriptWorld {
      */
     IScriptEntity makeBlockFall(int x, int y, int z);
 
-    IScriptEntity makeBlockFall(ScriptVector pos);
+    IScriptEntity makeBlockFall(IScriptVector pos);
 
     void setTileEntity(IScriptBlockState block, int x, int y, int z, INBTCompound tileData);
 
-    void setTileEntity(IScriptBlockState block, ScriptVector pos, INBTCompound tileData);
+    void setTileEntity(IScriptBlockState block, IScriptVector pos, INBTCompound tileData);
 
     /**
      * Fills a range with tile entities.

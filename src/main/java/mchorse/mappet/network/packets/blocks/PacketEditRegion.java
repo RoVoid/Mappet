@@ -1,7 +1,7 @@
 package mchorse.mappet.network.packets.blocks;
 
 import io.netty.buffer.ByteBuf;
-import mchorse.mappet.tile.TileRegion;
+import mchorse.mappet.blocks.tile.TileRegion;
 import mchorse.mclib.utils.NBTUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;

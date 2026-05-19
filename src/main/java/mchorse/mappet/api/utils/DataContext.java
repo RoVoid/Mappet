@@ -1,6 +1,6 @@
 package mchorse.mappet.api.utils;
 
-import mchorse.mappet.MappetConfig;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.entities.EntityNpc;

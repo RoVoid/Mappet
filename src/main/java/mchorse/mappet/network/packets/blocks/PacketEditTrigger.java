@@ -2,7 +2,7 @@ package mchorse.mappet.network.packets.blocks;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.mappet.blocks.BlockTrigger;
-import mchorse.mappet.tile.TileTrigger;
+import mchorse.mappet.blocks.tile.TileTrigger;
 import mchorse.mclib.utils.NBTUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;

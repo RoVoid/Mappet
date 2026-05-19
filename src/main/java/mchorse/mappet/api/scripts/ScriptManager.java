@@ -147,7 +147,7 @@ public class ScriptManager extends BaseManager<Script> {
     }
 
     @Override
-    public Collection<String> getKeys() {
+    public Set<String> getIDs() {
         if (folder == null) {
             return Collections.emptySet();
         }
@@ -244,10 +244,10 @@ public class ScriptManager extends BaseManager<Script> {
     /* Custom implementation of folder manager to support .js files */
 
     @Override
-    public boolean exists(String name) {
-        File scriptFile = getScriptFile(name);
+    public boolean exists(String id) {
+        File scriptFile = getScriptFile(id);
 
-        return super.exists(name) || scriptFile != null && scriptFile.exists();
+        return super.exists(id) || scriptFile != null && scriptFile.exists();
     }
 
     @Override
@@ -263,9 +263,9 @@ public class ScriptManager extends BaseManager<Script> {
     }
 
     @Override
-    public boolean delete(String name) {
-        boolean result = super.delete(name);
-        File scriptFile = getScriptFile(name);
+    public boolean delete(String id) {
+        boolean result = super.delete(id);
+        File scriptFile = getScriptFile(id);
 
         return scriptFile != null && scriptFile.delete() || result;
     }
@@ -281,7 +281,7 @@ public class ScriptManager extends BaseManager<Script> {
     }
 
     public void initiateAllScripts() {
-        for (String id : getKeys()) {
+        for (String id : getIDs()) {
             try {
                 Script script = load(id);
 

@@ -1,6 +1,6 @@
 package mchorse.mappet.api.utils;
 
-import mchorse.mappet.MappetConfig;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.api.hotkeys.Hotkey;
 import mchorse.mappet.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;

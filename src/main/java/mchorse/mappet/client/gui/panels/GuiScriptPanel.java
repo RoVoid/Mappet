@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.panels;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.MappetConfig;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.api.scripts.Script;
 import mchorse.mappet.api.utils.content.ContentTypes;
 import mchorse.mappet.api.utils.content.IContentType;
@@ -281,7 +281,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         try {
             formattedCode = Beautifier.beautify(code.getText());
         } catch (ScriptException | NoSuchMethodException e) {
-            Mappet.loggerClient.error(e.getMessage());
+            Mappet.logger.error(e.getMessage());
         }
 
         if (formattedCode.isEmpty()) return;

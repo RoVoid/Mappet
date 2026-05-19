@@ -1,7 +1,7 @@
 package mchorse.mappet.network.server.blocks;
 
 import mchorse.mappet.network.packets.blocks.PacketEditConditionModel;
-import mchorse.mappet.tile.TileConditionModel;
+import mchorse.mappet.blocks.tile.TileConditionModel;
 import mchorse.mappet.utils.WorldUtils;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;

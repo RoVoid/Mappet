@@ -1,10 +1,13 @@
 package mchorse.mappet.api.utils.manager;
 
-import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.utils.AbstractData;
+import mchorse.mappet.config.MappetConfig;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Folder based manager
@@ -15,10 +18,9 @@ public abstract class FolderManager<T extends AbstractData> implements IManager<
     protected long lastCheck;
 
     public FolderManager(File folder) {
-        if (folder != null) {
-            this.folder = folder;
-            this.folder.mkdirs();
-        }
+        if (folder == null) return;
+        this.folder = folder;
+        this.folder.mkdirs();
     }
 
     protected void doExpirationCheck() {
@@ -35,8 +37,8 @@ public abstract class FolderManager<T extends AbstractData> implements IManager<
     }
 
     @Override
-    public boolean exists(String name) {
-        return getFile(name).exists();
+    public boolean exists(String id) {
+        return getFile(id).exists();
     }
 
     @Override
@@ -57,11 +59,11 @@ public abstract class FolderManager<T extends AbstractData> implements IManager<
     }
 
     @Override
-    public boolean delete(String name) {
-        File file = getFile(name);
+    public boolean delete(String id) {
+        File file = getFile(id);
 
         if (file != null && file.delete()) {
-            cache.remove(name);
+            cache.remove(id);
 
             return true;
         }
@@ -70,21 +72,16 @@ public abstract class FolderManager<T extends AbstractData> implements IManager<
     }
 
     @Override
-    public Collection<String> getKeys() {
+    public Set<String> getIDs() {
         Set<String> set = new HashSet<>();
-
-        if (folder == null) {
-            return set;
-        }
-
+        if (folder == null) return set;
         recursiveFind(set, folder, "");
-
         return set;
     }
 
     protected void recursiveFind(Set<String> set, File folder, String prefix) {
         File[] files = folder.listFiles();
-        if(files == null) return;
+        if (files == null) return;
         for (File file : files) {
             String name = file.getName();
 
@@ -93,7 +90,7 @@ public abstract class FolderManager<T extends AbstractData> implements IManager<
             }
             else if (file.isDirectory()) {
                 File[] subFiles = file.listFiles();
-                if(subFiles == null) continue;
+                if (subFiles == null) continue;
                 if (subFiles.length > 0) {
                     recursiveFind(set, file, prefix + name + "/");
                 }

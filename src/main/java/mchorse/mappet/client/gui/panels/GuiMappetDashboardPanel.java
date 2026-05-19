@@ -121,6 +121,12 @@ public abstract class GuiMappetDashboardPanel<T extends AbstractData> extends Gu
                 () -> toggleSidebar.clickItself(GuiBase.getCurrent())).category(KEYS_CATEGORY);
     }
 
+    @Override
+    public boolean mouseClicked(GuiContext context) {
+        if (sidebar.mouseClicked(context)) return true;
+        return super.mouseClicked(context);
+    }
+
     protected GuiContextMenu sidebarContext() {
         GuiSimpleContextMenu menu = new GuiSimpleContextMenu(mc);
 
@@ -392,8 +398,8 @@ public abstract class GuiMappetDashboardPanel<T extends AbstractData> extends Gu
 
     @Override
     public void draw(GuiContext context) {
-        iconBar.area.draw(0x77000000);
-        GuiDraw.drawHorizontalGradientRect(iconBar.area.x - 6, iconBar.area.y, iconBar.area.x, iconBar.area.ey(), 0, 0x29000000);
+        iconBar.area.draw(0xaa000000);
+//        GuiDraw.drawHorizontalGradientRect(iconBar.area.x - 6, iconBar.area.y, iconBar.area.x, iconBar.area.ey(), 0, 0x29000000);
 
         if (sidebar.isVisible()) sidebar.area.draw(0xaa000000);
 

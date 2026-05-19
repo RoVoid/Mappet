@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.conditionModel;
 
-import mchorse.mappet.tile.TileConditionModel;
+import mchorse.mappet.blocks.tile.TileConditionModel;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;

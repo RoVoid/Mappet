@@ -32,6 +32,7 @@ import mchorse.mappet.network.packets.huds.PacketHUDScene;
 import mchorse.mappet.network.packets.npc.PacketNpcJump;
 import mchorse.mappet.network.packets.quests.PacketQuest;
 import mchorse.mappet.network.packets.quests.PacketQuests;
+import mchorse.mappet.utils.PlayerUtils;
 import mchorse.mclib.utils.OpHelper;
 import mchorse.mclib.utils.ReflectionUtils;
 import net.minecraft.block.Block;
@@ -141,10 +142,11 @@ public class EventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerPlaceBlock(BlockEvent.PlaceEvent event) {
-        EntityPlayerMP player = (EntityPlayerMP) event.getPlayer();
-        if (OpHelper.isPlayerOp(player)) {
-            Block block = event.getPlacedBlock().getBlock();
-            if (block instanceof BlockTrigger || block instanceof BlockRegion) event.setCanceled(true);
+        if (PlayerUtils.isOperator(event.getPlayer())) return;
+        Block block = event.getPlacedBlock().getBlock();
+        if (block instanceof BlockTrigger || block instanceof BlockRegion) {
+            event.setCanceled(true);
+            event.getWorld().setBlockState(event.getPos(), event.getPlacedBlock(), 3);
         }
     }
 

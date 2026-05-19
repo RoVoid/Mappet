@@ -45,7 +45,7 @@ public class ServerHandlerContentFolder extends ServerMessageHandler<PacketConte
         }
 
         /* Synchronize names to players */
-        List<String> names = new ArrayList<String>(message.type.manager().getKeys());
+        List<String> names = new ArrayList<String>(message.type.manager().getIDs());
 
         for (EntityPlayerMP otherPlayer : player.getServer().getPlayerList().getPlayers())
         {

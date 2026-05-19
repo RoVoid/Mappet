@@ -1,0 +1,1963 @@
+{
+  "docs": "This interface represent a world passed in the event.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var world \u003d c.getWorld();\n\n        // Do something with world...\n    }\n }\u003c/pre\u003e",
+  "methods": {
+    "getMinecraftWorld": [
+      {
+        "return": "net.minecraft.world.World",
+        "deprecated": true,
+        "docs": "Use {@link #asMinecraft()} instead\n\n @deprecated"
+      }
+    ],
+    "asMinecraft": [
+      {
+        "return": "net.minecraft.world.World",
+        "docs": "Get Minecraft world instance\n \u003cb\u003eBEWARE:\u003c/b\u003e you need to know the MCP mappings to directly call methods on this instance!\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var seaLevel \u003d c.getWorld().getMinecraftWorld().field_181546_a //Sea level\n\n     c.send(seaLevel)\n }\n }\u003c/pre\u003e"
+      }
+    ],
+    "setGameRule": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "java.lang.Object"
+          }
+        ],
+        "docs": "Set a game rule to a given value.\n\n \u003cpre\u003e{@code\n   c.getWorld().setGameRule(\"keepInventory\", true); //btw you can NOT write 1 instead of true\n   c.getWorld().setGameRule(\"randomTickSpeed\", 100);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getGameRule": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.Object",
+        "docs": "Get a game rule value.\n\n \u003cpre\u003e{@code\n   var keepInventory \u003d c.getWorld().getGameRule(\"keepInventory\");\n   var randomTickSpeed \u003d c.getWorld().getGameRule(\"randomTickSpeed\");\n\n   c.send(\"Keep inventory: \" + keepInventory);\n   c.send(\"Random tick speed: \" + randomTickSpeed);\n }\u003c/pre\u003e"
+      }
+    ],
+    "setBlock": [
+      {
+        "parameters": [
+          {
+            "name": "state",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "state",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "docs": "Set a block at XYZ, use {@link IScriptFactory#createBlock(String, int)}\n to get the block state.\n\n \u003cpre\u003e{@code\n    var coarse_dirt \u003d mappet.createBlockState(\"minecraft:dirt\", 1);\n\n    c.getWorld().setBlock(coarse_dirt, 214, 3, 509);\n }\u003c/pre\u003e"
+      }
+    ],
+    "isBlockLoaded": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "boolean"
+      },
+      {
+        "parameters": [
+          {
+            "name": "newPos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "removeBlock": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "docs": "Remove a block at given XYZ.\n\n \u003cpre\u003e{@code\n   c.getWorld().removeBlock(214, 3, 509);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ]
+      }
+    ],
+    "getBlock": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState",
+        "docs": "Get block state at given XYZ.\n\n \u003cpre\u003e{@code\n    var block \u003d c.getWorld().getBlock(214, 3, 509);\n\n    c.send(\"Block at (214, 3, 509) is \" + block.getBlockId());\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState",
+        "docs": "Get block state at given XYZ.\n\n \u003cpre\u003e{@code\n    var block \u003d c.getWorld().getBlock(mappet.vector3(214, 3, 509));\n\n    c.send(\"Block at (214, 3, 509) is \" + block.getBlockId());\n }\u003c/pre\u003e"
+      }
+    ],
+    "hasTileEntity": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Whether a tile entity is present at given XYZ.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var hasTileEntity \u003d c.getWorld().hasTileEntity(0, 80, 0)\n\n     c.send(hasTileEntity)\n }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "replaceBlocks": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "newBlock",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "minX",
+            "type": "int"
+          },
+          {
+            "name": "minY",
+            "type": "int"
+          },
+          {
+            "name": "minZ",
+            "type": "int"
+          },
+          {
+            "name": "maxX",
+            "type": "int"
+          },
+          {
+            "name": "maxY",
+            "type": "int"
+          },
+          {
+            "name": "maxZ",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "newBlock",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "start",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "end",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "newBlock",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "box",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "newBlock",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "tileData",
+            "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
+          },
+          {
+            "name": "minX",
+            "type": "int"
+          },
+          {
+            "name": "minY",
+            "type": "int"
+          },
+          {
+            "name": "minZ",
+            "type": "int"
+          },
+          {
+            "name": "maxX",
+            "type": "int"
+          },
+          {
+            "name": "maxY",
+            "type": "int"
+          },
+          {
+            "name": "maxZ",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "newBlock",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "tileData",
+            "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
+          },
+          {
+            "name": "start",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "end",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "newBlock",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "tileData",
+            "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
+          },
+          {
+            "name": "box",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+          }
+        ]
+      }
+    ],
+    "getTileEntity": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.blocks.IScriptTileEntity",
+        "docs": "Get tile entity at given XYZ.\n\n \u003cpre\u003e{@code\n    var tile \u003d c.getWorld().getTileEntity(214, 3, 509);\n\n    if (tile) {\n        c.send(\"Tile entity at (214, 3, 509) is \" + tile.getId());\n    }\n    else {\n        c.send(\"There is no tile entity at (214, 3, 509)\");\n    }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.blocks.IScriptTileEntity"
+      }
+    ],
+    "hasInventory": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Check whether there is an inventory tile entity at given XYZ.\n\n \u003cpre\u003e{@code\n    var world \u003d c.getWorld();\n\n    if (world.hasInventory(214, 4, 512))\n    {\n        var inventory \u003d world.getInventory(214, 4, 512);\n\n        inventory.setStack(0, mappet.createItem(\"minecraft:diamond_hoe\"));\n        c.send(\"There is a surprise for you in chest at (214, 4, 512) :)\");\n    }\n    else\n    {\n        c.send(\"There is no chest at (214, 4, 512)...\");\n    }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "getInventory": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.items.IScriptInventory",
+        "docs": "Get inventory tile entity at given XYZ.\n\n \u003cpre\u003e{@code\n    var world \u003d c.getWorld();\n    var inventory \u003d world.getInventory(214, 4, 512);\n\n    if (world.hasInventory(214, 4, 512))\n    {\n        var inventory \u003d world.getInventory(214, 4, 512);\n\n        inventory.clear();\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "isRaining": [
+      {
+        "return": "boolean",
+        "docs": "Check whether it\u0027s raining in the world.\n\n \u003cpre\u003e{@code\n    var world \u003d c.getWorld();\n    var pos \u003d c.getSubject().getPosition();\n\n    // If it\u0027s raining in the world, then drop a diamond\n    // If not, then drop a dirt block\n    if (world.isRaining())\n    {\n        world.dropItemStack(mappet.createItem(\"minecraft:diamond\"), pos.x, pos.y + 3, pos.z);\n    }\n    else\n    {\n        world.dropItemStack(mappet.createItem(\"minecraft:dirt\"), pos.x, pos.y + 3, pos.z);\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "setRaining": [
+      {
+        "parameters": [
+          {
+            "name": "raining",
+            "type": "boolean"
+          }
+        ],
+        "docs": "Set raining state.\n\n \u003cpre\u003e{@code\n    c.getWorld().setRaining(true);\n    c.send(\"The ritual dance got successfully completed!\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "getTime": [
+      {
+        "return": "long",
+        "docs": "Get current time of day (the one that is set by \u003ccode\u003e/time set\u003c/code\u003e command).\n\n \u003cpre\u003e{@code\n    if (c.getWorld().getTime() % 24000 \u003e 12000)\n    {\n        c.getSubject().send(\"Good night!\");\n    }\n    else\n    {\n        c.getSubject().send(\"Good day!\");\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "setTime": [
+      {
+        "parameters": [
+          {
+            "name": "time",
+            "type": "long"
+          }
+        ],
+        "docs": "Set current time of day.\n\n \u003cpre\u003e{@code\n    c.getWorld().setTime(14000);\n    c.send(\"Another ritual dance got successfully completed!\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "getTotalTime": [
+      {
+        "return": "long",
+        "docs": "Get total time that this world existed for (in ticks).\n\n \u003cpre\u003e{@code\n    if (c.getWorld().getTotalTime() \u003e 20 * 600)\n    {\n        c.send(\"You had only 10 minutes to complete the map...\");\n        c.send(\"Initiating SELF-DESTRUCT mode!\");\n\n        // TODO: implement self-destruction\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "getDimensionId": [
+      {
+        "return": "int",
+        "docs": "Get world\u0027s dimension ID.\n\n \u003cpre\u003e{@code\n    if (c.getWorld().getDimensionId() \u003d\u003d 0)\n    {\n        c.getSubject().send(\"You\u0027re in overworld!\");\n    }\n    else\n    {\n        c.getSubject().send(\"*shrugs*\");\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "spawnParticles": [
+      {
+        "parameters": [
+          {
+            "name": "type",
+            "type": "net.minecraft.util.EnumParticleTypes",
+            "docs": "Particle type, you can use {@link IScriptFactory#getParticleType(String)}\n                     to get the desired particle type."
+          },
+          {
+            "name": "longDistance",
+            "type": "boolean",
+            "docs": "Whether particles should be spawned regardless of the distance"
+          },
+          {
+            "name": "x",
+            "type": "double",
+            "docs": "X coordinate of position where particles should be spawned"
+          },
+          {
+            "name": "y",
+            "type": "double",
+            "docs": "Y coordinate of position where particles should be spawned"
+          },
+          {
+            "name": "z",
+            "type": "double",
+            "docs": "Z coordinate of position where particles should be spawned"
+          },
+          {
+            "name": "n",
+            "type": "int",
+            "docs": "How many particles of given type should be spawned"
+          },
+          {
+            "name": "dx",
+            "type": "double",
+            "docs": "X random offset that shift particle relative to X coordinate where it spawned"
+          },
+          {
+            "name": "dy",
+            "type": "double",
+            "docs": "Y random offset that shift particle relative to Y coordinate where it spawned"
+          },
+          {
+            "name": "dz",
+            "type": "double",
+            "docs": "Z random offset that shift particle relative to Z coordinate where it spawned"
+          },
+          {
+            "name": "speed",
+            "type": "double",
+            "docs": "The speed of particle, different particles might use this argument differently"
+          },
+          {
+            "name": "args",
+            "type": "int",
+            "docs": "Additional arguments that can be passed into a particle, for example for\n                     \"iconcrack\" particle you can pass item numeric ID to spawn item particle for\n                     a specific item (F3 + H shows the numeric ID of an item)"
+          }
+        ],
+        "docs": "Spawn vanilla particles.\n\n \u003cpre\u003e{@code\n    var explode \u003d mappet.getParticleType(\"explode\");\n    var pos \u003d c.getSubject().getPosition();\n\n    c.getWorld().spawnParticles(explode, false, pos.x, pos.y, pos.z, 10, 0.1, 0.1, 0.1, 0.1);\n }\u003c/pre\u003e\n\n                     to get the desired particle type.\n                     \"iconcrack\" particle you can pass item numeric ID to spawn item particle for\n                     a specific item (F3 + H shows the numeric ID of an item)"
+      },
+      {
+        "parameters": [
+          {
+            "name": "type",
+            "type": "net.minecraft.util.EnumParticleTypes"
+          },
+          {
+            "name": "longDistance",
+            "type": "boolean"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "number",
+            "type": "int"
+          },
+          {
+            "name": "offset",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "speed",
+            "type": "double"
+          },
+          {
+            "name": "args",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "player",
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer",
+            "docs": "The player that you want to limit seeing the particle only to"
+          },
+          {
+            "name": "type",
+            "type": "net.minecraft.util.EnumParticleTypes",
+            "docs": "Particle type, you can use {@link IScriptFactory#getParticleType(String)}\n                     to get the desired particle type."
+          },
+          {
+            "name": "longDistance",
+            "type": "boolean",
+            "docs": "Whether particles should be spawned regardless of the distance"
+          },
+          {
+            "name": "x",
+            "type": "double",
+            "docs": "X coordinate of position where particles should be spawned"
+          },
+          {
+            "name": "y",
+            "type": "double",
+            "docs": "Y coordinate of position where particles should be spawned"
+          },
+          {
+            "name": "z",
+            "type": "double",
+            "docs": "Z coordinate of position where particles should be spawned"
+          },
+          {
+            "name": "n",
+            "type": "int",
+            "docs": "How many particles of given type should be spawned"
+          },
+          {
+            "name": "dx",
+            "type": "double",
+            "docs": "X random offset that shift particle relative to X coordinate where it spawned"
+          },
+          {
+            "name": "dy",
+            "type": "double",
+            "docs": "Y random offset that shift particle relative to Y coordinate where it spawned"
+          },
+          {
+            "name": "dz",
+            "type": "double",
+            "docs": "Z random offset that shift particle relative to Z coordinate where it spawned"
+          },
+          {
+            "name": "speed",
+            "type": "double",
+            "docs": "The speed of particle, different particles might use this argument differently"
+          },
+          {
+            "name": "args",
+            "type": "int",
+            "docs": "Additional arguments that can be passed into a particle, for example for\n                     \"iconcrack\" particle you can pass item numeric ID to spawn item particle for\n                     a specific item (F3 + H shows the numeric ID of an item)"
+          }
+        ],
+        "docs": "Spawn vanilla particles only to a specific player.\n\n \u003cpre\u003e{@code\n    var explode \u003d mappet.getParticleType(\"explode\");\n    var pos \u003d c.getSubject().getPosition();\n\n    c.getWorld().spawnParticles(c.getSubject(), explode, false, pos.x, pos.y, pos.z, 10, 0.1, 0.1, 0.1, 0.1);\n }\u003c/pre\u003e\n\n                     to get the desired particle type.\n                     \"iconcrack\" particle you can pass item numeric ID to spawn item particle for\n                     a specific item (F3 + H shows the numeric ID of an item)"
+      }
+    ],
+    "spawnEntity": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntity",
+        "docs": "Spawn an entity at given position.\n\n \u003cpre\u003e{@code\n    var pos \u003d c.getSubject().getPosition();\n\n    // Make an explosion at player\u0027s feet\n    c.getWorld().spawnEntity(\"minecraft:tnt\", pos.x, pos.y, pos.z);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "compound",
+            "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntity",
+        "docs": "Spawn an entity at given position with additional data.\n\n \u003cpre\u003e{@code\n    var pos \u003d c.getSubject().getPosition();\n\n    // Spawn a baby zombie\n    c.getWorld().spawnEntity(\"minecraft:zombie\", pos.x, pos.y + 3, pos.z, mappet.createCompound(\"{IsBaby:1b}\"));\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "compound",
+            "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntity"
+      }
+    ],
+    "spawnNpc": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptNpc",
+        "docs": "Spawn an NPC at given position with default state.\n\n \u003cpre\u003e{@code\n    var pos \u003d c.getSubject().getPosition();\n\n    c.getWorld().spawnNpc(\"herobrine\", pos.x, pos.y, pos.z);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "state",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptNpc",
+        "docs": "Spawn an NPC at given position with given state.\n\n \u003cpre\u003e{@code\n    var pos \u003d c.getSubject().getPosition();\n\n    c.getWorld().spawnNpc(\"herobrine\", \"dabbing\", pos.x, pos.y, pos.z);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "state",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "yaw",
+            "type": "float"
+          },
+          {
+            "name": "pitch",
+            "type": "float"
+          },
+          {
+            "name": "headYaw",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptNpc",
+        "docs": "Spawn an NPC at given position with given state and rotation.\n\n \u003cpre\u003e{@code\n    var pos \u003d c.getSubject().getPosition();\n\n    c.getWorld().spawnNpc(\"herobrine\", \"dabbing\", pos.x, pos.y, pos.z, 0, 0, 0);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "state",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptNpc"
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "state",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "rot",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptNpc"
+      }
+    ],
+    "getEntities": [
+      {
+        "parameters": [
+          {
+            "name": "x1",
+            "type": "double"
+          },
+          {
+            "name": "y1",
+            "type": "double"
+          },
+          {
+            "name": "z1",
+            "type": "double"
+          },
+          {
+            "name": "x2",
+            "type": "double"
+          },
+          {
+            "name": "y2",
+            "type": "double"
+          },
+          {
+            "name": "z2",
+            "type": "double"
+          }
+        ],
+        "return": "java.util.List",
+        "docs": "Get entities within the box specified by given coordinates in this world.\n This method limits to scanning entities only within \u003cb\u003e100 blocks\u003c/b\u003e\n in any direction. If the box provided has any of its sizes that is longer\n than 100 blocks, then it will simply return an empty list.\n\n \u003cpre\u003e{@code\n    // Y position is at the feet, while X and Z is at center\n    var pos \u003d c.getSubject().getPosition();\n    var entities \u003d c.getWorld().getEntities(pos.x - 2, pos.y - 1, pos.z - 2, pos.x + 2, pos.y + 3, pos.z + 2);\n\n    for (var i in entities)\n    {\n        var entity \u003d entities[i];\n\n        if (!entity.isSame(c.getSubject()))\n        {\n            entity.damage(2.0);\n        }\n    }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "box",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+          }
+        ],
+        "return": "java.util.List"
+      },
+      {
+        "parameters": [
+          {
+            "name": "x1",
+            "type": "double"
+          },
+          {
+            "name": "y1",
+            "type": "double"
+          },
+          {
+            "name": "z1",
+            "type": "double"
+          },
+          {
+            "name": "x2",
+            "type": "double"
+          },
+          {
+            "name": "y2",
+            "type": "double"
+          },
+          {
+            "name": "z2",
+            "type": "double"
+          },
+          {
+            "name": "ignoreVolumeLimit",
+            "type": "boolean"
+          }
+        ],
+        "return": "java.util.List",
+        "docs": "Get entities within the box specified by given coordinates in this world ignoring the volume limit.\n This method does not limit to scanning entities only within \u003cb\u003e100 blocks\u003c/b\u003e\n\n \u003cpre\u003e{@code\n    // Y position is at the feet, while X and Z is at center\n    var pos \u003d c.getSubject().getPosition();\n    var entities \u003d c.getWorld().getEntities(pos.x - 30, pos.y - 30, pos.z - 30, pos.x + 30, pos.y + 30, pos.z + 30, true);\n\n    for (var i in entities)\n    {\n        var entity \u003d entities[i];\n\n        if (!entity.isSame(c.getSubject()))\n        {\n            entity.damage(2.0);\n        }\n    }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "box",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+          },
+          {
+            "name": "ignoreVolumeLimit",
+            "type": "boolean"
+          }
+        ],
+        "return": "java.util.List"
+      }
+    ],
+    "playSound": [
+      {
+        "parameters": [
+          {
+            "name": "event",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "docs": "Play a sound event in the world.\n\n \u003cp\u003eFor all possible sound event IDs, please refer to either \u003ccode\u003e/playsound\u003c/code\u003e\n command, or script editor\u0027s sound picker.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var pos \u003d c.getSubject().getPosition();\n\n    c.getWorld().playSound(\"minecraft:entity.pig.ambient\", pos.x, pos.y, pos.z);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "event",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "volume",
+            "type": "float"
+          },
+          {
+            "name": "pitch",
+            "type": "float"
+          }
+        ],
+        "docs": "Play a sound event in the world with volume and pitch.\n\n \u003cpre\u003e{@code\n    var pos \u003d c.getSubject().getPosition();\n\n    c.getWorld().playSound(\"minecraft:entity.pig.ambient\", pos.x, pos.y, pos.z, 1.0, 0.8);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "event",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "volume",
+            "type": "float"
+          },
+          {
+            "name": "pitch",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "stopAllSounds": [
+      {
+        "docs": "Stop all playing sound events for every player.\n\n \u003cpre\u003e{@code\n    c.getWorld().stopAllSounds();\n }\u003c/pre\u003e"
+      }
+    ],
+    "stopSound": [
+      {
+        "parameters": [
+          {
+            "name": "event",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Stop specific sound event for every player.\n\n \u003cpre\u003e{@code\n    c.getWorld().stopSound(\"minecraft:entity.pig.ambient\");\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "event",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "category",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "\u003cp\u003eStop specific sound event in given sound category for every player.\u003c/p\u003e\n\n \u003cp\u003eFor list of sound categories, type into chat\n \u003ccode\u003e/playsound minecraft:entity.pig.ambient\u003c/code\u003e, press space, and press\n Tab key. The list of sounds categories will be displayed.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    c.getWorld().stopSound(\"minecraft:entity.pig.ambient\", \"master\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "dropItemStack": [
+      {
+        "parameters": [
+          {
+            "name": "stack",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntityItem",
+        "docs": "Drop item stack at given XYZ position with no velocity applied.\n\n \u003cpre\u003e{@code\n    var item \u003d mappet.createItem(\"minecraft:diamond_hoe\");\n    var pos \u003d c.getSubject().getPosition();\n\n    c.getWorld().dropItemStack(item, pos.x, pos.y + 3, pos.z);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "stack",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "mx",
+            "type": "double"
+          },
+          {
+            "name": "my",
+            "type": "double"
+          },
+          {
+            "name": "mz",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntityItem",
+        "docs": "Drop an item stack at given XYZ position in this world with desired velocity.\n\n \u003cpre\u003e{@code\n    var item \u003d mappet.createItem(\"minecraft:diamond_hoe\");\n    var pos \u003d c.getSubject().getPosition();\n\n    c.getWorld().dropItemStack(item, pos.x, pos.y + 3, pos.z, 0, 1, 0);\n }\u003c/pre\u003e"
+      }
+    ],
+    "explode": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "distance",
+            "type": "float"
+          }
+        ],
+        "docs": "Make an explosion in this world at given coordinates, and distance that\n destroys blocks, damages entities but not places fire. See {@link IScriptWorld#explode(IScriptEntity, double, double, double, float, boolean, boolean)}\n for more thorough definition of arguments.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var s \u003d c.getSubject();\n     var pos \u003d s.getPosition();\n\n     c.getWorld().explode(pos.x, pos.y, pos.z, 10)\n }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "distance",
+            "type": "float"
+          },
+          {
+            "name": "blazeGround",
+            "type": "boolean"
+          },
+          {
+            "name": "destroyTerrain",
+            "type": "boolean"
+          }
+        ],
+        "docs": "Make an explosion in this world at given coordinates, and distance with\n options to place fire and destroy blocks. See {@link IScriptWorld#explode(IScriptEntity, double, double, double, float, boolean, boolean)}\n for more thorough definition of arguments.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var s \u003d c.getSubject();\n     var pos \u003d s.getPosition();\n\n     c.getWorld().explode(pos.x, pos.y, pos.z, 10, false, false)\n }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "exploder",
+            "type": "mchorse.mappet.api.scripts.user.entities.IScriptEntity",
+            "docs": "Entity that causes explosion that won\u0027t receive damage from it."
+          },
+          {
+            "name": "x",
+            "type": "double",
+            "docs": "X coordinate in the world at which explosion must be caused."
+          },
+          {
+            "name": "y",
+            "type": "double",
+            "docs": "Y coordinate in the world at which explosion must be caused."
+          },
+          {
+            "name": "z",
+            "type": "double",
+            "docs": "Z coordinate in the world at which explosion must be caused."
+          },
+          {
+            "name": "distance",
+            "type": "float",
+            "docs": "Radius (in blocks of the explosion)."
+          },
+          {
+            "name": "blazeGround",
+            "type": "boolean",
+            "docs": "Whether fire blocks should be placed randomly on top of remaining blocks."
+          },
+          {
+            "name": "destroyTerrain",
+            "type": "boolean",
+            "docs": "Whether blocks should be destroyed by the explosion."
+          }
+        ],
+        "docs": "Make an explosion in this world at given coordinates, distance, and entity\n that caused the explosion.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var s \u003d c.getSubject();\n     var pos \u003d s.getPosition();\n\n     c.getWorld().explode(s, pos.x, pos.y, pos.z, 10, false, false)\n }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "exploder",
+            "type": "mchorse.mappet.api.scripts.user.entities.IScriptEntity"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "distance",
+            "type": "float"
+          },
+          {
+            "name": "blazeGround",
+            "type": "boolean"
+          },
+          {
+            "name": "destroyTerrain",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "rayTrace": [
+      {
+        "parameters": [
+          {
+            "name": "x1",
+            "type": "double",
+            "docs": "X coordinate of the first point."
+          },
+          {
+            "name": "y1",
+            "type": "double",
+            "docs": "Y coordinate of the first point."
+          },
+          {
+            "name": "z1",
+            "type": "double",
+            "docs": "Z coordinate of the first point."
+          },
+          {
+            "name": "x2",
+            "type": "double",
+            "docs": "X coordinate of the second point."
+          },
+          {
+            "name": "y2",
+            "type": "double",
+            "docs": "Y coordinate of the second point."
+          },
+          {
+            "name": "z2",
+            "type": "double",
+            "docs": "Z coordinate of the second point."
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.IScriptRayTrace",
+        "docs": "Ray trace in this world, between two given points (including any entity intersection).\n Check {@link IScriptRayTrace} for an example."
+      }
+    ],
+    "rayTraceBlock": [
+      {
+        "parameters": [
+          {
+            "name": "x1",
+            "type": "double",
+            "docs": "X coordinate of the first point."
+          },
+          {
+            "name": "y1",
+            "type": "double",
+            "docs": "Y coordinate of the first point."
+          },
+          {
+            "name": "z1",
+            "type": "double",
+            "docs": "Z coordinate of the first point."
+          },
+          {
+            "name": "x2",
+            "type": "double",
+            "docs": "X coordinate of the second point."
+          },
+          {
+            "name": "y2",
+            "type": "double",
+            "docs": "Y coordinate of the second point."
+          },
+          {
+            "name": "z2",
+            "type": "double",
+            "docs": "Z coordinate of the second point."
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.IScriptRayTrace",
+        "docs": "Ray trace in this world, between two given points (excluding entities).\n Check {@link IScriptRayTrace} for an example."
+      }
+    ],
+    "isActive": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Return whether a button, plate or lever is active or not.\n\n \u003cpre\u003e{@code\n     c.getWorld().isActive(0, 4, 0);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "testForBlock": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState",
+            "docs": ""
+          },
+          {
+            "name": "x",
+            "type": "int",
+            "docs": ""
+          },
+          {
+            "name": "y",
+            "type": "int",
+            "docs": ""
+          },
+          {
+            "name": "z",
+            "type": "int",
+            "docs": ""
+          }
+        ],
+        "return": "boolean",
+        "docs": "@setter"
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "fill": [
+      {
+        "parameters": [
+          {
+            "name": "state",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState",
+            "docs": "The block to fill the area with."
+          },
+          {
+            "name": "x1",
+            "type": "int",
+            "docs": "The first x coordinate."
+          },
+          {
+            "name": "y1",
+            "type": "int",
+            "docs": "The first y coordinate."
+          },
+          {
+            "name": "z1",
+            "type": "int",
+            "docs": "The first z coordinate."
+          },
+          {
+            "name": "x2",
+            "type": "int",
+            "docs": "The second x coordinate."
+          },
+          {
+            "name": "y2",
+            "type": "int",
+            "docs": "The second y coordinate."
+          },
+          {
+            "name": "z2",
+            "type": "int",
+            "docs": "The second z coordinate."
+          }
+        ],
+        "docs": "Fill a 3D area with a block.\n\n \u003cpre\u003e{@code\n     var coarse_dirt \u003d mappet.createBlockState(\"minecraft:dirt\", 1);\n\n     c.getWorld().fill(coarse_dirt, -3, 100, -3, 3, 100, 3);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "start",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "end",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "box",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+          }
+        ]
+      }
+    ],
+    "spawnFallingBlock": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntity"
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntity"
+      }
+    ],
+    "setFallingBlock": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntity",
+        "deprecated": true,
+        "docs": "Use {@link #makeBlockFall(int, int, int)} instead"
+      }
+    ],
+    "makeBlockFall": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntity",
+        "docs": "Transform a block to a falling block in specific coordinates.\n\n \u003cpre\u003e{@code\n     c.getWorld().makeBlockFall(0, 100, 0);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntity"
+      }
+    ],
+    "setTileEntity": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          },
+          {
+            "name": "tileData",
+            "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "tileData",
+            "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
+          }
+        ]
+      }
+    ],
+    "fillTileEntities": [
+      {
+        "parameters": [
+          {
+            "name": "x1",
+            "type": "int",
+            "docs": "X coordinate"
+          },
+          {
+            "name": "y1",
+            "type": "int",
+            "docs": "Y coordinate"
+          },
+          {
+            "name": "z1",
+            "type": "int",
+            "docs": "Z coordinate"
+          },
+          {
+            "name": "x2",
+            "type": "int",
+            "docs": "X coordinate"
+          },
+          {
+            "name": "y2",
+            "type": "int",
+            "docs": "Y coordinate"
+          },
+          {
+            "name": "z2",
+            "type": "int",
+            "docs": "Z coordinate"
+          },
+          {
+            "name": "blockState",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          },
+          {
+            "name": "tileData",
+            "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
+          }
+        ],
+        "docs": "Fills a range with tile entities.\n\n \u003cpre\u003e{@code\n c.getWorld().fillTileEntities(530, 152, 546, mappet.createBlockState(\"blockbuster:model\", 0), mappet.createCompound(\u0027{Morph:{Settings:{Hands:1b},Name:\"blockbuster.fred\"},id:\"minecraft:blockbuster_model_tile_entity\"}\u0027));\n   }\u003c/pre\u003e"
+      }
+    ],
+    "clone": [
+      {
+        "parameters": [
+          {
+            "name": "x1",
+            "type": "int",
+            "docs": "The first x coordinate."
+          },
+          {
+            "name": "y1",
+            "type": "int",
+            "docs": "The first y coordinate."
+          },
+          {
+            "name": "z1",
+            "type": "int",
+            "docs": "The first z coordinate."
+          },
+          {
+            "name": "x2",
+            "type": "int",
+            "docs": "The second x coordinate."
+          },
+          {
+            "name": "y2",
+            "type": "int",
+            "docs": "The second y coordinate."
+          },
+          {
+            "name": "z2",
+            "type": "int",
+            "docs": "The second z coordinate."
+          },
+          {
+            "name": "xNew",
+            "type": "int",
+            "docs": "The new x coordinate."
+          },
+          {
+            "name": "yNew",
+            "type": "int",
+            "docs": "The new y coordinate."
+          },
+          {
+            "name": "zNew",
+            "type": "int",
+            "docs": "The new z coordinate."
+          }
+        ],
+        "docs": "Clones am area to another area.\n\n \u003cpre\u003e{@code\n c.getWorld().clone(0, 100, 0, 3, 100, 3, 0, 101, 0);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          },
+          {
+            "name": "xNew",
+            "type": "int"
+          },
+          {
+            "name": "yNew",
+            "type": "int"
+          },
+          {
+            "name": "zNew",
+            "type": "int"
+          }
+        ],
+        "docs": "Clones the block to another coordinates.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     c.getWorld().clone(0, 80, 0, 0, 83, 0)\n }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "box",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+          },
+          {
+            "name": "xNew",
+            "type": "int"
+          },
+          {
+            "name": "yNew",
+            "type": "int"
+          },
+          {
+            "name": "zNew",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "getBlockItem": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.items.IScriptItemStack",
+        "docs": "Gets the block stack at given position, including tile entity data.\n\n \u003cpre\u003e{@code\n    var x\u003d 0, y \u003d 100, z \u003d 0;\n    var world \u003d c.getWorld();\n    var blockItemStack \u003d world.getBlockStackWithTile(x, y, z);\n    world.setBlock(mappet.createBlockState(\"minecraft:air\", 0), x, y, z)\n    world.dropItemStack(blockItemStack, x+0.5, y+0.5, z+0.5);\n }\u003c/pre\u003e"
+      }
+    ],
+    "createSchematic": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.mappet.MappetSchematic",
+        "docs": "Returns a new empty Schematic object.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var schematic \u003d c.world.createSchematic();\n     schematic.loadFromWorld(0, 4, 0, 4, 8, 4).saveToFile(\"mySchematic\").place(0, 4, 4).place(0, 4, 8);\n }\n }\u003c/pre\u003e"
+      }
+    ],
+    "displayMorph": [
+      {
+        "parameters": [
+          {
+            "name": "morph",
+            "type": "mchorse.metamorph.api.morphs.AbstractMorph"
+          },
+          {
+            "name": "expiration",
+            "type": "int"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "docs": "Display a world morph to all players around 64 blocks away from given point.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var s \u003d c.getSubject();\n     var morph \u003d mappet.createMorph(\u0027{Name:\"item\"}\u0027);\n     var pos \u003d s.getPosition();\n\n     c.getWorld().displayMorph(morph, 100, pos.x, pos.y + s.getHeight() + 0.5, pos.z);\n }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "morph",
+            "type": "mchorse.metamorph.api.morphs.AbstractMorph",
+            "docs": "Morph that will be displayed (if \u003ccode\u003enull\u003c/code\u003e, then it won\u0027t send anything)."
+          },
+          {
+            "name": "expiration",
+            "type": "int",
+            "docs": "For how many ticks will this displayed morph exist on the client side."
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "range",
+            "type": "int",
+            "docs": "How many blocks far away will this send to players around given point."
+          }
+        ],
+        "docs": "Display a world morph to all players at given point.\n\n \u003cpre\u003e{@code\n    var s \u003d c.getSubject();\n    var morph \u003d mappet.createMorph(\u0027{Name:\"item\"}\u0027);\n    var pos \u003d s.getPosition();\n\n    // This will display a diamond hoe morph on top of the\n    // player\u0027s head (but it won\u0027t track player\u0027s movement)\n    c.getWorld().displayMorph(morph, 100, pos.x, pos.y + s.getHeight() + 0.5, pos.z, 64);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "morph",
+            "type": "mchorse.metamorph.api.morphs.AbstractMorph",
+            "docs": "Morph that will be displayed (if \u003ccode\u003enull\u003c/code\u003e, then it won\u0027t send anything)."
+          },
+          {
+            "name": "expiration",
+            "type": "int",
+            "docs": "For how many ticks will this displayed morph exist on the client side."
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "yaw",
+            "type": "float",
+            "docs": "Horizontal rotation in degrees."
+          },
+          {
+            "name": "pitch",
+            "type": "float",
+            "docs": "Vertical rotation in degrees."
+          }
+        ],
+        "docs": "Display a world morph to all players at given point with rotation.\n\n \u003cpre\u003e{@code\n    var s \u003d c.getSubject();\n    var morph \u003d mappet.createMorph(\u0027{Name:\"item\"}\u0027);\n    var pos \u003d s.getPosition();\n\n    // This will display a diamond hoe morph on top of the\n    // player\u0027s head (but it won\u0027t track player\u0027s movement)\n    // oriented at west\n    c.getWorld().displayMorph(morph, 100, pos.x, pos.y + s.getHeight() + 0.5, pos.z, 90, 0);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "morph",
+            "type": "mchorse.metamorph.api.morphs.AbstractMorph",
+            "docs": "Morph that will be displayed (if \u003ccode\u003enull\u003c/code\u003e, then it won\u0027t send anything)."
+          },
+          {
+            "name": "expiration",
+            "type": "int",
+            "docs": "For how many ticks will this displayed morph exist on the client side."
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "yaw",
+            "type": "float",
+            "docs": "Horizontal rotation in degrees."
+          },
+          {
+            "name": "pitch",
+            "type": "float",
+            "docs": "Vertical rotation in degrees."
+          },
+          {
+            "name": "range",
+            "type": "int",
+            "docs": "How many blocks far away will this send to players around given point."
+          }
+        ],
+        "docs": "Display a world morph to all players at given point with rotation\n some blocks away in this world.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var s \u003d c.getSubject();\n     var morph \u003d mappet.createMorph(\u0027{Name:\"item\"}\u0027);\n     var pos \u003d s.getPosition();\n\n     var yaw \u003d s.getYaw()\n     var pitch \u003d s.getPitch()\n\n     c.getWorld().displayMorph(morph, 100, pos.x, pos.y + s.getHeight() + 0.5, pos.z, yaw, pitch, 90);\n }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "morph",
+            "type": "mchorse.metamorph.api.morphs.AbstractMorph",
+            "docs": "Morph that will be displayed (if \u003ccode\u003enull\u003c/code\u003e, then it won\u0027t send anything)."
+          },
+          {
+            "name": "expiration",
+            "type": "int",
+            "docs": "For how many ticks will this displayed morph exist on the client side."
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "yaw",
+            "type": "float",
+            "docs": "Horizontal rotation in degrees."
+          },
+          {
+            "name": "pitch",
+            "type": "float",
+            "docs": "Vertical rotation in degrees."
+          },
+          {
+            "name": "range",
+            "type": "int",
+            "docs": "How many blocks far away will this send to players around given point."
+          },
+          {
+            "name": "player",
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer",
+            "docs": "The player that only should see the morph, or null for everyone."
+          }
+        ],
+        "docs": "Display a world morph to all players at given point with rotation\n some blocks away in this world only to given player.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var s \u003d c.getSubject();\n     var morph \u003d mappet.createMorph(\u0027{Name:\"item\"}\u0027);\n     var pos \u003d s.getPosition();\n\n     var yaw \u003d s.getYaw()\n     var pitch \u003d s.getPitch()\n\n     c.getWorld().displayMorph(morph, 100, pos.x, pos.y + s.getHeight() + 0.5, pos.z, yaw, pitch, 90, s);\n }\n }\u003c/pre\u003e"
+      }
+    ],
+    "getBorder": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.world.ScriptWorldBorder"
+      }
+    ],
+    "getLight": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "int"
+      }
+    ],
+    "loadStructure": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.world.ScriptStructure"
+      }
+    ],
+    "shootBBGunProjectile": [
+      {
+        "parameters": [
+          {
+            "name": "shooter",
+            "type": "mchorse.mappet.api.scripts.user.entities.IScriptEntity"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "yaw",
+            "type": "double"
+          },
+          {
+            "name": "pitch",
+            "type": "double"
+          },
+          {
+            "name": "gunPropsNbtString",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntity",
+        "docs": "Shoots a gun projectile entity.\n\n \u003cpre\u003e{@code\n     var projectile \u003d c.getWorld().shootBBGunProjectile(c.getSubject(), 547, 160, 497, 0, -90, \u0027{Gun:{TickCommand:\"particle heart ~ ~1 ~ 0.2 0.2 0.2 1\",StoredAmmo:0,Ticking:1,Damage:1.0f,Projectile:{Meta:0b,Block:\"minecraft:stone\",Name:\"block\"},Gravity:0.0f}}\u0027)\n     c.scheduleScript(20, function (c){\n         projectile.executeCommand(\"summon tnt ~ ~ ~\")\n         projectile.remove()\n     });\n }\u003c/pre\u003e"
+      }
+    ]
+  }
+}

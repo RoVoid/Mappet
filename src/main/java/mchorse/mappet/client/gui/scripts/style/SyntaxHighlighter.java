@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.scripts.style;
 
-import mchorse.mappet.MappetConfig;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.client.gui.scripts.utils.TextSegment;
 import mchorse.mappet.client.gui.scripts.utils.TextSegment.TOKEN;
 import net.minecraft.client.gui.FontRenderer;

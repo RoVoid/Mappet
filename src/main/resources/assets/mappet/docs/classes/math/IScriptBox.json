@@ -1,0 +1,87 @@
+{
+  "docs": "Script Box\n \u003cp\u003e CREATE: {@link IScriptMath#box(double, double, double, double, double, double)} \u003c/p\u003e\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var pos \u003d c.getSubject().getPosition();\n     var box \u003d mappet.box(-10, 4, -10, 10, 6, 10);\n     if (box.contains(pos)){\n         c.send(\"Player in the box\")\n     }\n }\n }\u003c/pre\u003e",
+  "methods": {
+    "isColliding": [
+      {
+        "parameters": [
+          {
+            "name": "box",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Checks if this box collides with another."
+      }
+    ],
+    "offset": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "docs": "Offsets the box by given coordinates\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var box \u003d mappet.box(-10, 4, -10, 10, 6, 10);\n     box.offset(10, 0, 10);\n     c.send(box.toString()); // ScriptBox(0.0, 4.0, 0.0, 20.0, 6.0, 20.0)\n }\n }\u003c/pre\u003e"
+      }
+    ],
+    "contains": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "return": "boolean",
+        "docs": "\u003cp id\u003d\"title\"\u003e Checks if given coordinates are inside of this box \u003c/p\u003e\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var box \u003d mappet.box(-10, 4, -10, 10, 6, 10);\n     c.send(box.contains(0, 4, 0)) // true\n     c.send(box.contains(0, 7, 0)) // false\n }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "vector",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "boolean",
+        "docs": "\u003cpre\u003e{@code\n function main(c)\n {\n     var box \u003d mappet.box(-10, 4, -10, 10, 6, 10);\n     var pos \u003d c.getSubject().getPosition()\n     if (box.contains(pos)){\n         c.send(\"Subject is inside the box\")\n     }\n }\n }\u003c/pre\u003e"
+      }
+    ],
+    "getBlocksPositions": [
+      {
+        "parameters": [
+          {
+            "name": "world",
+            "type": "mchorse.mappet.api.scripts.code.world.ScriptWorld"
+          },
+          {
+            "name": "state",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          }
+        ],
+        "return": "java.util.List",
+        "docs": "Returns a list of positions for blocks in the box that match a given block state in a given world.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var state \u003d mappet.createBlockState(\"minecraft:stone\");\n     var box \u003d mappet.box(-10, 4, -10, 10, 6, 10);\n\n     c.send(box.getBlocksPositions(c.getWorld(), state));\n }\n }\u003c/pre\u003e"
+      }
+    ],
+    "toString": [
+      {
+        "return": "java.lang.String"
+      }
+    ]
+  }
+}

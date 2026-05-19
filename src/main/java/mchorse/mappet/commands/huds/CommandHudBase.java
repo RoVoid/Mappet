@@ -44,7 +44,7 @@ public abstract class CommandHudBase extends MappetCommandBase
         {
             if (this instanceof CommandHudSetup)
             {
-                return getListOfStringsMatchingLastWord(args, Mappet.huds.getKeys());
+                return getListOfStringsMatchingLastWord(args, Mappet.huds.getIDs());
             }
             else
             {

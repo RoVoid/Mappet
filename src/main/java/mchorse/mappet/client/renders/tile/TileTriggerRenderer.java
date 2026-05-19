@@ -1,6 +1,6 @@
 package mchorse.mappet.client.renders.tile;
 
-import mchorse.mappet.tile.TileTrigger;
+import mchorse.mappet.blocks.tile.TileTrigger;
 import mchorse.mclib.utils.Color;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.utils.text;
 
 import com.google.common.collect.ImmutableList;
-import mchorse.mappet.MappetConfig;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.client.gui.scripts.GuiDocumentationOverlayPanel;
 import mchorse.mappet.client.gui.scripts.utils.documentation.DocMethod;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;

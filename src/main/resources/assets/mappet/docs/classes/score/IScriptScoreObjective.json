@@ -1,0 +1,116 @@
+{
+  "docs": "",
+  "methods": {
+    "getMinecraftScoreObjective": [
+      {
+        "return": "net.minecraft.scoreboard.ScoreObjective"
+      }
+    ],
+    "getName": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "getCriteria": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "getDisplayName": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "setDisplayName": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "getRenderType": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "setRenderType": [
+      {
+        "parameters": [
+          {
+            "name": "type",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "getSortedScores": [
+      {
+        "return": "java.util.List"
+      }
+    ],
+    "set": [
+      {
+        "parameters": [
+          {
+            "name": "player",
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
+          },
+          {
+            "name": "value",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "add": [
+      {
+        "parameters": [
+          {
+            "name": "player",
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
+          },
+          {
+            "name": "value",
+            "type": "int"
+          }
+        ],
+        "return": "int"
+      }
+    ],
+    "get": [
+      {
+        "parameters": [
+          {
+            "name": "player",
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
+          }
+        ],
+        "return": "int"
+      }
+    ],
+    "reset": [
+      {
+        "parameters": [
+          {
+            "name": "player",
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
+          }
+        ]
+      }
+    ],
+    "getScore": [
+      {
+        "parameters": [
+          {
+            "name": "player",
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
+          }
+        ],
+        "return": "net.minecraft.scoreboard.Score"
+      }
+    ]
+  }
+}

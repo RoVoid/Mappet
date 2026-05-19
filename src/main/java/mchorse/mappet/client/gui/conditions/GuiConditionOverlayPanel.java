@@ -26,7 +26,7 @@ import mchorse.mappet.client.gui.conditions.blocks.GuiStateConditionBlockPanel;
 import mchorse.mappet.client.gui.conditions.blocks.GuiWorldTimeConditionBlockPanel;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
 import mchorse.mappet.client.gui.utils.overlays.GuiEditorOverlayPanel;
-import mchorse.mappet.constants.Colors;
+import mchorse.mappet.client.Colors;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;

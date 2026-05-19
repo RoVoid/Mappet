@@ -1,0 +1,555 @@
+{
+  "docs": "Mappet\u0027s NPC entity interface.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        if (c.getSubject().isNpc())\n        {\n            // Do something with the NPC...\n        }\n    }\n }\u003c/pre\u003e",
+  "methods": {
+    "asMinecraft": [
+      {
+        "return": "mchorse.mappet.entities.EntityNpc",
+        "docs": "Get Mappet entity NPC instance. \u003cb\u003eBEWARE:\u003c/b\u003e you need to know the\n MCP mappings in order to directly call methods on this instance!\n\n \u003cp\u003eBut some methods might have human readable method names. Please\n check \u003ca href\u003d\"https://github.com/mchorse/mappet/blob/master/src/main/java/mchorse/mappet/entities/EntityNpc.java\"\u003eEntityNpc\u003c/a\u003e class for methods that\n don\u0027t have {@link Override} annotation!\u003c/p\u003e"
+      }
+    ],
+    "getMappetNpc": [
+      {
+        "return": "mchorse.mappet.entities.EntityNpc",
+        "docs": "Use {@link #asMinecraft()} instead"
+      }
+    ],
+    "getId": [
+      {
+        "return": "java.lang.String",
+        "docs": "Get NPC\u0027s NPC ID.\n\n \u003cpre\u003e{@code\n    var pos \u003d c.getSubject().getPosition();\n    var npc \u003d c.getWorld().spawnNpc(\"test\", pos.x, pos.y + 2, pos.z);\n\n    // This will output \"true\" as long as you have an NPC configured\n    // in Mappet\u0027s NPC dashboard panel\n    c.send(npc.getId() \u003d\u003d\u003d \"test\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "getNpcId": [
+      {
+        "return": "java.lang.String",
+        "deprecated": true,
+        "docs": "Use {@link #getId()} instead"
+      }
+    ],
+    "getNpcState": [
+      {
+        "return": "java.lang.String",
+        "docs": "Get NPC\u0027s state.\n\n \u003cpre\u003e{@code\n    c.send(c.getSubject().getNpcState());\n }\u003c/pre\u003e"
+      }
+    ],
+    "setNpcState": [
+      {
+        "parameters": [
+          {
+            "name": "stateId",
+            "type": "java.lang.String",
+            "docs": "state ID"
+          }
+        ],
+        "docs": "Set NPC\u0027s state.\n\n \u003cpre\u003e{@code\n    c.getSubject().setNpcState(\"default\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "canPickUpLoot": [
+      {
+        "parameters": [
+          {
+            "name": "canPickUpLoot",
+            "type": "boolean",
+            "docs": "true if NPC can pick up stuff, false otherwise"
+          }
+        ],
+        "docs": "Make NPC can pick up stuff.\n\n \u003cpre\u003e{@code\n    c.getSubject().canPickUpLoot(true);\n }\u003c/pre\u003e"
+      }
+    ],
+    "follow": [
+      {
+        "parameters": [
+          {
+            "name": "target",
+            "type": "java.lang.String",
+            "docs": "Target to follow (can be a player name, @r)"
+          }
+        ],
+        "docs": "Make NPC follow a target.\n\n \u003cpre\u003e{@code\n    c.getSubject().follow(\"@r\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "getFaction": [
+      {
+        "return": "java.lang.String",
+        "docs": "Returns the faction of the NPC as a string\n\n \u003cpre\u003e{@code\n c.send(c.getSubject().getFaction())\n }\u003c/pre\u003e"
+      }
+    ],
+    "setCanBeSteered": [
+      {
+        "parameters": [
+          {
+            "name": "enabled",
+            "type": "boolean"
+          }
+        ],
+        "docs": "Sets whether the NPC can be steered.\n\n \u003cpre\u003e{@code\n c.getSubject().setCanBeSteered(true);\n }\u003c/pre\u003e"
+      }
+    ],
+    "canBeSteered": [
+      {
+        "return": "boolean",
+        "docs": "Checks if the NPC can be steered.\n\n \u003cpre\u003e{@code\n c.getSubject().canBeSteered();\n }\u003c/pre\u003e"
+      }
+    ],
+    "setSteeringOffset": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          },
+          {
+            "name": "x",
+            "type": "float"
+          },
+          {
+            "name": "y",
+            "type": "float"
+          },
+          {
+            "name": "z",
+            "type": "float"
+          }
+        ],
+        "docs": "Sets the steering offset for the NPC.\n\n \u003cpre\u003e{@code\n c.getSubject().setSteeringOffset(index, x, y, z);\n }\u003c/pre\u003e"
+      }
+    ],
+    "addSteeringOffset": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "float"
+          },
+          {
+            "name": "y",
+            "type": "float"
+          },
+          {
+            "name": "z",
+            "type": "float"
+          }
+        ],
+        "docs": "Gets the steering offset of the NPC.\n\n \u003cpre\u003e{@code\n c.getSubject().addSteeringOffset(x, y, z);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getSteeringOffsets": [
+      {
+        "return": "java.util.List",
+        "docs": "Gets the steering offset of the NPC.\n\n \u003cpre\u003e{@code\n c.getSubject().getSteeringOffsets().forEach((offset) -\u003e {\n     c.send(offset.x + \", \" + offset.y + \", \" + offset.z);\n });\n }\u003c/pre\u003e"
+      }
+    ],
+    "setNpcSpeed": [
+      {
+        "parameters": [
+          {
+            "name": "speed",
+            "type": "float"
+          }
+        ],
+        "docs": "Sets the speed of the NPC.\n\n \u003cpre\u003e{@code\n c.getSubject().setNpcSpeed(speed);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getNpcSpeed": [
+      {
+        "return": "float",
+        "docs": "Gets the speed of the NPC.\n\n \u003cpre\u003e{@code\n c.getSubject().getNpcSpeed();\n }\u003c/pre\u003e"
+      }
+    ],
+    "setJumpPower": [
+      {
+        "parameters": [
+          {
+            "name": "jumpHeight",
+            "type": "float"
+          }
+        ],
+        "docs": "Sets the jump power of the NPC.\n\n \u003cpre\u003e{@code\n c.getSubject().setJumpPower(jumpHeight);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getJumpPower": [
+      {
+        "return": "float",
+        "docs": "Gets the jump power of the NPC.\n\n \u003cpre\u003e{@code\n c.getSubject().getjumpPower();\n }\u003c/pre\u003e"
+      }
+    ],
+    "setInvincible": [
+      {
+        "parameters": [
+          {
+            "name": "invincible",
+            "type": "boolean"
+          }
+        ],
+        "docs": "Sets whether the NPC is invincible.\n\n \u003cpre\u003e{@code\n c.getSubject().setInvincible(true);\n }\u003c/pre\u003e"
+      }
+    ],
+    "isInvincible": [
+      {
+        "return": "boolean",
+        "docs": "Checks if the NPC is invincible.\n\n \u003cpre\u003e{@code\n c.getSubject().isInvincible();\n }\u003c/pre\u003e"
+      }
+    ],
+    "setCanSwim": [
+      {
+        "parameters": [
+          {
+            "name": "canSwim",
+            "type": "boolean"
+          }
+        ],
+        "docs": "Sets whether the NPC can swim.\n\n \u003cpre\u003e{@code\n c.getSubject().setCanSwim(true);\n }\u003c/pre\u003e"
+      }
+    ],
+    "canSwim": [
+      {
+        "return": "boolean",
+        "docs": "Checks if the NPC can swim.\n\n \u003cpre\u003e{@code\n c.getSubject().canSwim();\n }\u003c/pre\u003e"
+      }
+    ],
+    "setImmovable": [
+      {
+        "parameters": [
+          {
+            "name": "immovable",
+            "type": "boolean"
+          }
+        ],
+        "docs": "Sets whether the NPC is immovable.\n\n \u003cpre\u003e{@code\n c.getSubject().setImmovable(true);\n }\u003c/pre\u003e"
+      }
+    ],
+    "isImmovable": [
+      {
+        "return": "boolean",
+        "docs": "Checks if the NPC is immovable.\n\n \u003cpre\u003e{@code\n c.getSubject().isImmovable();\n }\u003c/pre\u003e"
+      }
+    ],
+    "setCollision": [
+      {
+        "parameters": [
+          {
+            "name": "enabled",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "hasCollision": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "setShadowSize": [
+      {
+        "parameters": [
+          {
+            "name": "size",
+            "type": "float",
+            "docs": "the new shadow size for the NPC."
+          }
+        ],
+        "docs": "Sets the shadow size of the NPC.\n\n \u003cpre\u003e{@code\n c.getSubject().setShadowSize(0.8);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getShadowSize": [
+      {
+        "return": "float",
+        "docs": "Gets the shadow size of the NPC.\n\n \u003cpre\u003e{@code\n var size \u003d c.getSubject().getShadowSize();\n }\u003c/pre\u003e"
+      }
+    ],
+    "setXpValue": [
+      {
+        "parameters": [
+          {
+            "name": "xp",
+            "type": "int",
+            "docs": "the new XP value for the NPC."
+          }
+        ],
+        "return": "float",
+        "docs": "Sets the XP value of the NPC.\n\n \u003cpre\u003e{@code\n c.getSubject().setXpValue(10);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getXpValue": [
+      {
+        "return": "int",
+        "docs": "Gets the XP value of the NPC.\n\n \u003cpre\u003e{@code\n var xp \u003d c.getSubject().getXpValue();\n }\u003c/pre\u003e"
+      }
+    ],
+    "getPathDistance": [
+      {
+        "return": "float",
+        "docs": "Gets the path distance of the NPC. Also determines the NPC\u0027s sight radius of \"look at player\" option.\n\n \u003cpre\u003e{@code\n var distance \u003d c.getSubject().getPathDistance();\n }\u003c/pre\u003e"
+      }
+    ],
+    "setPathDistance": [
+      {
+        "parameters": [
+          {
+            "name": "sightRadius",
+            "type": "float",
+            "docs": "the new path distance for the NPC."
+          }
+        ],
+        "docs": "Sets the path distance of the NPC. Also determines the NPC\u0027s sight radius of \"look at player\" option.\n\n \u003cpre\u003e{@code\n c.getSubject().setPathDistance(10);\n }\u003c/pre\u003e"
+      }
+    ],
+    "setAttackRange": [
+      {
+        "parameters": [
+          {
+            "name": "sightDistance",
+            "type": "float",
+            "docs": "the new attack range for the NPC."
+          }
+        ],
+        "docs": "Sets the attack range of the NPC.\n\n \u003cpre\u003e{@code\n c.getSubject().setAttackRange(5);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getAttackRange": [
+      {
+        "return": "float",
+        "docs": "Gets the attack range of the NPC.\n\n \u003cpre\u003e{@code\n var range \u003d c.getSubject().getAttackRange();\n }\u003c/pre\u003e"
+      }
+    ],
+    "setKillable": [
+      {
+        "parameters": [
+          {
+            "name": "killable",
+            "type": "boolean",
+            "docs": "the new killable status for the NPC."
+          }
+        ],
+        "docs": "Sets the killable status of the NPC.\n If false, then NPCs can be killed only by a command.\n Regardless of the state, killable allows to make this NPC damaged\n until 0 health.\n\n \u003cpre\u003e{@code\n c.getSubject().setKillable(true);\n }\u003c/pre\u003e"
+      }
+    ],
+    "isKillable": [
+      {
+        "return": "boolean",
+        "docs": "Gets the killable status of the NPC.\n If false, then NPCs can be killed only by a command.\n Regardless of the state, killable allows to make this NPC damaged\n until 0 health.\n\n \u003cpre\u003e{@code\n var isKillable \u003d c.getSubject().isKillable();\n }\u003c/pre\u003e"
+      }
+    ],
+    "canGetBurned": [
+      {
+        "return": "boolean",
+        "docs": "Gets the burnable status of the NPC.\n\n \u003cpre\u003e{@code\n var canGetBurned \u003d c.getSubject().canGetBurned();\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "canGetBurned",
+            "type": "boolean",
+            "docs": "the new burnable status for the NPC."
+          }
+        ],
+        "docs": "Sets the burnable status of the NPC.\n\n \u003cpre\u003e{@code\n c.getSubject().canGetBurned(true);\n }\u003c/pre\u003e"
+      }
+    ],
+    "canFallDamage": [
+      {
+        "return": "boolean",
+        "docs": "Gets the status if the NPC can take fall damage.\n\n \u003cpre\u003e{@code\n var canFallDamage \u003d c.getSubject().canFallDamage();\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "canFallDamage",
+            "type": "boolean",
+            "docs": "the new status for the NPC\u0027s fall damage."
+          }
+        ],
+        "docs": "Sets the status if the NPC can take fall damage.\n\n \u003cpre\u003e{@code\n c.getSubject().canFallDamage(true);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getDamage": [
+      {
+        "return": "float",
+        "docs": "Gets the damage strength points of the NPC.\n\n \u003cpre\u003e{@code\n var damage \u003d c.getSubject().getDamage();\n }\u003c/pre\u003e"
+      }
+    ],
+    "setDamage": [
+      {
+        "parameters": [
+          {
+            "name": "damage",
+            "type": "float",
+            "docs": "the new damage for the NPC."
+          }
+        ],
+        "docs": "Sets the damage strength points of the NPC.\n\n \u003cpre\u003e{@code\n c.getSubject().setDamage(10);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getDamageDelay": [
+      {
+        "return": "int",
+        "docs": "Gets the damage delay of the NPC.\n\n \u003cpre\u003e{@code\n var delay \u003d c.getSubject().getDamageDelay();\n }\u003c/pre\u003e"
+      }
+    ],
+    "setDamageDelay": [
+      {
+        "parameters": [
+          {
+            "name": "damageDelay",
+            "type": "int",
+            "docs": "the new damage delay for the NPC."
+          }
+        ],
+        "docs": "Sets the damage delay of the NPC.\n\n \u003cpre\u003e{@code\n c.getSubject().setDamageDelay(5);\n }\u003c/pre\u003e"
+      }
+    ],
+    "doesWander": [
+      {
+        "return": "boolean",
+        "docs": "Gets the wandering status of the NPC.\n\n \u003cpre\u003e{@code\n var doesWander \u003d c.getSubject().doesWander();\n }\u003c/pre\u003e"
+      }
+    ],
+    "setWander": [
+      {
+        "parameters": [
+          {
+            "name": "wander",
+            "type": "boolean",
+            "docs": "the new wandering status for the NPC."
+          }
+        ],
+        "docs": "Sets the wandering status of the NPC.\n\n \u003cpre\u003e{@code\n c.getSubject().setWander(true);\n }\u003c/pre\u003e"
+      }
+    ],
+    "doesLookAround": [
+      {
+        "return": "boolean",
+        "docs": "Gets the status of the NPC\u0027s idle look around behavior.\n\n \u003cpre\u003e{@code\n var doesLookAround \u003d c.getSubject().doesLookAround();\n }\u003c/pre\u003e"
+      }
+    ],
+    "setLookAround": [
+      {
+        "parameters": [
+          {
+            "name": "lookAround",
+            "type": "boolean",
+            "docs": "the new idle look around status for the NPC."
+          }
+        ],
+        "docs": "Sets the status of the NPC\u0027s idle look around behavior.\n\n \u003cpre\u003e{@code\n c.getSubject().setLookAround(true);\n }\u003c/pre\u003e"
+      }
+    ],
+    "doesLookAtPlayer": [
+      {
+        "return": "boolean",
+        "docs": "Gets the status of the NPC\u0027s behavior to look at the player.\n\n \u003cpre\u003e{@code\n var doesLookAtPlayer \u003d c.getSubject().doesLookAtPlayer();\n }\u003c/pre\u003e"
+      }
+    ],
+    "setLookAtPlayer": [
+      {
+        "parameters": [
+          {
+            "name": "lookAtPlayer",
+            "type": "boolean",
+            "docs": "the new status for the NPC\u0027s behavior to look at the player."
+          }
+        ],
+        "docs": "Sets the status of the NPC\u0027s behavior to look at the player.\n\n \u003cpre\u003e{@code\n c.getSubject().setLookAtPlayer(true);\n }\u003c/pre\u003e"
+      }
+    ],
+    "addPatrolPoints": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "float"
+          },
+          {
+            "name": "y",
+            "type": "float"
+          },
+          {
+            "name": "z",
+            "type": "float"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "float"
+          },
+          {
+            "name": "y",
+            "type": "float"
+          },
+          {
+            "name": "z",
+            "type": "float"
+          },
+          {
+            "name": "script",
+            "type": "java.lang.String"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "float"
+          },
+          {
+            "name": "y",
+            "type": "float"
+          },
+          {
+            "name": "z",
+            "type": "float"
+          },
+          {
+            "name": "script",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "function",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "removePatrolPoint": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int",
+            "docs": "index of the patrol point to be removed"
+          }
+        ],
+        "docs": "Removes a patrol point at a certain indext from the NPC.\n\n \u003cpre\u003e{@code\n c.getSubject().removePatrolPoint(0);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int",
+            "docs": "x coordinate"
+          },
+          {
+            "name": "y",
+            "type": "int",
+            "docs": "y coordinate"
+          },
+          {
+            "name": "z",
+            "type": "int",
+            "docs": "z coordinate"
+          }
+        ],
+        "docs": "Removes a patrol point at a certain position from the NPC.\n\n \u003cpre\u003e{@code\n var npc \u003d c.getSubject();\n var pos \u003d npc.getPosition();\n npc.removePatrolPoint(pos.x, pos.y, pos.z);\n }\u003c/pre\u003e"
+      }
+    ],
+    "clearPatrolPoints": [
+      {
+        "docs": "Removes all NPC\u0027s patrol points.\n\n \u003cpre\u003e{@code\n c.getSubject().clearPatrolPoints();\n }\u003c/pre\u003e"
+      }
+    ]
+  }
+}

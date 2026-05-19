@@ -22,7 +22,7 @@ public abstract class CommandScriptBase extends MappetCommandBase
     {
         if (args.length == 2)
         {
-            return getListOfStringsMatchingLastWord(args, Mappet.scripts.getKeys());
+            return getListOfStringsMatchingLastWord(args, Mappet.scripts.getIDs());
         }
 
         return super.getTabCompletions(server, sender, args, targetPos);

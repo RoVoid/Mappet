@@ -65,7 +65,7 @@ public class ServerSettings implements INBTSerializable<NBTTagCompound> {
 
     public Trigger register(String key, Trigger trigger) {
         if (triggers.containsKey(key)) {
-            Mappet.logger.warning("Server trigger '" + key + "' is already registered!");
+            Mappet.logger.warn("Server trigger '" + key + "' is already registered!");
             return null;
         }
         triggers.put(key, trigger);

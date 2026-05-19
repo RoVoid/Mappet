@@ -61,44 +61,42 @@ dependencies {
     compileOnly files("run/libs/chameleon-${chameleon}.jar")
     compileOnly files("run/libs/nashorn.jar")
 
-    implementation ('org.reflections:reflections:0.9.12')
-    implementation ('org.slf4j:slf4j-api:1.7.32')
-    implementation ('org.javassist:javassist:3.28.0-GA')
+    implementation 'org.reflections:reflections:0.9.12'
+    implementation 'org.slf4j:slf4j-api:1.7.32'
+    implementation 'org.javassist:javassist:3.28.0-GA'
 
-    implementation ('org.ow2.asm:asm:5.2') { force = true }
-    implementation ('org.ow2.asm:asm-tree:5.2') { force = true }
-    implementation ('org.ow2.asm:asm-util:5.2') { force = true }
+    implementation('org.ow2.asm:asm:5.2') { force = true }
+    implementation('org.ow2.asm:asm-tree:5.2') { force = true }
+    implementation('org.ow2.asm:asm-util:5.2') { force = true }
 
     implementation("net.minecraftforge:mergetool:0.2.3.3") { force = true }
+}
+
+tasks.named('compileJava', JavaCompile).configure {
+    options.encoding = 'UTF-8'
+}
+
+
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import org.apache.tools.ant.filters.ReplaceTokens
+
+tasks.register('processSource', Sync) {
+    from sourceSets.main.java
+    into layout.buildDirectory.dir("generated-src")
+
+    filter(ReplaceTokens, tokens: [MAPPET     : version,
+                                   MCLIB      : mclib,
+                                   METAMORPH  : metamorph,
+                                   BLOCKBUSTER: blockbuster,
+                                   APERTURE   : aperture,
+                                   CHAMELEON  : chameleon])
 }
 
 tasks.named('jar', Jar).configure {
     finalizedBy('shadowJar')
     finalizedBy('reobfJar')
     finalizedBy('moveToExportFolder')
-}
-
-import org.apache.tools.ant.filters.ReplaceTokens
-
-tasks.register('processSource', Sync) {
-    outputs.upToDateWhen { false }
-
-    from sourceSets.main.java
-    filter(ReplaceTokens, tokens: [
-            MAPPET     : version,
-            MCLIB      : mclib,
-            METAMORPH  : metamorph,
-            BLOCKBUSTER: blockbuster,
-            APERTURE   : aperture,
-            CHAMELEON  : chameleon
-    ])
-
-    into layout.buildDirectory.dir("src")
-}
-
-tasks.named('compileJava', JavaCompile).configure {
-    source = []
-    source(tasks.named('processSource').map { it.outputs })
 }
 
 tasks.register('moveToExportFolder', Copy) {
@@ -116,27 +114,24 @@ tasks.named('shadowJar').configure {
 
     archiveClassifier.set("")
 
-    def dependenciesToRelocate = ["org.reflections", "org.slf4j", "javassist"]
-    for (dependency in dependenciesToRelocate) {
-        relocate dependency, "mchorse.mappet.libs." + dependency
-    }
+    relocate "org.reflections", "mchorse.mappet.libs.org.reflections"
+    relocate "org.slf4j", "mchorse.mappet.libs.org.slf4j"
+    relocate "javassist", "mchorse.mappet.libs.javassist"
 }
 
 tasks.register('prepareAssets', Copy) {
-    group = 'build'
+    def props = ['version'    : version.toString(),
+                 'mclib'      : mclib,
+                 'blockbuster': blockbuster,
+                 'metamorph'  : metamorph]
 
-    def expansionProps = [
-            'version': version.toString(),
-            'mclib': mclib,
-            'blockbuster': blockbuster,
-            'metamorph': metamorph
-    ]
-    inputs.properties(expansionProps)
+    inputs.properties(props)
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-        expand(expansionProps)
+        expand(props)
     }
+
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
@@ -148,11 +143,7 @@ tasks.named('classes').configure {
     dependsOn('prepareAssets')
 }
 
-tasks.withType(Jar).configureEach {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
 
-/* Comparing keys */
 tasks.register('compareLangFiles') {
     doLast {
         def help = project.file("src/main/resources/assets/${base.archivesName.get().toLowerCase()}/lang/")
@@ -190,8 +181,6 @@ tasks.register('compareLangFiles') {
 
             missing.sort()
             extra.sort()
-
-            print("\n")
 
             if (!missing.isEmpty() || !extra.isEmpty()) {
                 if (!missing.isEmpty()) {
@@ -244,34 +233,97 @@ tasks.register('copyLangStrings') {
                     }
                 }
                 file.write(splits.join("\n"))
-                print("Wrote to ${file.name}...\n")
             }
         }
-        print("Done!\n")
     }
 }
 
 tasks.register('scriptingJavadocsJson', Exec) {
     group = "build"
 
+    ignoreExitValue = true
+
+    def deps = configurations.runtimeClasspath.collect { it.absolutePath }.join(File.pathSeparator)
+
     executable "javadoc"
     args "-doclet", "robot.utils.doclets.JsonDoclet",
-            "-docletpath", "./run/jsonDoclet-1.1.jar",
+            "-docletpath", "./run/jsonDoclet-1.2.jar",
             "-sourcepath", "./src/main/java/",
-            "-subpackages", "mchorse.mappet.api.scripts.user:mchorse.mappet.api.scripts.code.ui:mchorse.mappet.client.gui.utils.graphics"
+            "-classpath", "./run/libs/*${File.pathSeparator}${deps}",
+            "-encoding", "UTF-8",
+            "-subpackages", "mchorse.mappet.api.scripts.user",
+            "-root", "mchorse.mappet.api.scripts.user",
+            "-result", "./src/main/resources/assets/mappet/docs",
+            "-version", "3"
+
+    errorOutput = System.err
+    standardOutput = System.out
+}
+
+
+
+
+def iconsDir = file("src/main/resources/assets/mappet/textures/gui/icons")
+def iconsJson = file("src/main/resources/assets/mappet/icons.json")
+
+tasks.register('generateIconsJson') {
+    group = "build"
+
+    inputs.dir(iconsDir)
+    outputs.file(iconsJson)
 
     doLast {
-        def tempJson = project.file("docs.json")
-        def targetJson = project.file("src/main/resources/assets/mappet/docs/en_us.json")
+        def iconsList = []
 
-        if (tempJson.exists()) {
-            targetJson.parentFile.mkdirs()
-            targetJson.text = tempJson.text
-            tempJson.delete()
+        if (iconsDir.exists()) {
+            iconsDir.eachFileRecurse { file ->
+                if (file.isFile() && file.name.endsWith(".png")) {
+                    def relativePath = iconsDir.toPath().relativize(file.toPath()).toString().replace('\\', '/')
+                    if (relativePath[0] == '-') return
+                    def iconKey = relativePath.substring(0, relativePath.length() - 4)
+
+                    def jsonSibling = new File(file.parentFile, file.name.replace(".png", ".json"))
+
+                    if (jsonSibling.exists()) {
+                        def parsed = new JsonSlurper().parse(jsonSibling)
+                        if (parsed instanceof Map) {
+                            parsed["path"] = iconKey
+                            iconsList << parsed
+                        } else {
+                            iconsList << iconKey
+                        }
+                    } else {
+                        iconsList << iconKey
+                    }
+                }
+            }
         }
+
+        iconsList.sort { a, b ->
+            def aKey = (a instanceof Map) ? a["path"] : a
+            def bKey = (b instanceof Map) ? b["path"] : b
+            aKey <=> bKey
+        }
+
+        def json = JsonOutput.prettyPrint(JsonOutput.toJson(iconsList))
+
+        iconsJson.parentFile.mkdirs()
+        iconsJson.text = json
     }
+}
+
+def iconSiblingJsonExcludes = fileTree(iconsDir) {
+    include "**/*.json"
+}.filter { java.io.File file -> new java.io.File(file.parentFile, file.name.replace(".json", ".png")).exists()
+}.collect { java.io.File file -> "assets/mappet/textures/gui/icons/" + iconsDir.toPath().relativize(file.toPath()).toString().replace('\\', '/')
 }
 
 tasks.named('processResources').configure {
     dependsOn('scriptingJavadocsJson')
+    dependsOn('generateIconsJson')
+}
+
+tasks.withType(Jar).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    exclude iconSiblingJsonExcludes
 }

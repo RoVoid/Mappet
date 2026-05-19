@@ -3,7 +3,7 @@ package mchorse.mappet.client.renders.tile;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.tileentity.TileEntityModelSettings;
 import mchorse.mappet.client.gui.panels.GuiConditionModelPanel;
-import mchorse.mappet.tile.TileConditionModel;
+import mchorse.mappet.blocks.tile.TileConditionModel;
 import mchorse.mclib.client.Draw;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTransformations;

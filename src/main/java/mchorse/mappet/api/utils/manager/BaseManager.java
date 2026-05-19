@@ -1,7 +1,7 @@
 package mchorse.mappet.api.utils.manager;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.MappetConfig;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.api.utils.AbstractData;
 import mchorse.mappet.utils.NBTToJsonLike;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,9 +20,7 @@ public abstract class BaseManager<T extends AbstractData> extends FolderManager<
     @Override
     public final T create(String id, NBTTagCompound tag) {
         T data = createData(id, tag);
-
         data.setId(id);
-
         return data;
     }
 
@@ -83,10 +81,10 @@ public abstract class BaseManager<T extends AbstractData> extends FolderManager<
     }
 
     @Override
-    public boolean save(String name, NBTTagCompound tag) {
+    public boolean save(String id, NBTTagCompound tag) {
         try {
-            NBTToJsonLike.write(getFile(name), tag);
-            cache.remove(name);
+            NBTToJsonLike.write(getFile(id), tag);
+            cache.remove(id);
 
             return true;
         } catch (Exception e) {

@@ -2,7 +2,7 @@ package mchorse.mappet.network.client.blocks;
 
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.network.packets.blocks.PacketEditConditionModel;
-import mchorse.mappet.tile.TileConditionModel;
+import mchorse.mappet.blocks.tile.TileConditionModel;
 import mchorse.mappet.utils.WorldUtils;
 import mchorse.mclib.network.ClientMessageHandler;
 import mchorse.metamorph.api.MorphManager;

@@ -18,7 +18,7 @@ import mchorse.mappet.api.scripts.user.nbt.INBTList;
 import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
 import mchorse.mappet.api.ui.UI;
 import mchorse.mappet.api.utils.SkinUtils;
-import mchorse.mappet.api.utils.logs.MappetLogger;
+import mchorse.mappet.MappetLogger;
 import mchorse.mappet.MappetIcons;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -138,6 +138,10 @@ public class ScriptFactory implements IScriptFactory {
         }
 
         return new ScriptNBTCompound(tag);
+    }
+    public INBTCompound createCompound(Object jsObject) {
+        NBTBase base = convertToNBT(jsObject);
+        return base instanceof NBTTagCompound ? new ScriptNBTCompound((NBTTagCompound) base) : null;
     }
 
     @Override

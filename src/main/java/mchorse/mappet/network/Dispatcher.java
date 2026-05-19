@@ -92,6 +92,16 @@ public class Dispatcher {
     private static final SimpleNetworkWrapper dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(Mappet.MOD_ID);
     private static byte size = 0;
 
+    //    @SafeVarargs
+    //    public static <REQ extends IMessage, REPLY extends IMessage> void push(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>>... handlers) {
+    //        for (Class<? extends IMessageHandler<REQ, REPLY>> handlerClass : handlers) {
+    //            if (ClientMessageHandler.class.isAssignableFrom(handlerClass))
+    //                dispatcher.registerMessage(handlerClass, message, size++, Side.CLIENT);
+    //            else if (ServerMessageHandler.class.isAssignableFrom(handlerClass))
+    //                dispatcher.registerMessage(handlerClass, message, size++, Side.SERVER);
+    //        }
+    //    }
+
     public static <REQ extends IMessage, REPLY extends IMessage> void push(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side) {
         dispatcher.registerMessage(handler, message, size++, side);
     }

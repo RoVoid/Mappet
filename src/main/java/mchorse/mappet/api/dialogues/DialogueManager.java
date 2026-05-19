@@ -2,7 +2,7 @@ package mchorse.mappet.api.dialogues;
 
 import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.Mappet;
-import mchorse.mappet.MappetConfig;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.api.dialogues.nodes.ReactionNode;
 import mchorse.mappet.api.events.nodes.EventBaseNode;
 import mchorse.mappet.api.quests.Quest;

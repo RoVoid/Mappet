@@ -18,7 +18,7 @@ import mchorse.mappet.events.handlers.EventHandler;
 import mchorse.mappet.events.handlers.ScriptedItemEventHandler;
 import mchorse.mappet.events.handlers.TriggerEventHandler;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.constants.Colors;
+import mchorse.mappet.client.Colors;
 import mchorse.mappet.utils.MappetNpcSelector;
 import mchorse.mappet.utils.MetamorphHandler;
 import mchorse.mappet.utils.ScriptUtils;

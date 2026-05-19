@@ -25,25 +25,6 @@ import java.util.List;
 
 public interface IScriptBox {
     /**
-     * Checks if this box collides with another.
-     */
-    boolean isColliding(ScriptBox box);
-
-    /**
-     * Offsets the box by given coordinates
-     *
-     * <pre>{@code
-     * function main(c)
-     * {
-     *     var box = mappet.box(-10, 4, -10, 10, 6, 10);
-     *     box.offset(10, 0, 10);
-     *     c.send(box.toString()); // ScriptBox(0.0, 4.0, 0.0, 20.0, 6.0, 20.0)
-     * }
-     * }</pre>
-     */
-    void offset(double x, double y, double z);
-
-    /**
      * <p id="title"> Checks if given coordinates are inside of this box </p>
      *
      * <pre>{@code
@@ -71,20 +52,28 @@ public interface IScriptBox {
      */
     boolean contains(ScriptVector vector);
 
+
+
+    void grow(double value);
+
     /**
-     * Returns a list of positions for blocks in the box that match a given block state in a given world.
+     * Checks if this box collides with another.
+     */
+    boolean intersection(ScriptBox box);
+
+    /**
+     * Offsets the box by given coordinates
      *
      * <pre>{@code
      * function main(c)
      * {
-     *     var state = mappet.createBlockState("minecraft:stone");
      *     var box = mappet.box(-10, 4, -10, 10, 6, 10);
-     *
-     *     c.send(box.getBlocksPositions(c.getWorld(), state));
+     *     box.offset(10, 0, 10);
+     *     c.send(box.toString()); // ScriptBox(0.0, 4.0, 0.0, 20.0, 6.0, 20.0)
      * }
      * }</pre>
      */
-    List<ScriptVector> getBlocksPositions(ScriptWorld world, ScriptBlockState state);
+    void offset(double x, double y, double z);
 
     String toString();
 }

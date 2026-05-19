@@ -42,7 +42,7 @@ public abstract class CommandQuestBase extends MappetCommandBase
     {
         if (args.length == 2)
         {
-            return getListOfStringsMatchingLastWord(args, Mappet.quests.getKeys());
+            return getListOfStringsMatchingLastWord(args, Mappet.quests.getIDs());
         }
 
         return super.getTabCompletions(server, sender, args, targetPos);

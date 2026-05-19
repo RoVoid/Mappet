@@ -1,0 +1,1507 @@
+{
+  "docs": "Entity interface.\n\n \u003cp\u003eThis interface represents an entity, it could be a player, NPC,\n or any other entity. \u003cb\u003eIMPORTANT\u003c/b\u003e: any method that marks an argument or return\n as of {@link IScriptEntity} type can return also {@link IScriptPlayer} if it\u0027s an\n actual player, or {@link IScriptNpc} if it\u0027s a Mappet NPC!\u003c/p\u003e\n\n \u003cpre\u003e{@code\n     function main(c)\n     {\n         if (c.getSubject().isPlayer())\n         {\n             // Do something with the player...\n         }\n         if (c.getSubject().isNpc())\n         {\n             // Do something with the NPC...\n         }\n         else\n         {\n             // Do something with the entity...\n         }\n     }\n }\u003c/pre\u003e",
+  "methods": {
+    "getMinecraftEntity": [
+      {
+        "return": "net.minecraft.entity.Entity",
+        "deprecated": true,
+        "docs": "Use {@link #asMinecraft()} instead\n @deprecated"
+      }
+    ],
+    "asMinecraft": [
+      {
+        "return": "net.minecraft.entity.Entity",
+        "docs": "Get Minecraft entity instance\n \u003cb\u003eBEWARE:\u003c/b\u003e you need to know the MCP mappings to directly call methods on this instance!\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     //c.getSubject().getMinecraftEntity().abilities.disableDamage \u003d true\n     c.getSubject().getMinecraftEntity().field_71075_bZ.field_75102_a \u003d true // or false\n }\n }\u003c/pre\u003e"
+      }
+    ],
+    "getWorld": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.world.IScriptWorld",
+        "docs": "Get entity\u0027s world.\n\n \u003cpre\u003e{@code\n    var s \u003d c.getSubject();\n    var world \u003d s.getWorld();\n\n    world.setRaining(true);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getPosition": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector",
+        "docs": "Get entity\u0027s position.\n\n \u003cpre\u003e{@code\n    var pos \u003d c.getSubject().getPosition();\n\n    c.send(c.getSubject().getName() + \"\u0027s position is (\" + pos.x + \", \" + pos.y + \", \" + pos.z + \")\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "setPosition": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "docs": "Set entity\u0027s position (teleport).\n\n \u003cpre\u003e{@code\n    c.getSubject().setPosition(800, 8, -135);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getDimension": [
+      {
+        "return": "int",
+        "docs": "Returns the dimension of the entity.\n\n \u003cpre\u003e{@code\n   var dimension \u003d c.getSubject().getDimension();\n   switch (dimension)\n   {\n       case 0: c.send(\"Overworld\"); break;\n       case 1: c.send(\"The End\"); break;\n       case -1: c.send(\"The Nether\"); break;\n       default: c.send(\"Unknown dimension\"); break;\n   }\n }\u003c/pre\u003e"
+      }
+    ],
+    "setDimension": [
+      {
+        "parameters": [
+          {
+            "name": "dimension",
+            "type": "int",
+            "docs": "The dimension to teleport the entity to."
+          }
+        ],
+        "docs": "Set the dimension of the entity.\n\n \u003cpre\u003e{@code\n   c.getSubject().setDimension(1); // Teleport to The End\n }\u003c/pre\u003e"
+      }
+    ],
+    "getMotion": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector",
+        "docs": "Get entity\u0027s motion.\n\n \u003cpre\u003e{@code\n    var motion \u003d c.getSubject().getMotion();\n\n    c.send(c.getSubject().getName() + \"\u0027s motion is (\" + motion.x + \", \" + motion.y + \", \" + motion.z + \")\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "setMotion": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "docs": "Set entity\u0027s motion.\n\n \u003cpre\u003e{@code\n    var motion \u003d c.getSubject().getMotion();\n\n    if (motion.y \u003c 0)\n    {\n        // Reverse the falling motion into a jumping up motion\n        c.getSubject().setMotion(motion.x, -motion.y, motion.z);\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "addMotion": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "docs": "Set entity\u0027s server-sided motion. (\u003ccode\u003e.setMotion()\u003c/code\u003e causes rubber banding)\n Adds to the current velocity of the entity.\n\n \u003cpre\u003e{@code\n     // Throw all items in the air\n     for each (var item in c.getServer().getEntities(\"@e[type\u003ditem]\"))\n     {\n         item.addVelocity(0, 0.3, 0);\n     }\n }\u003c/pre\u003e"
+      }
+    ],
+    "getRotations": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector",
+        "docs": "Get entity\u0027s rotation (x is pitch, y is yaw, and z is yaw head, if entity\n is living base).\n\n \u003cpre\u003e{@code\n     var rotations \u003d c.getSubject().getRotations();\n     var pitch \u003d rotations.x;\n     var yaw \u003d rotations.y;\n     var yaw_head \u003d rotations.z;\n\n     c.send(c.getSubject().getName() + \"\u0027s rotations are (\" + pitch + \", \" + yaw + \", \" + yaw_head + \")\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "setRotations": [
+      {
+        "parameters": [
+          {
+            "name": "pitch",
+            "type": "float"
+          },
+          {
+            "name": "yaw",
+            "type": "float"
+          },
+          {
+            "name": "yawHead",
+            "type": "float"
+          }
+        ],
+        "docs": "Set entity\u0027s rotation.\n\n \u003cpre\u003e{@code\n    // Make entity look at west\n    c.getSubject().setRotations(0, 0, 0);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getPitch": [
+      {
+        "return": "float",
+        "docs": "Get entity\u0027s pitch (vertical rotation)."
+      }
+    ],
+    "getYaw": [
+      {
+        "return": "float",
+        "docs": "Get entity\u0027s yaw (horizontal rotation)."
+      }
+    ],
+    "getYawHead": [
+      {
+        "return": "float",
+        "docs": "Get entity\u0027s head yaw."
+      }
+    ],
+    "getLook": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector",
+        "docs": "Get a vector in which direction entity looks.\n\n \u003cpre\u003e{@code\n     var look \u003d c.getSubject().getLook();\n\n     c.getSubject().setMotion(look.x * 0.5, look.y * 0.5, look.z * 0.5);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getEyeHeight": [
+      {
+        "return": "float",
+        "docs": "Returns the eye height of the entity.\n\n \u003cpre\u003e{@code\n    var s \u003d c.getSubject();\n\n    c.send(\"This entity\u0027s eye height is: \" + s.getEyeHeight());\n }\u003c/pre\u003e"
+      }
+    ],
+    "getWidth": [
+      {
+        "return": "float",
+        "docs": "Get entity\u0027s current hitbox width (and depth, it\u0027s the same number)."
+      }
+    ],
+    "getHeight": [
+      {
+        "return": "float",
+        "docs": "Get entity\u0027s current hitbox height."
+      }
+    ],
+    "getHp": [
+      {
+        "return": "float",
+        "docs": "Get health points of this entity (20 is the max default for players).\n\n \u003cpre\u003e{@code\n    var subject \u003d c.getSubject();\n\n    if (subject.getHp() \u003c 10)\n    {\n        subject.send(\"Man, you need to replenish your health!\");\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "setHp": [
+      {
+        "parameters": [
+          {
+            "name": "hp",
+            "type": "float"
+          }
+        ],
+        "docs": "Set entity\u0027s health points. Given value that is more than max HP will get limited to max HP.\n\n \u003cpre\u003e{@code\n    // If entity\u0027s health goes below 5 hearts, restore to max\n    var subject \u003d c.getSubject();\n\n    if (subject.getHp() \u003c 10)\n    {\n        subject.setHp(subject.getMaxHp());\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "getMaxHp": [
+      {
+        "return": "float",
+        "docs": "Get maximum health points this entity can have.\n\n \u003cpre\u003e{@code\n    var subject \u003d c.getSubject();\n\n    subject.send(subject.getName() + \" can have up to \" + subject.getMaxHp() + \" HP!\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "setMaxHp": [
+      {
+        "parameters": [
+          {
+            "name": "hp",
+            "type": "float"
+          }
+        ],
+        "docs": "Set entity\u0027s maximum health points.\n\n \u003cpre\u003e{@code\n    var subject \u003d c.getSubject();\n    subject.setMaxHp(100);\n    subject.send(subject.getName() + \" can have up to \" + subject.getMaxHp() + \" HP!\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "isInWater": [
+      {
+        "return": "boolean",
+        "docs": "Check whether this entity is in water.\n\n \u003cpre\u003e{@code\n     var subject \u003d c.getSubject();\n\n     c.send(\"Is the entity in water? \" + subject.isInWater());\n }\u003c/pre\u003e"
+      }
+    ],
+    "isInLava": [
+      {
+        "return": "boolean",
+        "docs": "Check whether this entity is in lava.\n\n \u003cpre\u003e{@code\n     var subject \u003d c.getSubject();\n\n     c.send(\"Is the entity in lava? \" + subject.isInLava());\n }\u003c/pre\u003e"
+      }
+    ],
+    "isBurning": [
+      {
+        "return": "boolean",
+        "docs": "Check whether this entity is on fire.\n\n \u003cpre\u003e{@code\n    var subject \u003d c.getSubject();\n\n    // Extinguish the entity if it\u0027s on fire\n    if (subject.isBurning())\n    {\n        subject.setBurning(0);\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "setBurning": [
+      {
+        "parameters": [
+          {
+            "name": "seconds",
+            "type": "int"
+          }
+        ],
+        "docs": "Set entity on fire for given amount of ticks. If \u003ccode\u003e0\u003c/code\u003e will be\n provided as the sole argument, then entity\u0027s fire will be extinguished.\n\n \u003cpre\u003e{@code\n    var subject \u003d c.getSubject();\n    var ray \u003d subject.rayTrace(32);\n\n    if (ray.isEntity())\n    {\n        ray.getEntity().setBurning(2);\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "isSneaking": [
+      {
+        "return": "boolean",
+        "docs": "Is this entity is sneaking.\n\n \u003cpre\u003e{@code\n    var subject \u003d c.getSubject();\n\n    if (subject.isSneaking())\n    {\n        subject.send(\"You completed Simon\u0027s task!\");\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "isSprinting": [
+      {
+        "return": "boolean",
+        "docs": "Is this entity is sprinting.\n\n \u003cpre\u003e{@code\n    var subject \u003d c.getSubject();\n\n    if (subject.isSprinting())\n    {\n        subject.send(\"This way, you\u0027ll run away way faster from zombies!\");\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "isOnGround": [
+      {
+        "return": "boolean",
+        "docs": "Is this entity on the ground."
+      }
+    ],
+    "rayTrace": [
+      {
+        "parameters": [
+          {
+            "name": "maxDistance",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.IScriptRayTrace",
+        "docs": "Ray trace from entity\u0027s looking direction (including any entity intersection).\n Check {@link IScriptRayTrace} for an example."
+      }
+    ],
+    "rayTraceBlock": [
+      {
+        "parameters": [
+          {
+            "name": "maxDistance",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.IScriptRayTrace",
+        "docs": "Ray trace from entity\u0027s looking direction (excluding entities).\n Check {@link IScriptRayTrace} for an example."
+      }
+    ],
+    "getMainItem": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.items.IScriptItemStack",
+        "docs": "Get item held in main hand.\n\n \u003cpre\u003e{@code\n    var subject \u003d c.getSubject();\n    var item \u003d subject.getMainItem();\n\n    // Lightning bolt admin stick idk I didn\u0027t play on servers\n    if (item.getItem().getId() \u003d\u003d\u003d \"minecraft:stick\")\n    {\n        c.executeCommand(\"/summon lightning_bolt ~ ~ ~\");\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "setMainItem": [
+      {
+        "parameters": [
+          {
+            "name": "stack",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          }
+        ],
+        "docs": "Set item held in main hand.\n\n \u003cpre\u003e{@code\n    // We did a little bit of trolling\n    c.getSubject().setMainItem(mappet.createItem(\"minecraft:diamond_hoe\"));\n }\u003c/pre\u003e"
+      }
+    ],
+    "getOffItem": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.items.IScriptItemStack",
+        "docs": "Get item held in off hand.\n\n \u003cpre\u003e{@code\n    var subject \u003d c.getSubject();\n    var item \u003d subject.getOffItem();\n\n    // Lightning bolt admin stick (but in off hand) idk I didn\u0027t play on servers\n    if (item.getItem().getId() \u003d\u003d\u003d \"minecraft:stick\")\n    {\n        c.executeCommand(\"/summon lightning_bolt ~ ~ ~\");\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "setOffItem": [
+      {
+        "parameters": [
+          {
+            "name": "stack",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          }
+        ],
+        "docs": "Set item held in off hand.\n\n \u003cpre\u003e{@code\n    c.getSubject().setOffItem(mappet.createItem(\"minecraft:shield\"));\n }\u003c/pre\u003e"
+      }
+    ],
+    "giveItem": [
+      {
+        "parameters": [
+          {
+            "name": "stack",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          }
+        ],
+        "docs": "Give item to this entity. (like the /give command)\n\n \u003cpre\u003e{@code\n    c.getSubject().giveItem(mappet.createItem(\"minecraft:diamond\", 64));\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "stack",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          },
+          {
+            "name": "playSound",
+            "type": "boolean"
+          },
+          {
+            "name": "dropIfInventoryFull",
+            "type": "boolean"
+          }
+        ],
+        "docs": "Give item to this entity. (like the /give command)\n\n \u003cpre\u003e{@code\n    c.getSubject().giveItem(mappet.createItem(\"minecraft:diamond\", 64), false, true);\n }\u003c/pre\u003e"
+      }
+    ],
+    "removeItem": [
+      {
+        "parameters": [
+          {
+            "name": "stack",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          }
+        ],
+        "return": "int",
+        "docs": "Remove one item from the subject\u0027s inventory.\n\n \u003cpre\u003e{@code\n    c.getSubject().removeItem(mappet.createItem(\"minecraft:diamond\"));\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "stack",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          },
+          {
+            "name": "count",
+            "type": "int"
+          }
+        ],
+        "return": "int",
+        "docs": "Remove {count} items from the subject\u0027s inventory. If {count} \u003c 0, remove all items.\n\n \u003cpre\u003e{@code\n    var deletedCount \u003d c.getSubject().removeItem(mappet.createItem(\"minecraft:diamond\"), 4);\n }\u003c/pre\u003e"
+      }
+    ],
+    "findItem": [
+      {
+        "parameters": [
+          {
+            "name": "stack",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          }
+        ],
+        "return": "int",
+        "docs": "Find the first occurrence of the specified item in the subject\u0027s inventory.\n\n \u003cpre\u003e{@code\n    var index \u003d c.getSubject().findItem(mappet.createItem(\"minecraft:diamond\"));\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "stack",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          },
+          {
+            "name": "startIndex",
+            "type": "int"
+          }
+        ],
+        "return": "int",
+        "docs": "Find the first occurrence of the specified item starting from {startIndex} in the subject\u0027s inventory.\n\n \u003cpre\u003e{@code\n    var index \u003d c.getSubject().findItem(mappet.createItem(\"minecraft:diamond\"), 4);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getHelmet": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.items.IScriptItemStack",
+        "docs": "Return the entity\u0027s helmet\u0027s item stack.\n\n \u003cpre\u003e{@code\n   c.send( c.getSubject().getHelmet().serialize() )\n }\u003c/pre\u003e"
+      }
+    ],
+    "getChestplate": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.items.IScriptItemStack",
+        "docs": "Return the entity\u0027s  chestplate\u0027s item stack.\n\n \u003cpre\u003e{@code\n   c.send( c.getSubject().getChestplate().serialize() )\n }\u003c/pre\u003e"
+      }
+    ],
+    "getLeggings": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.items.IScriptItemStack",
+        "docs": "Return the entity\u0027s  leggings\u0027 item stack.\n\n \u003cpre\u003e{@code\n   c.send( c.getSubject().getLeggings().serialize() )\n }\u003c/pre\u003e"
+      }
+    ],
+    "getBoots": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.items.IScriptItemStack",
+        "docs": "Return the entity\u0027s  boots\u0027 item stack.\n\n \u003cpre\u003e{@code\n   c.send( c.getSubject().getBoots().serialize() )\n }\u003c/pre\u003e"
+      }
+    ],
+    "setHelmet": [
+      {
+        "parameters": [
+          {
+            "name": "itemStack",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          }
+        ],
+        "docs": "Set the entity\u0027s  helemt.\n\n \u003cpre\u003e{@code\n   var item \u003d mappet.createItemNBT(mappet.createCompound(\"{id:\\\"minecraft:diamond_helmet\\\",Count:1b,tag:{ench:[{lvl:3s,id:0s}],RepairCost:1},Damage:0s}\"));\n   c.getSubject().setHelmet(item)\n }\u003c/pre\u003e"
+      }
+    ],
+    "setChestplate": [
+      {
+        "parameters": [
+          {
+            "name": "itemStack",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          }
+        ],
+        "docs": "Set the entity\u0027s  chestplate.\n\n \u003cpre\u003e{@code\n   var item \u003d mappet.createItemNBT(mappet.createCompound(\"{id:\\\"minecraft:diamond_chestplate\\\",Count:1b,tag:{ench:[{id:0,lvl:4}],RepairCost:1},Damage:0s}\"));\n   c.getSubject().setChestplate(item)\n }\u003c/pre\u003e"
+      }
+    ],
+    "setLeggings": [
+      {
+        "parameters": [
+          {
+            "name": "itemStack",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          }
+        ],
+        "docs": "Set the entity\u0027s  leggings.\n\n \u003cpre\u003e{@code\n   var item \u003d mappet.createItemNBT(mappet.createCompound(\"{id:\\\"minecraft:diamond_leggings\\\",Count:1b,tag:{ench:[{id:0,lvl:4}],RepairCost:1},Damage:0s}\"));\n   c.getSubject().setLeggings(item)\n }\u003c/pre\u003e"
+      }
+    ],
+    "setBoots": [
+      {
+        "parameters": [
+          {
+            "name": "itemStack",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          }
+        ],
+        "docs": "Set the entity\u0027s  boots.\n\n \u003cpre\u003e{@code\n   var item \u003d mappet.createItemNBT(mappet.createCompound(\"{id:\\\"minecraft:diamond_boots\\\",Count:1b,tag:{ench:[{id:0,lvl:4}],RepairCost:1},Damage:0s}\"));\n   c.getSubject().setBoots(item)\n }\u003c/pre\u003e"
+      }
+    ],
+    "setArmor": [
+      {
+        "parameters": [
+          {
+            "name": "helmet",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          },
+          {
+            "name": "chestplate",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          },
+          {
+            "name": "leggings",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          },
+          {
+            "name": "boots",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          }
+        ],
+        "docs": "Set the entity\u0027s  whole armor set.\n\n \u003cpre\u003e{@code\n     var players \u003d c.getServer().getAllPlayers();\n\n     for each (var player in players)\n     {\n         var helmet \u003d mappet.createItemNBT(mappet.createCompound(\"{id:\\\"minecraft:diamond_helmet\\\",Count:1b,tag:{ench:[{id:0s,lvl:3s}],RepairCost:1},Damage:0s}\"));\n         var chestplate \u003d mappet.createItemNBT(mappet.createCompound(\"{id:\\\"minecraft:diamond_chestplate\\\",Count:1b,tag:{ench:[{id:0,lvl:4}],RepairCost:1},Damage:0s}\"));\n         var leggings \u003d mappet.createItemNBT(mappet.createCompound(\"{id:\\\"minecraft:diamond_leggings\\\",Count:1b,tag:{ench:[{id:0,lvl:4}],RepairCost:1},Damage:0s}\"));\n         var boots \u003d mappet.createItemNBT(mappet.createCompound(\"{id:\\\"minecraft:diamond_boots\\\",Count:1b,tag:{ench:[{id:0,lvl:4}],RepairCost:1},Damage:0s}\"));\n\n         player.setArmor(helmet, chestplate, leggings, boots)\n     }\n }\u003c/pre\u003e"
+      }
+    ],
+    "clearArmor": [
+      {
+        "docs": "Clear the entity\u0027s  whole armor set.\n\n \u003cpre\u003e{@code\n   var players \u003d c.getServer().getEntities(\"@e[type\u003dplayer]\");\n   for each (var player in players){\n       player.clearArmor()\n   }\n }\u003c/pre\u003e"
+      }
+    ],
+    "playAnimation": [
+      {
+        "parameters": [
+          {
+            "name": "animation",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Play an animation on this entity, (need ChameleonMorph)\n\n \u003cpre\u003e@code\n     c.getSubject().playAnimation(\"running\");\n \u003c/pre\u003e"
+      }
+    ],
+    "isTamed": [
+      {
+        "parameters": [
+          {
+            "name": "player",
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "setOwner": [
+      {
+        "parameters": [
+          {
+            "name": "player",
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer"
+          }
+        ]
+      }
+    ],
+    "getOwner": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer"
+      }
+    ],
+    "setSpeed": [
+      {
+        "parameters": [
+          {
+            "name": "speed",
+            "type": "float"
+          }
+        ],
+        "docs": "Set entity\u0027s speed."
+      }
+    ],
+    "getTarget": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntity",
+        "docs": "Get this entity\u0027s attack target."
+      }
+    ],
+    "setTarget": [
+      {
+        "parameters": [
+          {
+            "name": "entity",
+            "type": "mchorse.mappet.api.scripts.user.entities.IScriptEntity"
+          }
+        ],
+        "docs": "Set this entity\u0027s attack target to given entity.\n\n \u003cpre\u003e{@code\n     // Stop the entity that you\u0027re looking at from targeting you.\n     function main(c)\n     {\n         var s \u003d c.getSubject();\n         var ray \u003d s.rayTrace(64);\n\n         if (ray.isEntity())\n         {\n             ray.getEntity().setTarget(null)\n         }\n     }\n }\u003c/pre\u003e"
+      }
+    ],
+    "isAIEnabled": [
+      {
+        "return": "boolean",
+        "docs": "Check whether entity\u0027s AI is enabled."
+      }
+    ],
+    "setAIEnabled": [
+      {
+        "parameters": [
+          {
+            "name": "enabled",
+            "type": "boolean"
+          }
+        ],
+        "docs": "Set entity\u0027s AI to be enabled or disabled (if it has it)."
+      }
+    ],
+    "getUniqueId": [
+      {
+        "return": "java.lang.String",
+        "docs": "Get unique ID of this entity, which can be used, if needed, in\n commands as a target selector.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var uuid \u003d c.getSubject().getUniqueId()\n     var entity \u003d c.getServer().getEntity(uuid)\n\n     var motion \u003d c.getSubject().getMotion();\n\n     entity.setMotion(motion.x, motion.y+3, motion.z)\n }\n }\u003c/pre\u003e"
+      }
+    ],
+    "getEntityId": [
+      {
+        "return": "java.lang.String",
+        "deprecated": true,
+        "docs": "Use {@link #getId()} instead\n @deprecated"
+      }
+    ],
+    "getId": [
+      {
+        "return": "java.lang.String",
+        "docs": "Get entity\u0027s resource location ID, like \u003ccode\u003eminecraft:pig\u003c/code\u003e or\n \u003ccode\u003eminecraft:zombie\u003c/code\u003e."
+      }
+    ],
+    "getTicks": [
+      {
+        "return": "int",
+        "docs": "Get how many ticks did this entity existed."
+      }
+    ],
+    "getCombinedLight": [
+      {
+        "return": "int",
+        "docs": "Get combined light value of where the entity is currently standing.\n In order to get torch and sky light values separately, see the example below\n to \"unpack\" the combined value.\n\n \u003cpre\u003e{@code\n     var light \u003d c.getPlayer().getCombinedLight();\n     var skyLight \u003d light / 65536 / 15;\n     var torchLight \u003d light % 65536 / 15;\n\n     // Do something with skyLight and torchLight\n }\u003c/pre\u003e"
+      }
+    ],
+    "getName": [
+      {
+        "return": "java.lang.String",
+        "docs": "Get entity name."
+      }
+    ],
+    "setName": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Set entity name."
+      }
+    ],
+    "setInvisible": [
+      {
+        "parameters": [
+          {
+            "name": "invisible",
+            "type": "boolean"
+          }
+        ],
+        "docs": "Set entity to invisible."
+      }
+    ],
+    "getFullData": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.nbt.INBTCompound",
+        "docs": "Get entity\u0027s full (copy of its) NBT data."
+      }
+    ],
+    "setFullData": [
+      {
+        "parameters": [
+          {
+            "name": "data",
+            "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
+          }
+        ],
+        "docs": "Overwrite NBT data of this entity. \u003cb\u003eWARNING\u003c/b\u003e: use it only if you know\n what are you doing as this method can corrupt entities."
+      }
+    ],
+    "getEntityData": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.nbt.INBTCompound",
+        "docs": "Get Forge\u0027s custom tag compound in which you can story any\n data you want.\n\n \u003cp\u003eThere is no setter method as you can directly work with returned\n NBT compound. Any changes to returned compound \u003cb\u003ewill be reflected\n upon entity\u0027s data\u003c/b\u003e.\u003c/p\u003e"
+      }
+    ],
+    "isPlayer": [
+      {
+        "return": "boolean",
+        "docs": "Check whether this entity is a player."
+      }
+    ],
+    "isNpc": [
+      {
+        "return": "boolean",
+        "deprecated": true,
+        "docs": "Check whether this entity is an NPC."
+      }
+    ],
+    "isNPC": [
+      {
+        "return": "boolean",
+        "docs": "Check whether this entity is an NPC."
+      }
+    ],
+    "isItem": [
+      {
+        "return": "boolean",
+        "docs": "Check whether this entity is an item."
+      }
+    ],
+    "isLivingBase": [
+      {
+        "return": "boolean",
+        "docs": "Check whether this entity is living base."
+      }
+    ],
+    "isSame": [
+      {
+        "parameters": [
+          {
+            "name": "entity",
+            "type": "mchorse.mappet.api.scripts.user.entities.IScriptEntity"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Check whether this entity is same as given entity."
+      }
+    ],
+    "isEntityInRadius": [
+      {
+        "parameters": [
+          {
+            "name": "entity",
+            "type": "mchorse.mappet.api.scripts.user.entities.IScriptEntity"
+          },
+          {
+            "name": "radius",
+            "type": "double"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Check if an entity is in a radius of another specific entity\n\n \u003cpre\u003e{@code\n     // Kills all cows within 5 blocks of the player\n     function main(c)\n     {\n         var tracker \u003d c.getSubject();\n         var trackedEntities \u003d c.getServer().getEntities(\"@e[type\u003dcow]\");\n\n         for each (var trackedEntity in trackedEntities)\n         {\n             if (trackedEntity.isEntityInRadius(tracker, 5))\n             {\n                 trackedEntity.kill();\n             }\n         }\n     }\n }\u003c/pre\u003e"
+      }
+    ],
+    "isInBlock": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Check if this entity is standing in a given block.\n\n \u003cpre\u003e{@code\n     var s \u003d c.getSubject();\n\n     if (s.isInBlock(0, 0, 0))\n     {\n         c.send(s.getName() + \" is at (0, 0, 0)!\");\n     }\n }\u003c/pre\u003e"
+      }
+    ],
+    "isInArea": [
+      {
+        "parameters": [
+          {
+            "name": "x1",
+            "type": "double"
+          },
+          {
+            "name": "y1",
+            "type": "double"
+          },
+          {
+            "name": "z1",
+            "type": "double"
+          },
+          {
+            "name": "x2",
+            "type": "double"
+          },
+          {
+            "name": "y2",
+            "type": "double"
+          },
+          {
+            "name": "z2",
+            "type": "double"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Check if this entity is standing in a given area.\n\n \u003cpre\u003e{@code\n     var s \u003d c.getSubject();\n\n     if (s.isInArea(20, 3, 100, 30, 8, 110))\n     {\n         c.send(s.getName() + \" is within given area!\");\n     }\n }\u003c/pre\u003e"
+      }
+    ],
+    "damage": [
+      {
+        "parameters": [
+          {
+            "name": "health",
+            "type": "float"
+          }
+        ],
+        "docs": "Inflict some damage on this entity (use {@link #kill()} to kill the entity though).\n\n \u003cpre\u003e{@code\n c.getSubject().damage(1); //dealt you 1 damage\n }\u003c/pre\u003e"
+      }
+    ],
+    "damageAs": [
+      {
+        "parameters": [
+          {
+            "name": "entity",
+            "type": "mchorse.mappet.api.scripts.user.entities.IScriptEntity"
+          },
+          {
+            "name": "health",
+            "type": "float"
+          }
+        ],
+        "docs": "Damage this entity as given entity was the source of attack.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var player \u003d c.getSubject();\n     var result \u003d player.rayTrace(32);\n\n     if (result.isEntity())\n     {\n         result.getEntity().damageAs(player, 1);\n     }\n }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "attacker",
+            "type": "mchorse.mappet.api.scripts.user.entities.IScriptEntity"
+          },
+          {
+            "name": "damage",
+            "type": "float"
+          },
+          {
+            "name": "ignore",
+            "type": "boolean"
+          }
+        ],
+        "docs": "Sets IS_UNBLOCKABLE to TRUE"
+      }
+    ],
+    "damageWithItemsAs": [
+      {
+        "parameters": [
+          {
+            "name": "player",
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer"
+          }
+        ],
+        "docs": "Damage this entity as given player was the source of the attack with its equipment.\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var player \u003d c.getSubject();\n     var result \u003d player.rayTrace(32);\n\n     if (result.isEntity())\n     {\n         result.getEntity().damageWithItemsAs(player);\n     }\n }\n }\u003c/pre\u003e"
+      }
+    ],
+    "mount": [
+      {
+        "parameters": [
+          {
+            "name": "entity",
+            "type": "mchorse.mappet.api.scripts.user.entities.IScriptEntity"
+          }
+        ],
+        "docs": "Mount this entity to given entity.\n\n \u003cpre\u003e{@code\n     function main(c)\n     {\n         var s \u003d c.getSubject();\n         var ray \u003d s.rayTrace(64);\n\n         if (ray.isEntity())\n         {\n              s.mount(ray.getEntity());\n         }\n     }\n }\u003c/pre\u003e"
+      }
+    ],
+    "dismount": [
+      {
+        "docs": "Dismount this entity from the entity it\u0027s riding.\n\n \u003cpre\u003e{@code\n     function main(c)\n     {\n          c.getSubject().dismount()\n     }\n }\u003c/pre\u003e"
+      }
+    ],
+    "getMount": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntity",
+        "docs": "Returns the entity that this entity rides on.\n\n \u003cpre\u003e{@code\n     var s \u003d c.getSubject();\n\n     s.getMount();\n }\u003c/pre"
+      }
+    ],
+    "getBoundingBox": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptBox",
+        "docs": "Returns the bounding box of this entity.\n\n \u003cpre\u003e{@code\n    var s \u003d c.getSubject();\n    var box \u003d s.getBoundingBox();\n    c.send(\"The bounding box of \" + s.getName() + \" is \" + box.minX + \", \" + box.minY + \", \" + box.minZ + \" to \" + box.maxX + \", \" + box.maxY + \", \" + box.maxZ);\n }\u003c/pre\u003e"
+      }
+    ],
+    "dropItem": [
+      {
+        "parameters": [
+          {
+            "name": "amount",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.ScriptEntityItem",
+        "docs": "Drop the item an entity is holding.\n\n \u003cpre\u003e{@code\n var s \u003d c.getSubject();\n var entityItem \u003d s.dropItem(10);\n entityItem.setNoDespawn();\n entityItem.setInfinitePickupDelay();\n }\u003c/pre\u003e"
+      },
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.ScriptEntityItem",
+        "docs": "Drop one item of what the entity is holding.\n\n \u003cpre\u003e{@code\n var s \u003d c.getSubject();\n var entityItem \u003d s.dropItem();\n entityItem.setNoDespawn();\n entityItem.setInfinitePickupDelay();\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "itemStack",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItemStack"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.ScriptEntityItem",
+        "docs": "Drop an item of the entity even if it is not holding it.\n Therefore, it doesn\u0027t remove the item from the entity\u0027s inventory.\n\n \u003cpre\u003e{@code\n var item \u003d mappet.createItemNBT(\"{id:\\\"minecraft:stone\\\",Count:64b,Damage:0s}\");\n var entityItem \u003d c.getSubject().dropItem(item);\n entityItem.setNoDespawn();\n entityItem.setInfinitePickupDelay();\n }\u003c/pre\u003e"
+      }
+    ],
+    "getFallDistance": [
+      {
+        "return": "float",
+        "docs": "Get entity\u0027s fall distance."
+      }
+    ],
+    "setFallDistance": [
+      {
+        "parameters": [
+          {
+            "name": "distance",
+            "type": "float"
+          }
+        ],
+        "docs": "Set entity\u0027s fall distance.\n\n \u003cp\u003eYou can use this method, by calling it with \u003ccode\u003e0\u003c/code\u003e, to prevent fall\n damage when teleporting an entity which was already falling.\u003c/p\u003e"
+      }
+    ],
+    "remove": [
+      {
+        "docs": "Remove this entity from the server without any dead effects (essentially despawn)."
+      }
+    ],
+    "kill": [
+      {
+        "docs": "Kill this entity from the server by inflicting lots of damage\n (similar to \u003ccode\u003e/kill\u003c/code\u003e command)."
+      }
+    ],
+    "swingArm": [
+      {
+        "docs": "Swing entity\u0027s main hand."
+      },
+      {
+        "parameters": [
+          {
+            "name": "arm",
+            "type": "int",
+            "docs": "\u003ccode\u003e0\u003c/code\u003e is primary (main), \u003ccode\u003e1\u003c/code\u003e is secondary (off-hand)."
+          }
+        ],
+        "docs": "Swing entity\u0027s arm."
+      }
+    ],
+    "getLeashedEntities": [
+      {
+        "return": "java.util.List",
+        "docs": "Returns leashed entities by this entity.\n\n \u003cpre\u003e{@code\n var leashedEntities \u003d c.getSubject().getLeashedEntities();\n leashedEntities.forEach(function(leashedEntity){\n     leashedEntity.kill();\n });\n }\u003c/pre\u003e"
+      }
+    ],
+    "setLeashHolder": [
+      {
+        "parameters": [
+          {
+            "name": "leashHolder",
+            "type": "mchorse.mappet.api.scripts.user.entities.IScriptEntity",
+            "docs": "the entity to leash this entity to"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Sets the leash holder of this entity.\n\n \u003cpre\u003e{@code\n // Leash all entities within 5 blocks of the subject\n function main(c){\n     var tracker \u003d c.getSubject();\n     var trackedEntities \u003d c.getServer().getEntities(\"@e[type\u003d!player]\");\n     trackedEntities.forEach(function(trackedEntity){\n         if (trackedEntity.isEntityInRadius(tracker, 5)){\n             trackedEntity.setLeashHolder(tracker);\n         }\n     });\n }\n }\u003c/pre\u003e"
+      }
+    ],
+    "getLeashHolder": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntity",
+        "docs": "Returns the leash holder of this entity.\n\n \u003cpre\u003e{@code\n //in scripted item (player: on entity interaction)\n //this leashes the entity to the player if it is not already leashed\n function main(c)\n {\n     var player \u003d c.getSubject();\n     var entity \u003d c.getObject();\n     if (entity.getLeashHolder()!\u003dnull) return;\n     c.scheduleScript(0, function (c)\n     {\n         entity.setLeashHolder(player);\n     });\n }\n }\u003c/pre\u003e"
+      }
+    ],
+    "clearLeashHolder": [
+      {
+        "parameters": [
+          {
+            "name": "dropLead",
+            "type": "boolean",
+            "docs": "whether to drop the lead item"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Clears the leash holder of this entity.\n\n \u003cpre\u003e{@code\n //free all leashed entities in the world\n function main(c)\n {\n     c.getServer().getEntities(\"@e[type\u003d!player]\").forEach(function(entity){\n         entity.clearLeashHolder(true); //true to drop the lead\n     });\n }\n }\u003c/pre\u003e"
+      }
+    ],
+    "setModifier": [
+      {
+        "parameters": [
+          {
+            "name": "modifierName",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "double"
+          }
+        ],
+        "docs": "Set entity\u0027s modifier to a certain value.\n\n \u003cpre\u003e{@code\n     c.getSubject().setModifier(\"generic.movementSpeed\", 0.5);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getModifier": [
+      {
+        "parameters": [
+          {
+            "name": "modifierName",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "double",
+        "docs": "Return an entity\u0027s modifier.\n\n \u003cpre\u003e{@code\n     c.send(c.getSubject().getModifier(\"generic.movementSpeed\"));\n }\u003c/pre\u003e"
+      }
+    ],
+    "removeModifier": [
+      {
+        "parameters": [
+          {
+            "name": "modifierName",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Remove entity\u0027s modifier.\n\n \u003cpre\u003e{@code\n     c.getSubject().removeModifier(\"generic.movementSpeed\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "removeAllModifiers": [
+      {
+        "docs": "Remove all the modifiers of the entity.\n\n \u003cpre\u003e{@code\n     c.getSubject().removeAllModifiers();\n }\u003c/pre\u003e"
+      }
+    ],
+    "applyPotion": [
+      {
+        "parameters": [
+          {
+            "name": "potion",
+            "type": "net.minecraft.potion.Potion",
+            "docs": "Potion that should be applied."
+          },
+          {
+            "name": "duration",
+            "type": "int",
+            "docs": "Duration of the effect in ticks (\u003ccode\u003e20\u003c/code\u003e ticks \u003d \u003ccode\u003e1\u003c/code\u003e second)."
+          },
+          {
+            "name": "amplifier",
+            "type": "int",
+            "docs": "How strong is potion effect."
+          },
+          {
+            "name": "particles",
+            "type": "boolean",
+            "docs": "Whether potion effect\u0027s particles should be emitted."
+          }
+        ],
+        "docs": "Apply given potion effect on the entity for given duration, with given amplifier,\n and optionally with particles.\n\n \u003cp\u003e\u003cb\u003eAttention\u003c/b\u003e: potion effects work only with living base entities, so check for\n {@link #isLivingBase()}! You can get the potion effect using\n {@link IScriptFactory#getPotion(String)}.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var slowness \u003d mappet.getPotion(\"slowness\");\n    var subject \u003d c.getSubject();\n\n    subject.applyPotion(slowness, 200, 1, false);\n }\u003c/pre\u003e"
+      }
+    ],
+    "hasPotion": [
+      {
+        "parameters": [
+          {
+            "name": "potion",
+            "type": "net.minecraft.potion.Potion"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Check whether given potion effect is present on this entity.\n\n \u003cp\u003e\u003cb\u003eAttention\u003c/b\u003e: potion effects work only with living base entities, so check for\n {@link #isLivingBase()}! You can get the potion effect using\n {@link IScriptFactory#getPotion(String)}.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var slowness \u003d mappet.getPotion(\"slowness\");\n    var subject \u003d c.getSubject();\n\n    if (subject.hasPotion(slowness))\n    {\n        subject.send(\"You\u0027re kind of slow, my dude...\");\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "removePotion": [
+      {
+        "parameters": [
+          {
+            "name": "potion",
+            "type": "net.minecraft.potion.Potion"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Remove given potion effect from this entity.\n\n \u003cp\u003e\u003cb\u003eAttention\u003c/b\u003e: potion effects work only with living base entities, so check for\n {@link #isLivingBase()}! You can get the potion effect using\n {@link IScriptFactory#getPotion(String)}.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var slowness \u003d mappet.getPotion(\"slowness\");\n    var subject \u003d c.getSubject();\n\n    if (subject.removePotion(slowness))\n    {\n        subject.send(\"I made you faster, no need to thank me ;)\");\n    }\n }\u003c/pre\u003e\n\n \u003ccode\u003efalse\u003c/code\u003e if had no given effect present."
+      }
+    ],
+    "clearPotions": [
+      {
+        "docs": "Remove all potion effects from this entity.\n\n \u003cp\u003e\u003cb\u003eAttention\u003c/b\u003e: potion effects work only with living base entities, so check for\n {@link #isLivingBase()}! You can get the potion effect using\n {@link IScriptFactory#getPotion(String)}.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    var subject \u003d c.getSubject();\n\n    subject.clearPotions();\n    subject.send(\"You\u0027ve been freed from all potion effects!\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "getStates": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.mappet.IMappetStates",
+        "docs": "Get entity\u0027s states (if it has some, only players and NPCs have states).\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var states \u003d c.getSubject().getStates()\n     states.add(\"run\", 1)\n\n     c.send(\"state run: §6\"+states.getNumber(\"run\"))\n }\n }\u003c/pre\u003e"
+      }
+    ],
+    "getMorph": [
+      {
+        "return": "mchorse.metamorph.api.morphs.AbstractMorph",
+        "docs": "Get entity\u0027s morph (works with player and NPCs).\n\n \u003cpre\u003e{@code\n    // Assuming s is a player\n    var s \u003d c.getSubject();\n    var morph \u003d mappet.createMorph(\"{Name:\\\"blockbuster.alex\\\"}\");\n    var entityMorph \u003d s.getMorph();\n\n    if (entityMorph !\u003d null \u0026\u0026 entityMorph.equals(morph))\n    {\n        c.send(s.getName() + \" is morphed into Alex morph!\");\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "setMorph": [
+      {
+        "parameters": [
+          {
+            "name": "morph",
+            "type": "mchorse.metamorph.api.morphs.AbstractMorph"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Set entity\u0027s morph (works with player and NPCs).\n\n \u003cpre\u003e{@code\n    var morph \u003d mappet.createMorph(\"{Name:\\\"blockbuster.alex\\\"}\");\n\n    // Assuming c.getSubject() is a player or an NPC\n    c.getSubject().setMorph(morph);\n }\u003c/pre\u003e"
+      }
+    ],
+    "displayMorph": [
+      {
+        "parameters": [
+          {
+            "name": "morph",
+            "type": "mchorse.metamorph.api.morphs.AbstractMorph"
+          },
+          {
+            "name": "expiration",
+            "type": "int"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "docs": "Display a world morph to all players that see this entity (including themselves).\n\n \u003cpre\u003e{@code\n function main(c)\n {\n     var s \u003d c.getSubject();\n     var morph \u003d mappet.createMorph(\u0027{Name:\"item\"}\u0027);\n\n     s.displayMorph(morph, 100, 0, s.getHeight() + 0.5, 0);\n }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "morph",
+            "type": "mchorse.metamorph.api.morphs.AbstractMorph",
+            "docs": "Morph that will be displayed (if \u003ccode\u003enull\u003c/code\u003e, then it won\u0027t send anything)."
+          },
+          {
+            "name": "expiration",
+            "type": "int",
+            "docs": "For how many ticks will this displayed morph exist on the client side."
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "rotate",
+            "type": "boolean",
+            "docs": "Whether attached world morph should replicate entity\u0027s rotation (i.e. copy head rotation)."
+          }
+        ],
+        "docs": "Display a world morph to all players that see this entity (including themselves) with\n toggleable following rotation.\n\n \u003cpre\u003e{@code\n    var s \u003d c.getSubject();\n    var morph \u003d mappet.createMorph(\u0027{Name:\"item\"}\u0027);\n\n    s.displayMorph(morph, 100, 0, s.getHeight() + 0.5, 0, true);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "morph",
+            "type": "mchorse.metamorph.api.morphs.AbstractMorph",
+            "docs": "Morph that will be displayed (if \u003ccode\u003enull\u003c/code\u003e, then it won\u0027t send anything)."
+          },
+          {
+            "name": "expiration",
+            "type": "int",
+            "docs": "For how many ticks will this displayed morph exist on the client side."
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "yaw",
+            "type": "float",
+            "docs": "Horizontal rotation in degrees."
+          },
+          {
+            "name": "pitch",
+            "type": "float",
+            "docs": "Vertical rotation in degrees."
+          },
+          {
+            "name": "rotate",
+            "type": "boolean",
+            "docs": "Whether attached world morph should replicate entity\u0027s rotation (i.e. copy head rotation)."
+          }
+        ],
+        "docs": "Display a world morph to all players that see this entity (including themselves)\n toggleable following rotation and rotation offsets.\n\n \u003cpre\u003e{@code\n    var s \u003d c.getSubject();\n    var morph \u003d mappet.createMorph(\u0027{Name:\"item\"}\u0027);\n\n    s.displayMorph(morph, 100, 0, s.getHeight() + 0.5, 0, 180, 0, true);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "morph",
+            "type": "mchorse.metamorph.api.morphs.AbstractMorph",
+            "docs": "Morph that will be displayed (if \u003ccode\u003enull\u003c/code\u003e, then it won\u0027t send anything)."
+          },
+          {
+            "name": "expiration",
+            "type": "int",
+            "docs": "For how many ticks will this displayed morph exist on the client side."
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "yaw",
+            "type": "float",
+            "docs": "Horizontal rotation in degrees."
+          },
+          {
+            "name": "pitch",
+            "type": "float",
+            "docs": "Vertical rotation in degrees."
+          },
+          {
+            "name": "rotate",
+            "type": "boolean",
+            "docs": "Whether attached world morph should replicate entity\u0027s rotation (i.e. copy head rotation)."
+          },
+          {
+            "name": "player",
+            "type": "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer",
+            "docs": "The player that only should see the morph, or null for everyone."
+          }
+        ],
+        "docs": "Display a world morph to given player that sees this entity\n toggleable following rotation and rotation offsets.\n\n \u003cpre\u003e{@code\n    // Show this morph only to Notch\n    var s \u003d c.getSubject();\n    var morph \u003d mappet.createMorph(\u0027{Name:\"item\"}\u0027);\n\n    s.displayMorph(morph, 100, 0, s.getHeight() + 0.5, 0, 180, 0, true, c.getServer().getPlayer(\"Notch\"));\n }\u003c/pre\u003e"
+      }
+    ],
+    "shootBBGunProjectile": [
+      {
+        "parameters": [
+          {
+            "name": "gunPropsNBT",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntity",
+        "docs": "Spawn a BB gun projectile. It works only if Blockbuster mod is present.\n\n \u003cp\u003eProTip: To get the gun props\u0027 NBT code, configure a desired BB gun, and grab it into\n you main hand. Execute \u003ccode\u003e/item_nbt false\u003c/code\u003e command in the chat, paste the NBT\n into the script, and remove {Gun: in the beginning and a } in the end.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n     c.getSubject().shootBBGunProjectile(\u0027{Gun:{Damage:1.0f,Projectile:{Meta:0b,Block:\"minecraft:stone\",Name:\"block\"},Gravity:0.0f}}\u0027)\n }\u003c/pre\u003e"
+      }
+    ],
+    "executeCommand": [
+      {
+        "parameters": [
+          {
+            "name": "command",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Executes a command as a entity.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        c.getSubject().executeCommand(\"/kill\");\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "executeScript": [
+      {
+        "parameters": [
+          {
+            "name": "scriptName",
+            "type": "java.lang.String",
+            "docs": "The name of the script to execute."
+          }
+        ],
+        "docs": "Execute for the entity a script with a given script name\n and the default function \"main\".\n\n \u003cpre\u003e{@code\n    c.getSubject().executeScript(\"example_script.js\");\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "scriptName",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "function",
+            "type": "java.lang.String",
+            "docs": "The name of the function within the script to execute."
+          }
+        ],
+        "docs": "Execute for the entity a script with a given script name.\n\n \u003cpre\u003e{@code\n    c.getSubject().executeScript(\"example_script.js\", \"custom_function\");\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "scriptName",
+            "type": "java.lang.String",
+            "docs": "The name of the script to execute."
+          },
+          {
+            "name": "function",
+            "type": "java.lang.String",
+            "docs": "The name of the function within the script to execute."
+          },
+          {
+            "name": "args",
+            "type": "java.lang.Object",
+            "docs": "The arguments to pass to the function."
+          }
+        ],
+        "docs": "Execute for the entity a script with a given script name and arguments.\n\n \u003cpre\u003e{@code\n c.getSubject().executeScript(\"example_script.js\", \"func_with_context\", c, 1, 2, 3);\n c.getSubject().executeScript(\"example_script.js\", \"func_without_context\", 1, 2, 3);\n\n // example_script.js\n function func_with_context(c, arg1, arg2, arg3)\n {\n     c.getSubject().send(\"arg1: \" + arg1 + \", arg2: \" + arg2 + \", arg3: \" + arg3);\n }\n\n function func_without_context(arg1, arg2, arg3)\n {\n     print(\"arg1: \" + arg1 + \", arg2: \" + arg2 + \", arg3: \" + arg3);\n }\n }\u003c/pre\u003e"
+      }
+    ],
+    "lockPosition": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double",
+            "docs": "X position"
+          },
+          {
+            "name": "y",
+            "type": "double",
+            "docs": "Y position"
+          },
+          {
+            "name": "z",
+            "type": "double",
+            "docs": "Z position"
+          }
+        ],
+        "docs": "Lock the entity\u0027s position.\n\n \u003cpre\u003e{@code\n var s \u003d c.getSubject();\n var pos \u003d s.getPosition();\n s.lockPosition(pos.x, pos.y, pos.z);\n }\u003c/pre\u003e"
+      }
+    ],
+    "unlockPosition": [
+      {
+        "docs": "Unlock the entity\u0027s position.\n\n \u003cpre\u003e{@code\n    c.getSubject().unlockPosition();\n }\u003c/pre\u003e"
+      }
+    ],
+    "isPositionLocked": [
+      {
+        "return": "boolean",
+        "docs": "Check if the entity\u0027s position is locked.\n\n \u003cpre\u003e{@code\n    if (c.getSubject().isPositionLocked())\n    {\n        // Do something\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "lockRotation": [
+      {
+        "parameters": [
+          {
+            "name": "yaw",
+            "type": "float",
+            "docs": "Yaw rotation"
+          },
+          {
+            "name": "pitch",
+            "type": "float",
+            "docs": "Pitch rotation"
+          },
+          {
+            "name": "yawHead",
+            "type": "float",
+            "docs": "Yaw rotation of the head"
+          }
+        ],
+        "docs": "Lock the entity\u0027s rotation.\n\n \u003cpre\u003e{@code\n var s \u003d c.getSubject();\n var rot \u003d s.getRotations();\n s.lockRotation(rot.y, rot.x, rot.z);\n }\u003c/pre\u003e"
+      }
+    ],
+    "unlockRotation": [
+      {
+        "docs": "Unlock the entity\u0027s rotation.\n\n \u003cpre\u003e{@code\n    c.getSubject().unlockRotation();\n }\u003c/pre\u003e"
+      }
+    ],
+    "isRotationLocked": [
+      {
+        "return": "boolean",
+        "docs": "Check if the entity\u0027s rotation is locked.\n\n \u003cpre\u003e{@code\n    if (c.getSubject().isRotationLocked())\n    {\n        // Do something\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "moveTo": [
+      {
+        "parameters": [
+          {
+            "name": "interpolation",
+            "type": "java.lang.String",
+            "docs": "The interpolation type used for the movement."
+          },
+          {
+            "name": "durationTicks",
+            "type": "int",
+            "docs": "The duration of the movement in ticks."
+          },
+          {
+            "name": "x",
+            "type": "double",
+            "docs": "The target x-coordinate for the entity."
+          },
+          {
+            "name": "y",
+            "type": "double",
+            "docs": "The target y-coordinate for the entity."
+          },
+          {
+            "name": "z",
+            "type": "double",
+            "docs": "The target z-coordinate for the entity."
+          },
+          {
+            "name": "disableAI",
+            "type": "boolean"
+          }
+        ],
+        "docs": "\u003cp\u003eMoves the entity to the specified position (\u003cb\u003ex, y, z\u003c/b\u003e)\n with the given \u003cb\u003einterpolation type\u003c/b\u003e and \u003cb\u003eduration\u003c/b\u003e.\n The following interpolation types are supported:\u003c/p\u003e\n \u003cul\u003e\n     \u003cli\u003e§7linear§r\u003c/li\u003e\n     \u003cli\u003e§7quad_in§r\u003c/li\u003e\n     \u003cli\u003e§7quad_out§r\u003c/li\u003e\n     \u003cli\u003e§7quad_inout§r\u003c/li\u003e\n     \u003cli\u003e§7cubic_in§r\u003c/li\u003e\n     \u003cli\u003e§7cubic_out§r\u003c/li\u003e\n     \u003cli\u003e§7cubic_inout§r\u003c/li\u003e\n     \u003cli\u003e§7exp_in§r\u003c/li\u003e\n     \u003cli\u003e§7exp_out§r\u003c/li\u003e\n     \u003cli\u003e§7exp_inout§r\u003c/li\u003e\n     \u003cli\u003e§7back_in§r\u003c/li\u003e\n     \u003cli\u003e§7back_out§r\u003c/li\u003e\n     \u003cli\u003e§7back_inout§r\u003c/li\u003e\n     \u003cli\u003e§7elastic_in§r\u003c/li\u003e\n     \u003cli\u003e§7elastic_out§r\u003c/li\u003e\n     \u003cli\u003e§7elastic_inout§r\u003c/li\u003e\n     \u003cli\u003e§7bounce_in§r\u003c/li\u003e\n     \u003cli\u003e§7bounce_out§r\u003c/li\u003e\n     \u003cli\u003e§7bounce_inout§r\u003c/li\u003e\n     \u003cli\u003e§7sine_in§r\u003c/li\u003e\n     \u003cli\u003e§7sine_out§r\u003c/li\u003e\n     \u003cli\u003e§7sine_inout§r\u003c/li\u003e\n     \u003cli\u003e§7quart_in§r\u003c/li\u003e\n     \u003cli\u003e§7quart_out§r\u003c/li\u003e\n     \u003cli\u003e§7quart_inout§r\u003c/li\u003e\n     \u003cli\u003e§7quint_in§r\u003c/li\u003e\n     \u003cli\u003e§7quint_out§r\u003c/li\u003e\n \u003c/ul\u003e\n\n \u003cpre\u003e{@code\n    var s \u003d c.getSubject();\n    var pos \u003d s.getPosition();\n    s.moveTo(\"quad_out\", 30, pos.x, pos.y+2, pos.z, false);\n }\u003c/pre\u003e"
+      }
+    ],
+    "observe": [
+      {
+        "parameters": [
+          {
+            "name": "entity",
+            "type": "mchorse.mappet.api.scripts.user.entities.IScriptEntity",
+            "docs": "The entity to observe"
+          }
+        ],
+        "docs": "Makes the entity observe the given entity.\n\n \u003cpre\u003e{@code\n    c.getSubject().observe(null); //to stop observing\n }\u003c/pre\u003e"
+      }
+    ],
+    "addEntityPatrol": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double",
+            "docs": "x coordinate"
+          },
+          {
+            "name": "y",
+            "type": "double",
+            "docs": "y coordinate"
+          },
+          {
+            "name": "z",
+            "type": "double",
+            "docs": "z coordinate"
+          },
+          {
+            "name": "speed",
+            "type": "double",
+            "docs": "speed of the entity"
+          },
+          {
+            "name": "shouldCirculate",
+            "type": "boolean",
+            "docs": "should the entity patrol the points in a loop"
+          },
+          {
+            "name": "executeCommandOnArrival",
+            "type": "java.lang.String",
+            "docs": "command to execute when the entity arrives at the point"
+          }
+        ],
+        "docs": "Adds a patrol point to the entity\n\n \u003cpre\u003e{@code\n     var s \u003d c.getSubject();\n     s.addEntityPatrol(440, 117, 640, 1, true, \"particle heart ~ ~1 ~ 0.2 0.2 0.2 1\")\n     s.addEntityPatrol(444, 117, 640, 1, true, \"particle angryVillager ~ ~1 ~ 0.2 0.2 0.2 1\")\n }\u003c/pre\u003e"
+      }
+    ],
+    "clearEntityPatrols": [
+      {
+        "docs": "Clears all patrol points from the entity\n\n \u003cpre\u003e{@code\n c.getSubject().clearEntityPatrols();\n }\u003c/pre\u003e"
+      }
+    ],
+    "setRotationsAI": [
+      {
+        "parameters": [
+          {
+            "name": "yaw",
+            "type": "float"
+          },
+          {
+            "name": "pitch",
+            "type": "float"
+          },
+          {
+            "name": "yawHead",
+            "type": "float"
+          }
+        ],
+        "docs": "Sets the entity\u0027s AI to look with specific rotations\n\n \u003cpre\u003e{@code\n     c.getSubject().setRotationsAI(0, 90, 0);\n }\u003c/pre\u003e"
+      }
+    ],
+    "clearRotationsAI": [
+      {
+        "docs": "Clears the entity\u0027s AI rotations\n\n \u003cpre\u003e{@code\n     c.getSubject().clearRotationsAI();\n }\u003c/pre\u003e"
+      }
+    ],
+    "executeRepeatingCommand": [
+      {
+        "parameters": [
+          {
+            "name": "command",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "frequency",
+            "type": "int"
+          }
+        ],
+        "docs": "Executes a command at a specific frequency on an entity.\n\n \u003cpre\u003e{@code\n    c.getSubject().executeRepeatingCommand(\"/tp @s ~ ~2 ~\", 20);"
+      }
+    ],
+    "removeRepeatingCommand": [
+      {
+        "parameters": [
+          {
+            "name": "command",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Removes a repeating command from an entity.\n\n \u003cpre\u003e{@code\n    c.getSubject().removeRepeatingCommand(\"/tp @s ~ ~2 ~\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "clearAllRepeatingCommands": [
+      {
+        "docs": "Clears all the repeating commands of an entity.\n\n \u003cpre\u003e{@code\n    c.getSubject().clearAllRepeatingCommands();\n }\u003c/pre\u003e"
+      }
+    ]
+  }
+}

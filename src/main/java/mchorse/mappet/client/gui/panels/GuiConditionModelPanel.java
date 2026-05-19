@@ -6,7 +6,7 @@ import mchorse.mappet.client.gui.conditionModel.GuiConditionModelBasicSettingsEl
 import mchorse.mappet.client.gui.conditionModel.GuiConditionModelElement;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.blocks.PacketEditConditionModel;
-import mchorse.mappet.tile.TileConditionModel;
+import mchorse.mappet.blocks.tile.TileConditionModel;
 import mchorse.mappet.utils.ConditionModel;
 import mchorse.mappet.utils.ReflectionUtils;
 import mchorse.mclib.client.gui.framework.GuiBase;

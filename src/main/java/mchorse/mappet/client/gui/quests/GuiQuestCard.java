@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.quests;
 
-import mchorse.mappet.MappetConfig;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.api.dialogues.DialogueFragment;
 import mchorse.mappet.api.quests.Quest;
 import mchorse.mappet.api.quests.Quests;

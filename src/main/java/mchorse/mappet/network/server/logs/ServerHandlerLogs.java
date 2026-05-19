@@ -1,7 +1,7 @@
 package mchorse.mappet.network.server.logs;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.api.utils.logs.MappetLogger;
+import mchorse.mappet.MappetLogger;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.logs.PacketLogs;
 import mchorse.mappet.network.packets.logs.PacketRequestLogs;

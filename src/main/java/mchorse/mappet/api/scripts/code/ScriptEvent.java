@@ -1,7 +1,6 @@
 package mchorse.mappet.api.scripts.code;
 
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.ScriptExecutionFork;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
@@ -13,6 +12,7 @@ import mchorse.mappet.api.scripts.user.entities.IScriptNpc;
 import mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer;
 import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import mchorse.mappet.api.utils.DataContext;
+import mchorse.mappet.proxy.CommonProxy;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 
@@ -55,7 +55,6 @@ public class ScriptEvent implements IScriptEvent {
     @Override
     public IScriptEntity getObject() {
         if (object == null && context.object != null) object = ScriptEntity.create(context.object);
-
         return object;
     }
 
@@ -83,7 +82,6 @@ public class ScriptEvent implements IScriptEvent {
     @Override
     public IScriptWorld getWorld() {
         if (world == null && context.world != null) world = new ScriptWorld(context.world);
-
         return world;
     }
 
@@ -129,8 +127,7 @@ public class ScriptEvent implements IScriptEvent {
 
     @Override
     public void scheduleScript(int delay, Consumer<IScriptEvent> consumer) {
-        if (consumer == null)
-            throw new IllegalStateException("Given object is null in script " + script + " (" + function + " function)!");
+        if (consumer == null) throw new IllegalStateException("Given object is null in script " + script + " (" + function + " function)!");
         CommonProxy.eventHandler.addExecutable(new ScriptExecutionFork(context.copy(), consumer, delay));
     }
 
@@ -149,7 +146,8 @@ public class ScriptEvent implements IScriptEvent {
         try {
             Mappet.scripts.execute(scriptName, function, context);
         } catch (ScriptException e) {
-            Mappet.logger.error("Script Error: " + scriptName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
+            Mappet.logger.error(
+                    "Script Error: " + scriptName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
         }
@@ -160,7 +158,8 @@ public class ScriptEvent implements IScriptEvent {
         try {
             Mappet.scripts.execute(scriptName, function, context, args);
         } catch (ScriptException e) {
-            Mappet.logger.error("Script Error: " + scriptName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
+            Mappet.logger.error(
+                    "Script Error: " + scriptName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
         }

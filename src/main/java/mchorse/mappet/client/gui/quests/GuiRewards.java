@@ -4,7 +4,7 @@ import mchorse.mappet.api.quests.rewards.IReward;
 import mchorse.mappet.api.quests.rewards.ItemStackReward;
 import mchorse.mappet.client.gui.quests.rewards.GuiItemStackReward;
 import mchorse.mappet.client.gui.quests.rewards.GuiReward;
-import mchorse.mappet.constants.Colors;
+import mchorse.mappet.client.Colors;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.utils.Icons;

@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.scripts.codeEditor;
 
-import mchorse.mappet.MappetConfig;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.client.gui.scripts.GuiCodeEditor;
 import mchorse.mappet.MappetIcons;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;

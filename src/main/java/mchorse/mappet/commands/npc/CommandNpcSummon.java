@@ -84,7 +84,7 @@ public class CommandNpcSummon extends CommandNpcBase
     {
         if (args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, Mappet.npcs.getKeys());
+            return getListOfStringsMatchingLastWord(args, Mappet.npcs.getIDs());
         }
 
         return super.getTabCompletions(server, sender, args, targetPos);

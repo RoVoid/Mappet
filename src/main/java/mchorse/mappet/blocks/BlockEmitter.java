@@ -4,7 +4,7 @@ import mchorse.mappet.Mappet;
 import mchorse.mappet.items.ModItems;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.blocks.PacketEditEmitter;
-import mchorse.mappet.tile.TileEmitter;
+import mchorse.mappet.blocks.tile.TileEmitter;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;

@@ -97,12 +97,10 @@ public class ScriptVector implements IScriptVector {
     // Векторное произведение
     @Override
     public ScriptVector crossProduct(ScriptVector other) {
-        return new ScriptVector(
-                y * other.z - z * other.y,
-                z * other.x - x * other.z,
-                x * other.y - y * other.x
-        );
+        return new ScriptVector(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x);
     }
+
+    public void grow
 
     @Override
     public double length() {
@@ -139,9 +137,8 @@ public class ScriptVector implements IScriptVector {
 
     @Override
     public double angleBetween(ScriptVector other) {
-        return other == null || isZero() || other.isZero() ? -1 : Math.acos(Math.max(-1.0,
-                                                                                     Math.min(1.0,
-                                                                                              normalize().dotProduct(other.normalize()))));
+        return other == null || isZero() || other.isZero() ? -1
+                : Math.acos(Math.max(-1.0, Math.min(1.0, normalize().dotProduct(other.normalize()))));
     }
 
     @Override
@@ -162,7 +159,7 @@ public class ScriptVector implements IScriptVector {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ScriptVector) {
-            ScriptVector other =  (ScriptVector) obj;
+            ScriptVector other = (ScriptVector) obj;
             return x == other.x && y == other.y && z == other.z;
         }
         return super.equals(obj);

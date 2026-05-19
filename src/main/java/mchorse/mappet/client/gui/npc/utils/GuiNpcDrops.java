@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.npc.utils;
 
 import mchorse.mappet.api.npcs.NpcDrop;
-import mchorse.mappet.constants.Colors;
+import mchorse.mappet.client.Colors;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiSlotElement;

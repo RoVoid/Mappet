@@ -1,7 +1,7 @@
 package mchorse.mappet.api.schematics;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.MappetConfig;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.api.utils.manager.BaseManager;
 import mchorse.mappet.api.utils.manager.ManagerCache;
 import net.minecraft.nbt.CompressedStreamTools;

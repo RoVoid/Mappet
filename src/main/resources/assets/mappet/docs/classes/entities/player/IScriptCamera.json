@@ -1,0 +1,187 @@
+{
+  "docs": "",
+  "methods": {
+    "getPitch": [
+      {
+        "return": "java.lang.Float"
+      }
+    ],
+    "getRoll": [
+      {
+        "return": "java.lang.Float"
+      }
+    ],
+    "getRotateX": [
+      {
+        "return": "java.lang.Float"
+      }
+    ],
+    "getRotateY": [
+      {
+        "return": "java.lang.Float"
+      }
+    ],
+    "getRotateZ": [
+      {
+        "return": "java.lang.Float"
+      }
+    ],
+    "getTilt": [
+      {
+        "return": "java.lang.Float"
+      }
+    ],
+    "getX": [
+      {
+        "return": "java.lang.Float"
+      }
+    ],
+    "getY": [
+      {
+        "return": "java.lang.Float"
+      }
+    ],
+    "rx": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "java.lang.Float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+      }
+    ],
+    "ry": [
+      {
+        "parameters": [
+          {
+            "name": "y",
+            "type": "java.lang.Float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+      }
+    ],
+    "rz": [
+      {
+        "parameters": [
+          {
+            "name": "z",
+            "type": "java.lang.Float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+      }
+    ],
+    "getYaw": [
+      {
+        "return": "java.lang.Float"
+      }
+    ],
+    "getZ": [
+      {
+        "return": "java.lang.Float"
+      }
+    ],
+    "pitch": [
+      {
+        "parameters": [
+          {
+            "name": "pitch",
+            "type": "java.lang.Float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+      }
+    ],
+    "roll": [
+      {
+        "parameters": [
+          {
+            "name": "roll",
+            "type": "java.lang.Float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+      }
+    ],
+    "takeScreenshot": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "share",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "tilt": [
+      {
+        "parameters": [
+          {
+            "name": "tilt",
+            "type": "java.lang.Float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+      }
+    ],
+    "x": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "java.lang.Float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+      }
+    ],
+    "y": [
+      {
+        "parameters": [
+          {
+            "name": "y",
+            "type": "java.lang.Float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+      }
+    ],
+    "yaw": [
+      {
+        "parameters": [
+          {
+            "name": "yaw",
+            "type": "java.lang.Float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+      }
+    ],
+    "z": [
+      {
+        "parameters": [
+          {
+            "name": "z",
+            "type": "java.lang.Float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+      }
+    ]
+  }
+}

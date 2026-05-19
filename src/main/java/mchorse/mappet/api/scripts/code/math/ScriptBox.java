@@ -39,8 +39,19 @@ public class ScriptBox implements IScriptBox {
     }
 
     @Override
-    public boolean isColliding(ScriptBox box) {
+    public boolean intersection(ScriptBox box) {
         return minX < box.maxX && maxX > minX && minY < maxY && maxY > box.minY && minZ < box.maxZ && maxZ > box.minZ;
+    }
+
+    @Override
+    public void grow(double value) {
+        if (maxX - minX < value || maxY - minY < value || maxZ - minZ < value) maxX = minX = maxX = minY = minZ = maxZ = 0;
+        minX -= value;
+        minY -= value;
+        minZ -= value;
+        maxX += value;
+        maxY += value;
+        maxZ += value;
     }
 
     @Override

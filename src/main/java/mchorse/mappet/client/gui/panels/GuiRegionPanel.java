@@ -4,7 +4,7 @@ import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.regions.GuiRegionEditor;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.blocks.PacketEditRegion;
-import mchorse.mappet.tile.TileRegion;
+import mchorse.mappet.blocks.tile.TileRegion;
 import mchorse.mappet.utils.ReflectionUtils;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;

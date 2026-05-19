@@ -8,7 +8,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -122,14 +121,14 @@ public class TranslationManager extends BaseManager<Translation> {
         Translation translation = load(key);
 
         if (translation == null) {
-            Mappet.logger.warning("Missing translation file: " + key + getExtension());
+            Mappet.logger.warn("Missing translation file: " + key + getExtension());
             return key;
         }
 
         String str = translation.entries.get(locale);
 
         if (str == null) {
-            Mappet.logger.warning("Missing translation locale: " + locale + " in " + key);
+            Mappet.logger.warn("Missing translation locale: " + locale + " in " + key);
             return key;
         }
 
@@ -137,7 +136,7 @@ public class TranslationManager extends BaseManager<Translation> {
         try {
             return MessageFormat.format(str, args);
         } catch (IllegalArgumentException e) {
-            Mappet.logger.warning("Error formatting translation key: " + key + " with " + locale);
+            Mappet.logger.warn("Error formatting translation key: " + key + " with " + locale);
             return str;
         }
     }
@@ -150,7 +149,7 @@ public class TranslationManager extends BaseManager<Translation> {
     }
 
     @Override
-    public Collection<String> getKeys() {
+    public Set<String> getIDs() {
         Set<String> set = new HashSet<>();
         if (folder == null) return set;
 
@@ -165,8 +164,8 @@ public class TranslationManager extends BaseManager<Translation> {
     }
 
     @Override
-    public boolean save(String key, NBTTagCompound tag) {
-        if (isValid(tag)) return super.save(key, tag);
+    public boolean save(String id, NBTTagCompound tag) {
+        if (isValid(tag)) return super.save(id, tag);
         return false;
     }
 

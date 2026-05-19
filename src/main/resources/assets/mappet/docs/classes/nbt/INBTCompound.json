@@ -1,0 +1,376 @@
+{
+  "docs": "Interface that represents an NBT compound tag",
+  "methods": {
+    "getNBTTagCompound": [
+      {
+        "return": "net.minecraft.nbt.NBTTagCompound",
+        "deprecated": true,
+        "docs": "Use {@link #asMinecraft()} instead\n @deprecated"
+      }
+    ],
+    "asMinecraft": [
+      {
+        "return": "net.minecraft.nbt.NBTTagCompound",
+        "docs": "Get raw NBT tag compound\n \u003cb\u003eBEWARE:\u003c/b\u003e you need to know the MCP mappings to directly call methods on this instance!"
+      }
+    ],
+    "has": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Check whether this NBT compound has a value by given key."
+      }
+    ],
+    "remove": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Remove a value by given key."
+      }
+    ],
+    "keys": [
+      {
+        "return": "java.util.Set",
+        "docs": "Get all the keys."
+      }
+    ],
+    "getByte": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "byte",
+        "docs": "Get byte (8-bit integer) value by given key."
+      }
+    ],
+    "setByte": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "byte"
+          }
+        ],
+        "docs": "Set byte (8-bit integer) value by given key."
+      }
+    ],
+    "getShort": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "short",
+        "docs": "Get short (16-bit integer) value by given key."
+      }
+    ],
+    "setShort": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "short"
+          }
+        ],
+        "docs": "Set short (16-bit integer) value by given key."
+      }
+    ],
+    "getInt": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "int",
+        "docs": "Get integer (32-bit integer) value by given key."
+      }
+    ],
+    "setInt": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "int"
+          }
+        ],
+        "docs": "Set integer (32-bit integer) value by given key."
+      }
+    ],
+    "getLong": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "long",
+        "docs": "Get long (64-bit integer) value by given key."
+      }
+    ],
+    "setLong": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "long"
+          }
+        ],
+        "docs": "Set long (64-bit integer) value by given key."
+      }
+    ],
+    "getFloat": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "float",
+        "docs": "Get float (32-bit floating point number) value by given key."
+      }
+    ],
+    "setFloat": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "float"
+          }
+        ],
+        "docs": "Set float (32-bit floating point number) value by given key."
+      }
+    ],
+    "getDouble": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "double",
+        "docs": "Get double (64-bit floating point number) value by given key."
+      }
+    ],
+    "setDouble": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "double"
+          }
+        ],
+        "docs": "Set double (64-bit floating point number) value by given key."
+      }
+    ],
+    "getString": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.String",
+        "docs": "Get string value by given key."
+      }
+    ],
+    "setString": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Set string value by given key."
+      }
+    ],
+    "getBoolean": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Get boolean (true or false) value by given key."
+      }
+    ],
+    "setBoolean": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "boolean"
+          }
+        ],
+        "docs": "Set boolean (true or false) value by given key."
+      }
+    ],
+    "getCompound": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.nbt.INBTCompound",
+        "docs": "Get NBT compound by given key."
+      }
+    ],
+    "setCompound": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
+          }
+        ],
+        "docs": "Set NBT compound by given key."
+      }
+    ],
+    "getList": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.user.nbt.INBTList",
+        "docs": "Get NBT list by given key."
+      }
+    ],
+    "setList": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "mchorse.mappet.api.scripts.user.nbt.INBTList"
+          }
+        ],
+        "docs": "Set NBT list by given key."
+      }
+    ],
+    "setNBT": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "nbt",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Set arbitrary NBT.\n\n \u003cpre\u003e{@code\n    var compound \u003d mappet.createCompound();\n\n    compound.setNBT(\"stack\", \u0027{id:\"minecraft:diamond\",Count:64b}\u0027);\n\n    // {stack:{id:\"minecraft:diamond\",Count:64b}}\n    print(compound.stringify());\n }\u003c/pre\u003e"
+      }
+    ],
+    "get": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String",
+            "docs": "the key of the value"
+          }
+        ],
+        "return": "java.lang.Object",
+        "docs": "Get the value of in this compound by given key of the raw type. Following\n value types are possible (depending on whatever was found in the compound):\n INBTCompound, INBTList, String, Double, Long, Float, Int, Short, Byte, or\n null if the value is absent by given key.\n\n \u003cpre\u003e{@code\n     var tag \u003d mappet.createCompound(\"{id:\\\"minecraft:diamond_hoe\\\",Count:1b}\");\n\n     c.send(tag.get(\"id\"));\n     c.send(tag.get(\"Count\"));\n }\u003c/pre\u003e"
+      }
+    ],
+    "equals": [
+      {
+        "parameters": [
+          {
+            "name": "compound",
+            "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound",
+            "docs": "the compound to compare with"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Check if this compound is equal to given compound (order of keys doesn\u0027t matter).\n\n \u003cpre\u003e{@code\n     var tag1 \u003d mappet.createCompound(\"{id:\\\"minecraft:diamond_hoe\\\",Count:1b}\");\n     var tag2 \u003d mappet.createCompound(\"{Count:1b,id:\\\"minecraft:diamond_hoe\\\"}\");\n\n     c.send(tag1.equals(tag2));\n }\u003c/pre\u003e"
+      }
+    ],
+    "addCompound": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Adds a new compound to this compound.\n\n \u003cpre\u003e{@code\n    var tag \u003d mappet.createCompound();\n    tag.addCompound(\"compound\");\n    tag.get(\"compound\").setString(\"x\", \"123\")\n    c.send(tag) //{compound:{x:\"123\"}}\n }\u003c/pre\u003e"
+      }
+    ],
+    "dumpJSON": [
+      {
+        "return": "java.lang.String",
+        "docs": "Dumps to a JSON String.\n It first replaces the key-value colons with the proper JSON format.\n Then, it creates a pattern to match the desired numeric literals and boolean values.\n It checks if the current matched pattern is \"0b\" or \"1b\"\n and replaces them with \"false\" and \"true\" respectively.\n For the other cases, it removes the last character from the matched pattern,\n effectively removing the type literal.\n\n \u003cpre\u003e{@code\n   var tag \u003d mappet.createCompound(\"{id:\\\"minecraft:diamond_hoe\\\",Count:1b}\");\n   c.send(tag.dumpJSON());\n }\u003c/pre\u003e"
+      }
+    ]
+  }
+}

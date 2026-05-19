@@ -2,14 +2,13 @@ package mchorse.mappet.client.gui.utils;
 
 import com.google.common.collect.Sets;
 import mchorse.mappet.Mappet;
-import mchorse.mappet.MappetConfig;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.scripts.PacketOpenLink;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -27,11 +26,8 @@ public class SafeWebLinkOpener implements GuiYesNoCallback {
 
     @Nullable
     public static URI parseUrl(String url) {
-        Side side = FMLCommonHandler.instance().getEffectiveSide();
-
         if (url == null || url.isEmpty()) {
-            if (side.isClient()) Mappet.loggerClient.error("Empty link: {}", url);
-            else Mappet.logger.error("Empty link: " + url);
+            Mappet.logger.error("Empty link: " + url);
             return null;
         }
 
@@ -39,20 +35,17 @@ public class SafeWebLinkOpener implements GuiYesNoCallback {
         try {
             uri = new URI(url);
         } catch (URISyntaxException e) {
-            if (side.isClient()) Mappet.loggerClient.error("Invalid link {}", url);
-            else Mappet.logger.error("Invalid link " + url);
+            Mappet.logger.error("Invalid link " + url);
             return null;
         }
 
         String s = uri.getScheme();
         if (s == null) {
-            if (side.isClient()) Mappet.loggerClient.error("Missing protocol in {}", url);
-            else Mappet.logger.error("Missing protocol in " + url);
+            Mappet.logger.error("Missing protocol in " + url);
             return null;
         }
         if (!PROTOCOLS.contains(s.toLowerCase(Locale.ROOT))) {
-            if (side.isClient()) Mappet.loggerClient.error("Unsupported protocol in {}", url);
-            else Mappet.logger.error("Unsupported protocol in " + url);
+            Mappet.logger.error("Unsupported protocol in " + url);
             return null;
         }
 
@@ -99,7 +92,7 @@ public class SafeWebLinkOpener implements GuiYesNoCallback {
         try {
             Desktop.getDesktop().browse(url);
         } catch (Exception e) {
-            Mappet.loggerClient.error("Couldn't open link: {}", e.getMessage());
+            Mappet.logger.error("Couldn't open link: {}", e.getMessage());
         }
     }
 }

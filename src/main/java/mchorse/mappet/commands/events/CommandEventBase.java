@@ -37,7 +37,7 @@ public abstract class CommandEventBase extends MappetCommandBase
     {
         if (args.length == 2)
         {
-            return getListOfStringsMatchingLastWord(args, Mappet.events.getKeys());
+            return getListOfStringsMatchingLastWord(args, Mappet.events.getIDs());
         }
 
         return super.getTabCompletions(server, sender, args, targetPos);

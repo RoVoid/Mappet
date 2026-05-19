@@ -1,0 +1,110 @@
+{
+  "docs": "Block State\n \u003cp\u003e CREATE: {@link mchorse.mappet.api.scripts.user.IScriptFactory#createBlock(String, int)} \u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var block \u003d c.getWorld().getBlock(214, 3, 511)\n        if (block.getId(\"minecraft:stone\") \u0026\u0026 block.getMeta() \u003d\u003d\u003d 0)\n        {\n            c.send(\"Block at (214, 3, 511) is indeed stone!\");\n        }\n    }\n }\u003c/pre\u003e",
+  "methods": {
+    "getMinecraftBlockState": [
+      {
+        "return": "net.minecraft.block.state.IBlockState",
+        "deprecated": true,
+        "docs": "Use {@link #asMinecraft()} instead\n\n @deprecated"
+      }
+    ],
+    "asMinecraft": [
+      {
+        "return": "net.minecraft.block.state.IBlockState",
+        "docs": "Get Minecraft block state instance\n \u003cp\u003e\u003cb\u003eBEWARE:\u003c/b\u003e You need to know the MCP mappings to directly call methods on this instance!\u003c/p\u003e"
+      }
+    ],
+    "getBlockId": [
+      {
+        "return": "java.lang.String",
+        "deprecated": true,
+        "docs": "Use {@link #getId()} instead\n\n @deprecated"
+      }
+    ],
+    "getId": [
+      {
+        "return": "java.lang.String",
+        "docs": "Get block\u0027s ID like \u003ccode\u003eminecraft:stone\u003c/code\u003e\n\n \u003cpre\u003e{@code\n    var block \u003d c.getWorld().getBlock(214, 3, 511);\n    c.send(\"Block ID is \" + block.getBlockId());\n }\u003c/pre\u003e"
+      }
+    ],
+    "getMeta": [
+      {
+        "return": "int",
+        "docs": "Get meta of this state (it will always be between 0 and 15)\n\n \u003cpre\u003e{@code\n    var andesite \u003d mappet.createBlockState(\"minecraft:stone\", 5);\n    c.send(\"Meta equals \" + andesite.getMeta()); // Meta equals 5\n }\u003c/pre\u003e"
+      }
+    ],
+    "isSame": [
+      {
+        "parameters": [
+          {
+            "name": "state",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Compare this block state with another\n\n \u003cpre\u003e{@code\n    var stone \u003d mappet.createBlockState(\"minecraft:stone\");\n    var andesite \u003d mappet.createBlockState(\"minecraft:stone\", 5);\n    c.send(stone.isSame(andesite)); // false\n }\u003c/pre\u003e"
+      }
+    ],
+    "isSameBlock": [
+      {
+        "parameters": [
+          {
+            "name": "state",
+            "type": "mchorse.mappet.api.scripts.user.blocks.IScriptBlockState"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Compare this block state with another, but not necessarily the same meta\n\n \u003cpre\u003e{@code\n    var stone \u003d mappet.createBlockState(\"minecraft:stone\");\n    var andesite \u003d mappet.createBlockState(\"minecraft:stone\", 5);\n    var air \u003d mappet.createBlockState(\"minecraft:air\");\n    c.send(stone.isSameBlock(andesite)); // true\n    c.send(stone.isSameBlock(air)); // false\n }\u003c/pre\u003e"
+      }
+    ],
+    "isOpaque": [
+      {
+        "return": "boolean",
+        "docs": "Returns true if the block state occupies the full block and is not transparent"
+      }
+    ],
+    "hasCollision": [
+      {
+        "parameters": [
+          {
+            "name": "world",
+            "type": "mchorse.mappet.api.scripts.user.world.IScriptWorld"
+          },
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Checks if the block state has collision boxes at a given position\n \u003cp\u003eCollision shape may differ depending on the world and coordinates\u003c/p\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "world",
+            "type": "mchorse.mappet.api.scripts.user.world.IScriptWorld"
+          },
+          {
+            "name": "vector",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "isAir": [
+      {
+        "return": "boolean",
+        "docs": "Checks if this block state is air"
+      }
+    ]
+  }
+}

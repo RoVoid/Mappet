@@ -1,8 +1,6 @@
 package mchorse.mappet.client;
 
-import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.Mappet;
-import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.hotkeys.Hotkey;
 import mchorse.mappet.api.hotkeys.HotkeyState;
 import mchorse.mappet.api.scripts.Script;
@@ -11,11 +9,11 @@ import mchorse.mappet.client.gui.hotkey.GuiClientHotkeyScreen;
 import mchorse.mappet.client.gui.scripts.scriptedItem.GuiScriptedItemScreen;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.hotkey.PacketTriggeredHotkeys;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.utils.NBTToJsonLike;
-import mchorse.mclib.utils.OpHelper;
+import mchorse.mappet.utils.PlayerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -56,29 +54,16 @@ public class KeyboardHandler {
     @SubscribeEvent
     public void onKeyPress(KeyInputEvent event) {
         Minecraft mc = Minecraft.getMinecraft();
-        if (openMappetDashboard.isPressed() && OpHelper.isPlayerOp()) {
-            if (MappetConfig.dashboardOnlyCreative.get()) {
-                if (mc.player.capabilities.isCreativeMode) {
-                    mc.displayGuiScreen(GuiMappetDashboard.get(mc));
-                }
-            }
-            else {
-                mc.displayGuiScreen(GuiMappetDashboard.get(mc));
-            }
-        }
-        if (openHotkeysMenu.isPressed()) {
-            mc.displayGuiScreen(new GuiClientHotkeyScreen(mc));
+
+        if (openMappetDashboard.isPressed() && PlayerUtils.isOperator()) mc.displayGuiScreen(GuiMappetDashboard.get(mc));
+        if (openHotkeysMenu.isPressed()) mc.displayGuiScreen(new GuiClientHotkeyScreen(mc));
+        if (openScriptedItem.isPressed()) {
+            ItemStack stack = mc.player.getHeldItemMainhand();
+            if (!stack.isEmpty()) mc.displayGuiScreen(new GuiScriptedItemScreen(mc, stack));
         }
         if (runCurrentScript.isPressed()) {
             Script script = GuiMappetDashboard.get(mc).script.getData();
-            if (script == null) return;
-            mc.player.sendChatMessage("/mp script exec " + mc.player.getName() + " " + script.getId());
-        }
-        if (openScriptedItem.isPressed()) {
-            ItemStack stack = mc.player.getHeldItemMainhand();
-            if (!stack.getItem().equals(Items.AIR)) {
-                mc.displayGuiScreen(new GuiScriptedItemScreen(mc, stack));
-            }
+            if (script != null) mc.player.sendChatMessage("/mp script exec " + mc.player.getName() + " " + script.getId());
         }
 
         handleHotkeys();
@@ -111,9 +96,7 @@ public class KeyboardHandler {
                 for (Hotkey hotkey : hotkeys)
                     if (keysNbt.hasKey(hotkey.id)) hotkey.keycode = keysNbt.getInteger(hotkey.id);
             }
-            else for (Hotkey hotkey : hotkeys) {
-                hotkey.keycode = KeyboardHandler.hotkeys.getOrDefault(hotkey.id, hotkey).keycode;
-            }
+            else for (Hotkey hotkey : hotkeys) hotkey.keycode = KeyboardHandler.hotkeys.getOrDefault(hotkey.id, hotkey).keycode;
         } catch (Exception e) {
             Mappet.logger.error("Failed to load keybinds from file: " + e.getMessage());
         }
@@ -128,10 +111,9 @@ public class KeyboardHandler {
             if (keybinds.isFile()) keysNbt = NBTToJsonLike.read(keybinds);
             else keysNbt = new NBTTagCompound();
 
-            for (Hotkey hotkey : hotkeys.values()) {
+            for (Hotkey hotkey : hotkeys.values())
                 if (hotkey.keycode == -1) keysNbt.removeTag(hotkey.id);
                 else keysNbt.setInteger(hotkey.id, hotkey.keycode);
-            }
 
             NBTToJsonLike.write(keybinds, keysNbt);
         } catch (Exception e) {

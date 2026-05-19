@@ -4,9 +4,9 @@ import io.netty.buffer.Unpooled;
 import mchorse.aperture.network.common.PacketCameraState;
 import mchorse.mappet.api.scripts.code.ScriptResourcePack;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
-import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.code.items.ScriptInventory;
 import mchorse.mappet.api.scripts.code.mappet.MappetQuests;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
 import mchorse.mappet.api.scripts.code.score.ScriptScoreObjective;
 import mchorse.mappet.api.scripts.code.score.ScriptScoreboard;
@@ -32,13 +32,14 @@ import mchorse.mappet.client.gui.utils.SafeWebLinkOpener;
 import mchorse.mappet.entities.utils.WalkSpeedManager;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.PacketBlackAndWhiteShader;
-import mchorse.mappet.network.packets.PacketPlayerPerspective;
 import mchorse.mappet.network.packets.PacketPack;
+import mchorse.mappet.network.packets.PacketPlayerPerspective;
 import mchorse.mappet.network.packets.scripts.PacketClipboard;
 import mchorse.mappet.network.packets.scripts.PacketEntityRotations;
 import mchorse.mappet.network.packets.scripts.PacketSound;
 import mchorse.mappet.network.packets.ui.PacketCloseUI;
 import mchorse.mappet.network.packets.ui.PacketUI;
+import mchorse.mappet.utils.PlayerUtils;
 import mchorse.mappet.utils.WorldUtils;
 import mchorse.metamorph.api.MorphAPI;
 import mchorse.metamorph.api.MorphUtils;
@@ -50,7 +51,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.*;
 import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -109,8 +109,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     /* Player's methods */
     @Override
     public boolean isOperator() {
-        MinecraftServer server = entity.getServer();
-        return server != null && server.getPlayerList().canSendCommands(entity.getGameProfile());
+        return PlayerUtils.isOperator(entity);
     }
 
     @Override
@@ -132,10 +131,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
 
     @Override
     public IScriptInventory getEnderChest() {
-        if (enderChest == null) {
-            enderChest = new ScriptInventory(entity.getInventoryEnderChest());
-        }
-
+        if (enderChest == null) enderChest = new ScriptInventory(entity.getInventoryEnderChest());
         return enderChest;
     }
 
@@ -236,9 +232,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
 
     @Override
     public void setHotbarIndex(int slot) {
-        if (slot < 0 || slot >= 9) {
-            return;
-        }
+        if (slot < 0 || slot >= 9) return;
 
         entity.inventory.currentItem = slot;
 
@@ -254,9 +248,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     public void sendRaw(INBT message) {
         ITextComponent component = ITextComponent.Serializer.fromJsonLenient(message.toString());
 
-        if (component != null) {
-            entity.sendMessage(component);
-        }
+        if (component != null) entity.sendMessage(component);
     }
 
     @Override
@@ -461,9 +453,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     public ArrayList<String> getModsList() {
         NetworkDispatcher dispatcher = NetworkDispatcher.get(getMinecraftPlayer().connection.netManager);
         ArrayList<String> list = new ArrayList<>();
-        if (dispatcher != null) {
-            dispatcher.getModList().forEach((modId, version) -> list.add(modId + ":" + version));
-        }
+        if (dispatcher != null) dispatcher.getModList().forEach((modId, version) -> list.add(modId + ":" + version));
         return list;
     }
 
@@ -530,21 +520,15 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
     public AbstractMorph getMorph() {
         IMorphing cap = Morphing.get(entity);
 
-        if (cap != null) {
-            return cap.getCurrentMorph();
-        }
+        if (cap != null) return cap.getCurrentMorph();
 
         return super.getMorph();
     }
 
     @Override
     public boolean setMorph(AbstractMorph morph) {
-        if (morph == null) {
-            MorphAPI.demorph(entity);
-        }
-        else {
-            MorphAPI.morph(entity, morph, true);
-        }
+        if (morph == null) MorphAPI.demorph(entity);
+        else MorphAPI.morph(entity, morph, true);
 
         return true;
     }
@@ -568,9 +552,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
         character.setUIContext(context);
         Dispatcher.sendTo(new PacketUI(ui), getMinecraftPlayer());
 
-        if (defaultData) {
-            context.populateDefaultData();
-        }
+        if (defaultData) context.populateDefaultData();
 
         context.clearChanges();
 
@@ -601,9 +583,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
         Set<String> factions = new HashSet<>();
 
         ICharacter character = Character.get(entity);
-        if (character != null) {
-            factions = character.getStates().getFactionNames();
-        }
+        if (character != null) factions = character.getStates().getFactionNames();
 
         return factions;
     }
@@ -680,16 +660,12 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> implements IScrip
 
     @Override
     public void playScene(String sceneName) {
-        if (Loader.isModLoaded("aperture")) {
-            playApertureScene(sceneName, true);
-        }
+        if (Loader.isModLoaded("aperture")) playApertureScene(sceneName, true);
     }
 
     @Override
     public void stopScene() {
-        if (Loader.isModLoaded("aperture")) {
-            playApertureScene("", false);
-        }
+        if (Loader.isModLoaded("aperture")) playApertureScene("", false);
     }
 
     @Optional.Method(modid = "aperture")

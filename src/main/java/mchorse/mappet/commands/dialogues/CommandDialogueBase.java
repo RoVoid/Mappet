@@ -36,7 +36,7 @@ public abstract class CommandDialogueBase extends MappetCommandBase
     {
         if (args.length == 2)
         {
-            return getListOfStringsMatchingLastWord(args, Mappet.dialogues.getKeys());
+            return getListOfStringsMatchingLastWord(args, Mappet.dialogues.getIDs());
         }
 
         return super.getTabCompletions(server, sender, args, targetPos);

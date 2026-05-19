@@ -6,18 +6,7 @@ import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.npcs.Npc;
 import mchorse.mappet.api.npcs.NpcState;
-import mchorse.mappet.api.scripts.code.ScriptFactory;
-import mchorse.mappet.api.scripts.code.ScriptRayTrace;
-import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
-import mchorse.mappet.api.scripts.code.blocks.ScriptTileEntity;
-import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
-import mchorse.mappet.api.scripts.code.entities.ScriptNpc;
-import mchorse.mappet.api.scripts.code.items.ScriptInventory;
-import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
-import mchorse.mappet.api.scripts.code.mappet.MappetSchematic;
-import mchorse.mappet.api.scripts.code.math.ScriptBox;
-import mchorse.mappet.api.scripts.code.math.ScriptVector;
-import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
+import mchorse.mappet.api.scripts.user.math.IScriptVector;
 import mchorse.mappet.api.scripts.user.IScriptRayTrace;
 import mchorse.mappet.api.scripts.user.blocks.IScriptBlockState;
 import mchorse.mappet.api.scripts.user.blocks.IScriptTileEntity;
@@ -119,7 +108,7 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public boolean isBlockLoaded(ScriptVector newPos) {
+    public boolean isBlockLoaded(IScriptVector newPos) {
         return world.isBlockLoaded(pos.setPos(newPos.floorX(), newPos.floorY(), newPos.floorZ()));
     }
 
@@ -129,7 +118,7 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public void setBlock(IScriptBlockState block, ScriptVector pos) {
+    public void setBlock(IScriptBlockState block, IScriptVector pos) {
         setBlock(block, pos.floorX(), pos.floorY(), pos.floorZ());
     }
 
@@ -139,7 +128,7 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public void removeBlock(ScriptVector pos) {
+    public void removeBlock(IScriptVector pos) {
         removeBlock(pos.floorX(), pos.floorY(), pos.floorZ());
     }
 
@@ -152,7 +141,7 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public IScriptBlockState getBlock(ScriptVector pos) {
+    public IScriptBlockState getBlock(IScriptVector pos) {
         return getBlock(pos.floorX(), pos.floorY(), pos.floorZ());
     }
 
@@ -162,14 +151,14 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public boolean hasTileEntity(ScriptVector pos) {
+    public boolean hasTileEntity(IScriptVector pos) {
         return hasTileEntity(pos.floorX(), pos.floorY(), pos.floorZ());
     }
 
     @Override
     public void setTileEntity(IScriptBlockState block, int x, int y, int z, INBTCompound tileData) {
         setBlock(block, x, y, z);
-        if (tileData == null) tileData = new ScriptNBTCompound(null);
+        if (tileData == null) tileData = new INBTCompound(null);
         tileData.setInt("x", x);
         tileData.setInt("y", y);
         tileData.setInt("z", z);
@@ -177,7 +166,7 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public void setTileEntity(IScriptBlockState block, ScriptVector pos, INBTCompound tileData) {
+    public void setTileEntity(IScriptBlockState block, IScriptVector pos, INBTCompound tileData) {
         setTileEntity(block, pos.floorX(), pos.floorY(), pos.floorZ(), tileData);
     }
 
@@ -188,7 +177,7 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public IScriptTileEntity getTileEntity(ScriptVector pos) {
+    public IScriptTileEntity getTileEntity(IScriptVector pos) {
         return getTileEntity(pos.floorX(), pos.floorY(), pos.floorZ());
     }
 
@@ -198,7 +187,7 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, ScriptVector start, ScriptVector end) {
+    public void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, IScriptVector start, IScriptVector end) {
         replaceBlocks(block, newBlock, new ScriptBox(start.x, start.y, start.z, end.x, end.y, end.z));
     }
 
@@ -219,7 +208,7 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, INBTCompound tileData, ScriptVector start, ScriptVector end) {
+    public void replaceBlocks(IScriptBlockState block, IScriptBlockState newBlock, INBTCompound tileData, IScriptVector start, IScriptVector end) {
         replaceBlocks(block, newBlock, tileData, new ScriptBox(start.x, start.y, start.z, end.x, end.y, end.z));
     }
 
@@ -240,7 +229,7 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public boolean hasInventory(ScriptVector pos) {
+    public boolean hasInventory(IScriptVector pos) {
         return hasInventory(pos.floorX(), pos.floorY(), pos.floorZ());
     }
 
@@ -291,7 +280,7 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public void spawnParticles(EnumParticleTypes type, boolean longDistance, ScriptVector pos, int number, ScriptVector offset, double speed, int... args) {
+    public void spawnParticles(EnumParticleTypes type, boolean longDistance, IScriptVector pos, int number, IScriptVector offset, double speed, int... args) {
         ((WorldServer) world).spawnParticle(type, longDistance, pos.x, pos.y, pos.z, number, offset.x, offset.y, offset.z, speed, args);
     }
 
@@ -301,7 +290,7 @@ public class ScriptWorld implements IScriptWorld {
         ((WorldServer) world).spawnParticle(entity.asMinecraft(), type, longDistance, x, y, z, number, dx, dy, dz, speed, args);
     }
 
-    public void spawnParticles(IScriptPlayer entity, EnumParticleTypes type, boolean longDistance, ScriptVector pos, int number, ScriptVector offset, double speed, int... args) {
+    public void spawnParticles(IScriptPlayer entity, EnumParticleTypes type, boolean longDistance, IScriptVector pos, int number, IScriptVector offset, double speed, int... args) {
         if (entity == null) return;
         ((WorldServer) world).spawnParticle(entity.asMinecraft(),
                 type,
@@ -329,7 +318,7 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public IScriptEntity spawnEntity(String id, ScriptVector pos, INBTCompound compound) {
+    public IScriptEntity spawnEntity(String id, IScriptVector pos, INBTCompound compound) {
         return spawnEntity(id, pos.x, pos.y, pos.z, compound);
     }
 
@@ -363,12 +352,12 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public IScriptNpc spawnNpc(String id, String state, ScriptVector pos) {
+    public IScriptNpc spawnNpc(String id, String state, IScriptVector pos) {
         return spawnNpc(id, state, pos.x, pos.y, pos.z, 0, 0, 0);
     }
 
     @Override
-    public IScriptNpc spawnNpc(String id, String state, ScriptVector pos, ScriptVector rot) {
+    public IScriptNpc spawnNpc(String id, String state, IScriptVector pos, IScriptVector rot) {
         return spawnNpc(id, state, pos.x, pos.y, pos.z, (float) rot.x, (float) rot.y, (float) rot.z);
     }
 
@@ -429,7 +418,7 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public void playSound(String event, ScriptVector pos, float volume, float pitch) {
+    public void playSound(String event, IScriptVector pos, float volume, float pitch) {
         playSound(event, pos.x, pos.y, pos.z, volume, pitch);
     }
 
@@ -468,7 +457,7 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public void explode(IScriptEntity exploder, ScriptVector pos, float distance, boolean blazeGround, boolean destroyTerrain) {
+    public void explode(IScriptEntity exploder, IScriptVector pos, float distance, boolean blazeGround, boolean destroyTerrain) {
         world.newExplosion(exploder == null ? null : exploder.asMinecraft(), pos.x, pos.y, pos.z, distance, blazeGround, destroyTerrain);
     }
 
@@ -488,7 +477,7 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public boolean isActive(ScriptVector pos) {
+    public boolean isActive(IScriptVector pos) {
         return world.isBlockPowered(pos.toBlockPos());
     }
 
@@ -498,7 +487,7 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public boolean testForBlock(ScriptBlockState block, ScriptVector pos) {
+    public boolean testForBlock(ScriptBlockState block, IScriptVector pos) {
         return block != null && getBlock(pos).isSame(block);
     }
 
@@ -508,7 +497,7 @@ public class ScriptWorld implements IScriptWorld {
     }
 
     @Override
-    public void fill(IScriptBlockState block, ScriptVector start, ScriptVector end) {
+    public void fill(IScriptBlockState block, IScriptVector start, IScriptVector end) {
         fill(block, new ScriptBox(start.x, start.y, start.z, end.x, end.y, end.z));
     }
 
@@ -529,11 +518,11 @@ public class ScriptWorld implements IScriptWorld {
         nbt.setInteger("Data", block.getMeta());
         nbt.setInteger("Time", 1);
 
-        return spawnEntity("minecraft:falling_block", x, y, z, new ScriptNBTCompound(nbt));
+        return spawnEntity("minecraft:falling_block", x, y, z, new INBTCompound(nbt));
     }
 
     @Override
-    public IScriptEntity spawnFallingBlock(IScriptBlockState block, ScriptVector pos) {
+    public IScriptEntity spawnFallingBlock(IScriptBlockState block, IScriptVector pos) {
         return spawnFallingBlock(block, pos.x, pos.y, pos.z);
     }
 
@@ -565,11 +554,11 @@ public class ScriptWorld implements IScriptWorld {
 
         world.setBlockToAir(pos);
 
-        return spawnEntity("minecraft:falling_block", x + 0.5, y + 0.5, z + 0.5, new ScriptNBTCompound(nbt));
+        return spawnEntity("minecraft:falling_block", x + 0.5, y + 0.5, z + 0.5, new INBTCompound(nbt));
     }
 
     @Override
-    public IScriptEntity makeBlockFall(ScriptVector pos) {
+    public IScriptEntity makeBlockFall(IScriptVector pos) {
         return makeBlockFall(pos.floorX(), pos.floorY(), pos.floorZ());
     }
 

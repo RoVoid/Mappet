@@ -26,14 +26,16 @@ public class Docs {
         InputStream stream = null;
         String language = mc.getLanguageManager().getCurrentLanguage().getLanguageCode().toLowerCase();
         try {
-            stream = mc.getResourceManager().getResource(new ResourceLocation(Mappet.MOD_ID, "docs/" + language + ".json")).getInputStream();
+            stream = mc.getResourceManager()
+                    .getResource(new ResourceLocation(Mappet.MOD_ID, "docs/" + language + ".json"))
+                    .getInputStream();
         } catch (Exception e) {
-            Mappet.loggerClient.error("Not found docs on your localization!");
+            Mappet.logger.error("Not found docs on your localization!");
             if (language.equalsIgnoreCase("en_us")) return;
             try {
                 stream = mc.getResourceManager().getResource(new ResourceLocation(Mappet.MOD_ID, "docs/en_us.json")).getInputStream();
             } catch (Exception e1) {
-                Mappet.loggerClient.error("Not found docs");
+                Mappet.logger.error("Not found docs");
             }
         }
 
@@ -42,8 +44,7 @@ public class Docs {
         try (Scanner scanner = new Scanner(stream, "UTF-8")) {
             String json = scanner.useDelimiter("\\A").next();
 
-            Type type = new TypeToken<Map<String, RawClassEntry>>() {
-            }.getType();
+            Type type = new TypeToken<Map<String, RawClassEntry>>() {}.getType();
             Map<String, RawClassEntry> rawDocs = gson.fromJson(json, type);
 
             for (Map.Entry<String, RawClassEntry> entry : rawDocs.entrySet()) {
@@ -81,8 +82,7 @@ public class Docs {
 
                             if (variantRaw.annotations != null) {
                                 variant.annotations.addAll(variantRaw.annotations);
-                                if (variant.annotations.contains("java.lang.Deprecated"))
-                                    variant.isDeprecated = true;
+                                if (variant.annotations.contains("java.lang.Deprecated")) variant.isDeprecated = true;
                             }
                             if (!variant.isDeprecated) method.isDeprecated = false;
 
@@ -100,7 +100,7 @@ public class Docs {
             }
 
         } catch (Exception e) {
-            Mappet.loggerClient.error("Failed to load Docs: {}", e.getMessage());
+            Mappet.logger.error("Failed to load Docs: {}", e.getMessage());
         }
     }
 

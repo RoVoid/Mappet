@@ -1,0 +1,230 @@
+{
+  "docs": "Script Vector\n \u003cp\u003e CREATE: {@link IScriptMath#vector(double, double, double)} \u003c/p\u003e",
+  "methods": {
+    "add": [
+      {
+        "parameters": [
+          {
+            "name": "other",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      }
+    ],
+    "subtract": [
+      {
+        "parameters": [
+          {
+            "name": "other",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      }
+    ],
+    "multiply": [
+      {
+        "parameters": [
+          {
+            "name": "scalar",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      },
+      {
+        "parameters": [
+          {
+            "name": "other",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      }
+    ],
+    "divide": [
+      {
+        "parameters": [
+          {
+            "name": "scalar",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      },
+      {
+        "parameters": [
+          {
+            "name": "other",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      }
+    ],
+    "floor": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      }
+    ],
+    "floorX": [
+      {
+        "return": "int"
+      }
+    ],
+    "floorY": [
+      {
+        "return": "int"
+      }
+    ],
+    "floorZ": [
+      {
+        "return": "int"
+      }
+    ],
+    "dotProduct": [
+      {
+        "parameters": [
+          {
+            "name": "other",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "double"
+      }
+    ],
+    "crossProduct": [
+      {
+        "parameters": [
+          {
+            "name": "other",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      }
+    ],
+    "length": [
+      {
+        "return": "double"
+      }
+    ],
+    "distance": [
+      {
+        "parameters": [
+          {
+            "name": "other",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "double"
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "return": "double"
+      }
+    ],
+    "normalize": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      }
+    ],
+    "equals": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "return": "boolean"
+      },
+      {
+        "parameters": [
+          {
+            "name": "other",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "angleBetween": [
+      {
+        "parameters": [
+          {
+            "name": "other",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "double"
+      }
+    ],
+    "isZero": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "toBlockPos": [
+      {
+        "return": "net.minecraft.util.math.BlockPos"
+      }
+    ]
+  }
+}

@@ -1,0 +1,232 @@
+{
+  "docs": "Script event.\n\n \u003cp\u003eThis interface represent the event, the only argument that was passed\n into script\u0027s function. It contains many different useful methods to\n interact with Minecraft on the server side.\u003c/p\u003e",
+  "methods": {
+    "getScript": [
+      {
+        "return": "java.lang.String",
+        "docs": "Get script\u0027s ID to which this event was passed to."
+      }
+    ],
+    "getFunction": [
+      {
+        "return": "java.lang.String",
+        "docs": "Get script\u0027s function name."
+      }
+    ],
+    "getSubject": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntity",
+        "docs": "Get subject (primary) entity that was passed into the event."
+      }
+    ],
+    "getObject": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntity",
+        "docs": "Get object (secondary) entity that was passed into the event."
+      }
+    ],
+    "getPlayer": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer",
+        "docs": "Get the first player from either subject or object (or \u003ccode\u003enull\u003c/code\u003e, if there is no player)."
+      }
+    ],
+    "getNPC": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptNpc",
+        "docs": "Get the first Mappet NPC from either subject or object (or \u003ccode\u003enull\u003c/code\u003e, if there is no NPC)."
+      }
+    ],
+    "getWorld": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.world.IScriptWorld",
+        "docs": "Get the world in which this event happened."
+      }
+    ],
+    "getServer": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.IScriptServer",
+        "docs": "Get the server in which this event happened."
+      }
+    ],
+    "getValues": [
+      {
+        "return": "java.util.Map",
+        "docs": "Get a map of extra context values that was passed into the event."
+      }
+    ],
+    "getValue": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.Object",
+        "docs": "Get a value for given key (might be a \u003ccode\u003enull\u003c/code\u003e)."
+      }
+    ],
+    "get": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.Object",
+        "docs": "Get a value for given key (might be a \u003ccode\u003enull\u003c/code\u003e)."
+      }
+    ],
+    "setValue": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "java.lang.Object"
+          }
+        ],
+        "docs": "Set a value for given key in extra data."
+      }
+    ],
+    "cancel": [
+      {
+        "docs": "Cancel the trigger event.\n\n \u003cp\u003eDepending on the type of event, it can prevent the\n default behavior (for example for chat trigger, if you cancel it, it won\u0027t\n send the message into the chat).\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    // Assuming this script was attached to global trigger \"On block placed,\"\n    // this script will cancel placing of the block by a player\n    function main(c)\n    {\n        if (c.getValue(\"block\") \u003d\u003d\u003d \"minecraft:stone\")\n        {\n            c.cancel();\n        }\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "scheduleScript": [
+      {
+        "parameters": [
+          {
+            "name": "delay",
+            "type": "int",
+            "docs": "How many ticks should pass before scheduled script will be executed."
+          }
+        ],
+        "docs": "Schedule execution of the same script (with same function)\n given ticks forward.\n\n \u003cp\u003eRead {@link #scheduleScript(String, String, int)} for more information.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var states \u003d c.getServer().getStates();\n        var counter \u003d states.getNumber(\"counter\");\n\n        if (counter \u003c 10)\n        {\n            c.send(counter + \" Mississippi...\");\n            states.add(\"counter\", 1);\n\n            c.scheduleScript(20);\n        }\n        else\n        {\n            states.reset(\"counter\");\n            c.send(\"Here I go!\");\n        }\n    }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "function",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "delay",
+            "type": "int"
+          }
+        ],
+        "docs": "Schedule execution of the same script with given function\n given ticks forward.\n\n \u003cp\u003eRead {@link #scheduleScript(String, String, int)} for more information.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        // Schedule script execution of function other\n        // within same script a second later\n        c.scheduleScript(\"other\", 20);\n    }\n\n    function other(c)\n    {\n        c.send(\"A second ago, function \\\"main\\\" told me to say \\\"hi\\\" to you... :)\")\n    }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "script",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "function",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "delay",
+            "type": "int"
+          }
+        ],
+        "docs": "Schedule execution of given script with specific function\n given ticks forward.\n\n \u003cp\u003eWhen scheduling a script, it will use same data which were passed\n into current script\u0027s function. I.e. subject, object, world, server\n and values.\u003c/p\u003e\n\n \u003cp\u003e\u003cb\u003eProTip\u003c/b\u003e: if you put some values into this context using\n {@link #setValue(String, Object)}, then that value will be also available\n when the scheduled script will be executed.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    // Script \"a\"\n    function main(c)\n    {\n        // As ProTip states, you can pass some value using\n        // setValue() and getValue() event\u0027s functions\n        c.setValue(\"message\", \"Hello!\");\n\n        // Schedule script \"b\" execution a second later\n        c.scheduleScript(\"b\", \"main\", 20);\n    }\n\n    // Script \"b\"\n    function main(c)\n    {\n        c.send(\"A second ago, script \\\"a\\\" told me deliver this message: \" + c.getValue(\"message\"));\n    }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "delay",
+            "type": "int"
+          },
+          {
+            "name": "function",
+            "type": "jdk.nashorn.api.scripting.ScriptObjectMirror"
+          }
+        ],
+        "docs": "Schedule a JavaScript function (instead of script). Once the timer has expired,\n given function will be called with this context as the only argument.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        c.scheduleScript(60, function (context)\n        {\n            context.send(\"This was called three seconds later!\");\n        });\n    }\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "delay",
+            "type": "int"
+          },
+          {
+            "name": "consumer",
+            "type": "java.util.function.Consumer"
+          }
+        ],
+        "docs": "Schedule a function (instead of script). Once the timer has expired,\n given function will be called with this context as the only argument."
+      }
+    ],
+    "executeCommand": [
+      {
+        "parameters": [
+          {
+            "name": "command",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "int",
+        "docs": "Execute a command.\n\n \u003cpre\u003e{@code\n    c.executeCommand(\"/kick Creeper501\");\n }\u003c/pre\u003e\n\n 2 or above - multiple commands were executed using target selectors."
+      }
+    ],
+    "executeScript": [
+      {
+        "parameters": [
+          {
+            "name": "scriptName",
+            "type": "java.lang.String"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "scriptName",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "function",
+            "type": "java.lang.String"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "scriptName",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "function",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "args",
+            "type": "java.lang.Object"
+          }
+        ]
+      }
+    ],
+    "send": [
+      {
+        "parameters": [
+          {
+            "name": "message",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Send a message to all players in the chat.\n\n \u003cpre\u003e{@code\n    c.send(\"Hi :)\");\n }\u003c/pre\u003e"
+      }
+    ]
+  }
+}

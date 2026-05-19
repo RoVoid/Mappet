@@ -16,9 +16,9 @@ import mchorse.mappet.api.states.States;
 import mchorse.mappet.api.translations.TranslationManager;
 import mchorse.mappet.api.ui.UIManager;
 import mchorse.mappet.api.utils.DataContext;
-import mchorse.mappet.api.utils.logs.MappetLogger;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.commands.CommandMappet;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.events.handlers.ModEventHandler;
 import mchorse.mappet.events.handlers.TriggerEventHandler;
 import mchorse.mappet.proxy.CommonProxy;
@@ -36,32 +36,18 @@ import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.util.logging.Handler;
 
 /**
  * Mappet mod
  * <p>
  * Adventure map toolset mod
  */
-@Mod(
-        modid = Mappet.MOD_ID,
-        name = "Mappet",
-        version = Mappet.VERSION,
-        dependencies =
-                "required-after:mclib@[@MCLIB@,);" +
-                        "required-after:metamorph@[@METAMORPH@,);" +
-                        "after:blockbuster@[@BLOCKBUSTER@,);" +
-                        "after:aperture@[@APERTURE@,);" +
-                        "after:chameleon@[@CHAMELEON@,);",
-        updateJSON = "https://raw.githubusercontent.com/mchorse/mappet/master/version.json"
-)
+@Mod(modid = Mappet.MOD_ID, name = "Mappet", version = Mappet.VERSION, dependencies = "required-after:mclib@[@MCLIB@,);" + "required-after:metamorph@[@METAMORPH@,);" + "after:blockbuster@[@BLOCKBUSTER@,);" + "after:aperture@[@APERTURE@,);" + "after:chameleon@[@CHAMELEON@,);")
 
 public final class Mappet {
     public static final String MOD_ID = "mappet";
-
     public static final String VERSION = "@MAPPET@";
 
     @Mod.Instance
@@ -71,38 +57,22 @@ public final class Mappet {
     public static CommonProxy proxy;
 
     public static L10n l10n = new L10n(MOD_ID);
-
     public static final EventBus EVENT_BUS = new EventBus();
-
     public static MappetLogger logger;
-
-    public static Logger loggerClient;
 
     /* Server side data */
     public static ServerSettings settings;
-
     public static States states;
-
     public static QuestManager quests;
-
     public static SchematicManager schematics;
-
     public static EventManager events;
-
     public static DialogueManager dialogues;
-
     public static ExpressionManager expressions;
-
     public static NpcManager npcs;
-
     public static FactionManager factions;
-
     public static DataManager data;
-
     public static QuestChainManager chains;
-
     public static ScriptManager scripts;
-
     public static HUDManager huds;
     public static UIManager ui;
     public static TranslationManager translations;
@@ -119,12 +89,13 @@ public final class Mappet {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onDashboardPanelsRemove(RemoveDashboardPanels event) {
-        GuiMappetDashboard.dashboard = null;
+        GuiMappetDashboard.remove();
     }
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         McLib.EVENT_BUS.register(this);
+        logger = new MappetLogger(event.getModLog());
         proxy.preInit(event);
     }
 
@@ -143,21 +114,9 @@ public final class Mappet {
         event.registerServerCommand(new CommandMappet());
 
         File mappetWorldFolder = new File(DimensionManager.getCurrentSaveRootDirectory(), MOD_ID);
-
         mappetWorldFolder.mkdirs();
 
-        if (logger != null) {
-            Handler[] handlers = logger.getHandlers();
-
-            for (Handler handler : handlers) {
-                handler.close();
-                logger.removeHandler(handler);
-            }
-
-            logger = null;
-        }
-
-        logger = new MappetLogger(MOD_ID, mappetWorldFolder);
+        logger.setupWorldLogging(mappetWorldFolder);
 
         settings = new ServerSettings(new File(mappetWorldFolder, "settings.json"));
         settings.load();
@@ -211,6 +170,7 @@ public final class Mappet {
             translations = null;
         }
 
+        logger.closeWorldLogging();
         CommonProxy.eventHandler.reset();
     }
 }

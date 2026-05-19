@@ -1,0 +1,338 @@
+{
+  "docs": "This interface represents Mappet states. Server ({@link mchorse.mappet.api.scripts.user.IScriptServer}),\n players ({@link IScriptPlayer})\n and NPCs ({@link mchorse.mappet.api.scripts.user.entities.IScriptNpc}) can have states.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var states \u003d c.getServer().getStates();\n\n        // Do something with global states...\n    }\n }\u003c/pre\u003e",
+  "methods": {
+    "add": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "double"
+          }
+        ],
+        "return": "double",
+        "docs": "Add some value to existing state by ID.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getServer().getStates();\n\n    states.add(\"total_spending\", 20);\n    c.send(\"Total spending is now \" + states.getNumber(\"total_spending\"));\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.String"
+      }
+    ],
+    "setNumber": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "double"
+          }
+        ],
+        "docs": "Set numeric value to existing state by ID.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getServer().getStates();\n\n    states.setNumber(\"total_spending\", 1000000001);\n    c.send(\"Total spending is now \" + states.getNumber(\"total_spending\"));\n }\u003c/pre\u003e"
+      }
+    ],
+    "setBoolean": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "setString": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Set string value to existing state by ID.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getSubject().getStates();\n\n    states.setString(\"name\", \"Jeff\");\n    c.getSubject().send(\"Your name is \" + states.getString(\"name\"));\n }\u003c/pre\u003e"
+      }
+    ],
+    "set": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "double"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "java.lang.String"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "java.lang.Object",
+            "docs": "JsonSerializable\n Experimental"
+          }
+        ],
+        "docs": "Experimental"
+      }
+    ],
+    "toggle": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "setJson": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "java.lang.Object",
+            "docs": "JsonSerializable\n Experimental"
+          }
+        ],
+        "docs": "Experimental"
+      }
+    ],
+    "getNumber": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "double",
+        "docs": "Get a numeric value of a state by given ID.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getServer().getStates();\n\n    c.send(\"Total spending is \" + states.getNumber(\"total_spending\"));\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "defaultValue",
+            "type": "double"
+          }
+        ],
+        "return": "double"
+      }
+    ],
+    "getString": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "defaultValue",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.String"
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.String",
+        "docs": "Get a string value of a state by given ID.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getSubject().getStates();\n\n    c.send(\"Your RPG class is: \" + states.getString(\"class\"));\n }\u003c/pre\u003e"
+      }
+    ],
+    "getJson": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.Object",
+        "docs": "Experimental"
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "defaultValue",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.Object"
+      }
+    ],
+    "isNumber": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Check if a state instance of number.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getServer().getStates();\n\n    c.send(\"State is number: \" + states.isNumber(\"state_number\"));\n }\u003c/pre\u003e"
+      }
+    ],
+    "getBoolean": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "defaultValue",
+            "type": "boolean"
+          }
+        ],
+        "return": "boolean"
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "isString": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Check if a state instance of string.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getServer().getStates();\n\n    c.send(\"State is string: \" + states.isString(\"state_string\"));\n }\u003c/pre\u003e"
+      }
+    ],
+    "isBoolean": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "reset": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Removes a state by given ID.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getServer().getStates();\n\n    // The city has been defaulted\n    states.reset(\"total_spending\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "resetMasked": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Removes multiple states by using mask.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getServer().getStates();\n\n    // Remove all states that start with \"regions.\"\n    states.resetMasked(\"regions.*\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "clear": [
+      {
+        "docs": "Remove all states.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getServer().getStates();\n\n    // Game over\n    states.clear();\n }\u003c/pre\u003e"
+      }
+    ],
+    "has": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Check whether state by given ID exists.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getSubject().getStates();\n    var name \u003d states.has(\"name\") ? states.getString(\"name\") : \"Jeff\";\n\n    c.getSubject().send(\"Your name is \" + name);\n }\u003c/pre\u003e"
+      }
+    ],
+    "keys": [
+      {
+        "return": "java.util.Set",
+        "docs": "Get IDs of all states.\n\n \u003cpre\u003e{@code\n    var states \u003d c.getSubject().getStates().keys();\n\n    for each (var key in states)\n    {\n        c.send(\"Server has state: \" + key);\n    }\n }\u003c/pre\u003e"
+      }
+    ]
+  }
+}

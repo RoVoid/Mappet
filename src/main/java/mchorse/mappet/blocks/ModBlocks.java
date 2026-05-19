@@ -2,10 +2,10 @@ package mchorse.mappet.blocks;
 
 import mchorse.mappet.Mappet;
 import mchorse.mappet.items.ModItems;
-import mchorse.mappet.tile.TileConditionModel;
-import mchorse.mappet.tile.TileEmitter;
-import mchorse.mappet.tile.TileRegion;
-import mchorse.mappet.tile.TileTrigger;
+import mchorse.mappet.blocks.tile.TileConditionModel;
+import mchorse.mappet.blocks.tile.TileEmitter;
+import mchorse.mappet.blocks.tile.TileRegion;
+import mchorse.mappet.blocks.tile.TileTrigger;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;

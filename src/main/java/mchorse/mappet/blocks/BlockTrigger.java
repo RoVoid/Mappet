@@ -5,7 +5,8 @@ import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.items.ModItems;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.blocks.PacketEditTrigger;
-import mchorse.mappet.tile.TileTrigger;
+import mchorse.mappet.blocks.tile.TileTrigger;
+import mchorse.mappet.utils.PlayerUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -19,7 +20,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -66,16 +66,14 @@ public class BlockTrigger extends Block implements ITileEntityProvider {
             TileEntity tile = worldIn.getTileEntity(pos);
 
             if (tile instanceof TileTrigger) {
-                ((TileTrigger) tile).leftClick.trigger(new DataContext(playerIn)
-                        .set("x", pos.getX())
-                        .set("y", pos.getY())
-                        .set("z", pos.getZ()));
+                ((TileTrigger) tile).leftClick.trigger(
+                        new DataContext(playerIn).set("x", pos.getX()).set("y", pos.getY()).set("z", pos.getZ()));
             }
         }
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (worldIn.isRemote) return true;
 
         TileEntity tile = worldIn.getTileEntity(pos);
@@ -83,16 +81,10 @@ public class BlockTrigger extends Block implements ITileEntityProvider {
         if (!(tile instanceof TileTrigger)) return true;
         TileTrigger trigger = (TileTrigger) tile;
 
-        MinecraftServer server = playerIn.getServer();
-        if (playerIn.isCreative() && !playerIn.isSneaking()) {
-            if (server != null && server.getPlayerList().canSendCommands(playerIn.getGameProfile()))
-                Dispatcher.sendTo(new PacketEditTrigger(trigger), (EntityPlayerMP) playerIn);
-        }
+        if (PlayerUtils.isOperator(player) && player.isCreative() && !player.isSneaking())
+            Dispatcher.sendTo(new PacketEditTrigger(trigger), (EntityPlayerMP) player);
         else {
-            trigger.rightClick.trigger(new DataContext(playerIn)
-                    .set("x", pos.getX())
-                    .set("y", pos.getY())
-                    .set("z", pos.getZ()));
+            trigger.rightClick.trigger(new DataContext(player).set("x", pos.getX()).set("y", pos.getY()).set("z", pos.getZ()));
         }
         return true;
     }

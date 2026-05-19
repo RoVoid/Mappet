@@ -1,0 +1,165 @@
+{
+  "docs": "",
+  "methods": {
+    "asMinecraft": [
+      {
+        "return": "net.minecraft.world.gen.structure.template.Template"
+      }
+    ],
+    "takeBlocks": [
+      {
+        "parameters": [
+          {
+            "name": "start",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "end",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "withEntities",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "x1",
+            "type": "int"
+          },
+          {
+            "name": "y1",
+            "type": "int"
+          },
+          {
+            "name": "z1",
+            "type": "int"
+          },
+          {
+            "name": "x2",
+            "type": "int"
+          },
+          {
+            "name": "y2",
+            "type": "int"
+          },
+          {
+            "name": "z2",
+            "type": "int"
+          },
+          {
+            "name": "withEntities",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "placeBlocks": [
+      {
+        "parameters": [
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "rotation",
+            "type": "int"
+          },
+          {
+            "name": "mirror",
+            "type": "int"
+          },
+          {
+            "name": "withEntities",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          },
+          {
+            "name": "rotation",
+            "type": "int"
+          },
+          {
+            "name": "mirror",
+            "type": "int"
+          },
+          {
+            "name": "withEntities",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "getSize": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      }
+    ],
+    "save": [
+      {},
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "getDimensionId": [
+      {
+        "return": "int"
+      }
+    ],
+    "isValid": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "getMinecraftStructure": [
+      {
+        "return": "net.minecraft.world.gen.structure.template.Template"
+      }
+    ]
+  }
+}

@@ -1,6 +1,5 @@
 package mchorse.mappet.proxy;
 
-import mchorse.mappet.Mappet;
 import mchorse.mappet.api.utils.content.IContentTypeBase;
 import mchorse.mappet.client.KeyboardHandler;
 import mchorse.mappet.client.RenderingHandler;
@@ -14,9 +13,9 @@ import mchorse.mappet.client.renders.tile.TileTriggerRenderer;
 import mchorse.mappet.entities.EntityNpc;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.content.PacketContentRequestNames;
-import mchorse.mappet.tile.TileConditionModel;
-import mchorse.mappet.tile.TileRegion;
-import mchorse.mappet.tile.TileTrigger;
+import mchorse.mappet.blocks.tile.TileConditionModel;
+import mchorse.mappet.blocks.tile.TileRegion;
+import mchorse.mappet.blocks.tile.TileTrigger;
 import mchorse.mclib.McLib;
 import mchorse.mclib.utils.ReflectionUtils;
 import net.minecraft.client.Minecraft;
@@ -24,7 +23,6 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,6 +39,8 @@ public class ClientProxy extends CommonProxy {
     private static final Map<Integer, Consumer<List<String>>> consumers = new HashMap<>();
 
     public static File sounds;
+
+    public static int savedGuiScale;
 
     @Override
     public void runClient(Runnable task) {
@@ -81,17 +81,9 @@ public class ClientProxy extends CommonProxy {
         ReflectionUtils.registerResourcePack(new SoundPack(sounds = new File(CommonProxy.configFolder, "sounds")));
 
         Minecraft mc = Minecraft.getMinecraft();
-        if (mc.getResourceManager() instanceof IReloadableResourceManager) {
+        if (mc.getResourceManager() instanceof IReloadableResourceManager)
             ((IReloadableResourceManager) mc.getResourceManager()).registerReloadListener(new ResourceReloadHandler());
-        }
-
-        Mappet.loggerClient = event.getModLog();
 
         Themes.initiate();
-    }
-
-    @Override
-    public void init(FMLInitializationEvent event) {
-        super.init(event);
     }
 }

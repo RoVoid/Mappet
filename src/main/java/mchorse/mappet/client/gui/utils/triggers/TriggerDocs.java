@@ -26,14 +26,14 @@ public class TriggerDocs {
                        .getResource(new ResourceLocation(Mappet.MOD_ID, "triggers/" + language + ".json"))
                        .getInputStream();
         } catch (Exception e) {
-            Mappet.loggerClient.error("Not found docs on your localization!");
+            Mappet.logger.error("Not found docs on your localization!");
             if (language.equalsIgnoreCase("en_us")) return;
             try {
                 stream = mc.getResourceManager()
                            .getResource(new ResourceLocation(Mappet.MOD_ID, "triggers/en_us.json"))
                            .getInputStream();
             } catch (Exception e1) {
-                Mappet.loggerClient.error("Not found docs");
+                Mappet.logger.error("Not found docs");
             }
         }
 
@@ -70,7 +70,7 @@ public class TriggerDocs {
             }
 
         } catch (Exception e) {
-            Mappet.loggerClient.error("Failed to load trigger docs: {}", e.getMessage());
+            Mappet.logger.error("Failed to load trigger docs: {}", e.getMessage());
         }
     }
 

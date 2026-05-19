@@ -5,7 +5,7 @@ import mchorse.mappet.api.regions.shapes.BoxShape;
 import mchorse.mappet.api.regions.shapes.CylinderShape;
 import mchorse.mappet.api.regions.shapes.SphereShape;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
-import mchorse.mappet.tile.TileRegion;
+import mchorse.mappet.blocks.tile.TileRegion;
 import mchorse.mclib.utils.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;

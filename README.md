@@ -1,4 +1,4 @@
-<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+<div align="center" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
   <a rel="noopener noreferrer" target="_blank" href="https://github.com/RoVoid/MappetR/releases">
     <img
       alt="Header"

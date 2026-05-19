@@ -32,7 +32,7 @@ public class ServerHandlerScreenshot extends ServerMessageHandler<PacketScreensh
                 Dispatcher.sendToServer(new PacketScreenshot(message.getName(), image));
             }
         } catch (Exception e) {
-            Mappet.loggerClient.error(e.getMessage());
+            Mappet.logger.error(e.getMessage());
         }
     }
 }

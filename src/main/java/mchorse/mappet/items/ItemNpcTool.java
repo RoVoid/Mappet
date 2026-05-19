@@ -1,14 +1,13 @@
 package mchorse.mappet.items;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.MappetConfig;
 import mchorse.mappet.api.npcs.Npc;
 import mchorse.mappet.api.npcs.NpcState;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.entities.EntityNpc;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.npc.PacketNpcList;
 import mchorse.mappet.network.packets.npc.PacketNpcState;
-import mchorse.mclib.utils.OpHelper;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.resources.I18n;
@@ -30,8 +29,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static mchorse.mappet.items.ModItems.NPC_TOOL;
-
 public class ItemNpcTool extends Item {
     public ItemNpcTool() {
         setCreativeTab(ModItems.creativeTab);
@@ -48,51 +45,25 @@ public class ItemNpcTool extends Item {
 
     @Override
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
-        if (!player.world.isRemote && target instanceof EntityNpc) {
-            if (MappetConfig.npcsToolOnlyOP.get() && !OpHelper.isPlayerOp((EntityPlayerMP) player)) {
-                return super.itemInteractionForEntity(stack, player, target, hand);
-            }
+        if (player.world.isRemote || !(target instanceof EntityNpc) || !MappetConfig.npcToolRight.check(player))
+            return super.itemInteractionForEntity(stack, player, target, hand);
 
-            if (MappetConfig.npcsToolOnlyCreative.get() && !player.capabilities.isCreativeMode) {
-                return super.itemInteractionForEntity(stack, player, target, hand);
-            }
+        EntityNpc npc = (EntityNpc) target;
+        if (player.isSneaking()) npc.setDead();
+        else Dispatcher.sendTo(new PacketNpcState(target.getEntityId(), npc.getState().serializeNBT()), (EntityPlayerMP) player);
 
-            EntityNpc npc = (EntityNpc) target;
-
-            if (player.isSneaking()) {
-                npc.setDead();
-            }
-            else {
-                Dispatcher.sendTo(new PacketNpcState(target.getEntityId(), npc.getState().serializeNBT()), (EntityPlayerMP) player);
-            }
-
-            return true;
-        }
-
-        return super.itemInteractionForEntity(stack, player, target, hand);
+        return true;
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-        if (!worldIn.isRemote) {
-            if (MappetConfig.npcsToolOnlyOP.get() && !OpHelper.isPlayerOp((EntityPlayerMP) playerIn)) {
-                return super.onItemRightClick(worldIn, playerIn, handIn);
-            }
-
-            if (MappetConfig.npcsToolOnlyCreative.get() && !playerIn.capabilities.isCreativeMode) {
-                return super.onItemRightClick(worldIn, playerIn, handIn);
-            }
-
-            if (openNpcTool(playerIn, playerIn.getHeldItem(handIn))) {
-                return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
-            }
-        }
-
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        if (world.isRemote || !MappetConfig.npcToolRight.check(player)) return super.onItemRightClick(world, player, hand);
+        if (openNpcTool(player, player.getHeldItem(hand))) return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+        return super.onItemRightClick(world, player, hand);
     }
 
     private boolean openNpcTool(EntityPlayer player, ItemStack stack) {
-        Collection<String> npcs = Mappet.npcs.getKeys();
+        Collection<String> npcs = Mappet.npcs.getIDs();
 
         if (!npcs.isEmpty() && player instanceof EntityPlayerMP) {
             List<String> states = new ArrayList<>();
@@ -112,34 +83,27 @@ public class ItemNpcTool extends Item {
     }
 
     @Override
-    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         ItemStack stack = player.getHeldItem(hand);
 
-        if (!worldIn.isRemote) {
-            if (MappetConfig.npcsToolOnlyOP.get() && !OpHelper.isPlayerOp((EntityPlayerMP) player)) {
-                return EnumActionResult.PASS;
-            }
+        if (world.isRemote) return EnumActionResult.SUCCESS;
+        if (!MappetConfig.npcToolRight.check(player)) return EnumActionResult.PASS;
 
-            if (MappetConfig.npcsToolOnlyCreative.get() && !player.capabilities.isCreativeMode) {
-                return EnumActionResult.PASS;
-            }
+        EntityNpc entity = new EntityNpc(world);
+        BlockPos posOffset = pos.offset(facing);
 
-            EntityNpc entity = new EntityNpc(worldIn);
-            BlockPos posOffset = pos.offset(facing);
+        entity.setPosition(posOffset.getX() + hitX, posOffset.getY() + hitY, posOffset.getZ() + hitZ);
 
-            entity.setPosition(posOffset.getX() + hitX, posOffset.getY() + hitY, posOffset.getZ() + hitZ);
+        setupState(entity, stack);
 
-            setupState(entity, stack);
+        entity.world.spawnEntity(entity);
+        entity.initialize();
 
-            entity.world.spawnEntity(entity);
-            entity.initialize();
+        if (!player.isSneaking())
+            Dispatcher.sendTo(new PacketNpcState(entity.getEntityId(), entity.getState().serializeNBT()), (EntityPlayerMP) player);
 
-            if (!player.isSneaking()) {
-                Dispatcher.sendTo(new PacketNpcState(entity.getEntityId(), entity.getState().serializeNBT()), (EntityPlayerMP) player);
-            }
-        }
-
-        return stack.getItem() == NPC_TOOL ? EnumActionResult.SUCCESS : super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+        //        return stack.getItem() == NPC_TOOL ? EnumActionResult.SUCCESS : super.onItemUse(player, world, pos, hand, facing, hitX, hitY, hitZ);
+        return EnumActionResult.SUCCESS;
     }
 
     private void setupState(EntityNpc entity, ItemStack stack) {

@@ -1,0 +1,310 @@
+{
+  "docs": "This interface represents an item stack",
+  "methods": {
+    "getMinecraftItemStack": [
+      {
+        "return": "net.minecraft.item.ItemStack",
+        "deprecated": true,
+        "docs": "Use {@link #asMinecraft()} instead\n\n @deprecated"
+      }
+    ],
+    "asMinecraft": [
+      {
+        "return": "net.minecraft.item.ItemStack",
+        "docs": "Get Minecraft item stack instance\n \u003cp\u003e\u003cb\u003eBEWARE:\u003c/b\u003e You need to know the MCP mappings to directly call methods on this instance!\u003c/p\u003e"
+      }
+    ],
+    "isEmpty": [
+      {
+        "return": "boolean",
+        "docs": "Whether this item is empty."
+      }
+    ],
+    "getItem": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.items.IScriptItem",
+        "docs": "Get item stack\u0027s item."
+      }
+    ],
+    "copy": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.items.IScriptItemStack",
+        "docs": "Get a copy of item stack."
+      }
+    ],
+    "getMaxCount": [
+      {
+        "return": "int",
+        "docs": "Get item stack\u0027s maximum size."
+      }
+    ],
+    "getCount": [
+      {
+        "return": "int",
+        "docs": "Get item stack\u0027s count."
+      }
+    ],
+    "setCount": [
+      {
+        "parameters": [
+          {
+            "name": "count",
+            "type": "int"
+          }
+        ],
+        "docs": "Set item stack\u0027s count."
+      }
+    ],
+    "getMeta": [
+      {
+        "return": "int",
+        "docs": "Get item stack\u0027s meta."
+      }
+    ],
+    "setMeta": [
+      {
+        "parameters": [
+          {
+            "name": "meta",
+            "type": "int"
+          }
+        ],
+        "docs": "Set item stack\u0027s meta."
+      }
+    ],
+    "hasData": [
+      {
+        "return": "boolean",
+        "docs": "Check whether an item stack has an NBT compound tag."
+      }
+    ],
+    "getData": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.nbt.INBTCompound",
+        "docs": "Get item stack\u0027s NBT compound tag."
+      }
+    ],
+    "setData": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "mchorse.mappet.api.scripts.user.nbt.INBTCompound"
+          }
+        ],
+        "docs": "Replace item stack\u0027s NBT compound tag."
+      }
+    ],
+    "serialize": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.nbt.INBTCompound",
+        "docs": "Serialize item stack to an NBT compound."
+      }
+    ],
+    "getDisplayName": [
+      {
+        "return": "java.lang.String",
+        "docs": "Get display name of the item stack."
+      }
+    ],
+    "setDisplayName": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Set display name of the item stack."
+      }
+    ],
+    "getLore": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ],
+        "return": "java.lang.String",
+        "docs": "Get lore of the item stack."
+      }
+    ],
+    "getLoreList": [
+      {
+        "return": "java.util.List",
+        "docs": "Get all lore lines of the item stack as a list."
+      }
+    ],
+    "setLore": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          },
+          {
+            "name": "lore",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Set lore of the item stack."
+      }
+    ],
+    "addLore": [
+      {
+        "parameters": [
+          {
+            "name": "lore",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Add a lore line to the item stack."
+      }
+    ],
+    "clearAllLores": [
+      {
+        "docs": "Remove all lore lines from the item stack."
+      }
+    ],
+    "clearLore": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ],
+        "docs": "Remove a lore line from the item stack."
+      }
+    ],
+    "clearAllEnchantments": [
+      {
+        "docs": "Clear all enchantments from the item stack."
+      }
+    ],
+    "getCanDestroyBlocks": [
+      {
+        "return": "java.util.List",
+        "docs": "Get a list of all blocks the item stack can destroy."
+      }
+    ],
+    "addCanDestroyBlock": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Add a block that the item stack can destroy."
+      }
+    ],
+    "clearAllCanDestroyBlocks": [
+      {
+        "docs": "Clear all blocks that the item stack can destroy."
+      }
+    ],
+    "clearCanDestroyBlock": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Clear a block that the item stack can destroy."
+      }
+    ],
+    "getCanPlaceOnBlocks": [
+      {
+        "return": "java.util.List",
+        "docs": "Get a list of all blocks the item stack can place on."
+      }
+    ],
+    "addCanPlaceOnBlock": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Add a block that the item stack can place on."
+      }
+    ],
+    "clearAllCanPlaceOnBlocks": [
+      {
+        "docs": "Clear all blocks that the item stack can place on."
+      }
+    ],
+    "clearCanPlaceOnBlock": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "java.lang.String"
+          }
+        ],
+        "docs": "Clear a block that the item stack can place on."
+      }
+    ],
+    "getRepairCost": [
+      {
+        "return": "int",
+        "docs": "Get repair cost of the item stack."
+      }
+    ],
+    "setRepairCost": [
+      {
+        "parameters": [
+          {
+            "name": "cost",
+            "type": "int"
+          }
+        ],
+        "docs": "Set repair cost of the item stack."
+      }
+    ],
+    "isUnbreakable": [
+      {
+        "return": "boolean",
+        "docs": "Check if an item stack is unbreakable."
+      }
+    ],
+    "setUnbreakable": [
+      {
+        "parameters": [
+          {
+            "name": "unbreakable",
+            "type": "boolean"
+          }
+        ],
+        "docs": "Set whether an item stack is unbreakable or not."
+      }
+    ],
+    "add": [
+      {
+        "parameters": [
+          {
+            "name": "amount",
+            "type": "int"
+          }
+        ],
+        "docs": "Add/remove more items to the stack."
+      }
+    ],
+    "equals": [
+      {
+        "parameters": [
+          {
+            "name": "other",
+            "type": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Check if this item stack is equal to another item stack."
+      }
+    ]
+  }
+}

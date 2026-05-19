@@ -36,7 +36,7 @@ public abstract class CommandDataBase extends MappetCommandBase
     {
         if (args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, Mappet.data.getKeys());
+            return getListOfStringsMatchingLastWord(args, Mappet.data.getIDs());
         }
 
         return super.getTabCompletions(server, sender, args, targetPos);

@@ -47,7 +47,7 @@ public abstract class CommandFactionBase extends MappetCommandBase
         {
             try
             {
-                return getListOfStringsMatchingLastWord(args, Mappet.factions.getKeys());
+                return getListOfStringsMatchingLastWord(args, Mappet.factions.getIDs());
             }
             catch (Exception e)
             {

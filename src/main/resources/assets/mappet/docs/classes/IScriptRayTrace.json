@@ -1,0 +1,47 @@
+{
+  "docs": "This interface represents a ray tracing result.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var result \u003d c.getSubject().rayTrace(32);\n\n        if (result.isBlock())\n        {\n            // Ray hit a block, so we\u0027ll change the block to diamond block\n            var pos \u003d result.getBlock();\n\n            c.getWorld().setBlock(mappet.createBlockState(\"minecraft:diamond_block\", 0), pos.x, pos.y, pos.z);\n        }\n        else if (result.isEntity())\n        {\n            // Ray hit an entity, so we\u0027ll throw it in the air\n            result.getEntity().setMotion(0, 1, 0);\n        }\n        else // if (result.isMissed())\n        {\n            c.send(\"Good luck next time!\");\n        }\n    }\n }\u003c/pre\u003e",
+  "methods": {
+    "getMinecraftRayTraceResult": [
+      {
+        "return": "net.minecraft.util.math.RayTraceResult",
+        "docs": "Get Minecraft ray trace result. \u003cb\u003eBEWARE:\u003c/b\u003e you need to know the MCP\n mappings in order to directly call methods on this instance!"
+      }
+    ],
+    "isMissed": [
+      {
+        "return": "boolean",
+        "docs": "Check whether this ray trace result didn\u0027t capture anything."
+      }
+    ],
+    "isBlock": [
+      {
+        "return": "boolean",
+        "docs": "Check whether this ray trace result hit a block."
+      }
+    ],
+    "isEntity": [
+      {
+        "return": "boolean",
+        "docs": "Check whether this ray trace result hit an entity."
+      }
+    ],
+    "getEntity": [
+      {
+        "return": "mchorse.mappet.api.scripts.user.entities.IScriptEntity",
+        "docs": "Get entity that was captured by this ray trace result (it can be null)."
+      }
+    ],
+    "getBlock": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector",
+        "docs": "Get block position it hit."
+      }
+    ],
+    "getHitPosition": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector",
+        "docs": "Get precise position where it hit."
+      }
+    ]
+  }
+}

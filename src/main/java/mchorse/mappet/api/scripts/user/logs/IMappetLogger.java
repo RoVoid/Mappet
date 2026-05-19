@@ -22,11 +22,7 @@ public interface IMappetLogger {
     /**
      * Logging a message with <b>WARNING</b> level.
      */
-    void warning(String message);
-
-    default void warn(String message) {
-        warning(message);
-    }
+    void warn(String message);
 
     /**
      * Logging a message with <b>INFO</b> level.

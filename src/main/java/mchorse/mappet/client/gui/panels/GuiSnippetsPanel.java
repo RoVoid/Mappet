@@ -26,13 +26,9 @@ import java.util.function.Consumer;
 public class GuiSnippetsPanel extends GuiDashboardPanel<GuiMappetDashboard> {
 
     public GuiScrollElement snippet;
-
     public GuiSnippetSearchList searchList;
-
     private final Map<Integer, Snippet> snippetsCache = new HashMap<>();
-
     private static String locale = "";
-
     private int index = -1;
 
     public GuiSnippetsPanel(Minecraft mc, GuiMappetDashboard dashboard) {
@@ -46,7 +42,7 @@ public class GuiSnippetsPanel extends GuiDashboardPanel<GuiMappetDashboard> {
             jsonList = JsonFetcher.fetchJsonArray(JsonFetcher.SNIPPETS + "list.json");
             if (jsonList == null) throw new IOException();
         } catch (IOException e) {
-            Mappet.loggerClient.error("Error while trying to load snippets list from URL: {}", e.getMessage());
+            Mappet.logger.error("Error while trying to load snippets list from URL: {}", e.getMessage());
             GuiLabel error = Elements.label(IKey.lang("mappet.snippet.list.error"));
             error.flex().relative(this).anchor(0.5f, 0.5f);
             add(error);
@@ -58,7 +54,7 @@ public class GuiSnippetsPanel extends GuiDashboardPanel<GuiMappetDashboard> {
             jsonAuthors = JsonFetcher.fetchJsonObject(JsonFetcher.SNIPPETS + "authors.json");
             if (jsonAuthors == null) throw new IOException();
         } catch (IOException e) {
-            Mappet.loggerClient.error("Error while trying to load snippets authors from URL: {}", e.getMessage());
+            Mappet.logger.error("Error while trying to load snippets authors from URL: {}", e.getMessage());
             GuiLabel error = Elements.label(IKey.lang("mappet.snippet.list.error"));
             error.flex().relative(this).anchor(0.5f, 0.5f);
             add(error);
@@ -100,7 +96,7 @@ public class GuiSnippetsPanel extends GuiDashboardPanel<GuiMappetDashboard> {
 
         Snippet sn = snippetsCache.get(index);
         if (sn == null) {
-            Mappet.loggerClient.warn("Snippet at index {} not found in cache", index);
+            Mappet.logger.warn("Snippet at index {} not found in cache", index);
             return;
         }
 
@@ -110,7 +106,7 @@ public class GuiSnippetsPanel extends GuiDashboardPanel<GuiMappetDashboard> {
                 if (json == null) throw new IOException("Received null JSON for snippet " + index);
                 sn.setContent(json);
             } catch (IOException e) {
-                Mappet.loggerClient.error("Error loading snippet {} from URL: ", index, e);
+                Mappet.logger.error("Error loading snippet {} from URL: ", index, e);
                 return;
             }
         }
@@ -259,7 +255,7 @@ public class GuiSnippetsPanel extends GuiDashboardPanel<GuiMappetDashboard> {
                     update();
                 }
             } catch (Exception e) {
-                Mappet.loggerClient.error("Filter error: ", e);
+                Mappet.logger.error("Filter error: ", e);
             }
         }
 

@@ -1,0 +1,36 @@
+{
+  "docs": "This interface represents an item",
+  "methods": {
+    "getMinecraftItem": [
+      {
+        "return": "net.minecraft.item.Item",
+        "deprecated": true,
+        "docs": "Use {@link #asMinecraft()} instead\n\n @deprecated"
+      }
+    ],
+    "asMinecraft": [
+      {
+        "return": "net.minecraft.item.Item",
+        "docs": "Get Minecraft item instance\n \u003cp\u003e\u003cb\u003eBEWARE:\u003c/b\u003e You need to know the MCP mappings to directly call methods on this instance!\u003c/p\u003e"
+      }
+    ],
+    "getId": [
+      {
+        "return": "java.lang.String",
+        "docs": "Get item\u0027s ID like \"minecraft:stick\" or \"minecraft:diamond_hoe\""
+      }
+    ],
+    "isSame": [
+      {
+        "parameters": [
+          {
+            "name": "item",
+            "type": "mchorse.mappet.api.scripts.user.items.IScriptItem"
+          }
+        ],
+        "return": "boolean",
+        "docs": "Check whether given item is same as this one"
+      }
+    ]
+  }
+}
