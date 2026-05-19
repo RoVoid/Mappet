@@ -1,6 +1,7 @@
 package mchorse.mappet;
 
 import mchorse.mappet.api.ServerSettings;
+import mchorse.mappet.api.crafting.CraftingManager;
 import mchorse.mappet.api.data.DataManager;
 import mchorse.mappet.api.dialogues.DialogueManager;
 import mchorse.mappet.api.events.EventManager;
@@ -107,6 +108,8 @@ public final class Mappet {
     public static UIManager ui;
     public static TranslationManager translations;
 
+    public static CraftingManager crafting;
+
     public Mappet() {
         MinecraftForge.EVENT_BUS.register(new ModEventHandler());
     }
@@ -178,6 +181,9 @@ public final class Mappet {
         ui = new UIManager(new File(mappetWorldFolder, "ui"));
         translations = new TranslationManager(new File(mappetWorldFolder, "translations"));
 
+        crafting = new CraftingManager(new File(mappetWorldFolder, "crafting"));
+
+
         /* Initiate */
         if (!settings.serverLoad.isEmpty()) settings.serverLoad.trigger(new DataContext(event.getServer()));
 
@@ -209,6 +215,8 @@ public final class Mappet {
             huds = null;
             ui = null;
             translations = null;
+
+            crafting = null;
         }
 
         CommonProxy.eventHandler.reset();

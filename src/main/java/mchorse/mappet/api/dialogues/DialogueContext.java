@@ -14,6 +14,10 @@ public class DialogueContext extends EventContext {
     public QuestChainNode questChain;
     public QuestDialogueNode quest;
 
+    public CraftingNode crafting;
+
+
+
     public DialogueContext(DataContext data) {
         super(data);
     }
@@ -24,22 +28,38 @@ public class DialogueContext extends EventContext {
         this.replyNodes.clear();
         this.questChain = null;
         this.quest = null;
+
+        crafting = null;
     }
 
-    public void addReply(ReplyNode node) {
+    public void addReply(ReplyNode node)
+    {
         this.replyNodes.add(node);
+        this.crafting = null;
         this.questChain = null;
         this.quest = null;
     }
 
-    public void setQuestChain(QuestChainNode node) {
+    public void setCrafting(CraftingNode node)
+    {
         this.replyNodes.clear();
+        this.crafting = node;
+        this.questChain = null;
+        this.quest = null;
+    }
+
+    public void setQuestChain(QuestChainNode node)
+    {
+        this.replyNodes.clear();
+        this.crafting = null;
         this.questChain = node;
         this.quest = null;
     }
 
-    public void setQuest(QuestDialogueNode node) {
+    public void setQuest(QuestDialogueNode node)
+    {
         this.replyNodes.clear();
+        this.crafting = null;
         this.questChain = null;
         this.quest = node;
     }

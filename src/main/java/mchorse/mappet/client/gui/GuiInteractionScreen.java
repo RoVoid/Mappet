@@ -1,8 +1,11 @@
 package mchorse.mappet.client.gui;
 
+import mchorse.mappet.api.crafting.CraftingTable;
 import mchorse.mappet.api.dialogues.DialogueFragment;
 import mchorse.mappet.api.quests.chains.QuestInfo;
 import mchorse.mappet.api.quests.chains.QuestStatus;
+import mchorse.mappet.client.gui.crafting.GuiCrafting;
+import mchorse.mappet.client.gui.crafting.ICraftingScreen;
 import mchorse.mappet.client.gui.quests.GuiQuestCard;
 import mchorse.mappet.client.gui.quests.GuiQuestInfoListElement;
 import mchorse.mappet.client.gui.utils.GuiMorphRenderer;
@@ -28,7 +31,7 @@ import net.minecraft.client.resources.I18n;
 
 import java.util.List;
 
-public class GuiInteractionScreen extends GuiBase {
+public class GuiInteractionScreen extends GuiBase implements ICraftingScreen {
     public GuiElement area;
 
     public GuiMorphRenderer morph;
@@ -48,6 +51,15 @@ public class GuiInteractionScreen extends GuiBase {
     public GuiButtonElement actionQuest;
 
     private List<QuestInfo> questInfos;
+
+
+    /* Crafting */
+    public GuiCrafting crafting;
+
+    private CraftingTable table;
+
+
+
 
     public GuiInteractionScreen(PacketDialogueFragment fragment) {
         super();
@@ -92,13 +104,24 @@ public class GuiInteractionScreen extends GuiBase {
 
         this.quest.add(this.actionQuest, this.questArea, this.quests);
 
+
+        /* Crafting */
+        this.crafting = new GuiCrafting(mc);
+        this.crafting.flex().relative(this.area).y(0.45F).w(1F).hTo(this.area.area, 1F);
+        this.crafting.setVisible(false);
+
+
+
+
         GuiDrawable drawable = new GuiDrawable((context) ->
         {
             Gui.drawRect(0, 0, this.area.area.x(0.65F), this.area.area.ey(), 0xaa000000);
             GuiDraw.drawHorizontalGradientRect(this.area.area.x(0.65F), 0, this.area.area.x(1.125F), this.area.area.ey(), 0xaa000000, 0);
         });
 
-        this.area.add(this.quest, this.replies, this.reaction);
+//        this.area.add(this.quest, this.replies, this.reaction);
+        this.area.add(this.quest, this.crafting, this.replies, this.reaction);
+
         this.root.add(this.morph, drawable, this.area);
         this.reaction.add(this.reactionText);
 
@@ -126,12 +149,21 @@ public class GuiInteractionScreen extends GuiBase {
 
             this.back.flex().reset().relative(this.quest).x(10).y(1F, -10).wh(80, 20).anchorY(1F);
             this.quest.add(this.back);
-        } else {
+        } else if (this.table != null)
+        {
+            this.reaction.flex().hTo(this.crafting.area);
+
+            this.back.flex().reset().relative(this.crafting).x(10).y(1F, -10).wh(80, 20).anchorY(1F);
+            this.crafting.add(this.back);
+        }else {
             this.reaction.flex().hTo(this.replies.area);
         }
 
         this.quest.setVisible(this.questInfos != null);
         this.replies.setVisible(this.questInfos == null);
+
+        this.crafting.setVisible(this.table != null);
+
     }
 
     /* Dialogue */
@@ -143,6 +175,10 @@ public class GuiInteractionScreen extends GuiBase {
 
         this.fragment = fragment;
         this.questInfos = null;
+
+
+        this.table = null;
+
 
         this.reactionText.text(fragment.reaction.getProcessedText());
         this.reactionText.color(fragment.reaction.color, true);
@@ -177,7 +213,30 @@ public class GuiInteractionScreen extends GuiBase {
         if (fragment.hasQuests) {
             this.setQuests(fragment.quests);
         }
+        else if (fragment.table != null)
+        {
+            this.setCraftingTable(fragment.table);
+        }
     }
+
+
+    /* Crafting */
+
+    public void setCraftingTable(CraftingTable table)
+    {
+        this.table = table;
+
+        this.crafting.set(table);
+        this.updateVisibility();
+        this.root.resize();
+    }
+
+    @Override
+    public void refresh()
+    {
+        this.crafting.refresh();
+    }
+
 
     /* Quests */
 

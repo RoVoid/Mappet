@@ -1,6 +1,7 @@
 package mchorse.mappet.commands;
 
 import mchorse.mappet.api.utils.DataContext;
+import mchorse.mappet.commands.crafting.CommandCrafting;
 import mchorse.mappet.commands.data.CommandData;
 import mchorse.mappet.commands.dialogues.CommandDialogue;
 import mchorse.mappet.commands.events.CommandEvent;
@@ -53,6 +54,9 @@ public class CommandMappet extends MappetSubCommandBase {
         this.add(new CommandScript());
         this.add(new CommandState());
         this.add(new CommandCustomPlaySound());
+
+
+        this.add(new CommandCrafting());
     }
 
     @Override

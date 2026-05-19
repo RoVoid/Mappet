@@ -39,6 +39,11 @@ public class GuiMappetDashboard extends GuiAbstractDashboard {
 
     public GuiCreativeMorphsMenu morphs;
 
+
+
+    public GuiCraftingTablePanel crafting;
+
+
     public static GuiMappetDashboard get(Minecraft mc) {
         if (dashboard == null) dashboard = new GuiMappetDashboard(mc);
         return dashboard;
@@ -92,6 +97,9 @@ public class GuiMappetDashboard extends GuiAbstractDashboard {
         logs = new GuiLogPanel(mc, this);
         snippets = new GuiSnippetsPanel(mc, this);
 
+        crafting = new GuiCraftingTablePanel(mc, this);
+
+
         panels.registerPanel(settings, IKey.lang("mappet.gui.panels.settings"), Icons.GEAR);
         panels.registerPanel(quest, IKey.lang(quest.getTitle()), Icons.EXCLAMATION);
         panels.registerPanel(event, IKey.lang(event.getTitle()), Icons.FILE);
@@ -105,9 +113,12 @@ public class GuiMappetDashboard extends GuiAbstractDashboard {
         panels.registerPanel(hud, IKey.lang(hud.getTitle()), Icons.POSE);
         panels.registerPanel(ui, IKey.lang(ui.getTitle()), Icons.PROCESSOR);
         panels.registerPanel(translation, IKey.lang(translation.getTitle()), MappetIcons.LETTER_A);
-        panels.registerPanel(translation, IKey.lang(translation.getTitle()), MappetIcons.LETTER_A);
         panels.registerPanel(logs, IKey.lang("mappet.gui.panels.logs"), MappetIcons.CONSOLE);
         panels.registerPanel(snippets, IKey.lang("mappet.gui.panels.snippets"), MappetIcons.GLASSES);
+
+
+        panels.registerPanel(crafting, IKey.lang("mappet.gui.panels.crafting"), Icons.WRENCH);
+
         
         panels.setPanel(settings);
     }

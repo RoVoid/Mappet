@@ -1,6 +1,7 @@
 package mchorse.mappet.capabilities.character;
 
 import mchorse.mappet.Mappet;
+import mchorse.mappet.api.crafting.CraftingTable;
 import mchorse.mappet.api.dialogues.Dialogue;
 import mchorse.mappet.api.dialogues.DialogueContext;
 import mchorse.mappet.api.huds.HUDMorph;
@@ -53,6 +54,19 @@ public class Character implements ICharacter {
     private Map<String, List<HUDScene>> displayedHUDs = new HashMap<>();
 
     private UUID cameraUuid;
+
+
+    private CraftingTable table;
+    @Override
+    public void setCraftingTable(CraftingTable table) {
+        this.table = table;
+    }
+    @Override
+    public CraftingTable getCraftingTable() {
+        return this.table;
+    }
+
+
 
     @Override
     public States getStates() {
@@ -121,7 +135,7 @@ public class Character implements ICharacter {
         tag.setTag("States", states.serializeNBT());
         tag.setString("LastClear", lastClear.toString());
         tag.setTag("DisplayedHUDs", serializeDisplayedHUDs());
-        if(cameraUuid != null) tag.setUniqueId("Camera", cameraUuid);
+        if (cameraUuid != null) tag.setUniqueId("Camera", cameraUuid);
 
         return tag;
     }

@@ -1,5 +1,6 @@
 package mchorse.mappet.api.dialogues;
 
+import mchorse.mappet.api.crafting.CraftingTable;
 import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.MappetConfig;
@@ -87,6 +88,22 @@ public class DialogueManager extends BaseManager<Dialogue> {
         }
         else if (context.questChain != null) {
             packet.addQuests(Mappet.chains.evaluate(context.questChain.chain, player, context.data.process(context.questChain.subject)));
+        }
+        else if (context.crafting != null)
+        {
+            CraftingTable table = Mappet.crafting.load(context.crafting.table);
+
+            if (table != null)
+            {
+                table.filter(player);
+
+                character.setCraftingTable(table);
+                packet.addCraftingTable(table);
+            }
+        }
+        else
+        {
+            character.setCraftingTable(null);
         }
 
         if (context.reactionNode != null) {

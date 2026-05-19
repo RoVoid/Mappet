@@ -1,5 +1,6 @@
 package mchorse.mappet.capabilities.character;
 
+import mchorse.mappet.api.crafting.CraftingTable;
 import mchorse.mappet.api.dialogues.Dialogue;
 import mchorse.mappet.api.dialogues.DialogueContext;
 import mchorse.mappet.api.huds.HUDScene;
@@ -66,4 +67,10 @@ public interface ICharacter extends INBTSerializable<NBTTagCompound> {
     void closeAllHUDs(List<String> ignores);
 
     Map<String, List<HUDScene>> getDisplayedHUDs();
+
+
+
+    /* Crafting table */
+    void setCraftingTable(CraftingTable table);
+    CraftingTable getCraftingTable();
 }

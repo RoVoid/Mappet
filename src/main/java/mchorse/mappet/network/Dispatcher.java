@@ -10,6 +10,8 @@ import mchorse.mappet.network.client.content.ClientHandlerContentData;
 import mchorse.mappet.network.client.content.ClientHandlerContentNames;
 import mchorse.mappet.network.client.content.ClientHandlerServerSettings;
 import mchorse.mappet.network.client.content.ClientHandlerStates;
+import mchorse.mappet.network.client.crafting.ClientHandlerCraft;
+import mchorse.mappet.network.client.crafting.ClientHandlerCraftingTable;
 import mchorse.mappet.network.client.dialogue.ClientHandlerDialogueFragment;
 import mchorse.mappet.network.client.huds.ClientHandlerHUDMorph;
 import mchorse.mappet.network.client.huds.ClientHandlerHUDScene;
@@ -31,6 +33,8 @@ import mchorse.mappet.network.packets.blocks.PacketEditEmitter;
 import mchorse.mappet.network.packets.blocks.PacketEditRegion;
 import mchorse.mappet.network.packets.blocks.PacketEditTrigger;
 import mchorse.mappet.network.packets.content.*;
+import mchorse.mappet.network.packets.crafting.PacketCraft;
+import mchorse.mappet.network.packets.crafting.PacketCraftingTable;
 import mchorse.mappet.network.packets.dialogue.PacketDialogueFragment;
 import mchorse.mappet.network.packets.dialogue.PacketFinishDialogue;
 import mchorse.mappet.network.packets.dialogue.PacketPickReply;
@@ -58,6 +62,8 @@ import mchorse.mappet.network.server.blocks.ServerHandlerEditEmitter;
 import mchorse.mappet.network.server.blocks.ServerHandlerEditRegion;
 import mchorse.mappet.network.server.blocks.ServerHandlerEditTrigger;
 import mchorse.mappet.network.server.content.*;
+import mchorse.mappet.network.server.crafting.ServerHandlerCraft;
+import mchorse.mappet.network.server.crafting.ServerHandlerCraftingTable;
 import mchorse.mappet.network.server.dialogue.ServerHandlerFinishDialogue;
 import mchorse.mappet.network.server.dialogue.ServerHandlerPickReply;
 import mchorse.mappet.network.server.factions.ServerHandlerRequestFactions;
@@ -218,5 +224,9 @@ public class Dispatcher {
         push(PacketPack.class, ClientHandlerPack.class, Side.CLIENT);
         push(PacketBlackAndWhiteShader.class, ClientHandlerBlackAndWhiteShader.class, Side.CLIENT);
         push(PacketPlayerPerspective.class, ClientHandlerPlayerPerspective.class, Side.CLIENT);
+
+
+        push(PacketCraftingTable.class, ClientHandlerCraftingTable.class, ServerHandlerCraftingTable.class);
+        push(PacketCraft.class, ClientHandlerCraft.class, ServerHandlerCraft.class);
     }
 }

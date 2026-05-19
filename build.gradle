@@ -103,7 +103,7 @@ tasks.named('compileJava', JavaCompile).configure {
 
 tasks.register('moveToExportFolder', Copy) {
     dependsOn 'reobfJar'
-    from layout.buildDirectory.file("libs/Mappet-${project.version}.jar")
+    from layout.buildDirectory.file("libs/Mappet-${project.version}-crafting.jar")
     into project.file("exports")
 }
 
@@ -114,7 +114,7 @@ tasks.named('shadowJar').configure {
         include(dependency("org.javassist:javassist:3.28.0-GA"))
     }
 
-    archiveClassifier.set("")
+    archiveClassifier.set("crafting")
 
     def dependenciesToRelocate = ["org.reflections", "org.slf4j", "javassist"]
     for (dependency in dependenciesToRelocate) {

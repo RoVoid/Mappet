@@ -2,6 +2,7 @@ package mchorse.mappet.events.handlers;
 
 import mchorse.mappet.Mappet;
 import mchorse.mappet.MappetConfig;
+import mchorse.mappet.api.crafting.CraftingManager;
 import mchorse.mappet.api.dialogues.DialogueManager;
 import mchorse.mappet.api.events.EventManager;
 import mchorse.mappet.api.factions.FactionManager;
@@ -50,6 +51,9 @@ public class ModEventHandler {
             Mappet.chains = new QuestChainManager(null);
             Mappet.scripts = new ScriptManager(null);
             Mappet.huds = new HUDManager(null);
+
+
+            Mappet.crafting = new CraftingManager(null);
         }
 
         if (MappetConfig.loadCustomSoundsOnLogin.get()) {
@@ -79,6 +83,8 @@ public class ModEventHandler {
         Mappet.chains = null;
         Mappet.scripts = null;
         Mappet.huds = null;
+
+        Mappet.crafting = null;
 
         KeyboardHandler.hotkeys.clear();
         RenderingHandler.reset();

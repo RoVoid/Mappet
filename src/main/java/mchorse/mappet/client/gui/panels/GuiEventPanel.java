@@ -44,6 +44,9 @@ public class GuiEventPanel extends GuiMappetRunPanel<NodeSystem<EventBaseNode>> 
         PANELS.put(ReplyNode.class, GuiDialogueNodePanel.class);
         PANELS.put(QuestChainNode.class, GuiQuestChainNodePanel.class);
         PANELS.put(QuestDialogueNode.class, GuiQuestDialogueNodePanel.class);
+
+
+        PANELS.put(CraftingNode.class, GuiCraftingNodePanel.class);
     }
 
     public GuiEventNodeGraph graph;

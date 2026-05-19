@@ -1,6 +1,7 @@
 package mchorse.mappet.api.utils.content;
 
 import mchorse.mappet.Mappet;
+import mchorse.mappet.api.crafting.CraftingTable;
 import mchorse.mappet.api.dialogues.Dialogue;
 import mchorse.mappet.api.events.nodes.EventBaseNode;
 import mchorse.mappet.api.factions.Faction;
@@ -11,9 +12,11 @@ import mchorse.mappet.api.quests.chains.QuestChain;
 import mchorse.mappet.api.scripts.Script;
 import mchorse.mappet.api.translations.Translation;
 import mchorse.mappet.api.ui.UI;
+import mchorse.mappet.api.utils.AbstractData;
 import mchorse.mappet.api.utils.manager.IManager;
 import mchorse.mappet.api.utils.nodes.NodeSystem;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
+import mchorse.mappet.client.gui.panels.GuiCraftingTablePanel;
 import mchorse.mappet.client.gui.panels.GuiMappetDashboardPanel;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraftforge.fml.relauncher.Side;
@@ -187,6 +190,32 @@ public class ContentTypes // Registry
         public IKey label() {return IKey.lang("mappet.gui.overlays.translation");}
     };
 
+    public static final IContentType<CraftingTable> CRAFT = new IContentType<CraftingTable>() {
+
+        @Override
+        public IManager<CraftingTable> manager() {
+            return Mappet.crafting;
+        }
+        @Override
+        public String name() {
+            return "CRAFTING_TABLE";
+        }
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public GuiMappetDashboardPanel<CraftingTable> panel(GuiMappetDashboard dashboard) {
+            return dashboard.crafting;
+        }
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public IKey label() {
+            return IKey.lang("mappet.gui.overlays.crafting");
+        }
+
+
+    };
+
 
     static {
         register(CHAIN);
@@ -199,6 +228,9 @@ public class ContentTypes // Registry
         register(SCRIPT);
         register(UI);
         register(TRANSLATION);
+
+
+        register(CRAFT);
     }
 
     public static void register(IContentTypeBase type) {

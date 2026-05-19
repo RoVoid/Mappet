@@ -1,6 +1,8 @@
 package mchorse.mappet.network.packets.dialogue;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.mappet.Mappet;
+import mchorse.mappet.api.crafting.CraftingTable;
 import mchorse.mappet.api.dialogues.DialogueFragment;
 import mchorse.mappet.api.quests.chains.QuestContext;
 import mchorse.mappet.api.quests.chains.QuestInfo;
@@ -23,6 +25,9 @@ public class PacketDialogueFragment implements IMessage {
     public boolean singleQuest;
     public List<QuestInfo> quests = new ArrayList<QuestInfo>();
 
+    public CraftingTable table;
+
+
     public PacketDialogueFragment() {
     }
 
@@ -31,6 +36,14 @@ public class PacketDialogueFragment implements IMessage {
         this.reaction = reaction;
         this.replies = replies;
     }
+
+
+    public void addCraftingTable(CraftingTable table)
+    {
+        this.table = table;
+    }
+
+
 
     public void addMorph(AbstractMorph morph) {
         this.morph = morph;
@@ -61,6 +74,15 @@ public class PacketDialogueFragment implements IMessage {
             this.replies.add(fragment);
         }
 
+
+        if (buf.readBoolean())
+        {
+            String id = ByteBufUtils.readUTF8String(buf);
+
+            this.table = Mappet.crafting.create(id, NBTUtils.readInfiniteTag(buf));
+        }
+
+
         this.hasQuests = buf.readBoolean();
         this.singleQuest = buf.readBoolean();
 
@@ -85,6 +107,17 @@ public class PacketDialogueFragment implements IMessage {
             ByteBufUtils.writeTag(buf, fragment.serializeNBT());
         }
 
+
+        buf.writeBoolean(this.table != null);
+
+        if (this.table != null)
+        {
+            ByteBufUtils.writeUTF8String(buf, this.table.getId());
+            ByteBufUtils.writeTag(buf, this.table.serializeNBT());
+        }
+
+
+
         buf.writeBoolean(this.hasQuests);
         buf.writeBoolean(this.singleQuest);
         buf.writeInt(this.quests.size());
@@ -95,6 +128,6 @@ public class PacketDialogueFragment implements IMessage {
     }
 
     public boolean isEmpty() {
-        return this.replies.isEmpty() && !this.hasQuests;
+        return this.replies.isEmpty() && !this.hasQuests && this.table == null;
     }
 }

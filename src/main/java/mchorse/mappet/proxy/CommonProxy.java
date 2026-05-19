@@ -13,12 +13,12 @@ import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.CharacterStorage;
 import mchorse.mappet.capabilities.character.ICharacter;
 import mchorse.mappet.client.gui.utils.Beautifier;
+import mchorse.mappet.constants.Colors;
 import mchorse.mappet.events.*;
 import mchorse.mappet.events.handlers.EventHandler;
 import mchorse.mappet.events.handlers.ScriptedItemEventHandler;
 import mchorse.mappet.events.handlers.TriggerEventHandler;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.constants.Colors;
 import mchorse.mappet.utils.MappetNpcSelector;
 import mchorse.mappet.utils.MetamorphHandler;
 import mchorse.mappet.utils.ScriptUtils;
@@ -128,6 +128,7 @@ public abstract class CommonProxy {
                 .register("reaction", ReactionNode.class, Colors.STATE)
                 .register("quest_chain", QuestChainNode.class, Colors.QUEST)
                 .register("quest", QuestDialogueNode.class, Colors.QUEST)
+                .register("crafting", CraftingNode.class, Colors.CRAFTING)
                 .unregister("timer");
 
         dialogues = dialogueNodes;
@@ -140,8 +141,8 @@ public abstract class CommonProxy {
         Mappet.EVENT_BUS.post(new RegisterQuestChainNodeEvent(questChainNodes));
 
         /* Register condition blocks */
-        MapFactory<AbstractConditionBlock> conditions = new MapFactory<AbstractConditionBlock>().register("quest",
-                        QuestConditionBlock.class, Colors.QUEST)
+        MapFactory<AbstractConditionBlock> conditions = new MapFactory<AbstractConditionBlock>().register("quest", QuestConditionBlock.class,
+                        Colors.QUEST)
                 .register("state", StateConditionBlock.class, Colors.STATE)
                 .register("dialogue", DialogueConditionBlock.class, Colors.DIALOGUE)
                 .register("faction", FactionConditionBlock.class, Colors.FACTION)
@@ -150,7 +151,9 @@ public abstract class CommonProxy {
                 .register("entity", EntityConditionBlock.class, Colors.ENTITY)
                 .register("condition", ConditionConditionBlock.class, Colors.CONDITION)
                 .register("morph", MorphConditionBlock.class, Colors.MORPH)
-                .register("expression", ExpressionConditionBlock.class, Colors.CANCEL);
+                .register("expression", ExpressionConditionBlock.class, Colors.CANCEL)
+                .register("item", ItemConditionBlock.class, Colors.CRAFTING);
+
 
         conditionBlocks = conditions;
         Mappet.EVENT_BUS.post(new RegisterConditionBlockEvent(conditions));
