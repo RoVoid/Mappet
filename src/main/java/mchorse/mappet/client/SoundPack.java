@@ -1,5 +1,6 @@
 package mchorse.mappet.client;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -20,15 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-/**
- * Virtual OGG sounds pack so .ogg files could be used as sound events
- * in Minecraft's system
- */
 @SideOnly(Side.CLIENT)
 public class SoundPack implements IResourcePack {
     private final File folder;
@@ -40,23 +36,19 @@ public class SoundPack implements IResourcePack {
 
     @Override
     public InputStream getInputStream(ResourceLocation location) throws IOException {
-        String path = location.getResourcePath();
-
-        if (path.equals("sounds.json")) {
-            JsonObject object = generateJson(folder, new JsonObject());
+        if (location.getResourcePath().equals("sounds.json")) {
+            JsonObject object = generateJson(folder, "", new JsonObject());
             return IOUtils.toInputStream(object.toString(), StandardCharsets.UTF_8);
         }
 
-        File file = new File(folder, path.substring(7));
-        if (!file.exists()) throw new IOException("Sound not found: " + path);
+        File file = getFile(location.getResourcePath());
+
+        if (!file.exists()) throw new IOException("Sound not found: " + location.getResourcePath());
+
         return new FileInputStream(file);
     }
 
-    private JsonObject generateJson(File folder, JsonObject object) {
-        return generateJson(folder, object, "");
-    }
-
-    private JsonObject generateJson(File folder, JsonObject object, String parent) {
+    private JsonObject generateJson(File folder, String prefix, JsonObject object) {
         if (!folder.exists()) return object;
 
         File[] files = folder.listFiles();
@@ -68,14 +60,14 @@ public class SoundPack implements IResourcePack {
             if (name.endsWith(".ogg")) {
                 JsonObject sound = new JsonObject();
                 JsonArray elements = new JsonArray();
-                String id = parent + name.substring(0, name.length() - 4); // remove ".ogg"
+                String id = name.substring(0, name.lastIndexOf(".ogg"));
 
-                elements.add("mp.sounds:" + id);
                 sound.add("sounds", elements);
-                object.add(id, sound);
+                elements.add("mp.sounds:" + prefix + id);
+                object.add(prefix.replace("/", ".") + id, sound);
             }
             else if (file.isDirectory()) {
-                generateJson(file, object, parent + name + ".");
+                generateJson(file, prefix + name + "/", object);
             }
         }
 
@@ -86,7 +78,7 @@ public class SoundPack implements IResourcePack {
         List<String> soundEvents = new ArrayList<>();
         File soundsFolder = new File(CommonProxy.configFolder, "sounds");
         SoundPack soundPack = new SoundPack(soundsFolder);
-        JsonObject soundJson = soundPack.generateJson(soundsFolder, new JsonObject());
+        JsonObject soundJson = soundPack.generateJson(soundsFolder, "", new JsonObject());
 
         for (Entry<String, JsonElement> entry : soundJson.entrySet()) {
             soundEvents.add("mp.sounds:" + entry.getKey());
@@ -97,14 +89,17 @@ public class SoundPack implements IResourcePack {
 
     @Override
     public boolean resourceExists(ResourceLocation location) {
-        String path = location.getResourcePath();
-        if (path.equals("sounds.json")) return true;
-        return new File(folder, path.substring(7)).exists();
+        if (location.getResourcePath().equals("sounds.json")) return true;
+        return getFile(location.getResourcePath()).exists();
+    }
+
+    private File getFile(String path) {
+        return new File(folder, path.substring(7));
     }
 
     @Override
     public Set<String> getResourceDomains() {
-        return Collections.singleton("mp.sounds");
+        return ImmutableSet.of("mp.sounds");
     }
 
     @Override
