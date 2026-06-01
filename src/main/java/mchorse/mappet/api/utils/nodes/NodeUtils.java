@@ -18,7 +18,7 @@ public class NodeUtils
     {
         NBTTagCompound tag = node.serializeNBT();
 
-        tag.setString("Type", system.getFactory().getType(node));
+        tag.setString("Type", system.getFactory().type(node));
 
         return tag;
     }

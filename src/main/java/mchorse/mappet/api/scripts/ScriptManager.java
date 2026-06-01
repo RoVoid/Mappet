@@ -128,6 +128,8 @@ public class ScriptManager extends BaseManager<Script> {
         if (script == null) {
             script = load(id);
 
+            if(script == null) return null;
+
             if (script != null && script.unique) {
                 uniqueScripts.put(id, script);
             }

@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.code.ui;
 
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
+import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import mchorse.mappet.api.ui.utils.LayoutType;
@@ -25,9 +25,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * <p>Additionally, column mode supports scrolling when there are too many
  * components within its frame.</p>
  *
- * <p>This component can be created using {@link IMappetUIBuilder#layout()},
- * {@link IMappetUIBuilder#column(int)}, {@link IMappetUIBuilder#row(int)}, and
- * {@link IMappetUIBuilder#grid(int)} methods.</p>
+ * <p>This component can be created using {@link MappetUIBuilder#layout()},
+ * {@link MappetUIBuilder#column(int)}, {@link MappetUIBuilder#row(int)}, and
+ * {@link MappetUIBuilder#grid(int)} methods.</p>
  *
  * <pre>{@code
  *    function main(c)
@@ -70,7 +70,7 @@ public class UILayoutComponent extends UIParentComponent
     public Integer items;
 
     /**
-     * Enables scrolling. This option works only with {@link IMappetUIBuilder#column(int)}
+     * Enables scrolling. This option works only with {@link MappetUIBuilder#column(int)}
      * layout component.
      *
      * <pre>{@code
@@ -109,7 +109,7 @@ public class UILayoutComponent extends UIParentComponent
 
     /**
      * Set manually scroll size of the layout element. This works only with
-     * basic {@link IMappetUIBuilder#layout()} component.
+     * basic {@link MappetUIBuilder#layout()} component.
      *
      * <p>If {@link UILayoutComponent#horizontal()} was enabled earlier,
      * then this value will change the max scrollable to width, rather than
@@ -168,7 +168,7 @@ public class UILayoutComponent extends UIParentComponent
 
     /**
      * Per component width (in pixels) that should be sustained within
-     * {@link IMappetUIBuilder#grid(int)} layout type. This doesn't work with any other
+     * {@link MappetUIBuilder#grid(int)} layout type. This doesn't work with any other
      * component than grid.
      */
     public UILayoutComponent width(int width)
@@ -180,7 +180,7 @@ public class UILayoutComponent extends UIParentComponent
 
     /**
      * How many components per row that should be placed within
-     * {@link IMappetUIBuilder#grid(int)} layout type. This option doesn't work with
+     * {@link MappetUIBuilder#grid(int)} layout type. This option doesn't work with
      * any other component than grid.
      */
     public UILayoutComponent items(int items)

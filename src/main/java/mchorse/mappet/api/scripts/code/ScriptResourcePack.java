@@ -1,7 +1,6 @@
 package mchorse.mappet.api.scripts.code;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.api.scripts.user.IScriptResourcePack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -9,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public class ScriptResourcePack implements IScriptResourcePack {
+public class ScriptResourcePack {
     String name;
     byte[] pack;
 

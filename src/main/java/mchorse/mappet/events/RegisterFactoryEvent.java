@@ -1,6 +1,6 @@
 package mchorse.mappet.events;
 
-import mchorse.mappet.api.utils.factory.MapFactory;
+import mchorse.mappet.api.utils.MapFactory;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public abstract class RegisterFactoryEvent <T> extends Event

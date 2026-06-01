@@ -20,7 +20,7 @@ public class MorphTriggerBlock extends AbstractTriggerBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String stringify()
+    public String name()
     {
         if (this.morph == null)
         {

@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.code.ui;
 
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
+import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -24,7 +24,7 @@ import java.util.function.Consumer;
  * the number displayed in the field, if integer option is enabled, then an
  * integer will be written, or double if it's disabled.</p>
  *
- * <p>This component can be created using {@link IMappetUIBuilder#trackpad()} method.</p>
+ * <p>This component can be created using {@link MappetUIBuilder#trackpad()} method.</p>
  *
  * <pre>{@code
  *    function main(c)

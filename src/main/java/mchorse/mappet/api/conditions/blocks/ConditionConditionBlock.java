@@ -19,7 +19,7 @@ public class ConditionConditionBlock extends AbstractConditionBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String stringify()
+    public String name()
     {
         return I18n.format("mappet.gui.conditions.condition.string", this.condition.blocks.size());
     }

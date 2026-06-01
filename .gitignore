@@ -1,32 +1,33 @@
-# eclipse
-bin
-*.launch
-.settings
-.metadata
-.classpath
-.project
-
-# idea
-out
-*.ipr
-*.iws
-*.iml
-.idea
-
 # gradle
-build
 .gradle
-
+/build
 gradle/wrapper/gradle-wrapper.properties
 
-# other
+# idea
+.idea
+out
+*.iml
+*.ipr
+*.iws
+
+# eclipse
+.metadata
+.settings
+bin
+.classpath
+.project
+*.launch
 eclipse
-run
+
+# generated
+/classes
+/exports
+/run
+/user
+
+# misc
 .DS_Store
 *.blend1
-/classes/
 *docs.json
-
-exports/
-
 TODO.md
+*копия*

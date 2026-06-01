@@ -8,49 +8,36 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class DialogueConditionBlock extends TargetConditionBlock
-{
+public class DialogueConditionBlock extends TargetConditionBlock {
     public String marker = "";
 
     @Override
-    public boolean evaluateBlock(DataContext context)
-    {
-        if (this.target.mode != TargetMode.GLOBAL)
-        {
-            ICharacter character = this.target.getCharacter(context);
-
-            return character != null && character.getStates().hasReadDialogue(this.id, this.marker);
-        }
-
-        return false;
+    public boolean evaluateBlock(DataContext context) {
+        if (target.mode == TargetMode.GLOBAL) return false;
+        ICharacter character = target.getCharacter(context);
+        return character != null && character.getDialogueStates().wasRead(id, marker);
     }
 
     @Override
-    protected TargetMode getDefaultTarget()
-    {
+    protected TargetMode getDefaultTarget() {
         return TargetMode.SUBJECT;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String stringify()
-    {
-        return I18n.format("mappet.gui.conditions.dialogue.was_read", this.id);
+    public String name() {
+        return I18n.format("mappet.gui.conditions.dialogue.was_read", id);
     }
 
     @Override
-    public void serializeNBT(NBTTagCompound tag)
-    {
+    public void serializeNBT(NBTTagCompound tag) {
         super.serializeNBT(tag);
-
-        tag.setString("Marker", this.marker);
+        tag.setString("Marker", marker);
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
-    {
+    public void deserializeNBT(NBTTagCompound tag) {
         super.deserializeNBT(tag);
-
-        this.marker = tag.getString("Marker");
+        marker = tag.getString("Marker");
     }
 }

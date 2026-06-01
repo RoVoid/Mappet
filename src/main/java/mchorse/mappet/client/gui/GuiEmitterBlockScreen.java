@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui;
 
-import mchorse.mappet.client.gui.conditions.GuiCheckerElement;
+import mchorse.mappet.client.gui.conditions.GuiOpenConditionButtonElement;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.blocks.PacketEditEmitter;
 import mchorse.mclib.client.gui.framework.GuiBase;
@@ -16,46 +16,46 @@ import java.util.function.Consumer;
 
 public class GuiEmitterBlockScreen extends GuiBase
 {
-    public GuiCheckerElement checker;
+    public GuiOpenConditionButtonElement conditionButtonElement;
     public GuiTrackpadElement radius;
     public GuiTrackpadElement update;
     public GuiToggleElement disable;
 
-    private BlockPos pos;
+    private final BlockPos pos;
 
     public GuiEmitterBlockScreen(PacketEditEmitter message)
     {
         super();
 
-        this.pos = message.pos;
+        pos = message.pos;
 
         Minecraft mc = Minecraft.getMinecraft();
 
-        this.checker = new GuiCheckerElement(mc, message.createChecker());
+        conditionButtonElement = new GuiOpenConditionButtonElement(mc, message.createChecker());
 
-        this.radius = new GuiTrackpadElement(mc, (Consumer<Double>) null);
-        this.radius.limit(0).setValue(message.radius);
+        radius = new GuiTrackpadElement(mc, (Consumer<Double>) null);
+        radius.limit(0).setValue(message.radius);
 
-        this.update = new GuiTrackpadElement(mc, (Consumer<Double>) null);
-        this.update.limit(1).integer().setValue(message.update);
+        update = new GuiTrackpadElement(mc, (Consumer<Double>) null);
+        update.limit(1).integer().setValue(message.update);
 
-        this.disable = new GuiToggleElement(mc, IKey.lang("mappet.gui.emitter_block.disable"), null);
-        this.disable.toggled(message.disable);
-        this.disable.tooltip(IKey.lang("mappet.gui.emitter_block.disable_tootlip"));
+        disable = new GuiToggleElement(mc, IKey.lang("mappet.gui.emitter_block.disable"), null);
+        disable.toggled(message.resets);
+        disable.tooltip(IKey.lang("mappet.gui.emitter_block.disable_tootlip"));
 
         GuiElement frame = Elements.column(mc, 5,
                 Elements.label(IKey.lang("mappet.gui.emitter_block.condition")),
-                this.checker,
+                conditionButtonElement,
                 Elements.row(mc, 5,
-                        Elements.column(mc, 5, Elements.label(IKey.lang("mappet.gui.emitter_block.radius")), this.radius),
-                        Elements.column(mc, 5, Elements.label(IKey.lang("mappet.gui.emitter_block.update")), this.update)
+                        Elements.column(mc, 5, Elements.label(IKey.lang("mappet.gui.emitter_block.radius")), radius),
+                        Elements.column(mc, 5, Elements.label(IKey.lang("mappet.gui.emitter_block.update")), update)
                 ).marginTop(12),
-                this.disable
+                disable
         );
 
-        frame.flex().relative(this.viewport).xy(0.5F, 0.5F).w(0.5F).anchor(0.5F, 0.5F);
+        frame.flex().relative(viewport).xy(0.5F, 0.5F).w(0.5F).anchor(0.5F, 0.5F);
 
-        this.root.add(frame);
+        root.add(frame);
     }
 
     @Override
@@ -68,15 +68,13 @@ public class GuiEmitterBlockScreen extends GuiBase
     protected void closeScreen()
     {
         super.closeScreen();
-
-        Dispatcher.sendToServer(new PacketEditEmitter(this.pos, this.checker.get().toNBT(), (float) this.radius.value, (int) this.update.value, this.disable.isToggled()));
+        Dispatcher.sendToServer(new PacketEditEmitter(pos, conditionButtonElement.toNBT(), (float) radius.value, (int) update.value, disable.isToggled()));
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        this.drawDefaultBackground();
-
+        drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 }

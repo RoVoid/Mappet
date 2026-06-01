@@ -14,8 +14,11 @@ public class UIKeybind implements INBTSerializable<NBTTagCompound>
     {
         int modifier = shift ? 1 : 0;
 
-        modifier += (ctrl ? 1 : 0) << 1;
-        modifier += (alt ? 1 : 0) << 2;
+//        modifier += (ctrl ? 1 : 0) << 1;
+//        modifier += (alt ? 1 : 0) << 2;
+
+        modifier |= ctrl ? 2 : 0;
+        modifier |= alt ? 4 : 0;
 
         return modifier;
     }

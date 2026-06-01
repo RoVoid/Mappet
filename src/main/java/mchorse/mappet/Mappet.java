@@ -4,7 +4,6 @@ import mchorse.mappet.api.ServerSettings;
 import mchorse.mappet.api.data.DataManager;
 import mchorse.mappet.api.dialogues.DialogueManager;
 import mchorse.mappet.api.events.EventManager;
-import mchorse.mappet.api.expressions.ExpressionManager;
 import mchorse.mappet.api.factions.FactionManager;
 import mchorse.mappet.api.huds.HUDManager;
 import mchorse.mappet.api.npcs.NpcManager;
@@ -12,7 +11,7 @@ import mchorse.mappet.api.quests.QuestManager;
 import mchorse.mappet.api.quests.chains.QuestChainManager;
 import mchorse.mappet.api.schematics.SchematicManager;
 import mchorse.mappet.api.scripts.ScriptManager;
-import mchorse.mappet.api.states.States;
+import mchorse.mappet.api.states.StateManager;
 import mchorse.mappet.api.translations.TranslationManager;
 import mchorse.mappet.api.ui.UIManager;
 import mchorse.mappet.api.utils.DataContext;
@@ -62,12 +61,10 @@ public final class Mappet {
 
     /* Server side data */
     public static ServerSettings settings;
-    public static States states;
     public static QuestManager quests;
     public static SchematicManager schematics;
     public static EventManager events;
     public static DialogueManager dialogues;
-    public static ExpressionManager expressions;
     public static NpcManager npcs;
     public static FactionManager factions;
     public static DataManager data;
@@ -76,6 +73,8 @@ public final class Mappet {
     public static HUDManager huds;
     public static UIManager ui;
     public static TranslationManager translations;
+
+    public static StateManager states;
 
     public Mappet() {
         MinecraftForge.EVENT_BUS.register(new ModEventHandler());
@@ -120,14 +119,13 @@ public final class Mappet {
 
         settings = new ServerSettings(new File(mappetWorldFolder, "settings.json"));
         settings.load();
-        states = new States(new File(mappetWorldFolder, "states.json"));
+        states = new StateManager(new File(mappetWorldFolder, "states.json"));
         states.load();
 
         quests = new QuestManager(new File(mappetWorldFolder, "quests"));
         schematics = new SchematicManager(new File(mappetWorldFolder, "schematics"));
         events = new EventManager(new File(mappetWorldFolder, "events"));
         dialogues = new DialogueManager(new File(mappetWorldFolder, "dialogues"));
-        expressions = new ExpressionManager();
         npcs = new NpcManager(new File(mappetWorldFolder, "npcs"));
         factions = new FactionManager(new File(mappetWorldFolder, "factions"));
         data = new DataManager(new File(mappetWorldFolder, "data"));
@@ -159,7 +157,6 @@ public final class Mappet {
             quests = null;
             events = null;
             dialogues = null;
-            expressions = null;
             npcs = null;
             factions = null;
             data = null;

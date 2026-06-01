@@ -2,7 +2,7 @@ package mchorse.mappet.client.gui.hotkey;
 
 import mchorse.mappet.api.hotkeys.Hotkey;
 import mchorse.mappet.api.hotkeys.Hotkeys;
-import mchorse.mappet.client.gui.conditions.GuiCheckerElement;
+import mchorse.mappet.client.gui.conditions.GuiOpenConditionButtonElement;
 import mchorse.mappet.client.gui.triggers.GuiTriggerElement;
 import mchorse.mappet.client.gui.utils.AlphaNumericLengthComparator;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
@@ -37,7 +37,7 @@ public class GuiHotkeysOverlayPanel extends GuiOverlayPanel {
     public GuiKeybindElement key;
     public GuiButtonElement mode;
     public GuiTriggerElement trigger;
-    public GuiCheckerElement enabled;
+    public GuiOpenConditionButtonElement enabled;
 
     private final Hotkeys hotkeys;
     private Hotkey hotkey;
@@ -84,7 +84,7 @@ public class GuiHotkeysOverlayPanel extends GuiOverlayPanel {
         mode.tooltip(IKey.lang("mappet.gui.hotkeys.mode"));
 
         trigger = new GuiTriggerElement(mc);
-        enabled = new GuiCheckerElement(mc);
+        enabled = new GuiOpenConditionButtonElement(mc);
 
         list.flex().relative(content).w(120).h(1F);
         editor.flex().relative(content).x(120).w(1F, -120).h(1F).column(5).vertical().stretch().scroll().padding(10);
@@ -175,7 +175,7 @@ public class GuiHotkeysOverlayPanel extends GuiOverlayPanel {
         key.setKeybind(hotkey.defaultKeycode);
         mode.label = IKey.lang("mappet.gui.hotkeys.mode." + hotkey.mode.toString());
         trigger.set(hotkey.trigger);
-        enabled.set(hotkey.enabled);
+        enabled.setCondition(hotkey.enabled);
 
         id.unfocus(null);
         name.unfocus(null);

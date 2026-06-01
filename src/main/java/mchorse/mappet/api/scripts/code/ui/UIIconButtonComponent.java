@@ -1,14 +1,13 @@
 package mchorse.mappet.api.scripts.code.ui;
 
 import mchorse.mappet.MappetIcons;
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
+import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import mchorse.mappet.client.gui.utils.GuiExtendedIconElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.utils.Icon;
-import mchorse.mclib.client.gui.utils.IconRegistry;
 import mchorse.mclib.client.gui.utils.Icons;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * script. The value that gets written to UI context's data (if ID is present)
  * is how many times the icon button was pressed.</p>
  *
- * <p>This component can be created using {@link IMappetUIBuilder#icon(String)} method.</p>
+ * <p>This component can be created using {@link MappetUIBuilder#icon(String)} method.</p>
  *
  * <pre>{@code
  *    function main(c)
@@ -118,7 +117,7 @@ public class UIIconButtonComponent extends UIComponent {
      * <p>A basic example:</p>
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *    uiContext.get("icon").icon("gear");
      * }</pre>
      *

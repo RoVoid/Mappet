@@ -1,6 +1,6 @@
 package mchorse.mappet.api.quests.chains;
 
-import mchorse.mappet.api.conditions.Checker;
+import mchorse.mappet.api.conditions.Condition;
 import mchorse.mappet.api.utils.nodes.Node;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
@@ -14,7 +14,7 @@ public class QuestNode extends Node
 
     public boolean autoAccept;
     public boolean allowRetake;
-    public Checker condition = new Checker(true);
+    public Condition condition = new Condition(true);
 
     @Override
     @SideOnly(Side.CLIENT)

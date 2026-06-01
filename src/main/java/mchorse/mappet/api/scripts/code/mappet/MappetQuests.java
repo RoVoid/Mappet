@@ -3,13 +3,11 @@ package mchorse.mappet.api.scripts.code.mappet;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.quests.Quest;
 import mchorse.mappet.api.quests.Quests;
-import mchorse.mappet.api.scripts.user.mappet.IMappetQuests;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.Set;
 
-public class MappetQuests implements IMappetQuests
-{
+public class MappetQuests {
     public Quests quests;
     public EntityPlayer player;
 
@@ -19,13 +17,11 @@ public class MappetQuests implements IMappetQuests
         this.player = player;
     }
 
-    @Override
     public boolean has(String id)
     {
         return this.quests.has(id);
     }
 
-    @Override
     public boolean add(String id)
     {
         if (this.quests.has(id))
@@ -43,7 +39,6 @@ public class MappetQuests implements IMappetQuests
         return quest != null;
     }
 
-    @Override
     public boolean isComplete(String id)
     {
         Quest quest = this.quests.getByName(id);
@@ -51,19 +46,16 @@ public class MappetQuests implements IMappetQuests
         return quest != null && quest.isComplete(this.player);
     }
 
-    @Override
     public boolean complete(String id)
     {
         return this.quests.complete(id, this.player);
     }
 
-    @Override
     public boolean decline(String id)
     {
         return this.quests.decline(id, this.player);
     }
 
-    @Override
     public Set<String> getIds()
     {
         return this.quests.quests.keySet();

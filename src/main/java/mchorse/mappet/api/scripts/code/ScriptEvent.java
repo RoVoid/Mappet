@@ -5,12 +5,11 @@ import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.ScriptExecutionFork;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.world.ScriptWorld;
-import mchorse.mappet.api.scripts.user.IScriptEvent;
-import mchorse.mappet.api.scripts.user.IScriptServer;
-import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
-import mchorse.mappet.api.scripts.user.entities.IScriptNpc;
-import mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer;
-import mchorse.mappet.api.scripts.user.world.IScriptWorld;
+import mchorse.mappet.api.scripts.code.ScriptServer;
+import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
+import mchorse.mappet.api.scripts.code.entities.ScriptNpc;
+import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
+import mchorse.mappet.api.scripts.code.world.ScriptWorld;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.proxy.CommonProxy;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,15 +19,15 @@ import javax.script.ScriptException;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class ScriptEvent implements IScriptEvent {
+public class ScriptEvent {
     private final DataContext context;
     private final String script;
     private final String function;
 
-    private IScriptEntity subject;
-    private IScriptEntity object;
-    private IScriptWorld world;
-    private IScriptServer server;
+    private ScriptEntity subject;
+    private ScriptEntity object;
+    private ScriptWorld world;
+    private ScriptServer server;
 
     public ScriptEvent(DataContext context, String script, String function) {
         this.context = context;
@@ -36,112 +35,95 @@ public class ScriptEvent implements IScriptEvent {
         this.function = function;
     }
 
-    @Override
     public String getScript() {
         return script == null ? "" : script;
     }
 
-    @Override
     public String getFunction() {
         return function == null ? "" : function;
     }
 
-    @Override
-    public IScriptEntity getSubject() {
+    public ScriptEntity getSubject() {
         if (subject == null && context.subject != null) subject = ScriptEntity.create(context.subject);
         return subject;
     }
 
-    @Override
-    public IScriptEntity getObject() {
+    public ScriptEntity getObject() {
         if (object == null && context.object != null) object = ScriptEntity.create(context.object);
         return object;
     }
 
-    @Override
-    public IScriptPlayer getPlayer() {
-        IScriptEntity subject = getSubject();
-        if (subject instanceof IScriptPlayer) return (IScriptPlayer) subject;
+    public ScriptPlayer getPlayer() {
+        ScriptEntity subject = getSubject();
+        if (subject instanceof ScriptPlayer) return (ScriptPlayer) subject;
 
-        IScriptEntity object = getObject();
-        if (object instanceof IScriptPlayer) return (IScriptPlayer) object;
-
-        return null;
-    }
-
-    public IScriptNpc getNPC() {
-        IScriptEntity subject = getSubject();
-        if (subject instanceof IScriptNpc) return (IScriptNpc) subject;
-
-        IScriptEntity object = getObject();
-        if (object instanceof IScriptNpc) return (IScriptNpc) object;
+        ScriptEntity object = getObject();
+        if (object instanceof ScriptPlayer) return (ScriptPlayer) object;
 
         return null;
     }
 
-    @Override
-    public IScriptWorld getWorld() {
+    public ScriptNpc getNPC() {
+        ScriptEntity subject = getSubject();
+        if (subject instanceof ScriptNpc) return (ScriptNpc) subject;
+
+        ScriptEntity object = getObject();
+        if (object instanceof ScriptNpc) return (ScriptNpc) object;
+
+        return null;
+    }
+
+    public ScriptWorld getWorld() {
         if (world == null && context.world != null) world = new ScriptWorld(context.world);
         return world;
     }
 
-    @Override
-    public IScriptServer getServer() {
+    public ScriptServer getServer() {
         if (server == null && context.server != null) server = new ScriptServer(context.server);
         return server;
     }
 
-    @Override
     public Map<String, Object> getValues() {
         return context.getValues();
     }
 
-    @Override
     public Object getValue(String key) {
         return context.getValue(key);
     }
 
-    @Override
     public void setValue(String key, Object value) {
         context.getValues().put(key, value);
     }
 
     /* Useful methods */
 
-    @Override
     public void cancel() {
         context.cancel();
     }
 
-    @Override
     public void scheduleScript(String script, String function, int delay) {
         CommonProxy.eventHandler.addExecutable(new ScriptExecutionFork(context.copy(), script, function, delay));
     }
 
-    @Override
     public void scheduleScript(int delay, ScriptObjectMirror function) {
         if (function == null || !function.isFunction())
             throw new IllegalStateException("Given object is null in script " + script + " (" + function + " function)!");
         CommonProxy.eventHandler.addExecutable(new ScriptExecutionFork(context.copy(), function, delay));
     }
 
-    @Override
-    public void scheduleScript(int delay, Consumer<IScriptEvent> consumer) {
+    public void scheduleScript(int delay, Consumer<ScriptEvent> consumer) {
         if (consumer == null) throw new IllegalStateException("Given object is null in script " + script + " (" + function + " function)!");
         CommonProxy.eventHandler.addExecutable(new ScriptExecutionFork(context.copy(), consumer, delay));
     }
 
-    @Override
     public int executeCommand(String command) {
         return context.execute(command);
     }
 
-    @Override
     public void executeScript(String scriptName) {
         executeScript(scriptName, "main");
     }
 
-    @Override
     public void executeScript(String scriptName, String function) {
         try {
             Mappet.scripts.execute(scriptName, function, context);
@@ -153,7 +135,6 @@ public class ScriptEvent implements IScriptEvent {
         }
     }
 
-    @Override
     public void executeScript(String scriptName, String function, Object... args) {
         try {
             Mappet.scripts.execute(scriptName, function, context, args);
@@ -165,7 +146,6 @@ public class ScriptEvent implements IScriptEvent {
         }
     }
 
-    @Override
     public void send(String... message) {
         TextComponentString text = new TextComponentString(message == null ? "null" : String.join(" ", message));
         for (EntityPlayer player : context.server.getPlayerList().getPlayers()) player.sendMessage(text);

@@ -1,5 +1,6 @@
 package mchorse.mappet.client.gui.states;
 
+import mchorse.mappet.api.states.ScriptStates;
 import mchorse.mappet.api.states.States;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class GuiStatesEditor extends GuiScrollElement {
     private States states;
-    private final States prestates = new States();
+    private final States prestates = new ScriptStates();
 
     public GuiStatesEditor(Minecraft mc) {
         super(mc);
@@ -27,14 +28,14 @@ public class GuiStatesEditor extends GuiScrollElement {
     public List<String> getChanges() {
         List<String> changes = new ArrayList<>();
         for (String key : prestates.keys()) {
-            if (!prestates.areValuesEqual(key, states.values().get(key))) changes.add(key);
+            if (!prestates.equals(key, states.values().get(key))) changes.add(key);
         }
         return changes;
     }
 
     public GuiStatesEditor set(States states) {
         this.states = states;
-        prestates.copy(states, true);
+        prestates.from(states, false);
 
         removeAll();
 

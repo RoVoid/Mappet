@@ -4,7 +4,7 @@ import mchorse.mappet.api.regions.Region;
 import mchorse.mappet.api.regions.shapes.AbstractShape;
 import mchorse.mappet.api.regions.shapes.BoxShape;
 import mchorse.mappet.api.utils.TargetMode;
-import mchorse.mappet.client.gui.conditions.GuiCheckerElement;
+import mchorse.mappet.client.gui.conditions.GuiOpenConditionButtonElement;
 import mchorse.mappet.client.gui.triggers.GuiTriggerElement;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -22,7 +22,7 @@ import net.minecraft.client.Minecraft;
 public class GuiRegionEditor extends GuiElement
 {
     public GuiToggleElement passable;
-    public GuiCheckerElement enabled;
+    public GuiOpenConditionButtonElement enabled;
     public GuiTrackpadElement delay;
     public GuiTrackpadElement update;
     public GuiToggleElement checkEntities;
@@ -47,7 +47,7 @@ public class GuiRegionEditor extends GuiElement
         super(mc);
 
         this.passable = new GuiToggleElement(mc, IKey.lang("mappet.gui.region.passable"), (b) -> this.region.passable = b.isToggled());
-        this.enabled = new GuiCheckerElement(mc);
+        this.enabled = new GuiOpenConditionButtonElement(mc);
         this.delay = new GuiTrackpadElement(mc, (value) -> this.region.delay = value.intValue()).limit(0).integer();
         this.update = new GuiTrackpadElement(mc, (value) -> this.region.update = value.intValue()).limit(1).integer();
         this.checkEntities = new GuiToggleElement(mc, IKey.lang("mappet.gui.region.check_entities"), (b) -> this.region.checkEntities = b.isToggled());
@@ -133,7 +133,7 @@ public class GuiRegionEditor extends GuiElement
         {
             this.passable.toggled(region.passable);
             this.checkEntities.toggled(region.checkEntities);
-            this.enabled.set(region.enabled);
+            this.enabled.setCondition(region.enabled);
             this.delay.setValue(region.delay);
             this.update.setValue(region.update);
             this.onEnter.set(region.onEnter);

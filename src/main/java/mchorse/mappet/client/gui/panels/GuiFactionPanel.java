@@ -5,7 +5,7 @@ import mchorse.mappet.api.factions.FactionAttitude;
 import mchorse.mappet.api.utils.content.ContentTypes;
 import mchorse.mappet.api.utils.content.IContentType;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
-import mchorse.mappet.client.gui.conditions.GuiCheckerElement;
+import mchorse.mappet.client.gui.conditions.GuiOpenConditionButtonElement;
 import mchorse.mappet.client.gui.factions.GuiFactionRelationOverlayPanel;
 import mchorse.mappet.client.gui.factions.GuiFactions;
 import mchorse.mappet.client.gui.factions.GuiFactionsOverlayPanel;
@@ -36,7 +36,7 @@ public class GuiFactionPanel extends GuiMappetDashboardPanel<Faction>
     public static final IKey EMPTY = IKey.lang("mappet.gui.factions.info.empty");
 
     public GuiTextElement title;
-    public GuiCheckerElement visible;
+    public GuiOpenConditionButtonElement visible;
     public GuiColorElement color;
     public GuiTrackpadElement score;
 
@@ -73,7 +73,7 @@ public class GuiFactionPanel extends GuiMappetDashboardPanel<Faction>
         this.folderList.setFileIcon(Icons.BOOKMARK);
 
         this.title = new GuiTextElement(mc, 1000, (t) -> this.data.title = t);
-        this.visible = new GuiCheckerElement(mc);
+        this.visible = new GuiOpenConditionButtonElement(mc);
         this.color = new GuiColorElement(mc, (c) -> this.data.color = c);
         this.score = new GuiTrackpadElement(mc, (v) -> this.data.score = v.intValue());
         this.score.limit(0).integer();
@@ -164,7 +164,7 @@ public class GuiFactionPanel extends GuiMappetDashboardPanel<Faction>
         if (data != null)
         {
             this.title.setText(data.title);
-            this.visible.set(data.visible);
+            this.visible.setCondition(data.visible);
             this.color.picker.setColor(data.color);
             this.score.setValue(data.score);
 

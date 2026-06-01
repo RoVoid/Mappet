@@ -27,7 +27,7 @@ public abstract class GuiAbstractTriggerBlockPanel <T extends AbstractTriggerBlo
         this.frequency = new GuiTrackpadElement(mc, (v) -> this.block.frequency = v.intValue());
         this.frequency.limit(1).integer().setValue(block.frequency);
 
-        GuiLabel label = Elements.label(IKey.lang("mappet.gui.trigger_types." + CommonProxy.getTriggerBlocks().getType(block)));
+        GuiLabel label = Elements.label(IKey.lang("mappet.gui.trigger_types." + CommonProxy.getTriggerBlocks().type(block)));
 
         this.flex().column(5).vertical().stretch();
         this.add(label);

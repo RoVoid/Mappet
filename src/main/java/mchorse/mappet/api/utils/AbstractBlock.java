@@ -5,18 +5,16 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public abstract class AbstractBlock implements INBTSerializable<NBTTagCompound>
-{
+public abstract class AbstractBlock implements INBTSerializable<NBTTagCompound> {
     @SideOnly(Side.CLIENT)
-    public abstract String stringify();
+    public abstract String name();
+
+    public abstract String type();
 
     @Override
-    public NBTTagCompound serializeNBT()
-    {
+    public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
-
-        this.serializeNBT(tag);
-
+        serializeNBT(tag);
         return tag;
     }
 

@@ -1,6 +1,5 @@
 package mchorse.mappet.api.scripts.code.entities.player;
 
-import mchorse.mappet.api.scripts.user.entities.player.IClientSettings;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.scripts.PacketClientSettings;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -11,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ClientSettings implements IClientSettings {
+public class ClientSettings {
     private final List<String> requests = new ArrayList<>();
     private final NBTTagCompound options = new NBTTagCompound();
     private final Set<String> usedKeys = new HashSet<>();
@@ -33,143 +32,119 @@ public class ClientSettings implements IClientSettings {
         if (usedKeys.add(key)) writer.run();
     }
 
-    @Override
-    public IClientSettings chatVisibility() {
+    public ClientSettings chatVisibility() {
         request("chatVisibility");
         return this;
     }
 
-    @Override
-    public IClientSettings chatVisibility(int mode) {
+    public ClientSettings chatVisibility(int mode) {
         apply("chatVisibility", () -> options.setInteger("chatVisibility", mode));
         return this;
     }
 
-    @Override
-    public IClientSettings fov() {
+    public ClientSettings fov() {
         request("fov");
         return this;
     }
 
-    @Override
-    public IClientSettings fov(float value) {
+    public ClientSettings fov(float value) {
         apply("fov", () -> options.setFloat("fov", value));
         return this;
     }
 
-    @Override
-    public IClientSettings gamma() {
+    public ClientSettings gamma() {
         request("gamma");
         return this;
     }
 
-    @Override
-    public IClientSettings gamma(float value) {
+    public ClientSettings gamma(float value) {
         apply("gamma", () -> options.setFloat("gamma", value));
         return this;
     }
 
-    @Override
-    public IClientSettings invertMouse() {
+    public ClientSettings invertMouse() {
         request("invertMouse");
         return this;
     }
 
-    @Override
-    public IClientSettings keybind(String id) {
+    public ClientSettings keybind(String id) {
         request("keybind:" + id);
         return this;
     }
 
-    @Override
-    public IClientSettings keybind(String id, int code) {
+    public ClientSettings keybind(String id, int code) {
         apply("keybind:" + id, () -> options.setInteger("keybind:" + id, code));
         return this;
     }
 
-    @Override
-    public IClientSettings keybinds() {
+    public ClientSettings keybinds() {
         request("keybinds");
         return this;
     }
 
-    @Override
-    public IClientSettings mappetKeybind(String id) {
+    public ClientSettings mappetKeybind(String id) {
         request("mappetKeybind:" + id);
         return this;
     }
 
-    @Override
-    public IClientSettings mappetKeybind(String id, int code) {
+    public ClientSettings mappetKeybind(String id, int code) {
         apply("mappetKeybind:" + id, () -> options.setInteger("mappetKeybind:" + id, code));
         return this;
     }
 
-    @Override
-    public IClientSettings language() {
+    public ClientSettings language() {
         request("language");
         return this;
     }
 
-    @Override
-    public IClientSettings mainHand() {
+    public ClientSettings mainHand() {
         request("mainHand");
         return this;
     }
 
-    @Override
-    public IClientSettings mouseSensitivity() {
+    public ClientSettings mouseSensitivity() {
         request("mouseSensitivity");
         return this;
     }
 
-    @Override
-    public IClientSettings renderDistance() {
+    public ClientSettings renderDistance() {
         request("renderDistance");
         return this;
     }
 
-    @Override
-    public IClientSettings renderDistance(int chunks) {
+    public ClientSettings renderDistance(int chunks) {
         apply("renderDistance", () -> options.setInteger("renderDistance", chunks));
         return this;
     }
 
-    @Override
-    public IClientSettings screenSize() {
+    public ClientSettings screenSize() {
         request("screenSize");
         return this;
     }
 
-    @Override
-    public IClientSettings showSubtitles() {
+    public ClientSettings showSubtitles() {
         request("showSubtitles");
         return this;
     }
 
-    @Override
-    public IClientSettings showSubtitles(boolean value) {
+    public ClientSettings showSubtitles(boolean value) {
         apply("showSubtitles", () -> options.setBoolean("showSubtitles", value));
         return this;
     }
 
-    @Override
-    public IClientSettings vsync() {
+    public ClientSettings vsync() {
         request("vsync");
         return this;
     }
 
-    @Override
     public void sendTo(ScriptPlayer... players) {
         sendTo("", "", players);
     }
 
-    @Override
     public void sendTo(String script, ScriptPlayer... players) {
         sendTo(script, "handler", players);
     }
 
-    @Override
     public void sendTo(String script, String function, ScriptPlayer... players) {
         if (requests.isEmpty() && options.hasNoTags()) return;
 

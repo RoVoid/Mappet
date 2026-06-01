@@ -34,14 +34,14 @@ public class ScriptTriggerBlock extends DataTriggerBlock
     }
 
     @Override
-    public String stringify()
+    public String name()
     {
         if (!this.string.isEmpty() && !this.function.isEmpty())
         {
             return this.string + " (" + TextFormatting.GRAY + this.function + TextFormatting.RESET + ")";
         }
 
-        return super.stringify();
+        return super.name();
     }
 
     @Override

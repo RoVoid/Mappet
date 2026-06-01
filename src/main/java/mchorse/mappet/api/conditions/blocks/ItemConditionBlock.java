@@ -56,7 +56,7 @@ public class ItemConditionBlock extends TargetConditionBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String stringify()
+    public String name()
     {
         String name = this.stack.getDisplayName();
 

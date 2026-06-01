@@ -1,10 +1,9 @@
 package mchorse.mappet.api.utils;
 
-import mchorse.mappet.config.MappetConfig;
-import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.entities.EntityNpc;
-import mchorse.mappet.utils.ExpressionRewriter;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,10 +16,10 @@ import net.minecraft.world.World;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DataContext {
-    public static final ExpressionRewriter REWRITER = new ExpressionRewriter();
-
     public MinecraftServer server;
     public World world;
     public BlockPos pos;
@@ -31,6 +30,8 @@ public class DataContext {
 
     private TriggerSender sender;
     private final Map<String, Object> values = new HashMap<>();
+
+    private static final Pattern PATTERN = Pattern.compile("\\$\\{([^}]+)}");
 
     public DataContext(Entity subject) {
         this(subject, null);
@@ -167,12 +168,19 @@ public class DataContext {
     }
 
     public String process(String text) {
-        /* Get rid of slash, even though it can be used, server API's like Mohist
-         * seem to have problems with that, so this should automatically fix command
-         * execution there */
         if (text.startsWith("/")) text = text.substring(1);
         if (!text.contains("${")) return text;
-        return REWRITER.set(this).rewrite(text);
+
+        StringBuffer sb = new StringBuffer();
+        Matcher matcher = PATTERN.matcher(text);
+
+        while (matcher.find()) {
+            Object value = getValue(matcher.group(1));
+            matcher.appendReplacement(sb, value != null ? Matcher.quoteReplacement(value.toString()) : "");
+        }
+
+        matcher.appendTail(sb);
+        return sb.toString();
     }
 
     public EntityPlayer getPlayer() {

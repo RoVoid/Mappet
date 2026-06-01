@@ -1,13 +1,11 @@
 package mchorse.mappet.api.scripts.code.blocks;
 
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
-import mchorse.mappet.api.scripts.user.blocks.IScriptTileEntity;
-import mchorse.mappet.api.scripts.user.nbt.INBTCompound;
+import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
-public class ScriptTileEntity implements IScriptTileEntity
-{
+public class ScriptTileEntity {
     private final TileEntity tile;
 
     public ScriptTileEntity(TileEntity tile)
@@ -15,47 +13,40 @@ public class ScriptTileEntity implements IScriptTileEntity
         this.tile = tile;
     }
 
-    @Override
     @Deprecated
     public TileEntity getMinecraftTileEntity()
     {
         return tile;
     }
 
-    @Override
     public TileEntity asMinecraft()
     {
         return tile;
     }
 
-    @Override
     public String getId()
     {
         ResourceLocation key = TileEntity.getKey(tile.getClass());
         return key == null ? "" : key.toString();
     }
 
-    @Override
     public boolean isInvalid()
     {
         return tile.isInvalid();
     }
 
-    @Override
-    public INBTCompound getData()
+    public ScriptNBTCompound getData()
     {
         return new ScriptNBTCompound(tile.serializeNBT());
     }
 
-    @Override
-    public void setData(INBTCompound compound)
+    public void setData(ScriptNBTCompound compound)
     {
         tile.readFromNBT(compound.asMinecraft());
         tile.markDirty();
     }
 
-    @Override
-    public INBTCompound getTileData()
+    public ScriptNBTCompound getTileData()
     {
         return new ScriptNBTCompound(tile.getTileData());
     }

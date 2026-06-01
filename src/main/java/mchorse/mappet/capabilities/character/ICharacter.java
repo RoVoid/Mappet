@@ -4,7 +4,7 @@ import mchorse.mappet.api.dialogues.Dialogue;
 import mchorse.mappet.api.dialogues.DialogueContext;
 import mchorse.mappet.api.huds.HUDScene;
 import mchorse.mappet.api.quests.Quests;
-import mchorse.mappet.api.states.States;
+import mchorse.mappet.api.states.*;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.utils.CurrentSession;
 import mchorse.mappet.utils.PositionCache;
@@ -20,7 +20,13 @@ import java.util.UUID;
 public interface ICharacter extends INBTSerializable<NBTTagCompound> {
     UUID getCamera();
 
-    States getStates();
+    ScriptStates getScriptStates();
+
+    FactionStates getFactionStates();
+
+    QuestStates getQuestStates();
+
+    StatesProvider getStates();
 
     Quests getQuests();
 
@@ -31,6 +37,8 @@ public interface ICharacter extends INBTSerializable<NBTTagCompound> {
     Dialogue getDialogue();
 
     DialogueContext getDialogueContext();
+
+    DialogueStates getDialogueStates();
 
     /* Last clear */
 

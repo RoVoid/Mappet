@@ -1,7 +1,7 @@
 package mchorse.mappet.events;
 
 import mchorse.mappet.api.scripts.code.ui.UIComponent;
-import mchorse.mappet.api.utils.factory.MapFactory;
+import mchorse.mappet.api.utils.MapFactory;
 
 public class RegisterUIComponentEvent extends RegisterFactoryEvent<UIComponent>
 {

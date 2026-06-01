@@ -7,18 +7,17 @@ import mchorse.mappet.api.events.nodes.*;
 import mchorse.mappet.api.quests.chains.QuestNode;
 import mchorse.mappet.api.scripts.code.ui.*;
 import mchorse.mappet.api.triggers.blocks.*;
-import mchorse.mappet.api.utils.factory.IFactory;
-import mchorse.mappet.api.utils.factory.MapFactory;
+import mchorse.mappet.api.utils.MapFactory;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.CharacterStorage;
 import mchorse.mappet.capabilities.character.ICharacter;
+import mchorse.mappet.client.Colors;
 import mchorse.mappet.client.gui.utils.Beautifier;
 import mchorse.mappet.events.*;
 import mchorse.mappet.events.handlers.EventHandler;
 import mchorse.mappet.events.handlers.ScriptedItemEventHandler;
 import mchorse.mappet.events.handlers.TriggerEventHandler;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.client.Colors;
 import mchorse.mappet.utils.MappetNpcSelector;
 import mchorse.mappet.utils.MetamorphHandler;
 import mchorse.mappet.utils.ScriptUtils;
@@ -35,34 +34,34 @@ import java.io.File;
  * Common proxy
  */
 public abstract class CommonProxy {
-    private static IFactory<EventBaseNode> events;
-    private static IFactory<EventBaseNode> dialogues;
-    private static IFactory<QuestNode> chains;
-    private static IFactory<AbstractConditionBlock> conditionBlocks;
-    private static IFactory<AbstractTriggerBlock> triggerBlocks;
-    private static IFactory<UIComponent> uiComponents;
+    private static MapFactory<EventBaseNode> events;
+    private static MapFactory<EventBaseNode> dialogues;
+    private static MapFactory<QuestNode> chains;
+    private static MapFactory<AbstractConditionBlock> conditionBlocks;
+    private static MapFactory<AbstractTriggerBlock> triggerBlocks;
+    private static MapFactory<UIComponent> uiComponents;
 
-    public static IFactory<EventBaseNode> getEvents() {
+    public static MapFactory<EventBaseNode> getEvents() {
         return events;
     }
 
-    public static IFactory<EventBaseNode> getDialogues() {
+    public static MapFactory<EventBaseNode> getDialogues() {
         return dialogues;
     }
 
-    public static IFactory<QuestNode> getChains() {
+    public static MapFactory<QuestNode> getChains() {
         return chains;
     }
 
-    public static IFactory<AbstractConditionBlock> getConditionBlocks() {
+    public static MapFactory<AbstractConditionBlock> getConditionBlocks() {
         return conditionBlocks;
     }
 
-    public static IFactory<AbstractTriggerBlock> getTriggerBlocks() {
+    public static MapFactory<AbstractTriggerBlock> getTriggerBlocks() {
         return triggerBlocks;
     }
 
-    public static IFactory<UIComponent> getUiComponents() {
+    public static MapFactory<UIComponent> getUiComponents() {
         return uiComponents;
     }
 
@@ -108,40 +107,29 @@ public abstract class CommonProxy {
 
     public void postInit(FMLPostInitializationEvent event) {
         /* Register event nodes */
-        MapFactory<EventBaseNode> eventNodes = new MapFactory<EventBaseNode>().register("command", CommandNode.class, Colors.COMMAND)
+        events = new MapFactory<EventBaseNode>().register("command", CommandNode.class, Colors.COMMAND)
                 .register("comment", CommentNode.class, Colors.COMMENT)
                 .register("condition", ConditionNode.class, Colors.CONDITION)
-                .register("switch", SwitchNode.class, Colors.FACTION)
                 .register("timer", TimerNode.class, Colors.TIME)
                 .register("trigger", TriggerNode.class, Colors.STATE)
-                /* Backward compatibility with gamma build */.alias("trigger", "event")
-                .alias("trigger", "dialogue")
-                .alias("trigger", "script")
                 .register("cancel", CancelNode.class, Colors.CANCEL);
-
-        events = eventNodes;
-        Mappet.EVENT_BUS.post(new RegisterEventNodeEvent(eventNodes));
+        Mappet.EVENT_BUS.post(new RegisterEventNodeEvent(events));
 
         /* Register dialogue nodes */
-        MapFactory<EventBaseNode> dialogueNodes = eventNodes.copy()
+        dialogues = events.copy()
                 .register("reply", ReplyNode.class, Colors.REPLY)
                 .register("reaction", ReactionNode.class, Colors.STATE)
                 .register("quest_chain", QuestChainNode.class, Colors.QUEST)
                 .register("quest", QuestDialogueNode.class, Colors.QUEST)
                 .unregister("timer");
-
-        dialogues = dialogueNodes;
-        Mappet.EVENT_BUS.post(new RegisterDialogueNodeEvent(dialogueNodes));
+        Mappet.EVENT_BUS.post(new RegisterDialogueNodeEvent(dialogues));
 
         /* Register quest chain blocks */
-        MapFactory<QuestNode> questChainNodes = new MapFactory<QuestNode>().register("quest", QuestNode.class, Colors.QUEST);
-
-        chains = questChainNodes;
-        Mappet.EVENT_BUS.post(new RegisterQuestChainNodeEvent(questChainNodes));
+        chains = new MapFactory<QuestNode>().register("quest", QuestNode.class, Colors.QUEST);
+        Mappet.EVENT_BUS.post(new RegisterQuestChainNodeEvent(chains));
 
         /* Register condition blocks */
-        MapFactory<AbstractConditionBlock> conditions = new MapFactory<AbstractConditionBlock>().register("quest",
-                        QuestConditionBlock.class, Colors.QUEST)
+        conditionBlocks = new MapFactory<AbstractConditionBlock>().register("quest", QuestConditionBlock.class, Colors.QUEST)
                 .register("state", StateConditionBlock.class, Colors.STATE)
                 .register("dialogue", DialogueConditionBlock.class, Colors.DIALOGUE)
                 .register("faction", FactionConditionBlock.class, Colors.FACTION)
@@ -149,15 +137,11 @@ public abstract class CommonProxy {
                 .register("world_time", WorldTimeConditionBlock.class, Colors.TIME)
                 .register("entity", EntityConditionBlock.class, Colors.ENTITY)
                 .register("condition", ConditionConditionBlock.class, Colors.CONDITION)
-                .register("morph", MorphConditionBlock.class, Colors.MORPH)
-                .register("expression", ExpressionConditionBlock.class, Colors.CANCEL);
-
-        conditionBlocks = conditions;
-        Mappet.EVENT_BUS.post(new RegisterConditionBlockEvent(conditions));
+                .register("morph", MorphConditionBlock.class, Colors.MORPH);
+        Mappet.EVENT_BUS.post(new RegisterConditionBlockEvent(conditionBlocks));
 
         /* Register condition blocks */
-        MapFactory<AbstractTriggerBlock> triggers = new MapFactory<AbstractTriggerBlock>().register("command", CommandTriggerBlock.class,
-                        Colors.COMMAND)
+        triggerBlocks = new MapFactory<AbstractTriggerBlock>().register("command", CommandTriggerBlock.class, Colors.COMMAND)
                 .register("sound", SoundTriggerBlock.class, Colors.REPLY)
                 .register("event", EventTriggerBlock.class, Colors.STATE)
                 .register("dialogue", DialogueTriggerBlock.class, Colors.DIALOGUE)
@@ -165,12 +149,10 @@ public abstract class CommonProxy {
                 .register("item", ItemTriggerBlock.class, Colors.CRAFTING)
                 .register("state", StateTriggerBlock.class, Colors.STATE)
                 .register("morph", MorphTriggerBlock.class, Colors.MORPH);
-
-        triggerBlocks = triggers;
-        Mappet.EVENT_BUS.post(new RegisterTriggerBlockEvent(triggers));
+        Mappet.EVENT_BUS.post(new RegisterTriggerBlockEvent(triggerBlocks));
 
         /* Register UI components */
-        MapFactory<UIComponent> ui = new MapFactory<UIComponent>().register("graphics", UIGraphicsComponent.class, 0xffffff)
+        uiComponents = new MapFactory<UIComponent>().register("graphics", UIGraphicsComponent.class, 0xffffff)
                 .register("button", UIButtonComponent.class, 0xffffff)
                 .register("icon", UIIconButtonComponent.class, 0xffffff)
                 .register("keybind", UIKeybindComponent.class, 0xffffff)
@@ -186,8 +168,6 @@ public abstract class CommonProxy {
                 .register("layout", UILayoutComponent.class, 0xffffff)
                 .register("morph", UIMorphComponent.class, 0xffffff)
                 .register("clickarea", UIClickComponent.class, 0xffffff);
-
-        uiComponents = ui;
-        Mappet.EVENT_BUS.post(new RegisterUIComponentEvent(ui));
+        Mappet.EVENT_BUS.post(new RegisterUIComponentEvent(uiComponents));
     }
 }

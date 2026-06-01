@@ -1,7 +1,7 @@
 package mchorse.mappet.api.factions;
 
-import mchorse.mappet.api.conditions.Checker;
-import mchorse.mappet.api.states.States;
+import mchorse.mappet.api.conditions.Condition;
+import mchorse.mappet.api.states.FactionStates;
 import mchorse.mappet.api.utils.AbstractData;
 import mchorse.mappet.api.utils.DataContext;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,8 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Faction extends AbstractData
-{
+public class Faction extends AbstractData {
     /**
      * The display name of the faction
      */
@@ -20,7 +19,7 @@ public class Faction extends AbstractData
     /**
      * Enabled condition
      */
-    public Checker visible = new Checker(true);
+    public Condition visible = new Condition(true);
 
     /**
      * Color of the faction
@@ -51,110 +50,65 @@ public class Faction extends AbstractData
     /**
      * Relations to other factions
      */
-    public Map<String, FactionAttitude> relations = new HashMap<String, FactionAttitude>();
+    public Map<String, FactionAttitude> relations = new HashMap<>();
 
-    public FactionAttitude get(States states)
-    {
-        if (states.hasFaction(this.getId()))
-        {
-            return this.ownRelation.getAttitude(states.getFactionScore(this.getId()));
-        }
+    public FactionAttitude get(FactionStates states) {
+        if (states.has(getId())) return ownRelation.getAttitude(states.get(getId()));
 
-        for (String key : this.relations.keySet())
-        {
-            if (states.hasFaction(key))
-            {
-                return this.relations.get(key);
-            }
-        }
+        for (String key : relations.keySet())
+            if (states.has(key)) return relations.get(key);
 
-        return this.playerAttitude;
+        return playerAttitude;
     }
 
-    public FactionAttitude get(String faction)
-    {
-        if (faction.equals(this.getId()))
-        {
-            return FactionAttitude.FRIENDLY;
-        }
+    public FactionAttitude get(String faction) {
+        if (faction.equals(getId())) return FactionAttitude.FRIENDLY;
 
-        FactionAttitude attitude = this.relations.get(faction);
+        FactionAttitude attitude = relations.get(faction);
 
-        return attitude == null ? this.othersAttitude : attitude;
+        return attitude == null ? othersAttitude : attitude;
     }
 
-    public boolean isVisible(EntityPlayer player)
-    {
-        return this.visible.check(new DataContext(player));
+    public boolean isVisible(EntityPlayer player) {
+        return visible.execute(new DataContext(player));
     }
 
     @Override
-    public NBTTagCompound serializeNBT()
-    {
+    public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
 
-        tag.setString("Title", this.title);
-        tag.setTag("Visible", this.visible.serializeNBT());
-        tag.setInteger("Color", this.color);
-        tag.setInteger("DefaultScore", this.score);
-        tag.setString("PlayerAttitude", this.playerAttitude.name());
-        tag.setString("OthersAttitude", this.othersAttitude.name());
-        tag.setTag("OwnRelation", this.ownRelation.serializeNBT());
+        tag.setString("Title", title);
+        tag.setTag("Visible", visible.serializeNBT());
+        tag.setInteger("Color", color);
+        tag.setInteger("DefaultScore", score);
+        tag.setString("PlayerAttitude", playerAttitude.name());
+        tag.setString("OthersAttitude", othersAttitude.name());
+        tag.setTag("OwnRelation", ownRelation.serializeNBT());
 
         NBTTagCompound relations = new NBTTagCompound();
 
         for (Map.Entry<String, FactionAttitude> entry : this.relations.entrySet())
-        {
             relations.setString(entry.getKey(), entry.getValue().name());
-        }
 
-        if (relations.getSize() > 0)
-        {
-            tag.setTag("Relations", relations);
-        }
+        if (relations.getSize() > 0) tag.setTag("Relations", relations);
 
         return tag;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
-    {
-        if (tag.hasKey("Title"))
-        {
-            this.title = tag.getString("Title");
-        }
-        if (tag.hasKey("Visible"))
-        {
-            this.visible.deserializeNBT(tag.getTag("Visible"));
-        }
-        if (tag.hasKey("Color"))
-        {
-            this.color = tag.getInteger("Color");
-        }
-        if (tag.hasKey("DefaultScore"))
-        {
-            this.score = tag.getInteger("DefaultScore");
-        }
-        if (tag.hasKey("PlayerAttitude"))
-        {
-            this.playerAttitude = FactionAttitude.get(tag.getString("PlayerAttitude"));
-        }
-        if (tag.hasKey("OthersAttitude"))
-        {
-            this.othersAttitude = FactionAttitude.get(tag.getString("OthersAttitude"));
-        }
-        if (tag.hasKey("OwnRelation"))
-        {
-            this.ownRelation.deserializeNBT(tag.getCompoundTag("OwnRelation"));
-        }
-        if (tag.hasKey("Relations"))
-        {
+    public void deserializeNBT(NBTTagCompound tag) {
+        if (tag.hasKey("Title")) title = tag.getString("Title");
+        if (tag.hasKey("Visible")) visible.deserializeNBT(tag.getCompoundTag("Visible"));
+        if (tag.hasKey("Color")) color = tag.getInteger("Color");
+        if (tag.hasKey("DefaultScore")) score = tag.getInteger("DefaultScore");
+        if (tag.hasKey("PlayerAttitude")) playerAttitude = FactionAttitude.get(tag.getString("PlayerAttitude"));
+        if (tag.hasKey("OthersAttitude")) othersAttitude = FactionAttitude.get(tag.getString("OthersAttitude"));
+        if (tag.hasKey("OwnRelation")) ownRelation.deserializeNBT(tag.getCompoundTag("OwnRelation"));
+        if (tag.hasKey("Relations")) {
             NBTTagCompound relations = tag.getCompoundTag("Relations");
 
             for (String key : relations.getKeySet())
-            {
                 this.relations.put(key, FactionAttitude.get(relations.getString(key)));
-            }
         }
     }
 }

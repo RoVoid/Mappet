@@ -54,7 +54,7 @@ public class QuestChainManager extends BaseManager<QuestChain>
             /* Special case for quest retake */
             if (node.allowRetake && !context.canceled && context.nesting > 0)
             {
-                if (context.nesting == context.completed && size == context.quests.size() && node.condition.check(context.data))
+                if (context.nesting == context.completed && size == context.quests.size() && node.condition.execute(context.data))
                 {
                     Quest quest = Mappet.quests.load(node.quest);
 
@@ -80,7 +80,7 @@ public class QuestChainManager extends BaseManager<QuestChain>
 
     private void evaluateRecursive(QuestContext context, ICharacter character, QuestChain chain, QuestNode node)
     {
-        int timesCompleted = character.getStates().getQuestCompletedTimes(node.quest);
+        int timesCompleted = character.getQuestStates().getCompletedTimes(node.quest);
         boolean wasCompleted = timesCompleted > 0;
         Quest quest = character.getQuests().getByName(node.quest);
         QuestInfo info = null;
@@ -147,7 +147,7 @@ public class QuestChainManager extends BaseManager<QuestChain>
             return false;
         }
 
-        if (!node.condition.check(context.data))
+        if (!node.condition.execute(context.data))
         {
             return false;
         }

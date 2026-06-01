@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.code.ui;
 
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
+import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * <p>The value that gets written to UI context's data (if ID is present) is
  * the string that user typed into the component.</p>
  *
- * <p>This component can be created using {@link IMappetUIBuilder#textbox()} method.</p>
+ * <p>This component can be created using {@link MappetUIBuilder#textbox()} method.</p>
  *
  * <pre>{@code
  *    function main(c)
@@ -52,7 +52,7 @@ public class UITextboxComponent extends UILabelBaseComponent
      * Change component's max length (how many character max can be inputted).
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *    uiContext.get("textbox").maxLength(68);
      * }</pre>
      */
@@ -69,7 +69,7 @@ public class UITextboxComponent extends UILabelBaseComponent
      * Disable textbox's background.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *    uiContext.get("textbox").noBackground();
      * }</pre>
      */

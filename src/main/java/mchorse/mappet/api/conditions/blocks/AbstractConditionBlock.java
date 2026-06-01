@@ -1,46 +1,46 @@
 package mchorse.mappet.api.conditions.blocks;
 
-import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.api.utils.AbstractBlock;
 import mchorse.mappet.api.utils.DataContext;
+import mchorse.mappet.proxy.CommonProxy;
 import net.minecraft.nbt.NBTTagCompound;
 
-public abstract class AbstractConditionBlock extends AbstractBlock
-{
+public abstract class AbstractConditionBlock extends AbstractBlock {
     public boolean not;
     public boolean or;
 
-    public boolean evaluate(DataContext context)
-    {
-        boolean result = this.evaluateBlock(context);
-
-        return this.not != result;
+    public boolean evaluate(DataContext context) {
+        return not != evaluateBlock(context);
     }
 
     protected abstract boolean evaluateBlock(DataContext context);
 
     @Override
-    protected void serializeNBT(NBTTagCompound tag)
-    {
-        tag.setBoolean("Not", this.not);
-        tag.setBoolean("Or", this.or);
+    protected void serializeNBT(NBTTagCompound tag) {
+        tag.setString("type", type());
+        if (not) tag.setBoolean("Not", true);
+        if (or) tag.setBoolean("Or", true);
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
-    {
-        this.not = tag.getBoolean("Not");
-        this.or = tag.getBoolean("Or");
+    public void deserializeNBT(NBTTagCompound tag) {
+        not = tag.getBoolean("Not");
+        or = tag.getBoolean("Or");
     }
 
-    public NBTTagCompound toNBT(){
+    @Override
+    public String type() {
+        return CommonProxy.getConditionBlocks().type(this);
+    }
+
+    public NBTTagCompound toNBT() {
         NBTTagCompound tag = new NBTTagCompound();
-        this.serializeNBT(tag);
+        serializeNBT(tag);
         return tag;
     }
 
     @Override
-    public String toString(){
-        return "AbstractConditionBlock[type:"+CommonProxy.getConditionBlocks().getType(this)+"]";
+    public String toString() {
+        return "AbstractConditionBlock[type:" + CommonProxy.getConditionBlocks().type(this) + "]";
     }
 }

@@ -1,7 +1,7 @@
 package mchorse.mappet.events;
 
 import mchorse.mappet.api.conditions.blocks.AbstractConditionBlock;
-import mchorse.mappet.api.utils.factory.MapFactory;
+import mchorse.mappet.api.utils.MapFactory;
 
 public class RegisterConditionBlockEvent extends RegisterFactoryEvent<AbstractConditionBlock>
 {

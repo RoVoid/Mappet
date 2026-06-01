@@ -31,7 +31,7 @@ public class GuiComparisonElement extends GuiElement
             this.mode.addLabel(mode.stringify());
         }
 
-        this.mode.setValue(comparison.comparison.ordinal());
+        this.mode.setValue(comparison.mode.ordinal());
         this.value = new GuiTrackpadElement(mc, (v) -> this.comparison.value = v);
         this.value.setValue(comparison.value);
 
@@ -45,21 +45,21 @@ public class GuiComparisonElement extends GuiElement
 
     private void toggleComparison(GuiCirculateElement b)
     {
-        this.comparison.comparison = ComparisonMode.values()[b.getValue()];
+        this.comparison.mode = ComparisonMode.values()[b.getValue()];
 
         GuiElement insert = this.value;
         IKey label = IKey.lang("mappet.gui.conditions.value");
 
-        if (this.comparison.comparison == ComparisonMode.EXPRESSION)
+        if (this.comparison.mode == ComparisonMode.EXPRESSION)
         {
             insert = this.expression;
             label = IKey.lang("mappet.gui.conditions.expression");
         }
-        else if (this.comparison.comparison == ComparisonMode.IS_TRUE || this.comparison.comparison == ComparisonMode.IS_FALSE)
+        else if (this.comparison.mode == ComparisonMode.IS_TRUE || this.comparison.mode == ComparisonMode.IS_FALSE)
         {
             insert = null;
         }
-        else if (this.comparison.comparison.isString)
+        else if (this.comparison.mode.isString)
         {
             insert = this.expression;
         }

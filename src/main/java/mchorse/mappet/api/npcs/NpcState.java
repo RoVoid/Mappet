@@ -2,8 +2,11 @@ package mchorse.mappet.api.npcs;
 
 import com.google.common.base.CaseFormat;
 import io.netty.buffer.ByteBuf;
-import mchorse.mappet.api.states.States;
+import mchorse.mappet.api.states.FactionStates;
+import mchorse.mappet.api.states.ScriptStates;
+import mchorse.mappet.api.states.StatesProvider;
 import mchorse.mappet.api.triggers.Trigger;
+import mchorse.mappet.entities.EntityNpc;
 import mchorse.mappet.utils.NBTUtils;
 import mchorse.mappet.utils.NpcStateUtils;
 import mchorse.mclib.config.values.GenericValue;
@@ -36,7 +39,10 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
 
     public ValueString id = new ValueString("Id", "");
 
-    public States states = new States(); //TODO make it work with ValueAPI
+//    public ScriptStates states = new ScriptStates();
+//    public FactionStates factions = new FactionStates();
+
+    public StatesProvider<EntityNpc> states = new StatesProvider<>(new ScriptStates(), null, null, new FactionStates());
 
     /**
      * Unique
@@ -326,78 +332,78 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
     public ValueBoolean respawnSaveUUID = new ValueBoolean("RespawnSaveUUID");
 
     public ValueSerializer serializer;
-    public Map<String, GenericValue> serealizableValues = new HashMap<>();
+    public Map<String, GenericValue<?>> serializableValues = new HashMap<>();
     public NpcState()
     {
-        this.serializer = new ValueSerializer();
+        serializer = new ValueSerializer();
 
         /* Meta */
-        this.registerValue(stateName);
-        this.registerValue(id);
-        this.registerValue(unique);
-        this.registerValue(pathDistance);
+        registerValue(stateName);
+        registerValue(id);
+        registerValue(unique);
+        registerValue(pathDistance);
 
         /* Health */
-        this.registerValue(maxHealth);
-        this.registerValue(health);
-        this.registerValue(regenDelay);
-        this.registerValue(regenFrequency);
+        registerValue(maxHealth);
+        registerValue(health);
+        registerValue(regenDelay);
+        registerValue(regenFrequency);
 
         /* Damage */
-        this.registerValue(damage);
-        this.registerValue(damageDelay);
-        this.registerValue(canRanged);
-        this.registerValue(canFallDamage);
-        this.registerValue(canGetBurned);
-        this.registerValue(invincible);
-        this.registerValue(killable);
+        registerValue(damage);
+        registerValue(damageDelay);
+        registerValue(canRanged);
+        registerValue(canFallDamage);
+        registerValue(canGetBurned);
+        registerValue(invincible);
+        registerValue(killable);
 
         /* Movement */
-        this.registerValue(speed);
-        this.registerValue(jumpPower);
-        this.registerValue(canSwim);
-        this.registerValue(immovable);
-        this.registerValue(collision);
-        this.registerValue(hasPost);
-        this.registerValue(postRadius);
-        this.registerValue(fallback);
-        this.registerValue(patrolCirculate);
-        this.registerValue(follow);
+        registerValue(speed);
+        registerValue(jumpPower);
+        registerValue(canSwim);
+        registerValue(immovable);
+        registerValue(collision);
+        registerValue(hasPost);
+        registerValue(postRadius);
+        registerValue(fallback);
+        registerValue(patrolCirculate);
+        registerValue(follow);
 
         /* General */
-        this.registerValue(faction);
-        this.registerValue(sightDistance);
-        this.registerValue(sightRadius);
-        this.registerValue(xp);
-        this.registerValue(shadowSize);
+        registerValue(faction);
+        registerValue(sightDistance);
+        registerValue(sightRadius);
+        registerValue(xp);
+        registerValue(shadowSize);
 
         /* Behavior */
-        this.registerValue(lookAtPlayer);
-        this.registerValue(lookAround);
-        this.registerValue(wander);
-        this.registerValue(alwaysWander);
-        this.registerValue(canFly);
-        this.registerValue(flightMaxHeight);
-        this.registerValue(flightMinHeight);
-        this.registerValue(flee);
-        this.registerValue(canPickUpLoot);
-        this.registerValue(hasNoGravity);
-        this.registerValue(canBeSteered);
+        registerValue(lookAtPlayer);
+        registerValue(lookAround);
+        registerValue(wander);
+        registerValue(alwaysWander);
+        registerValue(canFly);
+        registerValue(flightMaxHeight);
+        registerValue(flightMinHeight);
+        registerValue(flee);
+        registerValue(canPickUpLoot);
+        registerValue(hasNoGravity);
+        registerValue(canBeSteered);
 
         /* Respawn */
-        this.registerValue(respawn);
-        this.registerValue(respawnDelay);
-        this.registerValue(respawnOnCoordinates);
-        this.registerValue(respawnPosX);
-        this.registerValue(respawnPosY);
-        this.registerValue(respawnPosZ);
-        this.registerValue(respawnSaveUUID);
+        registerValue(respawn);
+        registerValue(respawnDelay);
+        registerValue(respawnOnCoordinates);
+        registerValue(respawnPosX);
+        registerValue(respawnPosY);
+        registerValue(respawnPosZ);
+        registerValue(respawnSaveUUID);
     }
 
-    private void registerValue(GenericValue value)
+    private void registerValue(GenericValue<?> value)
     {
-        this.serializer.registerNBTValue(value.id, value, true);
-        this.serealizableValues.put(value.id, value);
+        serializer.registerNBTValue(value.id, value, true);
+        serializableValues.put(value.id, value);
     }
 
     private String processPropertyName(String property)
@@ -410,62 +416,30 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
      */
     public boolean edit(String property, String value)
     {
-        Value parameter = this.serealizableValues.get(this.processPropertyName(property));
-        if (parameter == null)
-        {
-            if (property.equals("post"))
-            {
-                String[] splits = value.split(" ");
+        Value parameter = serializableValues.get(processPropertyName(property));
+        if (parameter == null) if (property.equals("post")) {
+            String[] splits = value.split(" ");
 
-                if (splits.length >= 3)
-                {
-                    int x = Integer.parseInt(splits[0]);
-                    int y = Integer.parseInt(splits[1]);
-                    int z = Integer.parseInt(splits[2]);
+            if (splits.length >= 3) {
+                int x = Integer.parseInt(splits[0]);
+                int y = Integer.parseInt(splits[1]);
+                int z = Integer.parseInt(splits[2]);
 
-                    this.postPosition = new BlockPos(x, y, z);
-                }
-                else
-                {
-                    return false;
-                }
+                postPosition = new BlockPos(x, y, z);
             }
-            else if (property.equals("morph"))
-            {
-                try
-                {
-                    this.morph = MorphManager.INSTANCE.morphFromNBT(JsonToNBT.getTagFromJson(value));
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
+            else return false;
         }
-        else if (parameter instanceof ValueString)
-        {
-            ((ValueString) parameter).set(value);
+        else if (property.equals("morph")) try {
+            morph = MorphManager.INSTANCE.morphFromNBT(JsonToNBT.getTagFromJson(value));
+        } catch (Exception e) {
+            return false;
         }
-        else if (parameter instanceof ValueBoolean)
-        {
-            ((ValueBoolean) parameter).set(Boolean.parseBoolean(value));
-        }
-        else if (parameter instanceof ValueInt)
-        {
-            ((ValueInt) parameter).set(Integer.parseInt(value));
-        }
-        else if (parameter instanceof ValueFloat)
-        {
-            ((ValueFloat) parameter).set(Float.parseFloat(value));
-        }
-        else if (parameter instanceof ValueDouble)
-        {
-            ((ValueDouble) parameter).set(Double.parseDouble(value));
-        }
+        else return false;
+        else if (parameter instanceof ValueString) ((ValueString) parameter).set(value);
+        else if (parameter instanceof ValueBoolean) ((ValueBoolean) parameter).set(Boolean.parseBoolean(value));
+        else if (parameter instanceof ValueInt) ((ValueInt) parameter).set(Integer.parseInt(value));
+        else if (parameter instanceof ValueFloat) ((ValueFloat) parameter).set(Float.parseFloat(value));
+        else if (parameter instanceof ValueDouble) ((ValueDouble) parameter).set(Double.parseDouble(value));
 
         return true;
     }
@@ -473,7 +447,7 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
     @Override
     public NBTTagCompound serializeNBT()
     {
-        return this.partialSerializeNBT(null);
+        return partialSerializeNBT(null);
     }
 
     public NBTTagCompound partialSerializeNBT(List<String> options)
@@ -482,96 +456,53 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
 
         NBTTagCompound tag = new NBTTagCompound();
 
-        if (!all && options.isEmpty())
-        {
-            return tag;
-        }
+        if (!all && options.isEmpty()) return tag;
 
-        this.serializer.toNBT(tag);
+        serializer.toNBT(tag);
 
-        if (all || options.contains("states"))
-        {
-            tag.setTag("States", this.states.serializeNBT());
-        }
-        if ((all || options.contains("steering_offset")))
+        if (all || options.contains("states")) tag.setTag("States", states.serializeNBT());
+        if (all || options.contains("factions")) tag.setTag("Factions", factions.serializeNBT());
+        if (all || options.contains("steering_offset"))
         {
             NBTTagList offsets = new NBTTagList();
 
-            for (BlockPos blockPos : this.steeringOffset) {
-                offsets.appendTag(NBTUtils.blockPosTo(blockPos));
-            }
+            for (BlockPos blockPos : steeringOffset) offsets.appendTag(NBTUtils.blockPosTo(blockPos));
 
             tag.setTag("SteeringOffsets", offsets);
         }
-        if ((all || options.contains("post")))
-        {
-            tag.setTag("Post", this.postPosition == null ? new NBTTagList() : NBTUtils.blockPosTo(this.postPosition));
-        }
-        if ((all || options.contains("patrol")))
+        if (all || options.contains("post")) tag.setTag("Post", postPosition == null ? new NBTTagList() : NBTUtils.blockPosTo(postPosition));
+        if (all || options.contains("patrol"))
         {
             NBTTagList points = new NBTTagList();
             NBTTagList triggers = new NBTTagList();
 
-            for (BlockPos blockPos : this.patrol) {
-                points.appendTag(NBTUtils.blockPosTo(blockPos));
-            }
+            for (BlockPos blockPos : patrol) points.appendTag(NBTUtils.blockPosTo(blockPos));
 
-            for (Trigger patrolTrigger : this.patrolTriggers) {
-                triggers.appendTag(patrolTrigger.serializeNBT());
-            }
+            for (Trigger patrolTrigger : patrolTriggers) triggers.appendTag(patrolTrigger.serializeNBT());
 
             tag.setTag("Patrol", points);
             tag.setTag("PatrolTriggers", triggers);
         }
-        if ((all || options.contains("morph")))
-        {
-            tag.setTag("Morph", this.morph == null ? new NBTTagCompound() : this.morph.toNBT());
-        }
-        if ((all || options.contains("drops")))
+        if (all || options.contains("morph")) tag.setTag("Morph", morph == null ? new NBTTagCompound() : morph.toNBT());
+        if (all || options.contains("drops"))
         {
             NBTTagList drops = new NBTTagList();
 
             for (NpcDrop drop : this.drops)
-            {
                 drops.appendTag(drop.serializeNBT());
-            }
 
             tag.setTag("Drops", drops);
         }
 
         /* Triggers */
-        if (all || options.contains("trigger_died"))
-        {
-            tag.setTag("TriggerDied", this.triggerDied.serializeNBT());
-        }
-        if (all || options.contains("trigger_damaged"))
-        {
-            tag.setTag("TriggerDamaged", this.triggerDamaged.serializeNBT());
-        }
-        if (all || options.contains("trigger_interact"))
-        {
-            tag.setTag("TriggerInteract", this.triggerInteract.serializeNBT());
-        }
-        if (all || options.contains("trigger_tick"))
-        {
-            tag.setTag("TriggerTick", this.triggerTick.serializeNBT());
-        }
-        if (all || options.contains("trigger_target"))
-        {
-            tag.setTag("TriggerTarget", this.triggerTarget.serializeNBT());
-        }
-        if (all || options.contains("trigger_initialize"))
-        {
-            tag.setTag("TriggerInitialize", this.triggerInitialize.serializeNBT());
-        }
-        if (all || options.contains("trigger_respawn"))
-        {
-            tag.setTag("TriggerRespawn", this.triggerRespawn.serializeNBT());
-        }
-        if (all || options.contains("trigger_entity_collision"))
-        {
-            tag.setTag("TriggerEntityCollision", this.triggerEntityCollision.serializeNBT());
-        }
+        if (all || options.contains("trigger_died")) tag.setTag("TriggerDied", triggerDied.serializeNBT());
+        if (all || options.contains("trigger_damaged")) tag.setTag("TriggerDamaged", triggerDamaged.serializeNBT());
+        if (all || options.contains("trigger_interact")) tag.setTag("TriggerInteract", triggerInteract.serializeNBT());
+        if (all || options.contains("trigger_tick")) tag.setTag("TriggerTick", triggerTick.serializeNBT());
+        if (all || options.contains("trigger_target")) tag.setTag("TriggerTarget", triggerTarget.serializeNBT());
+        if (all || options.contains("trigger_initialize")) tag.setTag("TriggerInitialize", triggerInitialize.serializeNBT());
+        if (all || options.contains("trigger_respawn")) tag.setTag("TriggerRespawn", triggerRespawn.serializeNBT());
+        if (all || options.contains("trigger_entity_collision")) tag.setTag("TriggerEntityCollision", triggerEntityCollision.serializeNBT());
 
         return tag;
     }
@@ -579,64 +510,50 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
     @Override
     public void deserializeNBT(NBTTagCompound tag)
     {
-        this.serializer.fromNBT(tag);
+        serializer.fromNBT(tag);
 
-        if (tag.hasKey("States"))
-        {
-            this.states.deserializeNBT(tag.getCompoundTag("States"));
-        }
+        if (tag.hasKey("States")) states.deserializeNBT(tag.getCompoundTag("States"));
+        if (tag.hasKey("Factions")) factions.deserializeNBT(tag.getCompoundTag("Factions"));
         if (tag.hasKey("SteeringOffsets", Constants.NBT.TAG_LIST))
         {
             NBTTagList offsets = tag.getTagList("SteeringOffsets", Constants.NBT.TAG_LIST);
 
-            this.steeringOffset.clear();
+            steeringOffset.clear();
 
             for (int i = 0; i < offsets.tagCount(); i++)
             {
                 BlockPos pos = NBTUtils.blockPosFrom(offsets.get(i));
 
-                if (pos != null)
-                {
-                    this.steeringOffset.add(pos);
-                }
+                if (pos != null) steeringOffset.add(pos);
             }
         }
-        if (tag.hasKey("Post", Constants.NBT.TAG_LIST))
-        {
-            this.postPosition = NBTUtils.blockPosFrom(tag.getTag("Post"));
-        }
+        if (tag.hasKey("Post", Constants.NBT.TAG_LIST)) postPosition = NBTUtils.blockPosFrom(tag.getTag("Post"));
         if (tag.hasKey("Patrol", Constants.NBT.TAG_LIST))
         {
             NBTTagList points = tag.getTagList("Patrol", Constants.NBT.TAG_LIST);
 
-            this.patrol.clear();
+            patrol.clear();
 
             for (int i = 0; i < points.tagCount(); i++)
             {
                 BlockPos pos = NBTUtils.blockPosFrom(points.get(i));
 
-                if (pos != null)
-                {
-                    this.patrol.add(pos);
-                }
+                if (pos != null) patrol.add(pos);
             }
 
             NBTTagList triggers = tag.getTagList("PatrolTriggers", Constants.NBT.TAG_COMPOUND);
 
-            this.patrolTriggers.clear();
+            patrolTriggers.clear();
 
             for (int i = 0; i < triggers.tagCount(); i++)
             {
                 Trigger trigger = new Trigger();
                 trigger.deserializeNBT(triggers.getCompoundTagAt(i));
 
-                this.patrolTriggers.add(trigger);
+                patrolTriggers.add(trigger);
             }
         }
-        if (tag.hasKey("Morph", Constants.NBT.TAG_COMPOUND))
-        {
-            this.morph = MorphManager.INSTANCE.morphFromNBT(tag.getCompoundTag("Morph"));
-        }
+        if (tag.hasKey("Morph", Constants.NBT.TAG_COMPOUND)) morph = MorphManager.INSTANCE.morphFromNBT(tag.getCompoundTag("Morph"));
         if (tag.hasKey("Drops"))
         {
             NBTTagList drops = tag.getTagList("Drops", Constants.NBT.TAG_COMPOUND);
@@ -650,48 +567,21 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
 
                 drop.deserializeNBT(tagDrop);
 
-                if (drop.chance <= 0 || drop.stack.isEmpty())
-                {
-                    continue;
-                }
+                if (drop.chance <= 0 || drop.stack.isEmpty()) continue;
 
                 this.drops.add(drop);
             }
         }
 
         /* Triggers */
-        if (tag.hasKey("TriggerDied"))
-        {
-            this.triggerDied.deserializeNBT(tag.getCompoundTag("TriggerDied"));
-        }
-        if (tag.hasKey("TriggerDamaged"))
-        {
-            this.triggerDamaged.deserializeNBT(tag.getCompoundTag("TriggerDamaged"));
-        }
-        if (tag.hasKey("TriggerInteract"))
-        {
-            this.triggerInteract.deserializeNBT(tag.getCompoundTag("TriggerInteract"));
-        }
-        if (tag.hasKey("TriggerTick"))
-        {
-            this.triggerTick.deserializeNBT(tag.getCompoundTag("TriggerTick"));
-        }
-        if (tag.hasKey("TriggerTarget"))
-        {
-            this.triggerTarget.deserializeNBT(tag.getCompoundTag("TriggerTarget"));
-        }
-        if (tag.hasKey("TriggerInitialize"))
-        {
-            this.triggerInitialize.deserializeNBT(tag.getCompoundTag("TriggerInitialize"));
-        }
-        if (tag.hasKey("TriggerRespawn"))
-        {
-            this.triggerRespawn.deserializeNBT(tag.getCompoundTag("TriggerRespawn"));
-        }
-        if (tag.hasKey("TriggerEntityCollision"))
-        {
-            this.triggerEntityCollision.deserializeNBT(tag.getCompoundTag("TriggerEntityCollision"));
-        }
+        if (tag.hasKey("TriggerDied")) triggerDied.deserializeNBT(tag.getCompoundTag("TriggerDied"));
+        if (tag.hasKey("TriggerDamaged")) triggerDamaged.deserializeNBT(tag.getCompoundTag("TriggerDamaged"));
+        if (tag.hasKey("TriggerInteract")) triggerInteract.deserializeNBT(tag.getCompoundTag("TriggerInteract"));
+        if (tag.hasKey("TriggerTick")) triggerTick.deserializeNBT(tag.getCompoundTag("TriggerTick"));
+        if (tag.hasKey("TriggerTarget")) triggerTarget.deserializeNBT(tag.getCompoundTag("TriggerTarget"));
+        if (tag.hasKey("TriggerInitialize")) triggerInitialize.deserializeNBT(tag.getCompoundTag("TriggerInitialize"));
+        if (tag.hasKey("TriggerRespawn")) triggerRespawn.deserializeNBT(tag.getCompoundTag("TriggerRespawn"));
+        if (tag.hasKey("TriggerEntityCollision")) triggerEntityCollision.deserializeNBT(tag.getCompoundTag("TriggerEntityCollision"));
     }
 
     public void writeToBuf(ByteBuf buf)

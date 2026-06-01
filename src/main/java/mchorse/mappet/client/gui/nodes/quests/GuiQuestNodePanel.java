@@ -2,7 +2,7 @@ package mchorse.mappet.client.gui.nodes.quests;
 
 import mchorse.mappet.api.quests.chains.QuestNode;
 import mchorse.mappet.api.utils.content.ContentTypes;
-import mchorse.mappet.client.gui.conditions.GuiCheckerElement;
+import mchorse.mappet.client.gui.conditions.GuiOpenConditionButtonElement;
 import mchorse.mappet.client.gui.nodes.GuiNodePanel;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
@@ -20,7 +20,7 @@ public class GuiQuestNodePanel extends GuiNodePanel<QuestNode>
     public GuiTextElement receiver;
     public GuiToggleElement autoAccept;
     public GuiToggleElement allowRetake;
-    public GuiCheckerElement condition;
+    public GuiOpenConditionButtonElement condition;
 
     public GuiQuestNodePanel(Minecraft mc)
     {
@@ -31,7 +31,7 @@ public class GuiQuestNodePanel extends GuiNodePanel<QuestNode>
         this.receiver = new GuiTextElement(mc, 10000, (text) -> this.node.receiver = text);
         this.autoAccept = new GuiToggleElement(mc, IKey.lang("mappet.gui.nodes.dialogue.auto_accept"), (b) -> this.node.autoAccept = b.isToggled());
         this.allowRetake = new GuiToggleElement(mc, IKey.lang("mappet.gui.nodes.dialogue.allow_retake"), (b) -> this.node.allowRetake = b.isToggled());
-        this.condition = new GuiCheckerElement(mc);
+        this.condition = new GuiOpenConditionButtonElement(mc);
         this.condition.tooltip(IKey.lang("mappet.gui.nodes.dialogue.condition"), Direction.TOP);
 
         this.add(this.quest);
@@ -54,6 +54,6 @@ public class GuiQuestNodePanel extends GuiNodePanel<QuestNode>
         this.receiver.setText(node.receiver);
         this.autoAccept.toggled(node.autoAccept);
         this.allowRetake.toggled(node.allowRetake);
-        this.condition.set(node.condition);
+        this.condition.setCondition(node.condition);
     }
 }

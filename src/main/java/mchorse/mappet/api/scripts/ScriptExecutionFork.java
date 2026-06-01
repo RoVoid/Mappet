@@ -3,7 +3,6 @@ package mchorse.mappet.api.scripts;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.ScriptEvent;
-import mchorse.mappet.api.scripts.user.IScriptEvent;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.api.utils.IExecutable;
 
@@ -13,7 +12,7 @@ public class ScriptExecutionFork implements IExecutable
 {
     public DataContext context;
     public ScriptObjectMirror object;
-    public Consumer<IScriptEvent> consumer;
+    public Consumer<ScriptEvent> consumer;
     public String script;
     public String function;
     public int timer;
@@ -33,7 +32,7 @@ public class ScriptExecutionFork implements IExecutable
         this.timer = timer;
     }
 
-    public ScriptExecutionFork(DataContext context, Consumer<IScriptEvent> consumer, int timer)
+    public ScriptExecutionFork(DataContext context, Consumer<ScriptEvent> consumer, int timer)
     {
         this.context = context;
         this.consumer = consumer;

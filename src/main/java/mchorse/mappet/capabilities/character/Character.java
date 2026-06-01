@@ -6,7 +6,7 @@ import mchorse.mappet.api.dialogues.DialogueContext;
 import mchorse.mappet.api.huds.HUDMorph;
 import mchorse.mappet.api.huds.HUDScene;
 import mchorse.mappet.api.quests.Quests;
-import mchorse.mappet.api.states.States;
+import mchorse.mappet.api.states.*;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.huds.PacketHUDMorph;
@@ -38,7 +38,13 @@ public class Character implements ICharacter {
     }
 
     private final Quests quests = new Quests();
-    private final States states = new States();
+
+    private final ScriptStates scriptStates = new ScriptStates();
+    private final FactionStates factionStates = new FactionStates();
+    private final DialogueStates dialogueStates = new DialogueStates();
+    private final QuestStates questStates = new QuestStates();
+
+    private final StatesProvider statesProvider = new StatesProvider(scriptStates, dialogueStates, questStates, factionStates);
 
     private Dialogue dialogue;
     private DialogueContext dialogueContext;
@@ -55,8 +61,28 @@ public class Character implements ICharacter {
     private UUID cameraUuid;
 
     @Override
-    public States getStates() {
-        return states;
+    public ScriptStates getScriptStates() {
+        return scriptStates;
+    }
+
+    @Override
+    public DialogueStates getDialogueStates() {
+        return dialogueStates;
+    }
+
+    @Override
+    public FactionStates getFactionStates() {
+        return factionStates;
+    }
+
+    @Override
+    public QuestStates getQuestStates() {
+        return questStates;
+    }
+
+    @Override
+    public StatesProvider getStates() {
+        return statesProvider;
     }
 
     @Override
@@ -66,9 +92,7 @@ public class Character implements ICharacter {
 
     @Override
     public void setDialogue(Dialogue dialogue, DialogueContext context) {
-        if (dialogue == null && this.dialogue != null) {
-            this.dialogue.onClose.trigger(dialogueContext.data);
-        }
+        if (dialogue == null && this.dialogue != null) this.dialogue.onClose.trigger(dialogueContext.data);
 
         this.dialogue = dialogue;
         dialogueContext = context;
@@ -107,7 +131,10 @@ public class Character implements ICharacter {
     @Override
     public void copy(ICharacter character, EntityPlayer player) {
         quests.copy(character.getQuests());
-        states.copy(character.getStates());
+        scriptStates.from(character.getScriptStates());
+        factionStates.from(character.getFactionStates());
+        dialogueStates.from(character.getDialogueStates());
+        questStates.from(character.getQuestStates());
         lastClear = character.getLastClear();
         displayedHUDs = character.getDisplayedHUDs();
         cameraUuid = character.getCamera();
@@ -118,38 +145,26 @@ public class Character implements ICharacter {
         NBTTagCompound tag = new NBTTagCompound();
 
         tag.setTag("Quests", quests.serializeNBT());
-        tag.setTag("States", states.serializeNBT());
+        tag.setTag("States", statesProvider.serializeNBT());
         tag.setString("LastClear", lastClear.toString());
         tag.setTag("DisplayedHUDs", serializeDisplayedHUDs());
-        if(cameraUuid != null) tag.setUniqueId("Camera", cameraUuid);
+        if (cameraUuid != null) tag.setUniqueId("Camera", cameraUuid);
 
         return tag;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound tag) {
-        if (tag.hasKey("Quests")) {
-            quests.deserializeNBT(tag.getCompoundTag("Quests"));
+        if (tag.hasKey("Quests")) quests.deserializeNBT(tag.getCompoundTag("Quests"));
+        if (tag.hasKey("States")) statesProvider.deserializeNBT(tag.getCompoundTag("States"));
+
+        if (tag.hasKey("LastClear")) try {
+            lastClear = Instant.parse(tag.getString("LastClear"));
+        } catch (Exception ignored) {
         }
 
-        if (tag.hasKey("States")) {
-            states.deserializeNBT(tag.getCompoundTag("States"));
-        }
-
-        if (tag.hasKey("LastClear")) {
-            try {
-                lastClear = Instant.parse(tag.getString("LastClear"));
-            } catch (Exception ignored) {
-            }
-        }
-
-        if (tag.hasKey("DisplayedHUDs")) {
-            deserializeDisplayedHUDs(tag.getCompoundTag("DisplayedHUDs"));
-        }
-
-        if (tag.hasUniqueId("Camera")) {
-            cameraUuid = tag.getUniqueId("Camera");
-        }
+        if (tag.hasKey("DisplayedHUDs")) deserializeDisplayedHUDs(tag.getCompoundTag("DisplayedHUDs"));
+        if (tag.hasUniqueId("Camera")) cameraUuid = tag.getUniqueId("Camera");
     }
 
     /* GUIs */
@@ -173,18 +188,11 @@ public class Character implements ICharacter {
             Dispatcher.sendTo(new PacketHUDScene(scene.getId(), scene.serializeNBT()), (EntityPlayerMP) player);
 
             //if the hud is global, display it to all players as well
-            if (scene.global) {
-                for (EntityPlayer player : player.world.playerEntities) {
-                    if (player != this.player) {
-                        Dispatcher.sendTo(new PacketHUDScene(scene.getId(), scene.serializeNBT()), (EntityPlayerMP) player);
-                    }
-                }
-            }
+            if (scene.global) for (EntityPlayer player : player.world.playerEntities)
+                if (player != this.player) Dispatcher.sendTo(new PacketHUDScene(scene.getId(), scene.serializeNBT()), (EntityPlayerMP) player);
 
             // Adds the morph to the displayedHUDs list
-            if (addToDisplayedList) {
-                getDisplayedHUDs().put(id, Collections.singletonList(scene));
-            }
+            if (addToDisplayedList) getDisplayedHUDs().put(id, Collections.singletonList(scene));
             return true;
         }
 
@@ -198,16 +206,11 @@ public class Character implements ICharacter {
         //if the hud is global, display change it for all players as well
         HUDScene scene = Mappet.huds.load(id);
 
-        if (scene.global) {
-            for (EntityPlayer player : player.world.playerEntities) {
-                if (player != this.player) {
-                    Dispatcher.sendTo(new PacketHUDMorph(id, index, tag), (EntityPlayerMP) player);
-                }
-            }
-        }
+        if (scene.global) for (EntityPlayer player : player.world.playerEntities)
+            if (player != this.player) Dispatcher.sendTo(new PacketHUDMorph(id, index, tag), (EntityPlayerMP) player);
 
         // Changing the HUDMorph in the displayedHUDs list
-        for (Map.Entry<String, List<HUDScene>> entry : getDisplayedHUDs().entrySet()) {
+        for (Map.Entry<String, List<HUDScene>> entry : getDisplayedHUDs().entrySet())
             if (entry.getKey().equals(id)) {
                 List<HUDScene> scenes = entry.getValue();
                 if (!scenes.isEmpty()) {
@@ -219,16 +222,13 @@ public class Character implements ICharacter {
                     }
                 }
             }
-        }
     }
 
     @Override
     public void closeHUD(String id) {
         HUDScene scene = Mappet.huds.load(id);
-        if (scene.global) {
-            for (EntityPlayer player : player.world.playerEntities)
-                Dispatcher.sendTo(new PacketHUDScene(id == null ? "" : id, null), (EntityPlayerMP) player);
-        }
+        if (scene.global) for (EntityPlayer player : player.world.playerEntities)
+            Dispatcher.sendTo(new PacketHUDScene(id == null ? "" : id, null), (EntityPlayerMP) player);
         else Dispatcher.sendTo(new PacketHUDScene(id == null ? "" : id, null), (EntityPlayerMP) player);
         getDisplayedHUDs().remove(id);
     }
@@ -242,10 +242,8 @@ public class Character implements ICharacter {
     public void closeAllHUDs(List<String> ignores) {
         for (Map.Entry<String, List<HUDScene>> entry : getDisplayedHUDs().entrySet()) {
             if (ignores.contains(entry.getKey())) continue;
-            if (entry.getValue().get(0).global) {
-                for (EntityPlayer player : player.world.playerEntities)
-                    Dispatcher.sendTo(new PacketHUDScene(entry.getKey(), null), (EntityPlayerMP) player);
-            }
+            if (entry.getValue().get(0).global) for (EntityPlayer player : player.world.playerEntities)
+                Dispatcher.sendTo(new PacketHUDScene(entry.getKey(), null), (EntityPlayerMP) player);
             else Dispatcher.sendTo(new PacketHUDScene(entry.getKey(), null), (EntityPlayerMP) player);
         }
         getDisplayedHUDs().clear();
@@ -279,9 +277,7 @@ public class Character implements ICharacter {
         NBTTagCompound tag = new NBTTagCompound();
         for (Map.Entry<String, List<HUDScene>> entry : displayedHUDs.entrySet()) {
             NBTTagList sceneList = new NBTTagList();
-            for (HUDScene scene : entry.getValue()) {
-                sceneList.appendTag(scene.serializeNBT());
-            }
+            for (HUDScene scene : entry.getValue()) sceneList.appendTag(scene.serializeNBT());
             tag.setTag(entry.getKey(), sceneList);
         }
         return tag;
@@ -289,15 +285,12 @@ public class Character implements ICharacter {
 
     public NBTTagCompound getGlobalDisplayedHUDsTag() {
         NBTTagCompound tag = new NBTTagCompound();
-        for (Map.Entry<String, List<HUDScene>> entry : displayedHUDs.entrySet()) {
+        for (Map.Entry<String, List<HUDScene>> entry : displayedHUDs.entrySet())
             if (entry.getValue().get(0).global) {
                 NBTTagList sceneList = new NBTTagList();
-                for (HUDScene scene : entry.getValue()) {
-                    sceneList.appendTag(scene.serializeNBT());
-                }
+                for (HUDScene scene : entry.getValue()) sceneList.appendTag(scene.serializeNBT());
                 tag.setTag(entry.getKey(), sceneList);
             }
-        }
         return tag;
     }
 
@@ -333,9 +326,7 @@ public class Character implements ICharacter {
                     break;
                 }
             }
-            if (removeScene) {
-                iterator.remove();
-            }
+            if (removeScene) iterator.remove();
         }
     }
 

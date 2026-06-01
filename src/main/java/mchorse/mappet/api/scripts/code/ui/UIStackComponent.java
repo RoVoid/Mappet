@@ -1,7 +1,7 @@
 package mchorse.mappet.api.scripts.code.ui;
 
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
-import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
+import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import mchorse.mappet.client.gui.ExtendedGuiSlotElement;
@@ -19,7 +19,7 @@ public class UIStackComponent extends UIComponent {
     public boolean frameVisible = true;
     public boolean itemTooltipVisible = true;
 
-    public UIStackComponent stack(IScriptItemStack stack) {
+    public UIStackComponent stack(ScriptItemStack stack) {
         return this.stack(stack == null ? ItemStack.EMPTY : stack.getMinecraftItemStack());
     }
 
@@ -29,7 +29,7 @@ public class UIStackComponent extends UIComponent {
         return this;
     }
 
-    public IScriptItemStack getStack() {
+    public ScriptItemStack getStack() {
         return ScriptItemStack.create(stack);
     }
 

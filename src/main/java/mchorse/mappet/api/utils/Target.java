@@ -1,7 +1,9 @@
 package mchorse.mappet.api.utils;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.api.states.States;
+import mchorse.mappet.api.states.FactionStates;
+import mchorse.mappet.api.states.QuestStates;
+import mchorse.mappet.api.states.ScriptStates;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
 import mchorse.mappet.utils.EntityUtils;
@@ -12,106 +14,77 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class Target implements INBTSerializable<NBTTagCompound>
-{
+public class Target implements INBTSerializable<NBTTagCompound> {
     public TargetMode mode;
     public String selector = "";
 
-    private TargetMode defaultMode;
+    private final TargetMode defaultMode;
 
-    public Target(TargetMode mode)
-    {
-        this.mode = this.defaultMode = mode;
+    public Target(TargetMode mode) {
+        this.mode = defaultMode = mode;
     }
 
-    public EntityPlayer getPlayer(DataContext context)
-    {
-        if (this.mode == TargetMode.SUBJECT && context.subject instanceof EntityPlayer)
-        {
-            return (EntityPlayer) context.subject;
-        }
-        else if (this.mode == TargetMode.OBJECT && context.object instanceof EntityPlayer)
-        {
-            return (EntityPlayer) context.object;
-        }
-        else if (this.mode == TargetMode.PLAYER)
-        {
-            return context.getPlayer();
-        }
-        else if (this.mode == TargetMode.SELECTOR)
-        {
-            try
-            {
-                return EntitySelector.matchOnePlayer(context.getSender(), this.selector);
+    public EntityPlayer getPlayer(DataContext context) {
+        if (mode == TargetMode.SUBJECT && context.subject instanceof EntityPlayer) return (EntityPlayer) context.subject;
+        if (mode == TargetMode.OBJECT && context.object instanceof EntityPlayer) return (EntityPlayer) context.object;
+        if (mode == TargetMode.PLAYER) return context.getPlayer();
+        if (mode == TargetMode.SELECTOR) {
+            try {
+                return EntitySelector.matchOnePlayer(context.getSender(), selector);
+            } catch (Exception ignored) {
             }
-            catch (Exception e)
-            {}
         }
-
         return null;
     }
 
-    public Entity getEntity(DataContext context)
-    {
-        if (this.mode == TargetMode.SUBJECT && context.subject != null)
-        {
-            return context.subject;
-        }
-        else if (this.mode == TargetMode.OBJECT && context.object != null)
-        {
-            return context.object;
-        }
-        else if (this.mode == TargetMode.PLAYER)
-        {
-            return context.getPlayer();
-        }
-        else if (this.mode == TargetMode.NPC)
-        {
-            return context.getNpc();
-        }
-        else if (this.mode == TargetMode.SELECTOR)
-        {
-            try
-            {
-                return EntitySelector.matchOneEntity(context.getSender(), this.selector, Entity.class);
+    public Entity getEntity(DataContext context) {
+        if (mode == TargetMode.SUBJECT && context.subject != null) return context.subject;
+        if (mode == TargetMode.OBJECT && context.object != null) return context.object;
+        if (mode == TargetMode.PLAYER) return context.getPlayer();
+        if (mode == TargetMode.NPC) return context.getNpc();
+        if (mode == TargetMode.SELECTOR) {
+            try {
+                return EntitySelector.matchOneEntity(context.getSender(), selector, Entity.class);
+            } catch (Exception ignored) {
             }
-            catch (Exception e)
-            {}
         }
-
         return null;
     }
 
-    public ICharacter getCharacter(DataContext context)
-    {
-        return Character.get(this.getPlayer(context));
+    public ICharacter getCharacter(DataContext context) {
+        return Character.get(getPlayer(context));
     }
 
-    public States getStates(DataContext context)
-    {
-        if (this.mode != TargetMode.GLOBAL)
-        {
-            return EntityUtils.getStates(this.getEntity(context));
-        }
+    public ScriptStates getSStates(DataContext context) {
+        return mode == TargetMode.GLOBAL ? Mappet.states.scripts : EntityUtils.getSStates(getEntity(context));
+    }
 
-        return Mappet.states;
+    public FactionStates getFStates(DataContext context) {
+        return mode == TargetMode.GLOBAL ? Mappet.states.factions : EntityUtils.getFStates(getEntity(context));
+    }
+
+    public QuestStates getQStates(DataContext context) {
+        if (mode == TargetMode.GLOBAL) return Mappet.states.quests;
+        if (getEntity(context) instanceof EntityPlayer) {
+            ICharacter character = Character.get((EntityPlayer) getEntity(context));
+            if (character != null) return character.getQuestStates();
+        }
+        return null;
     }
 
     @Override
-    public NBTTagCompound serializeNBT()
-    {
+    public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
 
-        tag.setInteger("Target", this.mode.ordinal());
-        tag.setString("Selector", this.selector);
+        tag.setInteger("Target", mode.ordinal());
+        tag.setString("Selector", selector);
 
         return tag;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
-    {
-        this.mode = EnumUtils.getValue(tag.getInteger("Target"), TargetMode.values(), this.defaultMode);
-        this.selector = tag.getString("Selector");
+    public void deserializeNBT(NBTTagCompound tag) {
+        mode = EnumUtils.getValue(tag.getInteger("Target"), TargetMode.values(), defaultMode);
+        selector = tag.getString("Selector");
     }
 }

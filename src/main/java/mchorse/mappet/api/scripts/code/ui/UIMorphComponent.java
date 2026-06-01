@@ -1,7 +1,7 @@
 package mchorse.mappet.api.scripts.code.ui;
 
 import mchorse.mappet.config.MappetConfig;
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
+import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
@@ -38,7 +38,7 @@ import java.text.DecimalFormat;
  * <p>If this component is editable, then the value that gets written to UI context's data
  * (if ID is present) is an NBT compound tag that represents a morph.</p>
  *
- * <p>This component can be created using {@link IMappetUIBuilder#morph(AbstractMorph)} method.</p>
+ * <p>This component can be created using {@link MappetUIBuilder#morph(AbstractMorph)} method.</p>
  *
  * <pre>{@code
  *    function main(c)
@@ -98,7 +98,7 @@ public class UIMorphComponent extends UIComponent {
      * Set display morph.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Set Alex morph
      *    uiContext.get("morph").morph(mappet.createMorph('{Name:"blockbuster.alex"}'));
@@ -116,7 +116,7 @@ public class UIMorphComponent extends UIComponent {
      * Enable an ability for players to pick or edit the morph.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Enable morph editing
      *    uiContext.get("morph").editing();
@@ -130,7 +130,7 @@ public class UIMorphComponent extends UIComponent {
      * Toggle an ability for players to pick or edit the morph.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Disable morph editing
      *    uiContext.get("morph").editing(false);
@@ -154,7 +154,7 @@ public class UIMorphComponent extends UIComponent {
      * paste into the code.</p>
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Set camera position
      *    uiContext.get("morph").position(0, 1, 0.5);
@@ -172,7 +172,7 @@ public class UIMorphComponent extends UIComponent {
      * Change camera orbit rotation in the morph component. The default camera rotation (<code>0</code>, <code>0</code>).
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Set camera rotation
      *    uiContext.get("morph").rotation(15, 0);
@@ -191,7 +191,7 @@ public class UIMorphComponent extends UIComponent {
      * camera distance is <code>2</code>.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Set camera distance
      *    uiContext.get("morph").distance(4);
@@ -209,7 +209,7 @@ public class UIMorphComponent extends UIComponent {
      * Change camera Field of View in the morph component. The default FOV is <code>70</code>.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Set camera FOV
      *    uiContext.get("morph").fov(50);

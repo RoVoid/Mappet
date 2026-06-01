@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.nodes;
 
 import mchorse.mappet.api.events.nodes.EventBaseNode;
-import mchorse.mappet.api.utils.factory.IFactory;
+import mchorse.mappet.api.utils.MapFactory;
 import mchorse.mappet.client.Colors;
 import net.minecraft.client.Minecraft;
 
@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 
 public class GuiEventNodeGraph extends GuiNodeGraph<EventBaseNode>
 {
-    public GuiEventNodeGraph(Minecraft mc, IFactory<EventBaseNode> factory, Consumer<EventBaseNode> callback)
+    public GuiEventNodeGraph(Minecraft mc, MapFactory<EventBaseNode> factory, Consumer<EventBaseNode> callback)
     {
         super(mc, factory, callback);
     }

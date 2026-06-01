@@ -15,6 +15,6 @@ public class ServerHandlerEditEmitter extends ServerMessageHandler<PacketEditEmi
         if (server != null && !server.getPlayerList().canSendCommands(player.getGameProfile())) return;
 
         TileEntity tile = WorldUtils.getTileEntity(player.world, message.pos);
-        if (tile instanceof TileEmitter) ((TileEmitter) tile).setExpression(message);
+        if (tile instanceof TileEmitter) ((TileEmitter) tile).applyPacket(message);
     }
 }

@@ -1,6 +1,6 @@
 package mchorse.mappet.api.conditions.blocks;
 
-import mchorse.mappet.api.states.States;
+import mchorse.mappet.api.states.QuestStates;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.api.utils.TargetMode;
 import mchorse.mappet.capabilities.character.Character;
@@ -12,107 +12,64 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class QuestConditionBlock extends TargetConditionBlock
-{
+public class QuestConditionBlock extends TargetConditionBlock {
     public QuestCheck quest = QuestCheck.COMPLETED;
 
     @Override
-    public boolean evaluateBlock(DataContext context)
-    {
-        if (this.target.mode == TargetMode.GLOBAL)
-        {
-            States states = this.target.getStates(context);
+    public boolean evaluateBlock(DataContext context) {
+        if (target.mode == TargetMode.GLOBAL) {
+            QuestStates states = target.getQStates(context);
 
-            if (this.quest == QuestCheck.ABSENT)
-            {
-                return !states.wasQuestCompleted(this.id) && this.hasServerInProgress(context);
-            }
-            else if (this.quest == QuestCheck.PRESENT)
-            {
-                return this.hasServerInProgress(context);
-            }
-            else
-            {
-                return states.wasQuestCompleted(this.id);
-            }
+            if (quest == QuestCheck.ABSENT) return !states.wasCompleted(id) && hasServerInProgress(context);
+            if (quest == QuestCheck.PRESENT) return hasServerInProgress(context);
+            return states.wasCompleted(id);
         }
-        else
-        {
-            ICharacter character = this.target.getCharacter(context);
+        ICharacter character = target.getCharacter(context);
 
-            if (character != null)
-            {
-                if (this.quest == QuestCheck.ABSENT)
-                {
-                    return !character.getStates().wasQuestCompleted(this.id) && !character.getQuests().has(this.id);
-                }
-                else if (this.quest == QuestCheck.PRESENT)
-                {
-                    return character.getQuests().has(this.id);
-                }
-                else
-                {
-                    return character.getStates().wasQuestCompleted(this.id);
-                }
-            }
-        }
+        if (character == null) return false;
 
-        return false;
+        if (quest == QuestCheck.ABSENT) return !character.getQuestStates().wasCompleted(id) && !character.getQuests().has(id);
+        if (quest == QuestCheck.PRESENT) return character.getQuests().has(id);
+        return character.getQuestStates().wasCompleted(id);
     }
 
-    private boolean hasServerInProgress(DataContext context)
-    {
-        for (EntityPlayer player : context.server.getPlayerList().getPlayers())
-        {
-            if (Character.get(player).getQuests().has(this.id))
-            {
-                return true;
-            }
+    private boolean hasServerInProgress(DataContext context) {
+        for (EntityPlayer player : context.server.getPlayerList().getPlayers()) {
+            Character character = Character.get(player);
+            if (character != null && character.getQuests().has(id)) return true;
         }
-
         return false;
     }
 
     @Override
-    protected TargetMode getDefaultTarget()
-    {
+    protected TargetMode getDefaultTarget() {
         return TargetMode.SUBJECT;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String stringify()
-    {
-        if (this.quest == QuestCheck.ABSENT)
-        {
-            return I18n.format("mappet.gui.conditions.quest.is_absent", this.id);
-        }
-        else if (this.quest == QuestCheck.PRESENT)
-        {
-            return I18n.format("mappet.gui.conditions.quest.is_present", this.id);
-        }
+    public String name() {
+        if (quest == QuestCheck.ABSENT) return I18n.format("mappet.gui.conditions.quest.is_absent", id);
+        if (quest == QuestCheck.PRESENT) return I18n.format("mappet.gui.conditions.quest.is_present", id);
 
-        return I18n.format("mappet.gui.conditions.quest.is_completed", this.id);
+        return I18n.format("mappet.gui.conditions.quest.is_completed", id);
     }
 
     @Override
-    public void serializeNBT(NBTTagCompound tag)
-    {
+    public void serializeNBT(NBTTagCompound tag) {
         super.serializeNBT(tag);
 
-        tag.setInteger("Quest", this.quest.ordinal());
+        tag.setInteger("Quest", quest.ordinal());
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
-    {
+    public void deserializeNBT(NBTTagCompound tag) {
         super.deserializeNBT(tag);
 
-        this.quest = EnumUtils.getValue(tag.getInteger("Quest"), QuestCheck.values(), QuestCheck.COMPLETED);
+        quest = EnumUtils.getValue(tag.getInteger("Quest"), QuestCheck.values(), QuestCheck.COMPLETED);
     }
 
-    public static enum QuestCheck
-    {
+    public enum QuestCheck {
         ABSENT, PRESENT, COMPLETED
     }
 }

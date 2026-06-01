@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.conditionModel;
 
 import mchorse.mappet.client.gui.GuiMappetDashboard;
-import mchorse.mappet.client.gui.conditions.GuiCheckerElement;
+import mchorse.mappet.client.gui.conditions.GuiOpenConditionButtonElement;
 import mchorse.mappet.client.gui.utils.GuiMorphRenderer;
 import mchorse.mappet.utils.ConditionModel;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -12,7 +12,7 @@ import net.minecraft.client.Minecraft;
 
 public class GuiConditionModelElement extends GuiElement
 {
-    public GuiCheckerElement checker;
+    public GuiOpenConditionButtonElement checker;
     public ConditionModel conditionModel;
     public GuiNestedEdit morph;
     public GuiMorphRenderer renderer;
@@ -21,7 +21,7 @@ public class GuiConditionModelElement extends GuiElement
     {
         super(mc);
 
-        this.checker = new GuiCheckerElement(mc);
+        this.checker = new GuiOpenConditionButtonElement(mc);
         this.renderer = new GuiMorphRenderer(mc);
         this.morph = new GuiNestedEdit(mc, (editing) -> GuiMappetDashboard.get(mc).openMorphMenu(this.parent, editing, this.renderer.morph.copy(), (morph) ->
         {
@@ -41,7 +41,7 @@ public class GuiConditionModelElement extends GuiElement
     public void set(ConditionModel conditionModel)
     {
         this.conditionModel = conditionModel;
-        this.checker.set(this.conditionModel.checker);
+        this.checker.setCondition(this.conditionModel.condition);
         this.renderer.morph.set(this.conditionModel.morph);
     }
 }

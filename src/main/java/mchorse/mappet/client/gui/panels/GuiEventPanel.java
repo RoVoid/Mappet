@@ -34,7 +34,6 @@ public class GuiEventPanel extends GuiMappetRunPanel<NodeSystem<EventBaseNode>> 
     static {
         PANELS.put(CommandNode.class, GuiCommandNodePanel.class);
         PANELS.put(ConditionNode.class, GuiConditionNodePanel.class);
-        PANELS.put(SwitchNode.class, GuiSwitchNodePanel.class);
         PANELS.put(TimerNode.class, GuiTimerNodePanel.class);
         PANELS.put(CancelNode.class, GuiCancelNodePanel.class);
         PANELS.put(CommentNode.class, GuiCommentNodePanel.class);

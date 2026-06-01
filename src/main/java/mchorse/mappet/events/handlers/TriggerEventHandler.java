@@ -1,15 +1,16 @@
 package mchorse.mappet.events.handlers;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntityItem;
 import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
 import mchorse.mappet.api.scripts.code.items.ScriptInventory;
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
+import mchorse.mappet.api.states.States;
 import mchorse.mappet.api.triggers.Trigger;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.entities.EntityNpc;
 import mchorse.mappet.events.StateChangedEvent;
 import mchorse.mappet.network.Dispatcher;
@@ -71,8 +72,7 @@ public class TriggerEventHandler {
         context.set("event", event);
         trigger.trigger(context);
         if (event.isCancelable() && context.isCanceled()) {
-            if (event instanceof LivingEquipmentChangeEvent || event instanceof TickEvent)
-                return; //otherwise game crashes
+            if (event instanceof LivingEquipmentChangeEvent || event instanceof TickEvent) return; //otherwise game crashes
             event.setCanceled(true);
         }
     }
@@ -106,8 +106,7 @@ public class TriggerEventHandler {
     public static Set<Class<? extends Event>> getRegisteredEvents() {
         if (!MappetConfig.enableForgeTriggers.get()) return new HashSet<>();
         if (registeredEvents == null || registeredEvents.isEmpty()) {
-            registeredEvents = new Reflections()
-                    .getSubTypesOf(Event.class)
+            registeredEvents = new Reflections().getSubTypesOf(Event.class)
                     .stream()
                     .filter(clazz -> !FMLNetworkEvent.class.isAssignableFrom(clazz))
                     .filter(clazz -> !TextureStitchEvent.class.isAssignableFrom(clazz))
@@ -130,8 +129,7 @@ public class TriggerEventHandler {
         IBlockState state = event.getState();
         ResourceLocation id = state.getBlock().getRegistryName();
         if (id == null) return;
-        DataContext context = new DataContext(event.getPlayer())
-                .set("block", id.toString())
+        DataContext context = new DataContext(event.getPlayer()).set("block", id.toString())
                 .set("meta", state.getBlock().getMetaFromState(state))
                 .set("position", event.getPos());
         trigger(event, Mappet.settings.blockBreak, context);
@@ -144,8 +142,7 @@ public class TriggerEventHandler {
         IBlockState state = event.getPlacedBlock();
         ResourceLocation id = state.getBlock().getRegistryName();
         if (id == null) return;
-        DataContext context = new DataContext(event.getPlayer())
-                .set("block", id.toString())
+        DataContext context = new DataContext(event.getPlayer()).set("block", id.toString())
                 .set("meta", state.getBlock().getMetaFromState(state))
                 .set("position", event.getPos());
         trigger(event, Mappet.settings.blockPlace, context);
@@ -156,8 +153,7 @@ public class TriggerEventHandler {
         DamageSource source = event.getSource();
         if (event.getEntity() == null || event.getEntity().world.isRemote) return;
         if (shouldSkipTrigger(Mappet.settings.entityDamaged)) return;
-        DataContext context = new DataContext(event.getEntityLiving(), source.getTrueSource())
-                .set("damage", event.getAmount())
+        DataContext context = new DataContext(event.getEntityLiving(), source.getTrueSource()).set("damage", event.getAmount())
                 .set("type", source.getDamageType())
                 .set("unblockable", source.isUnblockable());
         if (source.getImmediateSource() instanceof EntityLivingBase && source.getImmediateSource() != source.getTrueSource())
@@ -168,11 +164,9 @@ public class TriggerEventHandler {
     @SubscribeEvent
     public void onEntityAttacked(LivingAttackEvent event) {
         DamageSource source = event.getSource();
-        if (!(source.getTrueSource() instanceof EntityLivingBase) || event.getEntity() == null || event.getEntity().world.isRemote)
-            return;
+        if (!(source.getTrueSource() instanceof EntityLivingBase) || event.getEntity() == null || event.getEntity().world.isRemote) return;
         if (shouldSkipTrigger(Mappet.settings.entityAttacked)) return;
-        DataContext context = new DataContext(event.getEntityLiving(), source.getTrueSource())
-                .set("damage", event.getAmount())
+        DataContext context = new DataContext(event.getEntityLiving(), source.getTrueSource()).set("damage", event.getAmount())
                 .set("type", source.getDamageType())
                 .set("unblockable", source.isUnblockable());
         if (source.getImmediateSource() instanceof EntityLivingBase && source.getImmediateSource() != source.getTrueSource())
@@ -183,7 +177,8 @@ public class TriggerEventHandler {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onPlayerOpenOrCloseContainer(PlayerContainerEvent event) {
-        Trigger trigger = event instanceof PlayerContainerEvent.Close ? Mappet.settings.playerCloseContainer : Mappet.settings.playerOpenContainer;
+        Trigger trigger =
+                event instanceof PlayerContainerEvent.Close ? Mappet.settings.playerCloseContainer : Mappet.settings.playerOpenContainer;
         if (shouldSkipTrigger(trigger)) return;
 
         EntityPlayer player = event.getEntityPlayer();
@@ -234,8 +229,7 @@ public class TriggerEventHandler {
         if (player.world.isRemote) return;
 
         if (shouldSkipTrigger(Mappet.settings.blockClick)) return;
-        DataContext context = new DataContext(player)
-                .set("position", event.getPos())
+        DataContext context = new DataContext(player).set("position", event.getPos())
                 .set("hand", event.getHand() == EnumHand.MAIN_HAND ? "main" : "off");
 
         trigger(event, Mappet.settings.blockClick, context);
@@ -250,8 +244,7 @@ public class TriggerEventHandler {
         IBlockState state = event.getWorld().getBlockState(event.getPos());
         ResourceLocation id = state.getBlock().getRegistryName();
         if (id == null) return;
-        DataContext context = new DataContext(player)
-                .set("block", id.toString())
+        DataContext context = new DataContext(player).set("block", id.toString())
                 .set("meta", state.getBlock().getMetaFromState(state))
                 .set("position", event.getPos())
                 .set("hand", event.getHand() == EnumHand.MAIN_HAND ? "main" : "off");
@@ -265,8 +258,7 @@ public class TriggerEventHandler {
         if (player.world.isRemote) return;
 
         if (shouldSkipTrigger(Mappet.settings.playerItemInteract)) return;
-        DataContext context = new DataContext(player)
-                .set("position", event.getPos())
+        DataContext context = new DataContext(player).set("position", event.getPos())
                 .set("hand", event.getHand() == EnumHand.MAIN_HAND ? "main" : "off");
 
         trigger(event, Mappet.settings.playerItemInteract, context);
@@ -309,8 +301,7 @@ public class TriggerEventHandler {
     @SubscribeEvent
     public void onPlayerPickUp(EntityItemPickupEvent event) {
         if (event.getEntityPlayer().world.isRemote || shouldSkipTrigger(Mappet.settings.playerItemPickup)) return;
-        DataContext context = new DataContext(event.getEntityPlayer())
-                .set("item", ScriptItemStack.create(event.getItem().getItem()))
+        DataContext context = new DataContext(event.getEntityPlayer()).set("item", ScriptItemStack.create(event.getItem().getItem()))
                 .set("entityItem", ScriptEntityItem.create(event.getItem()));
         trigger(event, Mappet.settings.playerItemPickup, context);
     }
@@ -381,26 +372,27 @@ public class TriggerEventHandler {
 
     @SubscribeEvent
     public void onStateChange(StateChangedEvent event) {
-        Trigger trigger = Mappet.settings.stateChanged;
-        if (shouldSkipTrigger(Mappet.settings.stateChanged)) return;
+        if (event.type != States.TYPES.SCRIPT || shouldSkipTrigger(Mappet.settings.stateChanged)) return;
 
         MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
         if (server == null) return;
 
         DataContext context = null;
 
-        if (event.isGlobal()) context = new DataContext(server);
+        if (Mappet.states.isGlobal(event.states)) context = new DataContext(server);
         else {
             for (EntityPlayer player : server.getPlayerList().getPlayers()) {
                 ICharacter character = Character.get(player);
-                if (character == null || character.getStates() != event.states) continue;
+                if (character == null || character.getScriptStates() != event.states) continue;
                 context = new DataContext(player);
                 break;
             }
-            if (context == null) for (EntityNpc npc : getAllNpcs(server)) {
-                if (npc == null || npc.getStates() != event.states) continue;
-                context = new DataContext(npc);
-                break;
+            if (context == null) {
+                for (EntityNpc npc : getAllNpcs(server)) {
+                    if (npc == null || npc.getSStates() != event.states) continue;
+                    context = new DataContext(npc);
+                    break;
+                }
             }
         }
 
@@ -431,8 +423,7 @@ public class TriggerEventHandler {
         if (target != null && target.getEntityData().getBoolean("positionLocked")) event.setCanceled(true);
 
         if (target == null || target.world.isRemote || shouldSkipTrigger(Mappet.settings.livingKnockBack)) return;
-        DataContext context = new DataContext(target, event.getAttacker())
-                .set("strength", event.getStrength())
+        DataContext context = new DataContext(target, event.getAttacker()).set("strength", event.getStrength())
                 .set("ratioX", event.getRatioX())
                 .set("ratioZ", event.getRatioZ());
         trigger(event, Mappet.settings.livingKnockBack, context);
@@ -457,8 +448,7 @@ public class TriggerEventHandler {
     public void onLivingEquipmentChange(LivingEquipmentChangeEvent event) {
         if (event.getEntity().world.isRemote || shouldSkipTrigger(Mappet.settings.onLivingEquipmentChange)) return;
 
-        DataContext context = new DataContext(event.getEntity())
-                .set("item", ScriptItemStack.create(event.getTo()))
+        DataContext context = new DataContext(event.getEntity()).set("item", ScriptItemStack.create(event.getTo()))
                 .set("previous", ScriptItemStack.create(event.getFrom()));
 
         if (event.getEntity() instanceof EntityPlayerMP) {
@@ -480,8 +470,7 @@ public class TriggerEventHandler {
         if (item.getItem() != Items.LEAD) return;
 
         Entity target = event.getTarget();
-        if (!(target instanceof EntityLiving) || ((EntityLiving) target).getLeashed() || !((EntityLiving) target).canBeLeashedTo(player))
-            return;
+        if (!(target instanceof EntityLiving) || ((EntityLiving) target).getLeashed() || !((EntityLiving) target).canBeLeashedTo(player)) return;
 
         DataContext context = new DataContext(player, target).set("hand", event.getHand() == EnumHand.MAIN_HAND ? "main" : "off");
         trigger(event, Mappet.settings.playerEntityLeash, context);

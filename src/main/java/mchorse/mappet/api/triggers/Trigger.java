@@ -39,7 +39,7 @@ public class Trigger implements INBTSerializable<NBTTagCompound>
 
         for (AbstractTriggerBlock block : trigger.blocks)
         {
-            String type = CommonProxy.getTriggerBlocks().getType(block);
+            String type = CommonProxy.getTriggerBlocks().type(block);
             AbstractTriggerBlock newBlock = CommonProxy.getTriggerBlocks().create(type);
 
             newBlock.deserializeNBT(block.serializeNBT());
@@ -96,7 +96,7 @@ public class Trigger implements INBTSerializable<NBTTagCompound>
         {
             NBTTagCompound blockTag = block.serializeNBT();
 
-            blockTag.setString("Type", CommonProxy.getTriggerBlocks().getType(block));
+            blockTag.setString("Type", CommonProxy.getTriggerBlocks().type(block));
             blocks.appendTag(blockTag);
         }
 

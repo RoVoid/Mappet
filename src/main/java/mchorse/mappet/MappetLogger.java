@@ -1,6 +1,5 @@
 package mchorse.mappet;
 
-import mchorse.mappet.api.scripts.user.logs.IMappetLogger;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.appender.FileAppender;
 import org.apache.logging.log4j.core.layout.PatternLayout;
@@ -13,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class MappetLogger implements IMappetLogger {
+public class MappetLogger {
     public static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
     private final Logger forgeLogger;
@@ -82,39 +81,19 @@ public class MappetLogger implements IMappetLogger {
         return sb.toString();
     }
 
-    @Override
-    public void info(String message) {
-        forgeLogger.info(message);
-    }
-
-    @Override
-    public void error(String message) {
-        forgeLogger.error(message);
-    }
-
-    @Override
-    public void debug(String message) {
-        forgeLogger.debug(message);
-    }
-
-    @Override
-    public void warn(String message) {
-        forgeLogger.warn(message);
-    }
-
     public void info(Object... message) {
-        info(join(message));
+        forgeLogger.info(join(message));
     }
 
     public void warn(Object... message) {
-        warn(join(message));
+        forgeLogger.warn(join(message));
     }
 
     public void error(Object... message) {
-        error(join(message));
+        forgeLogger.error(join(message));
     }
 
     public void debug(Object... message) {
-        debug(join(message));
+        forgeLogger.debug(join(message));
     }
 }

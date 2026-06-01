@@ -2,18 +2,18 @@ package mchorse.mappet.entities;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.mappet.Mappet;
-import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.api.factions.Faction;
 import mchorse.mappet.api.factions.FactionAttitude;
 import mchorse.mappet.api.npcs.Npc;
 import mchorse.mappet.api.npcs.NpcDrop;
 import mchorse.mappet.api.npcs.NpcState;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
-import mchorse.mappet.api.scripts.user.nbt.INBTCompound;
-import mchorse.mappet.api.states.States;
+import mchorse.mappet.api.states.FactionStates;
+import mchorse.mappet.api.states.ScriptStates;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.entities.ai.*;
 import mchorse.mappet.entities.ai.fly.EntityAINpcFly;
 import mchorse.mappet.entities.ai.fly.FlyingMoveHelper;
@@ -158,13 +158,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
             // Check side and execute appropriate code
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
                 // This is a client
-                passenger.setPositionAndRotationDirect(finalPosX,
-                        offsetY,
-                        finalPosZ,
-                        passenger.rotationYaw,
-                        passenger.rotationPitch,
-                        3,
-                        true);
+                passenger.setPositionAndRotationDirect(finalPosX, offsetY, finalPosZ, passenger.rotationYaw, passenger.rotationPitch, 3, true);
             }
             else {
                 // This is a server
@@ -305,7 +299,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     private FactionAttitude getPlayerAttitude(Faction faction, EntityPlayerMP player) {
         if (player == null) return null;
         ICharacter character = Character.get(player);
-        return faction == null || character == null ? null : faction.get(character.getStates());
+        return faction == null || character == null ? null : faction.get(character.getFactionStates());
     }
 
     public void initialize() {
@@ -314,8 +308,12 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
 
     /* Getter and setters */
 
-    public States getStates() {
+    public ScriptStates getSStates() {
         return state.states;
+    }
+
+    public FactionStates getFStates() {
+        return state.factions;
     }
 
     public Faction getFaction() {
@@ -697,7 +695,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     }
 
     public void setStringInData(String key, String value) {
-        INBTCompound fullData = new ScriptNBTCompound(writeToNBT(new NBTTagCompound()));
+        ScriptNBTCompound fullData = new ScriptNBTCompound(writeToNBT(new NBTTagCompound()));
         fullData.getCompound("State").setString(key, value);
         readFromNBT(fullData.asMinecraft());
     }

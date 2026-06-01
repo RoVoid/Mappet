@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.code.ui;
 
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
+import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * <p>This component allows you to input one line of text. You can use Minecraft's
  * formatting using "[" symbol instead of section field.</p>
  *
- * <p>This component can be created using {@link IMappetUIBuilder#label(String)} method.</p>
+ * <p>This component can be created using {@link MappetUIBuilder#label(String)} method.</p>
  *
  * <pre>{@code
  *    function main(c)
@@ -46,7 +46,7 @@ public class UILabelComponent extends UILabelBaseComponent
      * Change background color of this label component by providing hex ARGB.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Add a half transparent black background
      *    uiContext.get("label").background(0x88000000);
@@ -66,7 +66,7 @@ public class UILabelComponent extends UILabelBaseComponent
      * relative to component's frame both vertically and horizontally.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Position the label's text in the middle of its frame
      *    uiContext.get("label").labelAnchor(0.5);
@@ -83,7 +83,7 @@ public class UILabelComponent extends UILabelBaseComponent
      * anchors.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Position the label's text in the middle only vertically
      *    uiContext.get("label").labelAnchor(0, 0.5);

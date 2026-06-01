@@ -2,7 +2,6 @@ package mchorse.mappet.api.scripts.code.math;
 
 import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
 import mchorse.mappet.api.scripts.code.world.ScriptWorld;
-import mchorse.mappet.api.scripts.user.math.IScriptBox;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -10,7 +9,7 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScriptBox implements IScriptBox {
+public class ScriptBox {
     public double minX;
     public double minY;
     public double minZ;
@@ -38,12 +37,10 @@ public class ScriptBox implements IScriptBox {
         maxZ = Math.max(vec1.z, vec2.z);
     }
 
-    @Override
     public boolean intersection(ScriptBox box) {
         return minX < box.maxX && maxX > minX && minY < maxY && maxY > box.minY && minZ < box.maxZ && maxZ > box.minZ;
     }
 
-    @Override
     public void grow(double value) {
         if (maxX - minX < value || maxY - minY < value || maxZ - minZ < value) maxX = minX = maxX = minY = minZ = maxZ = 0;
         minX -= value;
@@ -54,7 +51,6 @@ public class ScriptBox implements IScriptBox {
         maxZ += value;
     }
 
-    @Override
     public void offset(double x, double y, double z) {
         minX += x;
         minY += y;
@@ -65,17 +61,14 @@ public class ScriptBox implements IScriptBox {
         maxZ += z;
     }
 
-    @Override
     public boolean contains(double x, double y, double z) {
         return x >= minX && x <= maxX && y >= minY && y <= maxY && z >= minZ && z <= maxZ;
     }
 
-    @Override
     public boolean contains(ScriptVector vector) {
         return contains(vector.x, vector.y, vector.z);
     }
 
-    @Override
     public List<ScriptVector> getBlocksPositions(ScriptWorld world, ScriptBlockState state) {
         World minecraftWorldworld = world.asMinecraft();
         IBlockState blockState = state.asMinecraft();
@@ -95,7 +88,6 @@ public class ScriptBox implements IScriptBox {
         return blocks;
     }
 
-    @Override
     public String toString() {
         return "ScriptBox(" + minX + ", " + minY + ", " + minZ + ", " + maxX + ", " + maxY + ", " + maxZ + ")";
     }

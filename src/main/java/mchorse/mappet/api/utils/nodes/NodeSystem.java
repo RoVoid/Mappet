@@ -1,7 +1,7 @@
 package mchorse.mappet.api.utils.nodes;
 
 import mchorse.mappet.api.utils.AbstractData;
-import mchorse.mappet.api.utils.factory.IFactory;
+import mchorse.mappet.api.utils.MapFactory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -17,18 +17,18 @@ import java.util.UUID;
 
 public class NodeSystem <T extends Node> extends AbstractData
 {
-    private IFactory<T> factory;
+    private final MapFactory<T> factory;
 
     public Map<UUID, T> nodes = new HashMap<UUID, T>();
     public Map<UUID, List<NodeRelation<T>>> relations = new HashMap<UUID, List<NodeRelation<T>>>();
     public T main;
 
-    public NodeSystem(IFactory<T> factory)
+    public NodeSystem(MapFactory<T> factory)
     {
         this.factory = factory;
     }
 
-    public IFactory<T> getFactory()
+    public MapFactory<T> getFactory()
     {
         return this.factory;
     }

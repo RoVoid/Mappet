@@ -1,6 +1,6 @@
 package mchorse.mappet.api.hotkeys;
 
-import mchorse.mappet.api.conditions.Checker;
+import mchorse.mappet.api.conditions.Condition;
 import mchorse.mappet.api.triggers.Trigger;
 import mchorse.mappet.api.utils.DataContext;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,7 +14,7 @@ public class Hotkey implements INBTSerializable<NBTTagCompound> {
     public Mode mode = Mode.DOWN;
     public boolean state = false;
     public Trigger trigger = new Trigger();
-    public Checker enabled = new Checker(true);
+    public Condition enabled = new Condition(true);
 
     public Hotkey() {
     }
@@ -35,7 +35,7 @@ public class Hotkey implements INBTSerializable<NBTTagCompound> {
     }
 
     private boolean isEnabled(DataContext context) {
-        return enabled.check(context);
+        return enabled.execute(context);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class Hotkey implements INBTSerializable<NBTTagCompound> {
         defaultKeycode = tag.getInteger("DefaultKeycode");
         mode = Mode.values()[Math.max(0, Math.min(tag.getInteger("Mode"), Mode.values().length - 1))];
         trigger.deserializeNBT(tag.getCompoundTag("Trigger"));
-        enabled.deserializeNBT(tag.getTag("Enabled"));
+        enabled.deserializeNBT(tag.getCompoundTag("Enabled"));
     }
 
     @Override

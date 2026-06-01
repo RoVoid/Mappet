@@ -74,7 +74,7 @@ public class MorphConditionBlock extends TargetConditionBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String stringify()
+    public String name()
     {
         if (this.morph == null)
         {

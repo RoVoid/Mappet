@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.nodes;
 
+import mchorse.mappet.api.utils.MapFactory;
 import mchorse.mappet.config.MappetConfig;
-import mchorse.mappet.api.utils.factory.IFactory;
 import mchorse.mappet.api.utils.nodes.Node;
 import mchorse.mappet.api.utils.nodes.NodeRelation;
 import mchorse.mappet.api.utils.nodes.NodeSystem;
@@ -64,7 +64,7 @@ public class GuiNodeGraph<T extends Node> extends GuiCanvas {
 
     private final Consumer<T> callback;
 
-    public GuiNodeGraph(Minecraft mc, IFactory<T> factory, Consumer<T> callback) {
+    public GuiNodeGraph(Minecraft mc, MapFactory<T> factory, Consumer<T> callback) {
         super(mc);
 
         this.callback = callback;
@@ -78,9 +78,9 @@ public class GuiNodeGraph<T extends Node> extends GuiCanvas {
             menu.action(Icons.ADD, IKey.lang("mappet.gui.nodes.context.add"), () -> {
                 GuiSimpleContextMenu adds = new GuiSimpleContextMenu(this.mc);
 
-                for (String key : system.getFactory().getKeys()) {
+                for (String key : system.getFactory().types()) {
                     IKey label = IKey.format("mappet.gui.nodes.context.add_node", IKey.lang("mappet.gui.node_types." + key));
-                    int color = system.getFactory().getColor(key);
+                    int color = system.getFactory().color(key);
 
                     adds.action(Icons.ADD, label, () -> addNode(key, x, y), color);
                 }
@@ -118,7 +118,7 @@ public class GuiNodeGraph<T extends Node> extends GuiCanvas {
 
         int keycode = Keyboard.KEY_1;
 
-        for (String key : factory.getKeys()) {
+        for (String key : factory.types()) {
             Keybind keybind = keys()
                     .register(IKey.format("mappet.gui.nodes.context.add_node", IKey.lang("mappet.gui.node_types." + key)), keycode, () -> {
                         GuiContext context = GuiBase.getCurrent();
@@ -646,7 +646,7 @@ public class GuiNodeGraph<T extends Node> extends GuiCanvas {
             int index = selected.indexOf(node);
 
             int colorBg = hover ? 0xff080808 : 0xff000000;
-            int colorFg = 0xaa000000 + system.getFactory().getColor(node);
+            int colorFg = 0xaa000000 + system.getFactory().color(node);
 
             if (index >= 0) {
                 int colorSh = index == selected.size() - 1 ? 0x0088ff : 0x0022aa;

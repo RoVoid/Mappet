@@ -517,7 +517,7 @@ public class GuiUIConstructorPanel extends GuiMappetDashboardPanel<UI>
 
     private String typeName(UIComponent component)
     {
-        String type = CommonProxy.getUiComponents().getType(component);
+        String type = CommonProxy.getUiComponents().type(component);
 
         return type == null || type.isEmpty() ? component.getClass().getSimpleName() : type;
     }

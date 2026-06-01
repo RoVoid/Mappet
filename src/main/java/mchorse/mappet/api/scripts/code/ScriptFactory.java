@@ -2,6 +2,8 @@ package mchorse.mappet.api.scripts.code;
 
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetIcons;
+import mchorse.mappet.MappetLogger;
 import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
@@ -9,17 +11,8 @@ import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTList;
 import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
-import mchorse.mappet.api.scripts.user.IScriptFactory;
-import mchorse.mappet.api.scripts.user.blocks.IScriptBlockState;
-import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
-import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
-import mchorse.mappet.api.scripts.user.nbt.INBTCompound;
-import mchorse.mappet.api.scripts.user.nbt.INBTList;
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
 import mchorse.mappet.api.ui.UI;
 import mchorse.mappet.api.utils.SkinUtils;
-import mchorse.mappet.MappetLogger;
-import mchorse.mappet.MappetIcons;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.block.Block;
@@ -41,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ScriptFactory implements IScriptFactory {
+public class ScriptFactory {
     private static final Map<String, String> formattingCodes = new HashMap<>();
 
     static {
@@ -98,36 +91,30 @@ public class ScriptFactory implements IScriptFactory {
     }
 
     @Deprecated
-    @Override
-    public IScriptBlockState createBlockState(String blockId, int meta) {
+    public ScriptBlockState createBlockState(String blockId, int meta) {
         return createBlock(blockId, meta);
     }
 
     @Deprecated
-    @Override
-    public IScriptBlockState createBlockState(String blockId) {
+    public ScriptBlockState createBlockState(String blockId) {
         return createBlock(blockId, 0);
     }
 
-    @Override
-    public IScriptBlockState createBlock(String blockId, int meta) {
+    public ScriptBlockState createBlock(String blockId, int meta) {
         Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blockId));
         return ScriptBlockState.create(block == null ? null : block.getStateFromMeta(meta));
     }
 
-    @Override
-    public IScriptBlockState createBlock(String blockId) {
+    public ScriptBlockState createBlock(String blockId) {
         return createBlock(blockId, 0);
     }
 
-    @Override
-    public IScriptItemStack createBlockItem(String blockId, int count, int meta) {
+    public ScriptItemStack createBlockItem(String blockId, int count, int meta) {
         Block item = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blockId));
         return item == null ? null : ScriptItemStack.create(new ItemStack(item, count, meta));
     }
 
-    @Override
-    public INBTCompound createCompound(String nbt) {
+    public ScriptNBTCompound createCompound(String nbt) {
         NBTTagCompound tag = new NBTTagCompound();
 
         if (nbt != null) {
@@ -139,31 +126,28 @@ public class ScriptFactory implements IScriptFactory {
 
         return new ScriptNBTCompound(tag);
     }
-    public INBTCompound createCompound(Object jsObject) {
+
+    public ScriptNBTCompound createCompound(Object jsObject) {
         NBTBase base = convertToNBT(jsObject);
         return base instanceof NBTTagCompound ? new ScriptNBTCompound((NBTTagCompound) base) : null;
     }
 
-    @Override
-    public INBTCompound createCompoundFromJS(Object jsObject) {
+    public ScriptNBTCompound createCompoundFromJS(Object jsObject) {
         NBTBase base = convertToNBT(jsObject);
         return base instanceof NBTTagCompound ? new ScriptNBTCompound((NBTTagCompound) base) : null;
     }
 
-    @Override
-    public IScriptItemStack createItem(INBTCompound compound) {
+    public ScriptItemStack createItem(ScriptNBTCompound compound) {
         if (compound == null) return ScriptItemStack.EMPTY;
         return ScriptItemStack.create(new ItemStack(compound.asMinecraft()));
     }
 
-    @Override
-    public IScriptItemStack createItem(String itemId, int count, int meta) {
+    public ScriptItemStack createItem(String itemId, int count, int meta) {
         Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId));
         return item == null ? null : ScriptItemStack.create(new ItemStack(item, count, meta));
     }
 
-    @Override
-    public INBTList createList(String nbt) {
+    public ScriptNBTList createList(String nbt) {
         NBTTagList list = new NBTTagList();
 
         if (nbt != null) {
@@ -176,23 +160,19 @@ public class ScriptFactory implements IScriptFactory {
         return new ScriptNBTList(list);
     }
 
-    @Override
-    public INBTList createListFromJS(Object jsObject) {
+    public ScriptNBTList createListFromJS(Object jsObject) {
         NBTBase base = convertToNBT(jsObject);
         return base instanceof NBTTagList ? new ScriptNBTList((NBTTagList) base) : null;
     }
 
-    @Override
-    public AbstractMorph createMorph(INBTCompound compound) {
+    public AbstractMorph createMorph(ScriptNBTCompound compound) {
         return compound == null ? null : MorphManager.INSTANCE.morphFromNBT(compound.asMinecraft());
     }
 
-    @Override
-    public IMappetUIBuilder createUI(String script, String function) {
+    public MappetUIBuilder createUI(String script, String function) {
         return new MappetUIBuilder(new UI(), script == null ? "" : script, function == null ? "" : function);
     }
 
-    @Override
     public String encrypt(String text, String secretKey) {
         byte[] textBytes = text.getBytes(StandardCharsets.UTF_8);
         byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
@@ -204,7 +184,6 @@ public class ScriptFactory implements IScriptFactory {
         return Base64.getEncoder().encodeToString(result);
     }
 
-    @Override
     public String decrypt(String encryptedText, String secretKey) {
         byte[] encryptedBytes = Base64.getDecoder().decode(encryptedText);
         byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
@@ -216,7 +195,6 @@ public class ScriptFactory implements IScriptFactory {
         return new String(result, StandardCharsets.UTF_8);
     }
 
-    @Override
     public String dump(Object object, boolean simple) {
         if (object instanceof ScriptObjectMirror) return object.toString();
 
@@ -271,12 +249,10 @@ public class ScriptFactory implements IScriptFactory {
         return output.toString();
     }
 
-    @Override
     public String format(String format, Object... args) {
         return String.format(format, args);
     }
 
-    @Override
     public Object get(String key) {
         return Mappet.scripts.objects.get(key);
     }
@@ -285,7 +261,7 @@ public class ScriptFactory implements IScriptFactory {
         return Mappet.logger;
     }
 
-    public IScriptEntity getMappetEntity(Entity minecraftEntity) {
+    public ScriptEntity<?> getMappetEntity(Entity minecraftEntity) {
         return ScriptEntity.create(minecraftEntity);
     }
 
@@ -299,27 +275,22 @@ public class ScriptFactory implements IScriptFactory {
         return modifier;
     }
 
-    @Override
     public EnumParticleTypes getParticleType(String type) {
         return EnumParticleTypes.getByName(type);
     }
 
-    @Override
     public Potion getPotion(String type) {
         return Potion.getPotionFromResourceLocation(type);
     }
 
-    @Override
     public ScriptResourcePack pack(String name) {
         return new ScriptResourcePack(name);
     }
 
-    @Override
     public void set(String key, Object object) {
         Mappet.scripts.objects.put(key, object);
     }
 
-    @Override
     public String style(String... styles) {
         StringBuilder builder = new StringBuilder();
         for (String style : styles) {
@@ -329,45 +300,37 @@ public class ScriptFactory implements IScriptFactory {
         return builder.toString();
     }
 
-    @Override
-    public INBTCompound toNBT(Object object) {
-        if (object instanceof INBTCompound) return (INBTCompound) object;
+    public ScriptNBTCompound toNBT(Object object) {
+        if (object instanceof ScriptNBTCompound) return (ScriptNBTCompound) object;
         if (object instanceof NBTTagCompound) return new ScriptNBTCompound((NBTTagCompound) object);
         if (object instanceof AbstractMorph) return new ScriptNBTCompound(((AbstractMorph) object).toNBT());
         return null;
     }
 
-    @Override
     public String getSkin(String nickname) {
         return SkinUtils.getSkin(nickname);
     }
 
-    @Override
     public String getSkin(String nickname, String source) {
         return SkinUtils.getSkin(nickname, source);
     }
 
-    @Override
     public Object getSkinObject(String nickname) {
         return SkinUtils.getSkinObject(nickname);
     }
 
-    @Override
     public Object getSkinObject(String nickname, String source) {
         return SkinUtils.getSkinObject(nickname, source);
     }
 
-    @Override
     public List<String> getAllIcons() {
         return MappetIcons.getAllNames();
     }
 
-    @Override
     public String translate(String locale, String key, Object... args) {
         return Mappet.translations.getString(locale, key, args);
     }
 
-    @Override
     public String translate(ScriptPlayer player, String key, Object... args) {
         return translate(player.getLanguage().toLowerCase(), key, args);
     }

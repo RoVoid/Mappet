@@ -1,7 +1,7 @@
 package mchorse.mappet.events;
 
 import mchorse.mappet.api.triggers.blocks.AbstractTriggerBlock;
-import mchorse.mappet.api.utils.factory.MapFactory;
+import mchorse.mappet.api.utils.MapFactory;
 
 public class RegisterTriggerBlockEvent extends RegisterFactoryEvent<AbstractTriggerBlock>
 {

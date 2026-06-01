@@ -1,42 +1,36 @@
 package mchorse.mappet.api.quests.objectives;
 
-import mchorse.mappet.api.conditions.Checker;
+import mchorse.mappet.api.conditions.Condition;
 import mchorse.mappet.api.utils.DataContext;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class StateObjective extends AbstractObjective
-{
-    public Checker expression = new Checker();
+public class StateObjective extends AbstractObjective {
+    public Condition condition = new Condition();
     private boolean result;
     private String compiledMessage;
 
     @Override
-    public void initiate(EntityPlayer player)
-    {
+    public void initiate(EntityPlayer player) {
         super.initiate(player);
 
-        if (this.message.contains("${"))
-        {
+        if (this.message.contains("${")) {
             this.compiledMessage = new DataContext(player).process(this.message);
         }
     }
 
     @Override
-    public boolean isComplete(EntityPlayer player)
-    {
+    public boolean isComplete(EntityPlayer player) {
         return this.result;
     }
 
-    public boolean updateValue(EntityPlayer player)
-    {
+    public boolean updateValue(EntityPlayer player) {
         boolean result = this.result;
         DataContext data = new DataContext(player);
 
-        this.result = this.expression.check(data);
+        this.result = this.condition.execute(data);
 
-        if (this.message.contains("${"))
-        {
+        if (this.message.contains("${")) {
             this.compiledMessage = data.process(this.message);
 
             return true;
@@ -46,28 +40,23 @@ public class StateObjective extends AbstractObjective
     }
 
     @Override
-    public void complete(EntityPlayer player)
-    {}
+    public void complete(EntityPlayer player) {}
 
     @Override
-    public String stringifyObjective(EntityPlayer player)
-    {
+    public String stringifyObjective(EntityPlayer player) {
         return this.compiledMessage == null ? this.message : this.compiledMessage;
     }
 
     @Override
-    public String getType()
-    {
+    public String getType() {
         return "state";
     }
 
     @Override
-    public NBTTagCompound partialSerializeNBT()
-    {
+    public NBTTagCompound partialSerializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
 
-        if (this.result)
-        {
+        if (this.result) {
             tag.setBoolean("Result", this.result);
         }
 
@@ -75,24 +64,20 @@ public class StateObjective extends AbstractObjective
     }
 
     @Override
-    public void partialDeserializeNBT(NBTTagCompound tag)
-    {
-        if (tag.hasKey("Result"))
-        {
+    public void partialDeserializeNBT(NBTTagCompound tag) {
+        if (tag.hasKey("Result")) {
             this.result = tag.getBoolean("Result");
         }
     }
 
     @Override
-    public NBTTagCompound serializeNBT()
-    {
+    public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = super.serializeNBT();
 
-        tag.setTag("Expression", this.expression.serializeNBT());
+        tag.setTag("Expression", this.condition.serializeNBT());
         tag.setBoolean("Result", this.result);
 
-        if (this.compiledMessage != null)
-        {
+        if (this.compiledMessage != null) {
             tag.setString("CompiledMessage", this.compiledMessage);
         }
 
@@ -100,19 +85,16 @@ public class StateObjective extends AbstractObjective
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
-    {
+    public void deserializeNBT(NBTTagCompound tag) {
         super.deserializeNBT(tag);
 
-        this.expression.deserializeNBT(tag.getTag("Expression"));
+        this.condition.deserializeNBT(tag.getCompoundTag("Expression"));
         this.result = tag.getBoolean("Result");
 
-        if (tag.hasKey("CompiledMessage"))
-        {
+        if (tag.hasKey("CompiledMessage")) {
             this.compiledMessage = tag.getString("CompiledMessage");
         }
-        else
-        {
+        else {
             this.compiledMessage = null;
         }
     }

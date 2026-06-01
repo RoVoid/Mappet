@@ -22,7 +22,7 @@ public abstract class UILabelBaseComponent extends UIComponent
      * Change text color of this component by providing hex RGB.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Set label's text color to toxic green
      *    uiContext.get("component").color(0x00ff00);
@@ -38,7 +38,7 @@ public abstract class UILabelBaseComponent extends UIComponent
      * Optionally enable text shadow.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Set label's text color to black (and without text shadow)
      *    uiContext.get("component").color(0x000000, false);
@@ -59,7 +59,7 @@ public abstract class UILabelBaseComponent extends UIComponent
      * the input value for textbox and textarea components.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Assuming that title is a label UI component
      *    uiContext.get("title").label("Application form");

@@ -1,7 +1,8 @@
 package mchorse.mappet.utils;
 
 import com.google.common.collect.ImmutableSet;
-import mchorse.mappet.api.states.States;
+import mchorse.mappet.api.states.FactionStates;
+import mchorse.mappet.api.states.ScriptStates;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
 import mchorse.mappet.entities.EntityNpc;
@@ -16,36 +17,33 @@ import net.minecraftforge.common.ForgeHooks;
 
 import java.util.Set;
 
-public class EntityUtils
-{
-    public static final Set<String> ENTITY_PROPERTIES = ImmutableSet.of("xp", "xp_level", "hp", "hunger", "armor", "ticks", "light", "light_sky", "sneaking", "sprinting", "on_ground", "yaw", "pitch");
+public class EntityUtils {
+    public static final Set<String> ENTITY_PROPERTIES = ImmutableSet.of("xp", "xp_level", "hp", "hunger", "armor", "ticks", "light", "light_sky",
+            "sneaking", "sprinting", "on_ground", "yaw", "pitch");
 
-    public static States getStates(Entity entity)
-    {
-        if (entity instanceof EntityPlayer)
-        {
+    public static ScriptStates getSStates(Entity entity) {
+        if (entity instanceof EntityPlayer) {
             ICharacter character = Character.get((EntityPlayer) entity);
-
-            if (character != null)
-            {
-                return character.getStates();
-            }
+            if (character != null) return character.getScriptStates();
         }
-        else if (entity instanceof EntityNpc)
-        {
-            return ((EntityNpc) entity).getStates();
-        }
-
+        else if (entity instanceof EntityNpc) return ((EntityNpc) entity).getSStates();
         return null;
     }
 
-    public static double getProperty(Entity entity, String property)
-    {
+    public static FactionStates getFStates(Entity entity) {
+        if (entity instanceof EntityPlayer) {
+            ICharacter character = Character.get((EntityPlayer) entity);
+            if (character != null) return character.getFactionStates();
+        }
+        else if (entity instanceof EntityNpc) return ((EntityNpc) entity).getFStates();
+        return null;
+    }
+
+    public static double getProperty(Entity entity, String property) {
         EntityPlayer player = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
         EntityLivingBase living = entity instanceof EntityLivingBase ? (EntityLivingBase) entity : null;
 
-        switch (property)
-        {
+        switch (property) {
             case "xp":
                 return player == null ? 0 : player.experienceTotal;
 
@@ -89,12 +87,10 @@ public class EntityUtils
         return 0;
     }
 
-    public static int getCombinedLight(Entity entity)
-    {
+    public static int getCombinedLight(Entity entity) {
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(MathHelper.floor(entity.posX), 0, MathHelper.floor(entity.posZ));
 
-        if (entity.world.isBlockLoaded(pos))
-        {
+        if (entity.world.isBlockLoaded(pos)) {
             pos.setY(MathHelper.floor(entity.posY + entity.getEyeHeight()));
 
             return entity.world.getCombinedLight(pos, 0);
@@ -103,14 +99,11 @@ public class EntityUtils
         return 0;
     }
 
-    public static float getHeight(Entity entity)
-    {
-        if (entity instanceof IMorphProvider)
-        {
+    public static float getHeight(Entity entity) {
+        if (entity instanceof IMorphProvider) {
             AbstractMorph morphProvider = ((IMorphProvider) entity).getMorph();
 
-            if (entity instanceof EntityPlayer)
-            {
+            if (entity instanceof EntityPlayer) {
                 return entity.isSneaking() ? morphProvider.hitbox.sneakingHeight : morphProvider.hitbox.height;
             }
         }
@@ -118,19 +111,15 @@ public class EntityUtils
         return entity.height;
     }
 
-    public static float getEyeHeight(Entity entity)
-    {
-        if (entity instanceof IMorphProvider)
-        {
+    public static float getEyeHeight(Entity entity) {
+        if (entity instanceof IMorphProvider) {
             AbstractMorph morphProvider = ((IMorphProvider) entity).getMorph();
 
-            if (entity instanceof EntityPlayer)
-            {
+            if (entity instanceof EntityPlayer) {
                 float height = getHeight(entity);
                 float eyeHeight = height * morphProvider.hitbox.eye;
                 float minEyeToHeadDifference = 0.1F;
-                if (eyeHeight + minEyeToHeadDifference > height)
-                {
+                if (eyeHeight + minEyeToHeadDifference > height) {
                     eyeHeight = height - minEyeToHeadDifference;
                 }
 

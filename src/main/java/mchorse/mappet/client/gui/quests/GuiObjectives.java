@@ -44,8 +44,7 @@ public class GuiObjectives extends GuiElement
         StateObjective objective = new StateObjective();
         DialogueConditionBlock block = new DialogueConditionBlock();
 
-        objective.expression.condition.blocks.add(block);
-        objective.expression.expression = "dialogue_read(\"...\", subject)";
+        objective.condition.blocks.add(block);
         objective.message = I18n.format("mappet.gui.quests.objective_state.dialogue");
 
         return objective;

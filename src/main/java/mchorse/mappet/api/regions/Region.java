@@ -1,9 +1,10 @@
 package mchorse.mappet.api.regions;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.api.conditions.Checker;
+import mchorse.mappet.api.conditions.Condition;
 import mchorse.mappet.api.regions.shapes.AbstractShape;
 import mchorse.mappet.api.regions.shapes.BoxShape;
+import mchorse.mappet.api.states.ScriptStates;
 import mchorse.mappet.api.states.States;
 import mchorse.mappet.api.triggers.Trigger;
 import mchorse.mappet.api.utils.DataContext;
@@ -23,7 +24,7 @@ import java.util.List;
 public class Region implements INBTSerializable<NBTTagCompound> {
     public boolean passable = true;
     public boolean checkEntities = false;
-    public Checker enabled = new Checker(true);
+    public Condition enabled = new Condition(true);
     public int delay;
     public int update = 3;
     public Trigger onEnter = new Trigger();
@@ -32,7 +33,7 @@ public class Region implements INBTSerializable<NBTTagCompound> {
 
     public List<AbstractShape> shapes = new ArrayList<>();
 
-    public States states = new States();
+    public ScriptStates states = new ScriptStates();
 
     public Region() {
         shapes.add(new BoxShape());
@@ -51,7 +52,7 @@ public class Region implements INBTSerializable<NBTTagCompound> {
             if (states != null && states.has(state)) return false;
         }
 
-        return enabled.check(new DataContext(entity));
+        return enabled.execute(new DataContext(entity));
     }
 
     public boolean isPlayerInside(Entity entity, BlockPos pos) {
@@ -80,7 +81,7 @@ public class Region implements INBTSerializable<NBTTagCompound> {
 
     public void triggerExit(Entity entity, BlockPos pos) {
         if (writeState && !state.isEmpty()) {
-            States states = getStates(entity);
+            ScriptStates states = getStates(entity);
 
             if (!additive) states.reset(state);
         }
@@ -92,8 +93,8 @@ public class Region implements INBTSerializable<NBTTagCompound> {
         onTick.trigger(new DataContext(entity).set("x", pos.getX()).set("y", pos.getY()).set("z", pos.getZ()));
     }
 
-    private States getStates(Entity entity) {
-        return target == TargetMode.GLOBAL ? Mappet.states : EntityUtils.getStates(entity);
+    private ScriptStates getStates(Entity entity) {
+        return target == TargetMode.GLOBAL ? Mappet.states.scripts : (ScriptStates) EntityUtils.getSStates(entity);
     }
 
     @Override
@@ -133,7 +134,7 @@ public class Region implements INBTSerializable<NBTTagCompound> {
     public void deserializeNBT(NBTTagCompound tag) {
         if (tag.hasKey("Passable")) passable = tag.getBoolean("Passable");
 
-        if (tag.hasKey("Enabled", Constants.NBT.TAG_COMPOUND)) enabled.deserializeNBT(tag.getTag("Enabled"));
+        if (tag.hasKey("Enabled", Constants.NBT.TAG_COMPOUND)) enabled.deserializeNBT(tag.getCompoundTag("Enabled"));
 
         if (tag.hasKey("Delay", Constants.NBT.TAG_ANY_NUMERIC)) delay = tag.getInteger("Delay");
 

@@ -13,7 +13,7 @@ public class CommandFaction extends MappetSubCommandBase
     public static States getStates(MinecraftServer server, ICommandSender sender, String target) throws CommandException
     {
         Entity entity = getEntity(server, sender, target);
-        States states = EntityUtils.getStates(entity);
+        States states = EntityUtils.getSStates(entity);
 
         if (states != null)
         {

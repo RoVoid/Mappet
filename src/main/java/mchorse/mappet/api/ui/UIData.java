@@ -1,6 +1,5 @@
 package mchorse.mappet.api.ui;
 
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
 import mchorse.mappet.api.utils.AbstractData;
 import net.minecraft.nbt.NBTTagCompound;
 

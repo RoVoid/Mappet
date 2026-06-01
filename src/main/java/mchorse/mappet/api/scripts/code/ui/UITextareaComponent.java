@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.code.ui;
 
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
+import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import mchorse.mappet.client.gui.utils.text.GuiMultiTextElement;
@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * <p>The value that gets written to UI context's data (if ID is present) is
  * the multi-line string that user typed into the component.</p>
  *
- * <p>This component can be created using {@link IMappetUIBuilder#textarea(String)} method.</p>
+ * <p>This component can be created using {@link MappetUIBuilder#textarea(String)} method.</p>
  *
  * <pre>{@code
  *    function main(c)
@@ -56,7 +56,7 @@ public class UITextareaComponent extends UILabelBaseComponent {
      * Disable textarea's background.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *    uiContext.get("textarea").noBackground();
      * }</pre>
      */

@@ -84,10 +84,10 @@ public class GuiTriggerOverlayPanel extends GuiEditorOverlayPanel<AbstractTrigge
             {
                 GuiSimpleContextMenu adds = new GuiSimpleContextMenu(this.mc).shadow();
 
-                for (String key : CommonProxy.getTriggerBlocks().getKeys())
+                for (String key : CommonProxy.getTriggerBlocks().types())
                 {
                     IKey label = IKey.format("mappet.gui.triggers.context.add_trigger", IKey.lang("mappet.gui.trigger_types." + key));
-                    int color = CommonProxy.getTriggerBlocks().getColor(key);
+                    int color = CommonProxy.getTriggerBlocks().color(key);
 
                     adds.action(Icons.ADD, label, () -> this.addBlock(key), color);
                 }
@@ -143,7 +143,7 @@ public class GuiTriggerOverlayPanel extends GuiEditorOverlayPanel<AbstractTrigge
         AbstractTriggerBlock block = this.list.getCurrentFirst();
         NBTTagCompound tag = block.serializeNBT();
 
-        tag.setString("_TriggerType", CommonProxy.getTriggerBlocks().getType(block));
+        tag.setString("_TriggerType", CommonProxy.getTriggerBlocks().type(block));
         GuiScreen.setClipboardString(tag.toString());
     }
 
@@ -205,7 +205,7 @@ public class GuiTriggerOverlayPanel extends GuiEditorOverlayPanel<AbstractTrigge
         @Override
         protected void drawElementPart(AbstractTriggerBlock element, int i, int x, int y, boolean hover, boolean selected)
         {
-            int color = CommonProxy.getTriggerBlocks().getColor(element);
+            int color = CommonProxy.getTriggerBlocks().color(element);
 
             Gui.drawRect(x, y, x + 4, y + this.scroll.scrollItemSize, 0xff000000 + color);
             GuiDraw.drawHorizontalGradientRect(x + 4, y, x + 24, y + this.scroll.scrollItemSize, 0x44000000 + color, color);
@@ -216,7 +216,7 @@ public class GuiTriggerOverlayPanel extends GuiEditorOverlayPanel<AbstractTrigge
         @Override
         protected String elementToString(AbstractTriggerBlock element)
         {
-            return element.stringify();
+            return element.name();
         }
     }
 }

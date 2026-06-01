@@ -6,12 +6,12 @@ import mchorse.mappet.Mappet;
 import mchorse.mappet.api.huds.HUDScene;
 import mchorse.mappet.api.quests.Quest;
 import mchorse.mappet.api.quests.Quests;
+import mchorse.mappet.api.scripts.code.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.ai.repeatingCommand.EntityAIRepeatingCommand;
 import mchorse.mappet.api.scripts.code.entities.ai.repeatingCommand.RepeatingCommandDataStorage;
 import mchorse.mappet.api.scripts.code.entities.ai.rotations.EntityAIRotations;
 import mchorse.mappet.api.scripts.code.entities.ai.rotations.RotationDataStorage;
-import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
 import mchorse.mappet.api.utils.IExecutable;
 import mchorse.mappet.blocks.BlockRegion;
 import mchorse.mappet.blocks.BlockTrigger;
@@ -33,7 +33,6 @@ import mchorse.mappet.network.packets.npc.PacketNpcJump;
 import mchorse.mappet.network.packets.quests.PacketQuest;
 import mchorse.mappet.network.packets.quests.PacketQuests;
 import mchorse.mappet.utils.PlayerUtils;
-import mchorse.mclib.utils.OpHelper;
 import mchorse.mclib.utils.ReflectionUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -45,6 +44,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -91,11 +91,11 @@ public class EventHandler {
      */
     private final List<IExecutable> secondList = new ArrayList<>();
 
-//    /**
-//     * Set that keeps track of players that just joined (it is necessary to avoid
-//     * triggering the player respawn trigger when the player logs in)
-//     */
-//    private final Set<UUID> loggedInPlayers = new HashSet<>();
+    //    /**
+    //     * Set that keeps track of players that just joined (it is necessary to avoid
+    //     * triggering the player respawn trigger when the player logs in)
+    //     */
+    //    private final Set<UUID> loggedInPlayers = new HashSet<>();
 
     private int skinCounter;
 
@@ -211,14 +211,14 @@ public class EventHandler {
         //loggedInPlayers.add(player.getUniqueID());
     }
 
-//    /**
-//     * WORKS ONLY ON DEDICATED SERVER
-//     */
-//    @SubscribeEvent
-//    public void onPlayerLogsOut(PlayerEvent.PlayerLoggedOutEvent event) {
-//        MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-//        if (server != null && server.isDedicatedServer()) loggedInPlayers.remove(event.player.getUniqueID());
-//    }
+    //    /**
+    //     * WORKS ONLY ON DEDICATED SERVER
+    //     */
+    //    @SubscribeEvent
+    //    public void onPlayerLogsOut(PlayerEvent.PlayerLoggedOutEvent event) {
+    //        MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+    //        if (server != null && server.isDedicatedServer()) loggedInPlayers.remove(event.player.getUniqueID());
+    //    }
 
     /**
      * Copy data from dead player (or player returning from the end) to the new player
@@ -318,22 +318,19 @@ public class EventHandler {
         //lock entity if they should be locked
         for (Entity entity : getAllEntities()) {
             if (entity == null) continue;
+            NBTTagCompound data = entity.getEntityData();
             //lock position if it should be locked
-            if (entity.getEntityData().getBoolean("positionLocked")) {
+            if (data.getBoolean("positionLocked")) {
                 IScriptEntity scriptEntity = ScriptEntity.create(entity);
                 if (scriptEntity == null) continue;
-                scriptEntity.setPosition(entity.getEntityData().getDouble("lockX"),
-                        entity.getEntityData().getDouble("lockY"),
-                        entity.getEntityData().getDouble("lockZ"));
+                scriptEntity.setPosition(data.getDouble("lockX"), data.getDouble("lockY"), data.getDouble("lockZ"));
                 scriptEntity.setMotion(0.0, 0.0, 0.0);
             }
             //lock rotation if it should be locked
-            if (entity.getEntityData().getBoolean("rotationLocked")) {
+            if (data.getBoolean("rotationLocked")) {
                 IScriptEntity scriptEntity = ScriptEntity.create(entity);
                 if (scriptEntity == null) continue;
-                scriptEntity.setRotations(entity.getEntityData().getFloat("lockPitch"),
-                        entity.getEntityData().getFloat("lockYaw"),
-                        entity.getEntityData().getFloat("lockYawHead"));
+                scriptEntity.setRotations(data.getFloat("lockPitch"), data.getFloat("lockYaw"), data.getFloat("lockYawHead"));
             }
         }
 
@@ -383,16 +380,16 @@ public class EventHandler {
         }
     }
 
-//    private List<Entity> getAllEntities() {
-//        List<Entity> entities = new ArrayList<>();
-//        try {
-//            entities.addAll(EntitySelector.matchEntities(FMLCommonHandler
-//                    .instance()
-//                    .getMinecraftServerInstance(), "@e", Entity.class));
-//        } catch (Exception ignored) {
-//        }
-//        return entities;
-//    }
+    //    private List<Entity> getAllEntities() {
+    //        List<Entity> entities = new ArrayList<>();
+    //        try {
+    //            entities.addAll(EntitySelector.matchEntities(FMLCommonHandler
+    //                    .instance()
+    //                    .getMinecraftServerInstance(), "@e", Entity.class));
+    //        } catch (Exception ignored) {
+    //        }
+    //        return entities;
+    //    }
 
     private List<Entity> getAllEntities() {
         MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
@@ -457,6 +454,14 @@ public class EventHandler {
                 if (i > 0) {
                     playersToCheck.add(player);
                 }
+
+                /*
+                bool i = false;
+                i ||= stateWasUpdated;
+                if(i) doTo;
+
+                McHorse, what are you on?
+                 */
             }
         }
     }

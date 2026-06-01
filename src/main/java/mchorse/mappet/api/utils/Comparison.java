@@ -1,7 +1,7 @@
 package mchorse.mappet.api.utils;
 
-import mchorse.mappet.api.expressions.ExpressionManager;
 import mchorse.mappet.utils.EnumUtils;
+import mchorse.mclib.math.Constant;
 import mchorse.mclib.math.IValue;
 import mchorse.mclib.math.MathBuilder;
 import mchorse.mclib.math.Variable;
@@ -10,20 +10,20 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class Comparison implements INBTSerializable<NBTTagCompound>
-{
+public class Comparison implements INBTSerializable<NBTTagCompound> {
     private static final MathBuilder MATH;
     private static final Variable VALUE;
     private static final Variable VALUE2;
 
-    public ComparisonMode comparison = ComparisonMode.EQUALS;
+    public static IValue ZERO = new Constant(0);
+
+    public ComparisonMode mode = ComparisonMode.EQUALS;
     public double value;
     public String expression = "";
 
     private IValue compiledValue;
 
-    static
-    {
+    static {
         VALUE = new Variable("value", 0);
         VALUE2 = new Variable("x", 0);
 
@@ -35,19 +35,13 @@ public class Comparison implements INBTSerializable<NBTTagCompound>
     /**
      * Compare given value to expression or comparison mode
      */
-    public boolean compare(double a)
-    {
-        if (this.comparison == ComparisonMode.EXPRESSION)
-        {
-            if (this.compiledValue == null)
-            {
-                try
-                {
+    public boolean compare(double a) {
+        if (this.mode == ComparisonMode.EXPRESSION) {
+            if (this.compiledValue == null) {
+                try {
                     this.compiledValue = MATH.parse(this.expression);
-                }
-                catch (Exception e)
-                {
-                    this.compiledValue = ExpressionManager.ZERO;
+                } catch (Exception e) {
+                    this.compiledValue = ZERO;
                 }
             }
 
@@ -57,33 +51,32 @@ public class Comparison implements INBTSerializable<NBTTagCompound>
             return this.compiledValue.booleanValue();
         }
 
-        return this.comparison.compare(a, this.value);
+        return this.mode.compare(a, this.value);
     }
 
-    public boolean compareString(String a)
-    {
-        switch (this.comparison)
-        {
-            case EQUALS_TO_STRING: return a.equals(this.expression);
-            case CONTAINS_STRING: return a.contains(this.expression);
-            case REGEXP_STRING: return a.matches(this.expression);
+    public boolean compareString(String a) {
+        switch (this.mode) {
+            case EQUALS_TO_STRING:
+                return a.equals(this.expression);
+            case CONTAINS_STRING:
+                return a.contains(this.expression);
+            case REGEXP_STRING:
+                return a.matches(this.expression);
         }
-        
+
         return false;
     }
 
     @SideOnly(Side.CLIENT)
-    public String stringify(String id)
-    {
-        return this.comparison.stringify(id, this.value, this.expression);
+    public String stringify(String id) {
+        return this.mode.stringify(id, this.value, this.expression);
     }
 
     @Override
-    public NBTTagCompound serializeNBT()
-    {
+    public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
 
-        tag.setInteger("Comparison", this.comparison.ordinal());
+        tag.setInteger("Comparison", this.mode.ordinal());
         tag.setDouble("Value", this.value);
         tag.setString("Expression", this.expression);
 
@@ -91,11 +84,10 @@ public class Comparison implements INBTSerializable<NBTTagCompound>
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
-    {
+    public void deserializeNBT(NBTTagCompound tag) {
         this.compiledValue = null;
 
-        this.comparison = EnumUtils.getValue(tag.getInteger("Comparison"), ComparisonMode.values(), ComparisonMode.EQUALS);
+        this.mode = EnumUtils.getValue(tag.getInteger("Comparison"), ComparisonMode.values(), ComparisonMode.EQUALS);
         this.value = tag.getDouble("Value");
         this.expression = tag.getString("Expression");
     }

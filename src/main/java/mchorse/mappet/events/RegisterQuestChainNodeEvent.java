@@ -1,7 +1,7 @@
 package mchorse.mappet.events;
 
 import mchorse.mappet.api.quests.chains.QuestNode;
-import mchorse.mappet.api.utils.factory.MapFactory;
+import mchorse.mappet.api.utils.MapFactory;
 
 public class RegisterQuestChainNodeEvent extends RegisterFactoryEvent<QuestNode>
 {

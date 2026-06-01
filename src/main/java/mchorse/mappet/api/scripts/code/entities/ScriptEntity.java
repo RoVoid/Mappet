@@ -19,13 +19,6 @@ import mchorse.mappet.api.scripts.code.math.ScriptBox;
 import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
 import mchorse.mappet.api.scripts.code.world.ScriptWorld;
-import mchorse.mappet.api.scripts.user.IScriptRayTrace;
-import mchorse.mappet.api.scripts.user.entities.IScriptEntity;
-import mchorse.mappet.api.scripts.user.entities.player.IScriptPlayer;
-import mchorse.mappet.api.scripts.user.items.IScriptItemStack;
-import mchorse.mappet.api.scripts.user.mappet.IMappetStates;
-import mchorse.mappet.api.scripts.user.nbt.INBTCompound;
-import mchorse.mappet.api.scripts.user.world.IScriptWorld;
 import mchorse.mappet.api.states.States;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.client.morphs.WorldMorph;
@@ -78,15 +71,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ScriptEntity<T extends Entity> implements IScriptEntity {
+public class ScriptEntity<T extends Entity> implements IScriptEntity{
     protected T entity;
 
-    protected IMappetStates states;
+    protected States states;
 
 //    protected ScriptVector moveTarget = ScriptVector.EMPTY;
 //    protected int movingTick = 0;
 
-    public static IScriptEntity create(Entity entity) {
+    public static ScriptEntity create(Entity entity) {
         if (entity instanceof EntityPlayerMP) return new ScriptPlayer((EntityPlayerMP) entity);
         if (entity instanceof EntityNpc) return new ScriptNpc((EntityNpc) entity);
         if (entity instanceof EntityItem) return new ScriptEntityItem((EntityItem) entity);
@@ -110,7 +103,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     }
 
     @Override
-    public IScriptWorld getWorld() {
+    public ScriptWorld getWorld() {
         return new ScriptWorld(entity.world);
     }
 
@@ -314,54 +307,54 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     /* Ray tracing */
 
     @Override
-    public IScriptRayTrace rayTrace(double maxDistance) {
+    public ScriptRayTrace rayTrace(double maxDistance) {
         return new ScriptRayTrace(RayTracing.rayTraceWithEntity(entity, maxDistance));
     }
 
     @Override
-    public IScriptRayTrace rayTraceBlock(double maxDistance) {
+    public ScriptRayTrace rayTraceBlock(double maxDistance) {
         return new ScriptRayTrace(RayTracing.rayTrace(entity, maxDistance, 0));
     }
 
     /* Items */
 
     @Override
-    public IScriptItemStack getMainItem() {
+    public ScriptItemStack getMainItem() {
         if (isLivingBase()) return ScriptItemStack.create(((EntityLivingBase) entity).getHeldItemMainhand());
 
         return ScriptItemStack.EMPTY;
     }
 
     @Override
-    public void setMainItem(IScriptItemStack stack) {
+    public void setMainItem(ScriptItemStack stack) {
         setItem(EnumHand.MAIN_HAND, stack);
     }
 
     @Override
-    public IScriptItemStack getOffItem() {
+    public ScriptItemStack getOffItem() {
         if (isLivingBase()) return ScriptItemStack.create(((EntityLivingBase) entity).getHeldItemOffhand());
 
         return ScriptItemStack.EMPTY;
     }
 
     @Override
-    public void setOffItem(IScriptItemStack stack) {
+    public void setOffItem(ScriptItemStack stack) {
         setItem(EnumHand.OFF_HAND, stack);
     }
 
-    private void setItem(EnumHand hand, IScriptItemStack stack) {
+    private void setItem(EnumHand hand, ScriptItemStack stack) {
         if (stack == null) stack = ScriptItemStack.EMPTY;
 
         if (isLivingBase()) ((EntityLivingBase) entity).setHeldItem(hand, stack.asMinecraft().copy());
     }
 
     @Override
-    public void giveItem(IScriptItemStack stack) {
+    public void giveItem(ScriptItemStack stack) {
         giveItem(stack, true, true);
     }
 
     @Override
-    public void giveItem(IScriptItemStack stack, boolean playSound, boolean dropIfInventoryFull) {
+    public void giveItem(ScriptItemStack stack, boolean playSound, boolean dropIfInventoryFull) {
         if (stack == null || stack.isEmpty()) return;
 
         if (isPlayer()) {
@@ -399,12 +392,12 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     }
 
     @Override
-    public int removeItem(IScriptItemStack stack) {
+    public int removeItem(ScriptItemStack stack) {
         return removeItem(stack, 1);
     }
 
     @Override
-    public int removeItem(IScriptItemStack stack, int count) {
+    public int removeItem(ScriptItemStack stack, int count) {
         if (stack == null || stack.isEmpty() || count == 0) return 0;
         ItemStack itemStack = stack.asMinecraft().copy();
         int deleteCount = 0;
@@ -450,12 +443,12 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     }
 
     @Override
-    public int findItem(IScriptItemStack stack) {
+    public int findItem(ScriptItemStack stack) {
         return findItem(stack, 0);
     }
 
     @Override
-    public int findItem(IScriptItemStack stack, int startIndex) {
+    public int findItem(ScriptItemStack stack, int startIndex) {
         if (stack == null || stack.isEmpty() || startIndex < 0) return -1;
         ItemStack itemStack = stack.asMinecraft().copy();
         if (isPlayer()) {
@@ -472,7 +465,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     }
 
     @Override
-    public IScriptItemStack getHelmet() {
+    public ScriptItemStack getHelmet() {
         if (isLivingBase())
             return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.HEAD).copy());
 
@@ -480,7 +473,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     }
 
     @Override
-    public IScriptItemStack getChestplate() {
+    public ScriptItemStack getChestplate() {
         if (isLivingBase())
             return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.CHEST).copy());
 
@@ -488,36 +481,36 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     }
 
     @Override
-    public IScriptItemStack getLeggings() {
+    public ScriptItemStack getLeggings() {
         if (isLivingBase())
             return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.LEGS).copy());
         return null;
     }
 
     @Override
-    public IScriptItemStack getBoots() {
+    public ScriptItemStack getBoots() {
         if (isLivingBase())
             return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.FEET).copy());
         return null;
     }
 
     @Override
-    public void setHelmet(IScriptItemStack itemStack) {
+    public void setHelmet(ScriptItemStack itemStack) {
         entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, itemStack.asMinecraft());
     }
 
     @Override
-    public void setChestplate(IScriptItemStack itemStack) {
+    public void setChestplate(ScriptItemStack itemStack) {
         entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, itemStack.asMinecraft());
     }
 
     @Override
-    public void setLeggings(IScriptItemStack itemStack) {
+    public void setLeggings(ScriptItemStack itemStack) {
         entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, itemStack.asMinecraft());
     }
 
     @Override
-    public void setBoots(IScriptItemStack itemStack) {
+    public void setBoots(ScriptItemStack itemStack) {
         entity.setItemStackToSlot(EntityEquipmentSlot.FEET, itemStack.asMinecraft());
     }
 
@@ -529,20 +522,20 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     }
 
     @Override
-    public boolean isTamed(IScriptPlayer player) {
+    public boolean isTamed() {
         if (!(entity instanceof EntityTameable)) return false;
         return ((EntityTameable) entity).isTamed();
     }
 
     @Override
-    public void setOwner(IScriptPlayer player) {
+    public void setOwner(ScriptPlayer player) {
         if (!(entity instanceof EntityTameable)) return;
         if (player == null) ((EntityTameable) entity).setTamed(false);
         else ((EntityTameable) entity).setTamedBy(player.asMinecraft());
     }
 
     @Override
-    public IScriptPlayer getOwner() {
+    public ScriptPlayer getOwner() {
         if (!(entity instanceof EntityTameable)) return null;
         EntityTameable _entity = (EntityTameable) entity;
         if (_entity.isTamed() && _entity.getOwner() != null) return new ScriptPlayer((EntityPlayerMP) _entity.getOwner());
@@ -650,17 +643,17 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     }
 
     @Override
-    public INBTCompound getFullData() {
+    public ScriptNBTCompound getFullData() {
         return new ScriptNBTCompound(entity.writeToNBT(new NBTTagCompound()));
     }
 
     @Override
-    public void setFullData(INBTCompound data) {
+    public void setFullData(ScriptNBTCompound data) {
         entity.readFromNBT(data.asMinecraft());
     }
 
     @Override
-    public INBTCompound getEntityData() {
+    public ScriptNBTCompound getEntityData() {
         return new ScriptNBTCompound(entity.getEntityData());
     }
 
@@ -726,7 +719,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     }
 
     @Override
-    public void damageWithItemsAs(IScriptPlayer player) {
+    public void damageWithItemsAs(ScriptPlayer player) {
         player.asMinecraft().attackTargetEntityWithCurrentItem(entity);
     }
 
@@ -793,7 +786,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     }
 
     @Override
-    public ScriptEntityItem dropItem(IScriptItemStack scriptItemStack) {
+    public ScriptEntityItem dropItem(ScriptItemStack scriptItemStack) {
         return dropItemInternal(scriptItemStack.asMinecraft());
     }
 
@@ -850,7 +843,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     }
 
     @Override
-    public IScriptEntity getLeashHolder() {
+    public ScriptEntity getLeashHolder() {
         if (!(entity instanceof EntityLiving)) return null;
 
         EntityLiving leashedEntity = (EntityLiving) entity;
@@ -970,9 +963,9 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     /* Mappet stuff */
 
     @Override
-    public IMappetStates getStates() {
+    public States getStates() {
         if (states == null) {
-            States entityStates = EntityUtils.getStates(entity);
+            States entityStates = EntityUtils.getSStates(entity);
             if (entityStates != null) states = entityStates;
         }
 
@@ -1007,7 +1000,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     }
 
     @Override
-    public void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, float yaw, float pitch, boolean rotate, IScriptPlayer player) {
+    public void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, float yaw, float pitch, boolean rotate, ScriptPlayer player) {
         if (morph == null) return;
 
         WorldMorph worldMorph = new WorldMorph();

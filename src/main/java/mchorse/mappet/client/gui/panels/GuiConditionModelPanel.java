@@ -1,12 +1,11 @@
 package mchorse.mappet.client.gui.panels;
 
-import mchorse.mappet.api.conditions.Checker;
+import mchorse.mappet.blocks.tile.TileConditionModel;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.conditionModel.GuiConditionModelBasicSettingsElement;
 import mchorse.mappet.client.gui.conditionModel.GuiConditionModelElement;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.blocks.PacketEditConditionModel;
-import mchorse.mappet.blocks.tile.TileConditionModel;
 import mchorse.mappet.utils.ConditionModel;
 import mchorse.mappet.utils.ReflectionUtils;
 import mchorse.mclib.client.gui.framework.GuiBase;
@@ -37,8 +36,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class GuiConditionModelPanel extends GuiDashboardPanel<GuiMappetDashboard>
-{
+public class GuiConditionModelPanel extends GuiDashboardPanel<GuiMappetDashboard> {
     public static final IKey EMPTY = IKey.lang("mappet.gui.conditionModel.info.empty");
     public GuiIconElement toggleSidebar;
     public GuiElement sidebar;
@@ -51,8 +49,7 @@ public class GuiConditionModelPanel extends GuiDashboardPanel<GuiMappetDashboard
     public GuiConditionModelElementsListElement conditionModelList;
     public GuiConditionModelElement conditionModelElement;
 
-    public GuiConditionModelPanel(Minecraft mc, GuiMappetDashboard dashboard)
-    {
+    public GuiConditionModelPanel(Minecraft mc, GuiMappetDashboard dashboard) {
         super(mc, dashboard);
 
         this.sidebar = new GuiElement(mc);
@@ -61,7 +58,8 @@ public class GuiConditionModelPanel extends GuiDashboardPanel<GuiMappetDashboard
         this.toggleSidebar = new GuiIconElement(mc, Icons.RIGHTLOAD, (element) -> this.toggleSidebar());
         this.toggleSidebar.flex().relative(this.sidebar).x(-20);
 
-        GuiDrawable drawable = new GuiDrawable((context) -> this.font.drawStringWithShadow(I18n.format(this.getTitle()), this.tiles.area.x, this.area.y + 10, 0xffffff));
+        GuiDrawable drawable = new GuiDrawable(
+                (context) -> this.font.drawStringWithShadow(I18n.format(this.getTitle()), this.tiles.area.x, this.area.y + 10, 0xffffff));
 
         this.tiles = new GuiTileConditionModelListElement(mc, (list) -> this.fill(list.get(0), false));
         this.tiles.flex().relative(this.sidebar).xy(10, 25).w(1F, -20).h(1F, -35);
@@ -77,39 +75,33 @@ public class GuiConditionModelPanel extends GuiDashboardPanel<GuiMappetDashboard
         this.editor.add(this.basicSettings);
         this.editor.add(Elements.label(IKey.lang("mappet.gui.conditionModel.list")).marginTop(12));
 
-        GuiElement row = Elements.row(mc, 5, new GuiIconElement(mc, Icons.ADD, (b) ->
-        {
+        GuiElement row = Elements.row(mc, 5, new GuiIconElement(mc, Icons.ADD, (b) -> {
             ConditionModel model = new ConditionModel();
             this.tile.list.add(model);
             fillConditionBlockList(this.tile.list);
             this.conditionModelElement.set(model);
             this.conditionModelList.setCurrent(model);
-        }).tooltip(IKey.lang("mappet.gui.conditionModel.add")), new GuiIconElement(mc, Icons.REMOVE, (b) ->
-        {
+        }).tooltip(IKey.lang("mappet.gui.conditionModel.add")), new GuiIconElement(mc, Icons.REMOVE, (b) -> {
             this.tile.list.remove(this.conditionModelList.getCurrentFirst());
             fillConditionBlockList(this.tile.list);
             this.conditionModelElement.setVisible(false);
-        }).tooltip(IKey.lang("mappet.gui.conditionModel.remove")), new GuiIconElement(mc, Icons.MOVE_UP, (b) ->
-        {
+        }).tooltip(IKey.lang("mappet.gui.conditionModel.remove")), new GuiIconElement(mc, Icons.MOVE_UP, (b) -> {
             ConditionModel current = this.conditionModelList.getCurrentFirst();
             List<ConditionModel> list = this.tile.list;
             int index = list.indexOf(current);
 
-            if (index - 1 >= 0)
-            {
+            if (index - 1 >= 0) {
                 Collections.swap(list, index, index - 1);
             }
 
             fillConditionBlockList(this.tile.list);
             this.conditionModelList.setCurrent(current);
-        }).tooltip(IKey.lang("mappet.gui.conditionModel.move_up")), new GuiIconElement(mc, Icons.MOVE_DOWN, (b) ->
-        {
+        }).tooltip(IKey.lang("mappet.gui.conditionModel.move_up")), new GuiIconElement(mc, Icons.MOVE_DOWN, (b) -> {
             ConditionModel current = this.conditionModelList.getCurrentFirst();
             List<ConditionModel> list = this.tile.list;
             int index = list.indexOf(current);
 
-            if (index + 1 < list.size())
-            {
+            if (index + 1 < list.size()) {
                 Collections.swap(list, index, index + 1);
             }
 
@@ -139,69 +131,60 @@ public class GuiConditionModelPanel extends GuiDashboardPanel<GuiMappetDashboard
 
         this.add(this.sidebar, this.editor, this.toggleSidebar, this.trans);
 
-        this.keys().register(IKey.lang("mappet.gui.panels.keys.toggle_sidebar"), Keyboard.KEY_N, () -> this.toggleSidebar.clickItself(GuiBase.getCurrent())).category(GuiMappetDashboardPanel.KEYS_CATEGORY);
+        this.keys()
+                .register(IKey.lang("mappet.gui.panels.keys.toggle_sidebar"), Keyboard.KEY_N,
+                        () -> this.toggleSidebar.clickItself(GuiBase.getCurrent()))
+                .category(GuiMappetDashboardPanel.KEYS_CATEGORY);
 
         this.fill(null, true);
     }
 
-    private void toggleSidebar()
-    {
+    private void toggleSidebar() {
         this.sidebar.toggleVisible();
         this.toggleSidebar.both(this.sidebar.isVisible() ? Icons.RIGHTLOAD : Icons.LEFTLOAD);
 
-        if (this.sidebar.isVisible())
-        {
+        if (this.sidebar.isVisible()) {
             this.toggleSidebar.flex().relative(this.sidebar).x(-20);
         }
-        else
-        {
+        else {
             this.toggleSidebar.flex().relative(this).x(1F, -20);
         }
 
         this.resize();
     }
 
-    public TileConditionModel getTile()
-    {
+    public TileConditionModel getTile() {
         return this.tile;
     }
 
-    public String getTitle()
-    {
+    public String getTitle() {
         return "mappet.gui.panels.condition_models";
     }
 
-    public boolean isOpened()
-    {
+    public boolean isOpened() {
         return this.wasOpened;
     }
 
-    public boolean isSelected(TileConditionModel tileEntityModel)
-    {
+    public boolean isSelected(TileConditionModel tileEntityModel) {
         return this.tile == tileEntityModel;
     }
 
 
     /* Data population */
 
-    public void setBasicSettings(ConditionModel conditionModel)
-    {
-        if (conditionModel != null && !conditionModel.equals(this.conditionModelElement.conditionModel))
-        {
+    public void setBasicSettings(ConditionModel conditionModel) {
+        if (conditionModel != null && !conditionModel.equals(this.conditionModelElement.conditionModel)) {
             this.conditionModelElement.set(conditionModel);
         }
         this.conditionModelElement.setVisible(conditionModel != null);
     }
 
-    public void fill(TileConditionModel tile, boolean ignoreSave)
-    {
-        if (!ignoreSave)
-        {
+    public void fill(TileConditionModel tile, boolean ignoreSave) {
+        if (!ignoreSave) {
             this.save();
         }
 
-        if (tile != null && tile.isInvalid())
-        {
+        if (tile != null && tile.isInvalid()) {
             tile = null;
         }
 
@@ -212,8 +195,7 @@ public class GuiConditionModelPanel extends GuiDashboardPanel<GuiMappetDashboard
         this.conditionModelElement.setVisible(tile != null && this.conditionModelList.getCurrentFirst() != null);
         this.tiles.setCurrentScroll(tile);
 
-        if (tile != null)
-        {
+        if (tile != null) {
 
             this.trans.set(tile);
             this.basicSettings.set(tile);
@@ -222,29 +204,23 @@ public class GuiConditionModelPanel extends GuiDashboardPanel<GuiMappetDashboard
         }
     }
 
-    public void fillConditionBlockList(List<ConditionModel> list)
-    {
+    public void fillConditionBlockList(List<ConditionModel> list) {
         this.conditionModelList.clear();
 
-        for (ConditionModel model : list)
-        {
+        for (ConditionModel model : list) {
             this.conditionModelList.add(model);
         }
     }
 
-    public void fillTiles(Collection<TileEntity> tiles)
-    {
+    public void fillTiles(Collection<TileEntity> tiles) {
         this.tiles.clear();
 
-        if (tiles == null)
-        {
+        if (tiles == null) {
             return;
         }
 
-        for (TileEntity tile : tiles)
-        {
-            if (tile instanceof TileConditionModel)
-            {
+        for (TileEntity tile : tiles) {
+            if (tile instanceof TileConditionModel) {
                 this.tiles.add((TileConditionModel) tile);
             }
         }
@@ -254,26 +230,22 @@ public class GuiConditionModelPanel extends GuiDashboardPanel<GuiMappetDashboard
     }
 
     @Override
-    public boolean needsBackground()
-    {
+    public boolean needsBackground() {
         return false;
     }
 
     @Override
-    public void open()
-    {
+    public void open() {
         super.open();
 
         this.fillTiles(ReflectionUtils.getGlobalTiles(this.mc.renderGlobal));
     }
 
     @Override
-    public void appear()
-    {
+    public void appear() {
         super.appear();
 
-        if (this.tile != null && this.tile.isInvalid())
-        {
+        if (this.tile != null && this.tile.isInvalid()) {
             this.fill(null, true);
         }
 
@@ -281,47 +253,41 @@ public class GuiConditionModelPanel extends GuiDashboardPanel<GuiMappetDashboard
     }
 
     @Override
-    public void close()
-    {
+    public void close() {
         super.close();
 
         this.save();
         this.wasOpened = false;
     }
 
-    private void save()
-    {
-        if (this.tile != null && !this.tile.isInvalid() && this.wasOpened)
-        {
+    private void save() {
+        if (this.tile != null && !this.tile.isInvalid() && this.wasOpened) {
             this.tile.markDirty();
             Dispatcher.sendToServer(new PacketEditConditionModel(this.tile.getPos(), this.tile.serializeNBT()));
         }
     }
 
     @Override
-    public void draw(GuiContext context)
-    {
-        if (this.editor.isVisible())
-        {
+    public void draw(GuiContext context) {
+        if (this.editor.isVisible()) {
             Gui.drawRect(this.editor.area.x, this.editor.area.y, this.editor.area.mx(), this.editor.area.ey(), 0xbb000000);
-            GuiDraw.drawHorizontalGradientRect(this.editor.area.mx(), this.editor.area.y, this.editor.area.x(1.25F), this.editor.area.ey(), 0xbb000000, 0);
-            Gui.drawRect(this.conditionModelList.area.x, this.conditionModelList.area.y, this.conditionModelList.area.ex(), this.conditionModelList.area.ey(), 0xbb000000);
+            GuiDraw.drawHorizontalGradientRect(this.editor.area.mx(), this.editor.area.y, this.editor.area.x(1.25F), this.editor.area.ey(),
+                    0xbb000000, 0);
+            Gui.drawRect(this.conditionModelList.area.x, this.conditionModelList.area.y, this.conditionModelList.area.ex(),
+                    this.conditionModelList.area.ey(), 0xbb000000);
         }
 
-        if (this.conditionModelElement.isVisible())
-        {
+        if (this.conditionModelElement.isVisible()) {
             this.conditionModelElement.area.draw(0xdd000000);
         }
 
-        if (this.sidebar.isVisible())
-        {
+        if (this.sidebar.isVisible()) {
             this.sidebar.area.draw(0xdd000000);
         }
 
         super.draw(context);
 
-        if (!this.editor.isVisible())
-        {
+        if (!this.editor.isVisible()) {
             int w = (this.sidebar.isVisible() ? this.sidebar.area.x - this.area.x : this.area.w) / 2;
             int x = this.area.x + w / 2;
 
@@ -329,16 +295,13 @@ public class GuiConditionModelPanel extends GuiDashboardPanel<GuiMappetDashboard
         }
     }
 
-    public static class GuiTileConditionModelListElement extends GuiListElement<TileConditionModel>
-    {
-        public GuiTileConditionModelListElement(Minecraft mc, Consumer<List<TileConditionModel>> callback)
-        {
+    public static class GuiTileConditionModelListElement extends GuiListElement<TileConditionModel> {
+        public GuiTileConditionModelListElement(Minecraft mc, Consumer<List<TileConditionModel>> callback) {
             super(mc, callback);
         }
 
         @Override
-        protected String elementToString(TileConditionModel element)
-        {
+        protected String elementToString(TileConditionModel element) {
             BlockPos pos = element.getPos();
             String first = "(" + element.list.size() + ") ";
 
@@ -346,60 +309,38 @@ public class GuiConditionModelPanel extends GuiDashboardPanel<GuiMappetDashboard
         }
     }
 
-    public static class GuiConditionModelElementsListElement extends GuiListElement<ConditionModel>
-    {
-        public GuiConditionModelElementsListElement(Minecraft mc, Consumer<List<ConditionModel>> callback)
-        {
+    public static class GuiConditionModelElementsListElement extends GuiListElement<ConditionModel> {
+        public GuiConditionModelElementsListElement(Minecraft mc, Consumer<List<ConditionModel>> callback) {
             super(mc, callback);
         }
 
         @Override
-        protected String elementToString(ConditionModel element)
-        {
-            Checker checker = element.checker;
-            String string;
-            if (checker.isEmpty())
-            {
-                return "-";
-            }
-            if (checker.mode == Checker.Mode.CONDITION)
-            {
-                int size = checker.condition.blocks.size();
-                string = checker.condition.blocks.get(0).stringify() + (size > 1 ? (" (" + (size - 1) + "+)") : "");
-            }
-            else
-            {
-                string = checker.expression;
-            }
-            return string;
+        protected String elementToString(ConditionModel element) {
+            if (element.condition.isEmpty()) return "-";
+            int size = element.condition.blocks.size();
+            return element.condition.blocks.get(0).name() + (size > 1 ? " (" + (size - 1) + "+)" : "");
         }
     }
 
-    public static class GuiModelBlockTransformations extends GuiTransformations
-    {
+    public static class GuiModelBlockTransformations extends GuiTransformations {
         public TileConditionModel model;
 
-        public GuiModelBlockTransformations(Minecraft mc)
-        {
+        public GuiModelBlockTransformations(Minecraft mc) {
             super(mc);
-            this.one.callback = (toggle) ->
-            {
+            this.one.callback = (toggle) -> {
                 boolean one = toggle.isToggled();
                 this.model.getSettings().setUniform(one);
                 this.updateScaleFields();
-                if (!one)
-                {
+                if (!one) {
                     this.sy.setValueAndNotify(this.sx.value);
                     this.sz.setValueAndNotify(this.sx.value);
                 }
             };
         }
 
-        public void set(TileConditionModel model)
-        {
+        public void set(TileConditionModel model) {
             this.model = model;
-            if (model != null)
-            {
+            if (model != null) {
                 this.fillT(model.getSettings().getX(), model.getSettings().getY(), model.getSettings().getZ());
                 this.fillS(model.getSettings().getSx(), model.getSettings().getSy(), model.getSettings().getSz());
                 this.fillR(model.getSettings().getRx(), model.getSettings().getRy(), model.getSettings().getRz());
@@ -408,37 +349,32 @@ public class GuiConditionModelPanel extends GuiDashboardPanel<GuiMappetDashboard
             }
         }
 
-        public void setT(double x, double y, double z)
-        {
+        public void setT(double x, double y, double z) {
             this.model.getSettings().setX((float) x);
             this.model.getSettings().setY((float) y);
             this.model.getSettings().setZ((float) z);
         }
 
-        public void setS(double x, double y, double z)
-        {
+        public void setS(double x, double y, double z) {
             this.model.getSettings().setSx((float) x);
             this.model.getSettings().setSy((float) y);
             this.model.getSettings().setSz((float) z);
         }
 
-        public void setR(double x, double y, double z)
-        {
+        public void setR(double x, double y, double z) {
             this.model.getSettings().setRx((float) x);
             this.model.getSettings().setRy((float) y);
             this.model.getSettings().setRz((float) z);
         }
 
-        protected void localTranslate(double x, double y, double z)
-        {
+        protected void localTranslate(double x, double y, double z) {
             this.model.getSettings().addTranslation(x, y, z, GuiStaticTransformOrientation.getOrientation());
             this.fillT(this.model.getSettings().getX(), this.model.getSettings().getY(), this.model.getSettings().getZ());
         }
 
-        protected void prepareRotation(Matrix4f mat)
-        {
+        protected void prepareRotation(Matrix4f mat) {
             MatrixUtils.RotationOrder order = MatrixUtils.RotationOrder.valueOf(this.model.getSettings().getOrder().toString());
-            float[] rot = new float[] {(float) this.rx.value, (float) this.ry.value, (float) this.rz.value};
+            float[] rot = new float[]{(float) this.rx.value, (float) this.ry.value, (float) this.rz.value};
             Matrix4f trans = new Matrix4f();
             trans.setIdentity();
             trans.set(MatrixUtils.Transformation.getRotationMatrix(order.thirdIndex, (double) rot[order.thirdIndex]));
@@ -449,9 +385,9 @@ public class GuiConditionModelPanel extends GuiDashboardPanel<GuiMappetDashboard
             mat.mul(trans);
         }
 
-        protected void postRotation(MatrixUtils.Transformation transform)
-        {
-            Vector3f result = transform.getRotation(MatrixUtils.RotationOrder.valueOf(this.model.getSettings().getOrder().toString()), new Vector3f((float) this.rx.value, (float) this.ry.value, (float) this.rz.value));
+        protected void postRotation(MatrixUtils.Transformation transform) {
+            Vector3f result = transform.getRotation(MatrixUtils.RotationOrder.valueOf(this.model.getSettings().getOrder().toString()),
+                    new Vector3f((float) this.rx.value, (float) this.ry.value, (float) this.rz.value));
             this.rx.setValueAndNotify((double) result.x);
             this.ry.setValueAndNotify((double) result.y);
             this.rz.setValueAndNotify((double) result.z);

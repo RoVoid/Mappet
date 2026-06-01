@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.code.ui;
 
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
+import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import mchorse.mappet.api.ui.utils.GuiClick;
@@ -27,7 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *     <li>Index <code>4</code> = Mouse button (<code>0</code> is left button, <code>1</code> is right button, <code>2</code> is middle button, etc.).</li>
  * </ul>
  *
- * <p>This component can be created using {@link IMappetUIBuilder#click()} method.</p>
+ * <p>This component can be created using {@link MappetUIBuilder#click()} method.</p>
  *
  * <pre>{@code
  *    function main(c)

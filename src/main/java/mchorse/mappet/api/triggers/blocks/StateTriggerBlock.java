@@ -1,5 +1,6 @@
 package mchorse.mappet.api.triggers.blocks;
 
+import mchorse.mappet.api.states.ScriptStates;
 import mchorse.mappet.api.states.States;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.api.utils.Target;
@@ -17,7 +18,7 @@ public class StateTriggerBlock extends StringTriggerBlock
     @Override
     public void trigger(DataContext context)
     {
-        States states = this.target.getStates(context);
+        ScriptStates states = this.target.getSStates(context);
 
         if (states == null)
         {

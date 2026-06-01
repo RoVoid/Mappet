@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.code.ui;
 
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
+import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import mchorse.mappet.client.gui.utils.text.GuiText;
@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * this text component is resizable inside of column and row elements so it should
  * work perfectly with layouts.</p>
  *
- * <p>This component can be created using {@link IMappetUIBuilder#text(String)} method.</p>
+ * <p>This component can be created using {@link MappetUIBuilder#text(String)} method.</p>
  *
  * <pre>{@code
  *    function main(c)
@@ -45,7 +45,7 @@ public class UITextComponent extends UILabelBaseComponent
      * be rendered relative to component's frame horizontally.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Position the text's content in the center of its frame
      *    uiContext.get("text").textAnchor(0.5);

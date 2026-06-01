@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.code.ui;
 
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
+import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -27,7 +27,7 @@ import java.util.List;
  * <p>The value that gets written to UI context's data (if ID is present) is
  * the selected string that picked in the list.</p>
  *
- * <p>This component can be created using {@link IMappetUIBuilder#stringList(List)} method.</p>
+ * <p>This component can be created using {@link MappetUIBuilder#stringList(List)} method.</p>
  *
  * <pre>{@code
  *    function main(c)
@@ -65,7 +65,7 @@ public class UIStringListComponent extends UIComponent
      * Replace values within this string list.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Replace values in strings
      *    uiContext.get("strings").values("Tomato", "Cucumber", "Pepper", "Cabbage");
@@ -85,7 +85,7 @@ public class UIStringListComponent extends UIComponent
      * Replace values within this string list.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *    var vegetables = ["Tomato", "Cucumber", "Pepper", "Cabbage"];
      *
      *    // Replace values in strings
@@ -106,7 +106,7 @@ public class UIStringListComponent extends UIComponent
      * Replace values within this string list.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *    var vegetables = ["Tomato", "Cucumber", "Pepper", "Cabbage"];
      *
      *    // Replace values in strings
@@ -139,7 +139,7 @@ public class UIStringListComponent extends UIComponent
      * Set the currently selected element.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Set first string in the list to be selected
      *    uiContext.get("strings").selected(0);
@@ -158,7 +158,7 @@ public class UIStringListComponent extends UIComponent
      * Set component's solid color background.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Set half transparent black background
      *    uiContext.get("strings").background();
@@ -173,7 +173,7 @@ public class UIStringListComponent extends UIComponent
      * Set component's solid color background.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *
      *    // Set half transparent toxic green background
      *    uiContext.get("strings").background(0x8800ff00);

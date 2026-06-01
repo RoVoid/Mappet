@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.code.ui;
 
-import mchorse.mappet.api.scripts.user.ui.IMappetUIContext;
+import mchorse.mappet.api.scripts.code.ui.MappetUIContext;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import mchorse.mappet.api.ui.utils.UIContextItem;
@@ -74,7 +74,7 @@ public abstract class UIComponent implements INBTSerializable<NBTTagCompound>
      *
      * <p><b>BEWARE</b>: multiple components must not share same ID, if they will
      * it will certainly cause bugs in the data that you'll be receiving from the
-     * client and the way you retrieve components using {@link IMappetUIContext#get(String)}.</p>
+     * client and the way you retrieve components using {@link MappetUIContext#get(String)}.</p>
      */
     public UIComponent id(String id)
     {
@@ -95,7 +95,7 @@ public abstract class UIComponent implements INBTSerializable<NBTTagCompound>
      * Set a tooltip that will be displayed at specified side of component's frame.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *    uiContext.get("component").tooltip("Enter your full name", 1);
      * }</pre>
      *
@@ -119,7 +119,7 @@ public abstract class UIComponent implements INBTSerializable<NBTTagCompound>
      * i.e. despite button being invisible, it can't be clicked.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *    uiContext.get("button").visible(false);
      * }</pre>
      */
@@ -138,7 +138,7 @@ public abstract class UIComponent implements INBTSerializable<NBTTagCompound>
      * textareas, no clicking on click area, icon button, or button, etc.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *    uiContext.get("button").enabled(false);
      * }</pre>
      */
@@ -158,7 +158,7 @@ public abstract class UIComponent implements INBTSerializable<NBTTagCompound>
      * They do absolutely nothing outside of column, row and grid layout components.</p>
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *    uiContext.get("button").margin(10);
      * }</pre>
      */
@@ -300,7 +300,7 @@ public abstract class UIComponent implements INBTSerializable<NBTTagCompound>
      * Add a context menu item.
      *
      * @param icon Icon ID (see {@link UIIconButtonComponent}).
-     * @param action Action ID that will be used for handling with {@link IMappetUIContext#getContext()}.
+     * @param action Action ID that will be used for handling with {@link MappetUIContext#getContext()}.
      * @param label Label that will be displayed in the context menu item.
      */
     public UIComponent context(String icon, String action, String label)
@@ -348,7 +348,7 @@ public abstract class UIComponent implements INBTSerializable<NBTTagCompound>
      * }</pre>
      *
      * @param icon Icon ID (see {@link UIIconButtonComponent}).
-     * @param action Action ID that will be used for handling with {@link IMappetUIContext#getContext()}.
+     * @param action Action ID that will be used for handling with {@link MappetUIContext#getContext()}.
      * @param label Label that will be displayed in the context menu item.
      * @param color Background color highlight (in RGB hex format).
      */
@@ -611,7 +611,7 @@ public abstract class UIComponent implements INBTSerializable<NBTTagCompound>
      * to the hanlder script.</p>
      *
      * <pre>{@code
-     *    // Assuming that ui is a IMappetUIBuilder
+     *    // Assuming that ui is a MappetUIBuilder
      *
      *    // Change text box's update delay to 1 second meaning
      *    // that a second after user didn't type anything into

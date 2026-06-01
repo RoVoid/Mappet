@@ -18,11 +18,11 @@ public abstract class StringTriggerBlock extends AbstractTriggerBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String stringify()
+    public String name()
     {
         if (this.string.isEmpty())
         {
-            return super.stringify();
+            return super.name();
         }
 
         return this.string;

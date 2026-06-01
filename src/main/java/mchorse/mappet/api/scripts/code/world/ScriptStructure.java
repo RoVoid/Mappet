@@ -2,7 +2,6 @@ package mchorse.mappet.api.scripts.code.world;
 
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.math.ScriptVector;
-import mchorse.mappet.api.scripts.user.world.IScriptStructure;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,7 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
-public class ScriptStructure implements IScriptStructure {
+public class ScriptStructure {
     String name;
     WorldServer world;
     Template structure;
@@ -37,12 +36,10 @@ public class ScriptStructure implements IScriptStructure {
         structure.takeBlocksFromWorld(world, pos, size, withEntities, Blocks.STRUCTURE_VOID);
     }
 
-    @Override
     public void takeBlocks(ScriptVector start, ScriptVector end, boolean withEntities) {
         takeBlocks(start.toBlockPos(), end.toBlockPos().subtract(start.toBlockPos()).add(1, 1, 1), withEntities);
     }
 
-    @Override
     public void takeBlocks(int x1, int y1, int z1, int x2, int y2, int z2, boolean withEntities) {
         takeBlocks(new BlockPos(Math.min(x1, x2), Math.min(y1, y2), Math.min(z1, z2)), new BlockPos(Math.abs(x2 - x1) + 1, Math.abs(y2 - y1) + 1, Math.abs(z2 - z1) + 1), withEntities);
     }
@@ -57,37 +54,30 @@ public class ScriptStructure implements IScriptStructure {
         structure.addBlocksToWorld(world, pos, settings);
     }
 
-    @Override
     public void placeBlocks(ScriptVector pos) {
         placeBlocks(pos.toBlockPos(), 0, 0, false);
     }
 
-    @Override
     public void placeBlocks(int x, int y, int z) {
         placeBlocks(new BlockPos(x, y, z), 0, 0, false);
     }
 
-    @Override
     public void placeBlocks(ScriptVector pos, int rotation, int mirror, boolean withEntities) {
         placeBlocks(pos.toBlockPos(), rotation, mirror, withEntities);
     }
 
-    @Override
     public void placeBlocks(int x, int y, int z, int rotation, int mirror, boolean withEntities) {
         placeBlocks(new BlockPos(x, y, z), rotation, mirror, withEntities);
     }
 
-    @Override
     public ScriptVector getSize() {
         return new ScriptVector(structure.getSize());
     }
 
-    @Override
     public void save() {
         save(name);
     }
 
-    @Override
     public void save(String name) {
         File file = new File(world.getSaveHandler().getWorldDirectory(), "structures/" + name + ".nbt");
         NBTTagCompound nbt = new NBTTagCompound();
@@ -99,23 +89,19 @@ public class ScriptStructure implements IScriptStructure {
         }
     }
 
-    @Override
     public int getDimensionId() {
         return world.provider.getDimension();
     }
 
-    @Override
     public boolean isValid() {
         return structure != null && world != null;
     }
 
-    @Override
     @Deprecated
     public Template getMinecraftStructure() {
         return asMinecraft();
     }
 
-    @Override
     public Template asMinecraft() {
         return structure;
     }

@@ -39,7 +39,7 @@ public class WorldTimeConditionBlock extends AbstractConditionBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String stringify()
+    public String name()
     {
         String label = this.check.stringify();
 

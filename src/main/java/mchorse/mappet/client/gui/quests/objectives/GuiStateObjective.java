@@ -1,7 +1,7 @@
 package mchorse.mappet.client.gui.quests.objectives;
 
 import mchorse.mappet.api.quests.objectives.StateObjective;
-import mchorse.mappet.client.gui.conditions.GuiCheckerElement;
+import mchorse.mappet.client.gui.conditions.GuiOpenConditionButtonElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
@@ -9,13 +9,13 @@ import net.minecraft.client.resources.I18n;
 
 public class GuiStateObjective extends GuiObjective<StateObjective>
 {
-    public GuiCheckerElement expression;
+    public GuiOpenConditionButtonElement expression;
 
     public GuiStateObjective(Minecraft mc, StateObjective objective)
     {
         super(mc, objective);
 
-        this.expression = new GuiCheckerElement(mc, objective.expression);
+        this.expression = new GuiOpenConditionButtonElement(mc, objective.condition);
         this.expression.flex().relative(this).y(12).w(1F);
 
         this.message.flex().relative(this).y(1F).w(1F).anchorY(1F);

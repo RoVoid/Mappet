@@ -30,7 +30,7 @@ public class GuiAbstractConditionBlockPanel <T extends AbstractConditionBlock> e
         this.overlay = overlay;
         this.block = block;
 
-        GuiLabel label = Elements.label(IKey.lang("mappet.gui.condition_types." + CommonProxy.getConditionBlocks().getType(block)));
+        GuiLabel label = Elements.label(IKey.lang("mappet.gui.condition_types." + CommonProxy.getConditionBlocks().type(block)));
 
         this.not = new GuiIconElement(mc, Icons.EXCLAMATION, (b) -> this.block.not = !this.block.not);
         this.not.tooltip(IKey.lang("mappet.gui.conditions.not")).flex().wh(16, 16);

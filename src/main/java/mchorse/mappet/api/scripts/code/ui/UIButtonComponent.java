@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.code.ui;
 
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
+import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * to UI context's data (if ID is present) is how many times the button
  * was pressed.</p>
  *
- * <p>This component can be created using {@link IMappetUIBuilder#button(String)} method.</p>
+ * <p>This component can be created using {@link MappetUIBuilder#button(String)} method.</p>
  *
  * <pre>{@code
  *    function main(c)
@@ -61,7 +61,7 @@ public class UIButtonComponent extends UILabelBaseComponent
      * Change button's background color by providing hex RGB.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *    uiContext.get("button").background(0x00ff00);
      * }</pre>
      */
@@ -78,7 +78,7 @@ public class UIButtonComponent extends UILabelBaseComponent
      * Disable button's background.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *    uiContext.get("button").noBackground();
      * }</pre>
      */

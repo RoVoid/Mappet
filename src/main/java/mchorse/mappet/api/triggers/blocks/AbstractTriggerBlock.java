@@ -16,9 +16,14 @@ public abstract class AbstractTriggerBlock extends AbstractBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String stringify()
+    public String name()
     {
-        return I18n.format("mappet.gui.trigger_types." + CommonProxy.getTriggerBlocks().getType(this));
+        return I18n.format("mappet.gui.trigger_types." + CommonProxy.getTriggerBlocks().type(this));
+    }
+
+    @Override
+    public String type() {
+        return CommonProxy.getTriggerBlocks().type(this);
     }
 
     public void triggerWithFrequency(DataContext context)

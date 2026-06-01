@@ -3,8 +3,6 @@ package mchorse.mappet.blocks.tile;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityModelSettings;
-import mchorse.mappet.Mappet;
-import mchorse.mappet.api.conditions.Checker;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.blocks.PacketEditConditionModel;
@@ -27,8 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileConditionModel extends TileEntity implements ITickable
-{
+public class TileConditionModel extends TileEntity implements ITickable {
     public EntityActor entity;
     public int frequency;
     public boolean isGlobal = true;
@@ -38,32 +35,27 @@ public class TileConditionModel extends TileEntity implements ITickable
 
     private int tick;
 
-    public TileConditionModel()
-    {
-        this.frequency = 1;
-        this.settings = new TileEntityModelSettings();
+    public TileConditionModel() {
+        frequency = 1;
+        settings = new TileEntityModelSettings();
     }
 
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getRenderBoundingBox()
-    {
+    public AxisAlignedBB getRenderBoundingBox() {
         return TileEntity.INFINITE_EXTENT_AABB;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public double getMaxRenderDistanceSquared()
-    {
+    public double getMaxRenderDistanceSquared() {
         float range = Blockbuster.actorRenderingRange.get();
 
         return range * range;
     }
 
     @Override
-    public void update()
-    {
-        if (this.world.isRemote)
-        {
+    public void update() {
+        if (world.isRemote) {
             updateMorph();
             return;
         }
@@ -72,91 +64,53 @@ public class TileConditionModel extends TileEntity implements ITickable
 
         Constant constantFalse = new Constant(0);
 
-        if (this.tick % frequency == 0)
-        {
-            for (EntityPlayer playerEntity : this.world.playerEntities)
-            {
-                AbstractMorph morph = null;
+        if (tick % frequency == 0) for (EntityPlayer playerEntity : world.playerEntities) {
+            AbstractMorph morph = null;
 
-                for (ConditionModel conditionModel : this.list)
-                {
-                    boolean result = false;
-
-                    DataContext context = new DataContext(playerEntity);
-                    Checker checker = conditionModel.checker;
-
-                    if (checker.mode == Checker.Mode.CONDITION)
-                    {
-                        result = checker.condition.execute(context);
-                    }
-                    else
-                    {
-                        String expression = checker.expression;
-                        result = Mappet.expressions.set(context).parse(expression, constantFalse).booleanValue();
-                    }
-
-                    if (result && !conditionModel.morph.equals(morph))
-                    {
-                        morph = conditionModel.morph;
-                    }
-                }
-                NBTTagCompound tag = new NBTTagCompound();
-                NBTTagCompound tagMorph = new NBTTagCompound();
-                if (morph != null)
-                {
-                    morph.toNBT(tagMorph);
-                }
-                NBTTagCompound settings = new NBTTagCompound();
-                this.settings.toNBT(settings);
-                tag.setTag("settings", settings);
-                tag.setTag("morph", tagMorph);
-                tag.setBoolean("shadow", this.isShadow);
-                tag.setBoolean("global", this.isGlobal);
-                Dispatcher.sendTo(new PacketEditConditionModel(this.getPos(), tag).setIsEdit(false), (EntityPlayerMP) playerEntity);
-            }
+            for (ConditionModel conditionModel : list)
+                if (conditionModel.condition.execute(new DataContext(playerEntity)) && !conditionModel.morph.equals(morph))
+                    morph = conditionModel.morph;
+            NBTTagCompound tag = new NBTTagCompound();
+            NBTTagCompound tagMorph = new NBTTagCompound();
+            if (morph != null) morph.toNBT(tagMorph);
+            NBTTagCompound settings = new NBTTagCompound();
+            this.settings.toNBT(settings);
+            tag.setTag("settings", settings);
+            tag.setTag("morph", tagMorph);
+            tag.setBoolean("shadow", isShadow);
+            tag.setBoolean("global", isGlobal);
+            Dispatcher.sendTo(new PacketEditConditionModel(getPos(), tag).setIsEdit(false), (EntityPlayerMP) playerEntity);
         }
 
-        this.tick += 1;
+        tick += 1;
     }
 
     @SideOnly(Side.CLIENT)
-    public void updateMorph()
-    {
-        if (this.entity == null)
-        {
-            this.createEntity(this.world);
-        }
+    public void updateMorph() {
+        if (entity == null) createEntity(world);
 
-        if (this.entity.morph.get() != null)
-        {
-            this.entity.morph.get().update(this.entity);
-        }
+        if (entity.morph.get() != null) entity.morph.get().update(entity);
 
         ++entity.ticksExisted;
     }
 
-    public TileEntityModelSettings getSettings()
-    {
-        return this.settings;
+    public TileEntityModelSettings getSettings() {
+        return settings;
     }
 
-    public void createEntity(World world)
-    {
-        if (world != null)
-        {
-            this.entity = new EntityActor(world);
-            this.entity.onGround = true;
+    public void createEntity(World world) {
+        if (world != null) {
+            entity = new EntityActor(world);
+            entity.onGround = true;
         }
     }
 
-    public void fill(NBTTagCompound tag)
-    {
-        this.list.clear();
+    public void fill(NBTTagCompound tag) {
+        list.clear();
 
         NBTTagList list = tag.getTagList("list", 10);
 
-        for (int i = 0; i < list.tagCount(); i++)
-        {
+        for (int i = 0; i < list.tagCount(); i++) {
             NBTTagCompound element = list.getCompoundTagAt(i);
 
             ConditionModel conditionModel = new ConditionModel();
@@ -165,65 +119,56 @@ public class TileConditionModel extends TileEntity implements ITickable
             this.list.add(conditionModel);
         }
 
-        this.frequency = tag.getInteger("frequency");
-        this.isGlobal = tag.getBoolean("global");
-        this.isShadow = tag.getBoolean("shadow");
+        frequency = tag.getInteger("frequency");
+        isGlobal = tag.getBoolean("global");
+        isShadow = tag.getBoolean("shadow");
     }
 
-    public NBTTagCompound toNBT(NBTTagCompound tag)
-    {
+    public NBTTagCompound toNBT(NBTTagCompound tag) {
         NBTTagList list = new NBTTagList();
 
-        for (ConditionModel element : this.list)
-        {
-            list.appendTag(element.serializeNBT());
-        }
+        for (ConditionModel element : this.list) list.appendTag(element.serializeNBT());
 
         tag.setTag("list", list);
-        tag.setInteger("frequency", this.frequency);
-        tag.setBoolean("global", this.isGlobal);
-        tag.setBoolean("shadow", this.isShadow);
+        tag.setInteger("frequency", frequency);
+        tag.setBoolean("global", isGlobal);
+        tag.setBoolean("shadow", isShadow);
         return tag;
     }
 
     @Override
-    public NBTTagCompound getUpdateTag()
-    {
-        return this.writeToNBT(new NBTTagCompound());
+    public NBTTagCompound getUpdateTag() {
+        return writeToNBT(new NBTTagCompound());
     }
 
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket()
-    {
-        return new SPacketUpdateTileEntity(this.pos, this.getBlockMetadata(), this.getUpdateTag());
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(pos, getBlockMetadata(), getUpdateTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet)
-    {
-        this.readFromNBT(packet.getNbtCompound());
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+        readFromNBT(packet.getNbtCompound());
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag)
-    {
+    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         NBTTagCompound settings = new NBTTagCompound();
         this.settings.toNBT(settings);
 
         tag.setTag("settings", settings);
 
-        this.toNBT(tag);
+        toNBT(tag);
 
         return super.writeToNBT(tag);
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag)
-    {
+    public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        this.settings = new TileEntityModelSettings();
-        this.settings.fromNBT((NBTTagCompound) tag.getTag("settings"));
+        settings = new TileEntityModelSettings();
+        settings.fromNBT((NBTTagCompound) tag.getTag("settings"));
 
-        this.fill(tag);
+        fill(tag);
     }
 }

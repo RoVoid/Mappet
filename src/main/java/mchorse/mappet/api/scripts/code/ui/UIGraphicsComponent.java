@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.code.ui;
 
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
+import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import mchorse.mappet.client.gui.utils.GuiGraphics;
@@ -30,7 +30,7 @@ import java.util.List;
  * images loaded through Minecraft's texture manager, text and McLib icons. Think
  * of it as a very primitive canvas implementation.</p>
  *
- * <p>This component can be created using {@link IMappetUIBuilder#graphics()} method.</p>
+ * <p>This component can be created using {@link MappetUIBuilder#graphics()} method.</p>
  *
  * <pre>{@code
  *    function main(c)

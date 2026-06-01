@@ -18,7 +18,7 @@ public class CommandTriggerBlock extends StringTriggerBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String stringify()
+    public String name()
     {
         if (!this.string.startsWith("/"))
         {

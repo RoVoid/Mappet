@@ -32,7 +32,7 @@ public abstract class UIParentComponent extends UIComponent
         {
             NBTTagCompound componentTag = component.serializeNBT();
 
-            componentTag.setString("Type", CommonProxy.getUiComponents().getType(component));
+            componentTag.setString("Type", CommonProxy.getUiComponents().type(component));
             list.appendTag(componentTag);
         }
 

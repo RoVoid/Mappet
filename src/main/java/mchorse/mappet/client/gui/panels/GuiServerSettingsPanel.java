@@ -2,6 +2,7 @@ package mchorse.mappet.client.gui.panels;
 
 import mchorse.mappet.MappetIcons;
 import mchorse.mappet.api.ServerSettings;
+import mchorse.mappet.api.states.ScriptStates;
 import mchorse.mappet.api.states.States;
 import mchorse.mappet.api.triggers.Trigger;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
@@ -272,7 +273,7 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
     }
 
     public void fillStates(String target, NBTTagCompound data) {
-        States states = new States();
+        ScriptStates states = new ScriptStates();
 
         statesTitle.label = target.equals("~") ? IKey.lang("mappet.gui.states.server") : IKey.format("mappet.gui.states.player", target);
         states.deserializeNBT(data);

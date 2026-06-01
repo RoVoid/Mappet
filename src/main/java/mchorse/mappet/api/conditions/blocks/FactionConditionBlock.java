@@ -3,7 +3,7 @@ package mchorse.mappet.api.conditions.blocks;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.factions.Faction;
 import mchorse.mappet.api.factions.FactionAttitude;
-import mchorse.mappet.api.states.States;
+import mchorse.mappet.api.states.FactionStates;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.api.utils.TargetMode;
 import mchorse.mappet.utils.EnumUtils;
@@ -32,7 +32,7 @@ public class FactionConditionBlock extends PropertyConditionBlock
     {
         if (this.target.mode != TargetMode.GLOBAL)
         {
-            States states = this.target.getStates(context);
+            FactionStates states = this.target.getFStates(context);
 
             if (states == null)
             {
@@ -41,17 +41,17 @@ public class FactionConditionBlock extends PropertyConditionBlock
 
             if (this.faction == FactionCheck.SCORE)
             {
-                if (!states.hasFaction(this.id))
+                if (!states.has(this.id))
                 {
                     return false;
                 }
 
-                if (this.comparison.comparison.isString)
+                if (this.comparison.mode.isString)
                 {
-                    return this.compareString(String.valueOf(states.getFactionScore(this.id)));
+                    return this.compareString(String.valueOf(states.get(this.id)));
                 }
 
-                return this.compare(states.getFactionScore(this.id));
+                return this.compare(states.get(this.id));
             }
 
             Faction faction = Mappet.factions.load(this.id);
@@ -69,7 +69,7 @@ public class FactionConditionBlock extends PropertyConditionBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String stringify()
+    public String name()
     {
         if (this.faction == FactionCheck.SCORE)
         {

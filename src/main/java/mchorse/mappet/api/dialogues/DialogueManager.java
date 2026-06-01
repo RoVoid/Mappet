@@ -1,8 +1,6 @@
 package mchorse.mappet.api.dialogues;
 
-import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.Mappet;
-import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.api.dialogues.nodes.ReactionNode;
 import mchorse.mappet.api.events.nodes.EventBaseNode;
 import mchorse.mappet.api.quests.Quest;
@@ -11,8 +9,10 @@ import mchorse.mappet.api.quests.chains.QuestStatus;
 import mchorse.mappet.api.utils.manager.BaseManager;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.dialogue.PacketDialogueFragment;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.utils.WorldUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,46 +29,39 @@ public class DialogueManager extends BaseManager<Dialogue> {
     @Override
     protected Dialogue createData(String id, NBTTagCompound tag) {
         Dialogue dialogue = new Dialogue(CommonProxy.getDialogues());
-
-        if (tag != null) {
-            dialogue.deserializeNBT(tag);
-        }
-
+        if (tag != null) dialogue.deserializeNBT(tag);
         return dialogue;
     }
 
     public void open(EntityPlayerMP player, Dialogue dialogue, DialogueContext context) {
         ICharacter character = Character.get(player);
 
-        if (character != null) {
-            character.setDialogue(dialogue, context);
-            Mappet.dialogues.execute(dialogue, context);
+        if (character == null) return;
 
-            if (context.reactionNode != null) {
-                handleContext(player, dialogue, context, null);
-            }
-        }
+        character.setDialogue(dialogue, context);
+        Mappet.dialogues.execute(dialogue, context);
+
+        if (context.reactionNode != null) handleContext(player, dialogue, context, null);
     }
 
     public void handleContext(EntityPlayerMP player, Dialogue dialogue, DialogueContext context, ReactionNode last) {
-        if (last != null && !last.sound.isEmpty()) {
-            WorldUtils.stopSound(player, last.sound);
-        }
+        ICharacter character = Character.get(player);
 
-        List<DialogueFragment> replies = context.replyNodes
-                .stream()
+        if (character == null) return;
+
+        if (last != null && !last.sound.isEmpty()) WorldUtils.stopSound(player, last.sound);
+
+        List<DialogueFragment> replies = context.replyNodes.stream()
                 .map((r) -> r.message.copy().process(context.data))
                 .collect(Collectors.toList());
+
         DialogueFragment reaction = context.reactionNode == null ? new DialogueFragment() : context.reactionNode.message.copy();
 
         reaction.process(context.data);
 
         PacketDialogueFragment packet = new PacketDialogueFragment(dialogue.closable, reaction, replies);
-        ICharacter character = Character.get(player);
 
-        if (context.reactionNode != null) {
-            packet.addMorph(context.reactionNode.morph);
-        }
+        if (context.reactionNode != null) packet.addMorph(context.reactionNode.morph);
 
         if (context.quest != null) {
             Quest quest = Mappet.quests.load(context.quest.quest);
@@ -78,35 +71,25 @@ public class DialogueManager extends BaseManager<Dialogue> {
 
                 if (character.getQuests().has(quest.getId())) {
                     Quest playerQuest = character.getQuests().getByName(quest.getId());
-
                     status = playerQuest.isComplete(player) ? QuestStatus.COMPLETED : QuestStatus.UNAVAILABLE;
                 }
 
                 packet.addQuest(new QuestInfo(quest, status));
             }
         }
-        else if (context.questChain != null) {
+        else if (context.questChain != null)
             packet.addQuests(Mappet.chains.evaluate(context.questChain.chain, player, context.data.process(context.questChain.subject)));
-        }
 
         if (context.reactionNode != null) {
-            if (context.reactionNode.read) {
-                character.getStates().readDialogue(dialogue.getId(), context.reactionNode.marker);
-            }
-
+            if (context.reactionNode.read) character.getDialogueStates().read(dialogue.getId(), context.reactionNode.marker);
             WorldUtils.playSound(player, context.reactionNode.sound);
         }
 
         Dispatcher.sendTo(packet, player);
     }
 
-    /* Dialogue execution */
-
     public DialogueContext execute(Dialogue event, DialogueContext context) {
-        if (event.main != null) {
-            recursiveExecute(event, event.main, context, false);
-        }
-
+        if (event.main != null) recursiveExecute(event, event.main, context, false);
         return context;
     }
 
@@ -120,14 +103,8 @@ public class DialogueManager extends BaseManager<Dialogue> {
 
             List<EventBaseNode> children = system.getChildren(node);
 
-            if (result == EventBaseNode.ALL) {
-                for (EventBaseNode child : children) {
-                    recursiveExecute(system, child, context, false);
-                }
-            }
-            else if (result <= children.size()) {
-                recursiveExecute(system, children.get(result - 1), context, false);
-            }
+            if (result == EventBaseNode.ALL) for (EventBaseNode child : children) recursiveExecute(system, child, context, false);
+            else if (result <= children.size()) recursiveExecute(system, children.get(result - 1), context, false);
 
             context.nesting -= 1;
         }

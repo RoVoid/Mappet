@@ -22,7 +22,7 @@ public class ItemTriggerBlock extends AbstractTriggerBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String stringify()
+    public String name()
     {
         String displayName = this.stack.getDisplayName();
 

@@ -28,7 +28,7 @@ public class EntityConditionBlock extends PropertyConditionBlock
 
         double value = EntityUtils.getProperty(entity, this.id);
 
-        if (this.comparison.comparison.isString)
+        if (this.comparison.mode.isString)
         {
             return this.compareString(String.valueOf(value));
         }
@@ -38,7 +38,7 @@ public class EntityConditionBlock extends PropertyConditionBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String stringify()
+    public String name()
     {
         String id = "";
 

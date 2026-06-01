@@ -1,6 +1,6 @@
 package mchorse.mappet.api.scripts.code.ui;
 
-import mchorse.mappet.api.scripts.user.ui.IMappetUIBuilder;
+import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * <code>1</code>/<code>0</code>). The value that gets written to UI context's data
  * (if ID is present) is boolean.</p>
  *
- * <p>This component can be created using {@link IMappetUIBuilder#toggle(String)} method.</p>
+ * <p>This component can be created using {@link MappetUIBuilder#toggle(String)} method.</p>
  *
  * <pre>{@code
  *    function main(c)
@@ -52,7 +52,7 @@ public class UIToggleComponent extends UILabelBaseComponent
      * Change component's toggled state.
      *
      * <pre>{@code
-     *    // Assuming that uiContext is a IMappetUIContext
+     *    // Assuming that uiContext is a MappetUIContext
      *    uiContext.get("toggle").state(true);
      * }</pre>
      */
