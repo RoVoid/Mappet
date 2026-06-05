@@ -10,11 +10,10 @@ public class StateConditionBlock extends PropertyConditionBlock {
 
     @Override
     public boolean evaluateBlock(DataContext context) {
-        ScriptStates states = target.getSStates(context);
-        if (states == null) return false;
+        ScriptStates states = target.getStates(context).scripts;
+        return states != null && (comparison.mode.isString ? states.isString(id) ? compareString(states.getString(id))
+                : compareString(String.valueOf(states.getNumber(id))) : compare(states.getNumber(id)));
         // he he
-        return comparison.mode.isString ? states.isString(id) ? compareString(states.getString(id))
-                : compareString(String.valueOf(states.getNumber(id))) : compare(states.getNumber(id));
     }
 
     @Override

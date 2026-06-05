@@ -1,13 +1,13 @@
 package mchorse.mappet.api.scripts.code;
 
+import mchorse.mappet.api.scripts.code.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.math.ScriptVector;
-import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import net.minecraft.util.math.RayTraceResult;
 
 public class ScriptRayTrace {
     private final RayTraceResult result;
-    private ScriptEntity entity;
+    private IScriptEntity entity;
 
     public ScriptRayTrace(RayTraceResult result) {
         this.result = result;
@@ -29,7 +29,7 @@ public class ScriptRayTrace {
         return result.typeOfHit == RayTraceResult.Type.ENTITY;
     }
 
-    public ScriptEntity getEntity() {
+    public IScriptEntity getEntity() {
         if (result.entityHit == null) return null;
         if (entity == null) entity = ScriptEntity.create(result.entityHit);
         return entity;

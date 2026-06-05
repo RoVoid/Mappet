@@ -14,8 +14,8 @@ public class DialogueStates extends States {
     }
 
     @Override
-    protected TYPES type() {
-        return TYPES.DIALOGUE;
+    protected Type type() {
+        return Type.DIALOGUE;
     }
 
     public boolean wasRead(String id, String marker) {

@@ -15,7 +15,7 @@ public class DialogueConditionBlock extends TargetConditionBlock {
     public boolean evaluateBlock(DataContext context) {
         if (target.mode == TargetMode.GLOBAL) return false;
         ICharacter character = target.getCharacter(context);
-        return character != null && character.getDialogueStates().wasRead(id, marker);
+        return character != null && character.getStates().dialogues.wasRead(id, marker);
     }
 
     @Override

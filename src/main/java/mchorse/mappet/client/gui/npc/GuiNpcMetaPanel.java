@@ -39,7 +39,7 @@ public class GuiNpcMetaPanel extends GuiNpcPanel
 
     private void openStates()
     {
-        GuiStatesOverlay overlay = new GuiStatesOverlay(this.mc, IKey.lang("mappet.gui.npcs.meta.states.title"), this.state.states);
+        GuiStatesOverlay overlay = new GuiStatesOverlay(this.mc, IKey.lang("mappet.gui.npcs.meta.states.title"), this.state.states.scripts);
 
         GuiOverlay.addOverlay(GuiBase.getCurrent(), overlay, 0.6F, 0.8F);
     }

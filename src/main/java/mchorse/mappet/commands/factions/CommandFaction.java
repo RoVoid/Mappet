@@ -1,6 +1,7 @@
 package mchorse.mappet.commands.factions;
 
-import mchorse.mappet.api.states.States;
+import mchorse.mappet.api.states.FactionStates;
+import mchorse.mappet.api.states.StatesProvider;
 import mchorse.mappet.commands.MappetSubCommandBase;
 import mchorse.mappet.utils.EntityUtils;
 import net.minecraft.command.CommandException;
@@ -10,24 +11,24 @@ import net.minecraft.server.MinecraftServer;
 
 public class CommandFaction extends MappetSubCommandBase
 {
-    public static States getStates(MinecraftServer server, ICommandSender sender, String target) throws CommandException
+    public static FactionStates getStates(MinecraftServer server, ICommandSender sender, String target) throws CommandException
     {
         Entity entity = getEntity(server, sender, target);
-        States states = EntityUtils.getSStates(entity);
 
-        if (states != null)
-        {
-            return states;
-        }
+        StatesProvider provider = EntityUtils.getStates(entity);
+        if (provider == null) return null;
+
+        FactionStates states = provider.factions;
+        if (states != null) return states;
 
         throw new CommandException("states.invalid_target", target);
     }
 
     public CommandFaction()
     {
-        this.add(new CommandFactionAdd());
-        this.add(new CommandFactionClear());
-        this.add(new CommandFactionSet());
+        add(new CommandFactionAdd());
+        add(new CommandFactionClear());
+        add(new CommandFactionSet());
     }
 
     @Override

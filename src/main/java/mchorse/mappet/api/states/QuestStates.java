@@ -10,8 +10,8 @@ public class QuestStates extends States {
     }
 
     @Override
-    protected TYPES type() {
-        return TYPES.QUEST;
+    protected Type type() {
+        return Type.QUEST;
     }
 
     public boolean wasCompleted(String id) {

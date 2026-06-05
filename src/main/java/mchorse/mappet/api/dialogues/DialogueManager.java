@@ -81,7 +81,7 @@ public class DialogueManager extends BaseManager<Dialogue> {
             packet.addQuests(Mappet.chains.evaluate(context.questChain.chain, player, context.data.process(context.questChain.subject)));
 
         if (context.reactionNode != null) {
-            if (context.reactionNode.read) character.getDialogueStates().read(dialogue.getId(), context.reactionNode.marker);
+            if (context.reactionNode.read) character.getStates().dialogues.read(dialogue.getId(), context.reactionNode.marker);
             WorldUtils.playSound(player, context.reactionNode.sound);
         }
 

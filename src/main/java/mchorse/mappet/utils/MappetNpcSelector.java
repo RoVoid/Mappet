@@ -2,6 +2,7 @@ package mchorse.mappet.utils;
 
 import com.google.common.base.Predicate;
 import mchorse.mappet.api.states.States;
+import mchorse.mappet.api.states.StatesProvider;
 import mchorse.mappet.entities.EntityNpc;
 import mchorse.mclib.math.IValue;
 import mchorse.mclib.math.MathBuilder;
@@ -61,18 +62,20 @@ public class MappetNpcSelector implements IEntitySelectorFactory {
             IValue value = BUILDER.parse(expression);
 
             list.add((e) -> {
-                States states = EntityUtils.getSStates(e);
+                StatesProvider provider=EntityUtils.getStates(e);
+                if(provider == null) return false;
 
+                States states = provider.scripts;
                 if (states == null) return false;
 
                 for (Variable variable : BUILDER.variables.values()) {
                     Object v = states.values().get(variable.getName());
 
-                    if (v != null) {
+                    if (v == null) variable.set(0); // :P
+                    else {
                         if (v instanceof String) variable.set((String) v);
                         else if (v instanceof Number) variable.set(((Number) v).doubleValue());
                     }
-                    else variable.set(0);
                 }
 
                 return value.booleanValue();

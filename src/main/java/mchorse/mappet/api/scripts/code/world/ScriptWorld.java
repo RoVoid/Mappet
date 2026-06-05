@@ -7,22 +7,19 @@ import mchorse.mappet.Mappet;
 import mchorse.mappet.api.npcs.Npc;
 import mchorse.mappet.api.npcs.NpcState;
 import mchorse.mappet.api.scripts.code.ScriptFactory;
-import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
-import mchorse.mappet.api.scripts.code.blocks.ScriptTileEntity;
-import mchorse.mappet.api.scripts.code.mappet.MappetSchematic;
-import mchorse.mappet.api.scripts.code.math.ScriptBox;
-import mchorse.mappet.api.scripts.code.math.ScriptVector;
-import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
-import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.code.ScriptRayTrace;
 import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
 import mchorse.mappet.api.scripts.code.blocks.ScriptTileEntity;
+import mchorse.mappet.api.scripts.code.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntityItem;
 import mchorse.mappet.api.scripts.code.entities.ScriptNpc;
 import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
 import mchorse.mappet.api.scripts.code.items.ScriptInventory;
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
+import mchorse.mappet.api.scripts.code.mappet.MappetSchematic;
+import mchorse.mappet.api.scripts.code.math.ScriptBox;
+import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
 import mchorse.mappet.api.utils.RayTracing;
 import mchorse.mappet.client.gui.scripts.scriptedItem.util.Pair;
@@ -170,7 +167,7 @@ public class ScriptWorld {
         replaceBlocks(block, newBlock, new ScriptBox(minX, minY, minZ, maxX, maxY, maxZ));
     }
 
-//    public void replaceBlocks(ScriptBlockState block, ScriptBlockState newBlock, ScriptVector start, ScriptVector end) {
+    //    public void replaceBlocks(ScriptBlockState block, ScriptBlockState newBlock, ScriptVector start, ScriptVector end) {
     public void replaceBlocks(ScriptBlockState block, ScriptBlockState newBlock, ScriptVector start, ScriptVector end) {
         replaceBlocks(block, newBlock, new ScriptBox(start.x, start.y, start.z, end.x, end.y, end.z));
     }
@@ -260,21 +257,11 @@ public class ScriptWorld {
 
     public void spawnParticles(ScriptPlayer entity, EnumParticleTypes type, boolean longDistance, ScriptVector pos, int number, ScriptVector offset, double speed, int... args) {
         if (entity == null) return;
-        ((WorldServer) world).spawnParticle(entity.asMinecraft(),
-                type,
-                longDistance,
-                pos.x,
-                pos.y,
-                pos.z,
-                number,
-                offset.x,
-                offset.y,
-                offset.z,
-                speed,
-                args);
+        ((WorldServer) world).spawnParticle(entity.asMinecraft(), type, longDistance, pos.x, pos.y, pos.z, number, offset.x, offset.y, offset.z,
+                speed, args);
     }
 
-    public ScriptEntity spawnEntity(String id, double x, double y, double z, ScriptNBTCompound compound) {
+    public IScriptEntity spawnEntity(String id, double x, double y, double z, ScriptNBTCompound compound) {
         if (!isBlockLoaded((int) x, (int) y, (int) z)) return null;
         NBTTagCompound tag = new NBTTagCompound();
         if (compound != null) tag.merge(compound.asMinecraft());
@@ -284,7 +271,7 @@ public class ScriptWorld {
         return entity == null ? null : ScriptEntity.create(entity);
     }
 
-    public ScriptEntity spawnEntity(String id, ScriptVector pos, ScriptNBTCompound compound) {
+    public IScriptEntity spawnEntity(String id, ScriptVector pos, ScriptNBTCompound compound) {
         return spawnEntity(id, pos.x, pos.y, pos.z, compound);
     }
 
@@ -323,38 +310,35 @@ public class ScriptWorld {
         return spawnNpc(id, state, pos.x, pos.y, pos.z, (float) rot.x, (float) rot.y, (float) rot.z);
     }
 
-    public List<ScriptEntity> getEntities(double x1, double y1, double z1, double x2, double y2, double z2) {
+    public List<IScriptEntity> getEntities(double x1, double y1, double z1, double x2, double y2, double z2) {
         return getEntities(x1, y1, z1, x2, y2, z2, false);
     }
 
-    public List<ScriptEntity> getEntities(ScriptBox box) {
+    public List<IScriptEntity> getEntities(ScriptBox box) {
         return getEntities(box, false);
     }
 
-    public List<ScriptEntity> getEntities(double x1, double y1, double z1, double x2, double y2, double z2, boolean ignoreVolumeLimit) {
+    public List<IScriptEntity> getEntities(double x1, double y1, double z1, double x2, double y2, double z2, boolean ignoreVolumeLimit) {
         return getEntities(new ScriptBox(x1, y1, z1, x2, y2, z2), ignoreVolumeLimit);
     }
 
-    public List<ScriptEntity> getEntities(ScriptBox box, boolean ignoreVolumeLimit) {
-        List<ScriptEntity> entities = new ArrayList<>();
+    public List<IScriptEntity> getEntities(ScriptBox box, boolean ignoreVolumeLimit) {
+        List<IScriptEntity> entities = new ArrayList<>();
         if (!ignoreVolumeLimit && (box.maxX - box.minX > MAX_VOLUME || box.maxY - box.minY > MAX_VOLUME || box.maxZ - box.minZ > MAX_VOLUME)) {
             return entities;
         }
 
-        int minChunkX = ((int) Math.floor(box.minX)) >> 4;
-        int minChunkZ = ((int) Math.floor(box.minZ)) >> 4;
-        int maxChunkX = ((int) box.maxX) >> 4;
-        int maxChunkZ = ((int) box.maxZ) >> 4;
+        int minChunkX = (int) Math.floor(box.minX) >> 4;
+        int minChunkZ = (int) Math.floor(box.minZ) >> 4;
+        int maxChunkX = (int) box.maxX >> 4;
+        int maxChunkZ = (int) box.maxZ >> 4;
 
         for (int chunkX = minChunkX; chunkX <= maxChunkX; chunkX++) {
             for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ++) {
                 if (!world.isChunkGeneratedAt(chunkX, chunkZ)) continue;
                 Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
-                AxisAlignedBB chunkAABB = new AxisAlignedBB(Math.max(chunk.getPos().getXStart(), box.minX),
-                        box.minY,
-                        Math.max(chunk.getPos().getZStart(), box.minZ),
-                        Math.min(chunk.getPos().getXEnd(), box.maxX),
-                        box.maxY,
+                AxisAlignedBB chunkAABB = new AxisAlignedBB(Math.max(chunk.getPos().getXStart(), box.minX), box.minY,
+                        Math.max(chunk.getPos().getZStart(), box.minZ), Math.min(chunk.getPos().getXEnd(), box.maxX), box.maxY,
                         Math.min(chunk.getPos().getZEnd(), box.maxZ));
 
                 List<Entity> chunkEntities = new ArrayList<>();
@@ -405,11 +389,11 @@ public class ScriptWorld {
         return (ScriptEntityItem) ScriptEntity.create(item);
     }
 
-    public void explode(ScriptEntity exploder, double x, double y, double z, float distance, boolean blazeGround, boolean destroyTerrain) {
+    public void explode(IScriptEntity exploder, double x, double y, double z, float distance, boolean blazeGround, boolean destroyTerrain) {
         world.newExplosion(exploder == null ? null : exploder.asMinecraft(), x, y, z, distance, blazeGround, destroyTerrain);
     }
 
-    public void explode(ScriptEntity exploder, ScriptVector pos, float distance, boolean blazeGround, boolean destroyTerrain) {
+    public void explode(IScriptEntity exploder, ScriptVector pos, float distance, boolean blazeGround, boolean destroyTerrain) {
         world.newExplosion(exploder == null ? null : exploder.asMinecraft(), pos.x, pos.y, pos.z, distance, blazeGround, destroyTerrain);
     }
 
@@ -453,7 +437,7 @@ public class ScriptWorld {
         }
     }
 
-    public ScriptEntity spawnFallingBlock(ScriptBlockState block, double x, double y, double z) {
+    public IScriptEntity spawnFallingBlock(ScriptBlockState block, double x, double y, double z) {
         NBTTagCompound nbt = new NBTTagCompound();
 
         nbt.setString("Block", block.getId());
@@ -463,16 +447,16 @@ public class ScriptWorld {
         return spawnEntity("minecraft:falling_block", x, y, z, new ScriptNBTCompound(nbt));
     }
 
-    public ScriptEntity spawnFallingBlock(ScriptBlockState block, ScriptVector pos) {
+    public IScriptEntity spawnFallingBlock(ScriptBlockState block, ScriptVector pos) {
         return spawnFallingBlock(block, pos.x, pos.y, pos.z);
     }
 
     @Deprecated
-    public ScriptEntity setFallingBlock(int x, int y, int z) {
+    public IScriptEntity setFallingBlock(int x, int y, int z) {
         return makeBlockFall(x, y, z);
     }
 
-    public ScriptEntity makeBlockFall(int x, int y, int z) {
+    public IScriptEntity makeBlockFall(int x, int y, int z) {
         ScriptBlockState block = getBlock(x, y, z);
         if (block == null || block.isAir()) return null;
 
@@ -496,7 +480,7 @@ public class ScriptWorld {
         return spawnEntity("minecraft:falling_block", x + 0.5, y + 0.5, z + 0.5, new ScriptNBTCompound(nbt));
     }
 
-    public ScriptEntity makeBlockFall(ScriptVector pos) {
+    public IScriptEntity makeBlockFall(ScriptVector pos) {
         return makeBlockFall(pos.floorX(), pos.floorY(), pos.floorZ());
     }
 
@@ -621,10 +605,7 @@ public class ScriptWorld {
         worldMorph.pitch = pitch;
 
         if (player == null) {
-            NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(world.provider.getDimension(),
-                    x,
-                    y,
-                    z,
+            NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z,
                     MathUtils.clamp(range, 1, 256));
             Dispatcher.sendToAllAround(new PacketWorldMorph(worldMorph), point);
         }
@@ -639,15 +620,15 @@ public class ScriptWorld {
         return new ScriptStructure(this, name);
     }
 
-//    public TemplateManager getStructureManager(){
-//        if(!(world instanceof WorldServer)) return null;
-//        return ((WorldServer) world).getStructureTemplateManager();
-//    }
+    //    public TemplateManager getStructureManager(){
+    //        if(!(world instanceof WorldServer)) return null;
+    //        return ((WorldServer) world).getStructureTemplateManager();
+    //    }
 
 
     /* BlockBuster stuff */
 
-    public ScriptEntity shootBBGunProjectile(ScriptEntity shooter, double x, double y, double z, double yaw, double pitch, String gunPropsNbtString) {
+    public IScriptEntity shootBBGunProjectile(IScriptEntity shooter, double x, double y, double z, double yaw, double pitch, String gunPropsNbtString) {
         if (shooter.asMinecraft() instanceof EntityLivingBase && Loader.isModLoaded("blockbuster")) {
             try {
                 return shootBBGunProjectileMethod(shooter, x, y, z, yaw, pitch, gunPropsNbtString);
@@ -659,13 +640,11 @@ public class ScriptWorld {
     }
 
     @Optional.Method(modid = "blockbuster")
-    private ScriptEntity<?> shootBBGunProjectileMethod(ScriptEntity shooter, double x, double y, double z, double yaw, double pitch, String gunPropsNbtString) {
+    private IScriptEntity shootBBGunProjectileMethod(IScriptEntity shooter, double x, double y, double z, double yaw, double pitch, String gunPropsNbtString) {
         ScriptFactory factory = new ScriptFactory();
 
         EntityLivingBase entityLivingBase = (EntityLivingBase) shooter.asMinecraft();
-        GunProps gunProps = new GunProps((factory.createCompound(gunPropsNbtString)).getCompound("Gun")
-                .getCompound("Projectile")
-                .asMinecraft());
+        GunProps gunProps = new GunProps(factory.createCompound(gunPropsNbtString).getCompound("Gun").getCompound("Projectile").asMinecraft());
 
         gunProps.fromNBT(factory.createCompound(gunPropsNbtString).getCompound("Gun").asMinecraft());
 

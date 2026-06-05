@@ -1,7 +1,6 @@
 package mchorse.mappet.api.triggers.blocks;
 
 import mchorse.mappet.api.states.ScriptStates;
-import mchorse.mappet.api.states.States;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.api.utils.Target;
 import mchorse.mappet.api.utils.TargetMode;
@@ -9,87 +8,52 @@ import mchorse.mappet.utils.EnumUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants;
 
-public class StateTriggerBlock extends StringTriggerBlock
-{
+public class StateTriggerBlock extends StringTriggerBlock {
     public Target target = new Target(TargetMode.GLOBAL);
     public StateMode mode = StateMode.SET;
     public Object value = 0D;
 
     @Override
-    public void trigger(DataContext context)
-    {
-        ScriptStates states = this.target.getSStates(context);
+    public void trigger(DataContext context) {
+        ScriptStates states = target.getStates(context).scripts;
+        if (states == null) return;
 
-        if (states == null)
-        {
-            return;
+        if (mode == StateMode.ADD && value instanceof Number) states.add(string, ((Number) value).doubleValue());
+        else if (mode == StateMode.SET) {
+            if (value instanceof Number) states.setNumber(string, ((Number) value).doubleValue());
+            else if (value instanceof String) states.setString(string, (String) value);
         }
-
-        if (this.mode == StateMode.ADD && this.value instanceof Number)
-        {
-            states.add(this.string, ((Number) this.value).doubleValue());
-        }
-        else if (this.mode == StateMode.SET)
-        {
-            if (this.value instanceof Number)
-            {
-                states.setNumber(this.string, ((Number) this.value).doubleValue());
-            }
-            else if (this.value instanceof String)
-            {
-                states.setString(this.string, (String) this.value);
-            }
-        }
-        else
-        {
-            states.resetMasked(this.string);
-        }
+        else states.resetMasked(string);
     }
 
     @Override
-    protected String getKey()
-    {
+    protected String getKey() {
         return "State";
     }
 
     @Override
-    protected void serializeNBT(NBTTagCompound tag)
-    {
+    protected void serializeNBT(NBTTagCompound tag) {
         super.serializeNBT(tag);
 
-        tag.setTag("Target", this.target.serializeNBT());
-        tag.setInteger("Mode", this.mode.ordinal());
+        tag.setTag("Target", target.serializeNBT());
+        tag.setInteger("Mode", mode.ordinal());
 
-        if (this.value instanceof Number)
-        {
-            tag.setDouble("Value", ((Number) this.value).doubleValue());
-        }
-        else if (this.value instanceof String)
-        {
-            tag.setString("Value", (String) this.value);
-        }
+        if (value instanceof Number) tag.setDouble("Value", ((Number) value).doubleValue());
+        else if (value instanceof String) tag.setString("Value", (String) value);
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
-    {
+    public void deserializeNBT(NBTTagCompound tag) {
         super.deserializeNBT(tag);
 
-        this.target.deserializeNBT(tag.getCompoundTag("Target"));
-        this.mode = EnumUtils.getValue(tag.getInteger("Mode"), StateMode.values(), StateMode.SET);
+        target.deserializeNBT(tag.getCompoundTag("Target"));
+        mode = EnumUtils.getValue(tag.getInteger("Mode"), StateMode.values(), StateMode.SET);
 
-        if (tag.hasKey("Value", Constants.NBT.TAG_ANY_NUMERIC))
-        {
-            this.value = tag.getDouble("Value");
-        }
-        else if (tag.hasKey("Value", Constants.NBT.TAG_STRING))
-        {
-            this.value = tag.getString("Value");
-        }
+        if (tag.hasKey("Value", Constants.NBT.TAG_ANY_NUMERIC)) value = tag.getDouble("Value");
+        else if (tag.hasKey("Value", Constants.NBT.TAG_STRING)) value = tag.getString("Value");
     }
 
-    public static enum StateMode
-    {
+    public enum StateMode {
         ADD, SET, REMOVE
     }
 }

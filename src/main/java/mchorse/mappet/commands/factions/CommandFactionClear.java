@@ -38,15 +38,15 @@ public class CommandFactionClear extends CommandFactionBase
             String id = args[1];
 
             /* Check that the faction exists */
-            this.getFaction(id);
+            getFaction(id);
 
-            CommandFaction.getStates(server, sender, args[0]).clearFactionScore(id);
-            this.getL10n().info(sender, "factions.clear", id);
+            CommandFaction.getStates(server, sender, args[0]).reset(id);
+            getL10n().info(sender, "factions.clear", id);
         }
         else
         {
-            CommandFaction.getStates(server, sender, args[0]).clearAllFactionScores();
-            this.getL10n().info(sender, "factions.clear_all", args[0]);
+            CommandFaction.getStates(server, sender, args[0]).resetAll();
+            getL10n().info(sender, "factions.clear_all", args[0]);
         }
     }
 }

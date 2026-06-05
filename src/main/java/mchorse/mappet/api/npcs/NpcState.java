@@ -2,11 +2,9 @@ package mchorse.mappet.api.npcs;
 
 import com.google.common.base.CaseFormat;
 import io.netty.buffer.ByteBuf;
-import mchorse.mappet.api.states.FactionStates;
-import mchorse.mappet.api.states.ScriptStates;
+import mchorse.mappet.api.states.StatesStorage;
 import mchorse.mappet.api.states.StatesProvider;
 import mchorse.mappet.api.triggers.Trigger;
-import mchorse.mappet.entities.EntityNpc;
 import mchorse.mappet.utils.NBTUtils;
 import mchorse.mappet.utils.NpcStateUtils;
 import mchorse.mclib.config.values.GenericValue;
@@ -42,7 +40,7 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
 //    public ScriptStates states = new ScriptStates();
 //    public FactionStates factions = new FactionStates();
 
-    public StatesProvider<EntityNpc> states = new StatesProvider<>(new ScriptStates(), null, null, new FactionStates());
+    public StatesProvider states = StatesStorage.forNpc();
 
     /**
      * Unique
@@ -461,7 +459,6 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
         serializer.toNBT(tag);
 
         if (all || options.contains("states")) tag.setTag("States", states.serializeNBT());
-        if (all || options.contains("factions")) tag.setTag("Factions", factions.serializeNBT());
         if (all || options.contains("steering_offset"))
         {
             NBTTagList offsets = new NBTTagList();
@@ -513,7 +510,6 @@ public class NpcState implements INBTSerializable<NBTTagCompound>
         serializer.fromNBT(tag);
 
         if (tag.hasKey("States")) states.deserializeNBT(tag.getCompoundTag("States"));
-        if (tag.hasKey("Factions")) factions.deserializeNBT(tag.getCompoundTag("Factions"));
         if (tag.hasKey("SteeringOffsets", Constants.NBT.TAG_LIST))
         {
             NBTTagList offsets = tag.getTagList("SteeringOffsets", Constants.NBT.TAG_LIST);

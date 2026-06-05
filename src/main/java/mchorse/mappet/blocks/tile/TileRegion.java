@@ -19,191 +19,114 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableInt;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
-public class TileRegion extends TileEntity implements ITickable
-{
+public class TileRegion extends TileEntity implements ITickable {
     public Region region = new Region();
 
 
-    private Set<UUID> entities = new HashSet<UUID>(10);
-    private Map<UUID, MutableInt> delays = new HashMap<UUID, MutableInt>();
+    private final Set<UUID> entities = new HashSet<>(10);
+    private final Map<UUID, MutableInt> delays = new HashMap<>();
     private int tick;
 
-    public void set(NBTTagCompound tag)
-    {
-        this.region = new Region();
-        this.region.deserializeNBT(tag);
+    public void set(NBTTagCompound tag) {
+//        if (tag == null || tag.hasNoTags()) region = new Region();
+        region.deserializeNBT(tag);
+        markDirty();
 
-        this.markDirty();
     }
 
     @Override
-    public void update()
-    {
-        if (this.world.isRemote)
-        {
-            return;
+    public void update() {
+        if (world.isRemote) return;
+
+        if (!delays.isEmpty()) checkDelays();
+
+        int frequency = Math.max(region.update, 1);
+        if (tick % frequency == 0) {
+            checkRegion();
+            tick = 0;
         }
-
-        if (!this.delays.isEmpty())
-        {
-            this.checkDelays();
-        }
-
-        int frequency = Math.max(this.region.update, 1);
-
-        if (this.tick % frequency == 0)
-        {
-            this.checkRegion();
-        }
-
-        this.tick += 1;
+        ++tick;
     }
 
-    private void checkDelays()
-    {
-        Iterator<Map.Entry<UUID, MutableInt>> it = this.delays.entrySet().iterator();
-
-        while (it.hasNext())
-        {
-            Map.Entry<UUID, MutableInt> trigger = it.next();
-            int delay = trigger.getValue().intValue();
-
-            if (delay <= 0)
-            {
-                UUID id = trigger.getKey();
-                EntityPlayer player = this.world.getPlayerEntityByUUID(id);
-
-                if (player != null)
-                {
-                    this.region.triggerEnter(player, this.getPos());
-                }
-
-                it.remove();
+    private void checkDelays() {
+        delays.entrySet().removeIf(entry -> {
+            int delay = entry.getValue().decrementAndGet();
+            if (delay > 0) {
+                entry.getValue().setValue(delay);
+                return false;
             }
-
-            trigger.getValue().setValue(delay - 1);
-        }
+            EntityPlayer player = world.getPlayerEntityByUUID(entry.getKey());
+            if (player != null) region.triggerEnter(player, getPos());
+            return true;
+        });
     }
 
-    private void checkRegion()
-    {
-        List<? extends Entity> list = new ArrayList<>(this.region.checkEntities ? this.world.loadedEntityList : this.world.playerEntities);
-        for (Entity entity : list)
-        {
-            boolean enabled = this.region.isEnabled(entity);
-
-            if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isSpectator())
-            {
-                continue;
-            }
-
+    private void checkRegion() {
+        List<? extends Entity> list = region.checkEntities ? world.loadedEntityList : world.playerEntities;
+        for (Entity entity : list) {
             UUID id = entity.getUniqueID();
-            boolean wasInside = this.entities.contains(id);
+            boolean wasInside = entities.contains(id);
 
-            if (this.region.isPlayerInside(entity, this.getPos()))
-            {
-                if (!enabled)
-                {
-                    if (!this.region.passable && entity instanceof EntityPlayer)
-                    {
-                        this.handlePassing((EntityPlayer) entity);
-                    }
-
+            if (region.isEntityInside(entity, getPos())) {
+                if (!region.isEnabled(entity)) {
+                    if (!region.passable && entity instanceof EntityPlayer) handlePassing((EntityPlayer) entity);
                     continue;
                 }
 
-                this.region.triggerTick(entity, this.getPos());
+                region.triggerTick(entity, getPos());
 
-                if (!wasInside)
-                {
-                    if (this.region.delay > 0)
-                    {
-                        this.delays.put(id, new MutableInt(this.region.delay));
-                    }
-                    else
-                    {
-                        this.region.triggerEnter(entity, this.getPos());
-                    }
+                if (wasInside) continue;
 
-                    this.entities.add(id);
-                }
+                if (region.delay > 0) delays.put(id, new MutableInt(region.delay));
+                else region.triggerEnter(entity, getPos());
+                entities.add(id);
             }
-            else if (wasInside)
-            {
-                if (this.delays.containsKey(id))
-                {
-                    this.delays.remove(id);
-                }
-                else
-                {
-                    this.region.triggerExit(entity, this.getPos());
-                }
-
-                this.entities.remove(id);
+            else if (wasInside) {
+                if (delays.remove(id) == null) region.triggerExit(entity, getPos());
+                entities.remove(id);
             }
         }
     }
 
-    private void handlePassing(EntityPlayer player)
-    {
+    private void handlePassing(EntityPlayer player) {
         ICharacter character = Character.get(player);
+        if (character == null) return;
+
+        // out last
         Vec3d last = player.getPositionVector();
 
-        if (character == null)
-        {
-            return;
-        }
 
         PositionCache cache = character.getPositionCache();
-        Vec3d vec = cache.lastPosition;
+        Vec3d vec = cache.last10Position;
+        if (vec == null) return;
 
-        if (vec != null && this.region.isPlayerOutside(vec.x, vec.y + player.height / 2, vec.z, this.getPos()))
-        {
-            this.teleportEntity(player, vec, last);
-
-            cache.resetLastPositionTimer();
-
-            return;
-        }
-
-        vec = cache.lastLastPosition;
-
-        if (vec != null && this.region.isPlayerOutside(vec.x, vec.y + player.height / 2, vec.z, this.getPos()))
-        {
-            this.teleportEntity(player, vec, last);
+        if (region.isEntityOutside(vec.x, vec.y + player.height / 2, vec.z, getPos())) {
+            teleportEntity(player, vec, last);
 
             cache.resetLastPositionTimer();
 
             return;
         }
 
-        if (vec == null)
-        {
-            return;
-        }
+//        vec = cache.lastLastPosition;
+//        if (vec != null && region.isEntityOutside(vec.x, vec.y + player.height / 2, vec.z, getPos())) {
+//            teleportEntity(player, vec, last);
+//            cache.resetLastPositionTimer();
+//            return;
+//        }
 
         vec = vec.subtract(player.posX, player.posY, player.posZ);
 
-        if (vec.lengthSquared() > 0)
-        {
-            vec = vec.normalize();
-            vec = vec.scale(-0.5D);
+        if (vec.lengthSquared() > 0) {
+            vec = vec.normalize().scale(-0.5D);
 
             double x = player.posX;
             double y = player.posY;
             double z = player.posZ;
 
-            while (this.region.isPlayerInside(player, this.getPos()))
-            {
+            while (region.isEntityInside(player, getPos())) {
                 player.posX += vec.x;
                 player.posY += vec.y;
                 player.posZ += vec.z;
@@ -215,22 +138,18 @@ public class TileRegion extends TileEntity implements ITickable
             player.posY = y;
             player.posZ = z;
 
-            this.teleportEntity(player, vec, last);
+            teleportEntity(player, vec, last);
         }
 
         cache.resetLastPositionTimer();
     }
 
-    private void teleportEntity(Entity entity, Vec3d vec, Vec3d last)
-    {
+    private void teleportEntity(Entity entity, Vec3d vec, Vec3d last) {
         entity.setPositionAndUpdate(vec.x, vec.y, vec.z);
 
         Vec3d motion = last.subtract(entity.getPositionVector()).scale(-0.5);
 
-        if (motion.distanceTo(Vec3d.ZERO) < 0.5 * 0.5)
-        {
-            motion = motion.normalize();
-        }
+        if (motion.distanceTo(Vec3d.ZERO) < 0.5 * 0.5) motion = motion.normalize();
 
         double y = Math.abs(motion.y) < 0.01 ? 0.2 : motion.y;
 
@@ -241,56 +160,43 @@ public class TileRegion extends TileEntity implements ITickable
 
     @Override
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getRenderBoundingBox()
-    {
+    public AxisAlignedBB getRenderBoundingBox() {
         return TileEntity.INFINITE_EXTENT_AABB;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public double getMaxRenderDistanceSquared()
-    {
+    public double getMaxRenderDistanceSquared() {
         float range = 128;
-
         return range * range;
     }
 
     /* NBT stuff */
 
     @Override
-    public NBTTagCompound getUpdateTag()
-    {
-        return this.writeToNBT(new NBTTagCompound());
+    public NBTTagCompound getUpdateTag() {
+        return writeToNBT(new NBTTagCompound());
     }
 
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket()
-    {
-        return new SPacketUpdateTileEntity(this.pos, this.getBlockMetadata(), this.getUpdateTag());
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(pos, getBlockMetadata(), getUpdateTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet)
-    {
-        this.readFromNBT(packet.getNbtCompound());
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+        readFromNBT(packet.getNbtCompound());
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag)
-    {
-        tag.setTag("Region", this.region.serializeNBT());
-
+    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+        tag.setTag("Region", region.serializeNBT());
         return super.writeToNBT(tag);
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag)
-    {
+    public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-
-        if (tag.hasKey("Region"))
-        {
-            this.region.deserializeNBT(tag.getCompoundTag("Region"));
-        }
+        if (tag.hasKey("Region")) region.deserializeNBT(tag.getCompoundTag("Region"));
     }
 }

@@ -23,7 +23,7 @@ public class FactionStates extends States {
     }
 
     @Override
-    protected TYPES type() {
-        return TYPES.FACTION;
+    protected Type type() {
+        return Type.FACTION;
     }
 }

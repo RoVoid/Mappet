@@ -487,7 +487,7 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> {
         Set<String> factions = new HashSet<>();
 
         ICharacter character = Character.get(entity);
-        if (character != null) factions = character.getFactionStates().keys();
+        if (character != null) factions = character.getStates().factions.keys();
 
         return factions;
     }

@@ -45,7 +45,7 @@ public class QuestDialogueNode extends EventBaseNode
 
             if (character != null)
             {
-                return character.getQuestStates().wasCompleted(this.quest);
+                return character.getStates().quests.wasCompleted(this.quest);
             }
         }
 

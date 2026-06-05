@@ -10,6 +10,7 @@ import mchorse.mappet.api.npcs.NpcState;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
 import mchorse.mappet.api.states.FactionStates;
 import mchorse.mappet.api.states.ScriptStates;
+import mchorse.mappet.api.states.StatesProvider;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
@@ -79,6 +80,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
 
     public EntityNpc(World worldIn) {
         super(worldIn);
+        state.states.bind(this);
     }
 
     @Override
@@ -299,7 +301,7 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
     private FactionAttitude getPlayerAttitude(Faction faction, EntityPlayerMP player) {
         if (player == null) return null;
         ICharacter character = Character.get(player);
-        return faction == null || character == null ? null : faction.get(character.getFactionStates());
+        return faction == null || character == null ? null : faction.get(character.getStates().factions);
     }
 
     public void initialize() {
@@ -308,12 +310,8 @@ public class EntityNpc extends EntityCreature implements IEntityAdditionalSpawnD
 
     /* Getter and setters */
 
-    public ScriptStates getSStates() {
+    public StatesProvider getStates() {
         return state.states;
-    }
-
-    public FactionStates getFStates() {
-        return state.factions;
     }
 
     public Faction getFaction() {

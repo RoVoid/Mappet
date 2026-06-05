@@ -1,6 +1,7 @@
 package mchorse.mappet.api.scripts.code;
 
 import mchorse.mappet.Mappet;
+import mchorse.mappet.api.scripts.code.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
 import mchorse.mappet.api.scripts.code.score.ScriptScoreboard;
@@ -36,8 +37,8 @@ public class ScriptServer {
         return new ScriptWorld(server.getWorld(dimension));
     }
 
-    public List<ScriptEntity> getEntities(String targetSelector) {
-        List<ScriptEntity> entities = new ArrayList<>();
+    public List<IScriptEntity> getEntities(String targetSelector) {
+        List<IScriptEntity> entities = new ArrayList<>();
 
         try {
             for (Entity entity : EntitySelector.matchEntities(server, targetSelector, Entity.class))
@@ -48,7 +49,7 @@ public class ScriptServer {
         return entities;
     }
 
-    public ScriptEntity getEntity(String uuid) {
+    public IScriptEntity getEntity(String uuid) {
         return ScriptEntity.create(server.getEntityFromUuid(UUID.fromString(uuid)));
     }
 

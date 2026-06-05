@@ -1,7 +1,7 @@
 package mchorse.mappet.network.server.content;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.api.states.States;
+import mchorse.mappet.api.states.ScriptStates;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.network.packets.content.PacketStates;
 import mchorse.mclib.network.ServerMessageHandler;
@@ -11,18 +11,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 
 public class ServerHandlerStates extends ServerMessageHandler<PacketStates> {
-    public static States getStates(MinecraftServer server, String target) {
-        if (target.equals("~")) return Mappet.states;
+    public static ScriptStates getStates(MinecraftServer server, String target) {
+        if (target.equals("~")) return Mappet.states.scripts;
 
         Character character = Character.get(server.getPlayerList().getPlayerByUsername(target));
-        return character == null ? null : character.getStates();
+        return character == null ? null : character.getStates().scripts;
     }
 
     @Override
     public void run(EntityPlayerMP player, PacketStates message) {
         if (!OpHelper.isPlayerOp(player)) return;
 
-        States states = getStates(player.world.getMinecraftServer(), message.target);
+        ScriptStates states = getStates(player.world.getMinecraftServer(), message.target);
         if (states == null) return;
 
         NBTTagCompound nbt = states.serializeNBT();

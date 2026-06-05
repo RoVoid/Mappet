@@ -5,14 +5,14 @@ import net.minecraft.util.math.Vec3d;
 
 public class PositionCache
 {
-    public Vec3d lastPosition;
-    public Vec3d lastLastPosition;
+    public Vec3d last10Position;
+    public Vec3d last20Position;
     private int timer;
 
     public void setLastPosition(EntityPlayer player)
     {
-        this.lastLastPosition = this.lastPosition;
-        this.lastPosition = new Vec3d(player.posX, player.posY, player.posZ);
+        this.last20Position = this.last10Position;
+        this.last10Position = new Vec3d(player.posX, player.posY, player.posZ);
     }
 
     public void resetLastPositionTimer()

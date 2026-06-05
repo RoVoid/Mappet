@@ -12,105 +12,69 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class FactionConditionBlock extends PropertyConditionBlock
-{
+public class FactionConditionBlock extends PropertyConditionBlock {
     public FactionCheck faction = FactionCheck.SCORE;
 
-    public FactionConditionBlock()
-    {
+    public FactionConditionBlock() {
         super();
     }
 
     @Override
-    protected TargetMode getDefaultTarget()
-    {
+    protected TargetMode getDefaultTarget() {
         return TargetMode.SUBJECT;
     }
 
     @Override
-    public boolean evaluateBlock(DataContext context)
-    {
-        if (this.target.mode != TargetMode.GLOBAL)
-        {
-            FactionStates states = this.target.getFStates(context);
+    public boolean evaluateBlock(DataContext context) {
+        if (target.mode == TargetMode.GLOBAL) return false;
 
-            if (states == null)
-            {
-                return false;
-            }
+        FactionStates states = target.getStates(context).factions;
+        if (states == null) return false;
 
-            if (this.faction == FactionCheck.SCORE)
-            {
-                if (!states.has(this.id))
-                {
-                    return false;
-                }
-
-                if (this.comparison.mode.isString)
-                {
-                    return this.compareString(String.valueOf(states.get(this.id)));
-                }
-
-                return this.compare(states.get(this.id));
-            }
-
-            Faction faction = Mappet.factions.load(this.id);
-
-            if (faction == null)
-            {
-                return false;
-            }
-
-            return faction.get(states) == this.faction.attitude;
+        if (faction == FactionCheck.SCORE) {
+            if (!states.has(id)) return false;
+            if (comparison.mode.isString) return compareString(String.valueOf(states.get(id)));
+            return compare(states.get(id));
         }
 
-        return false;
+        Faction faction = Mappet.factions.load(id);
+        return faction != null && faction.get(states) == this.faction.attitude;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String name()
-    {
-        if (this.faction == FactionCheck.SCORE)
-        {
-            return this.comparison.stringify(this.id);
+    public String name() {
+        switch (faction) {
+            case SCORE:
+                return comparison.stringify(id);
+            case AGGRESSIVE:
+                return I18n.format("mappet.gui.conditions.faction.is_aggressive", id);
+            case PASSIVE:
+                return I18n.format("mappet.gui.conditions.faction.is_passive", id);
+            default:
+                return I18n.format("mappet.gui.conditions.faction.is_friendly", id);
         }
-        else if (this.faction == FactionCheck.AGGRESSIVE)
-        {
-            return I18n.format("mappet.gui.conditions.faction.is_aggressive", this.id);
-        }
-        else if (this.faction == FactionCheck.PASSIVE)
-        {
-            return I18n.format("mappet.gui.conditions.faction.is_passive", this.id);
-        }
-
-        return I18n.format("mappet.gui.conditions.faction.is_friendly", this.id);
     }
 
     @Override
-    public void serializeNBT(NBTTagCompound tag)
-    {
+    public void serializeNBT(NBTTagCompound tag) {
         super.serializeNBT(tag);
 
-        tag.setInteger("Faction", this.faction.ordinal());
+        tag.setInteger("Faction", faction.ordinal());
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
-    {
+    public void deserializeNBT(NBTTagCompound tag) {
         super.deserializeNBT(tag);
 
-        this.faction = EnumUtils.getValue(tag.getInteger("Faction"), FactionCheck.values(), FactionCheck.SCORE);
+        faction = EnumUtils.getValue(tag.getInteger("Faction"), FactionCheck.values(), FactionCheck.SCORE);
     }
 
-    public static enum FactionCheck
-    {
+    public enum FactionCheck {
         AGGRESSIVE(FactionAttitude.AGGRESSIVE), PASSIVE(FactionAttitude.PASSIVE), FRIENDLY(FactionAttitude.FRIENDLY), SCORE(null);
 
         public final FactionAttitude attitude;
-
-        FactionCheck(FactionAttitude attitude)
-        {
+        FactionCheck(FactionAttitude attitude) {
             this.attitude = attitude;
         }
     }

@@ -30,7 +30,7 @@ public class CommandStateSet extends CommandStateBase {
         try {
             states.setNumber(id, Double.parseDouble(args[2]));
         } catch (NumberFormatException e) {
-            states.setString(id, String.join(" ", SubCommandBase.dropFirstArguments(args, 2)));
+//            states.setString(id, String.join(" ", SubCommandBase.dropFirstArguments(args, 2)));
         }
 
         getL10n().info(sender, "states.set", id, states.values().get(id));

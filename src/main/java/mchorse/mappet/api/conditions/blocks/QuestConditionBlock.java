@@ -18,7 +18,7 @@ public class QuestConditionBlock extends TargetConditionBlock {
     @Override
     public boolean evaluateBlock(DataContext context) {
         if (target.mode == TargetMode.GLOBAL) {
-            QuestStates states = target.getQStates(context);
+            QuestStates states = target.getStates(context).quests;
 
             if (quest == QuestCheck.ABSENT) return !states.wasCompleted(id) && hasServerInProgress(context);
             if (quest == QuestCheck.PRESENT) return hasServerInProgress(context);
@@ -28,9 +28,9 @@ public class QuestConditionBlock extends TargetConditionBlock {
 
         if (character == null) return false;
 
-        if (quest == QuestCheck.ABSENT) return !character.getQuestStates().wasCompleted(id) && !character.getQuests().has(id);
+        if (quest == QuestCheck.ABSENT) return !character.getStates().quests.wasCompleted(id) && !character.getQuests().has(id);
         if (quest == QuestCheck.PRESENT) return character.getQuests().has(id);
-        return character.getQuestStates().wasCompleted(id);
+        return character.getStates().quests.wasCompleted(id);
     }
 
     private boolean hasServerInProgress(DataContext context) {

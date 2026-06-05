@@ -1,8 +1,7 @@
 package mchorse.mappet.utils;
 
 import com.google.common.collect.ImmutableSet;
-import mchorse.mappet.api.states.FactionStates;
-import mchorse.mappet.api.states.ScriptStates;
+import mchorse.mappet.api.states.StatesProvider;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
 import mchorse.mappet.entities.EntityNpc;
@@ -21,21 +20,12 @@ public class EntityUtils {
     public static final Set<String> ENTITY_PROPERTIES = ImmutableSet.of("xp", "xp_level", "hp", "hunger", "armor", "ticks", "light", "light_sky",
             "sneaking", "sprinting", "on_ground", "yaw", "pitch");
 
-    public static ScriptStates getSStates(Entity entity) {
+    public static StatesProvider getStates(Entity entity) {
         if (entity instanceof EntityPlayer) {
             ICharacter character = Character.get((EntityPlayer) entity);
-            if (character != null) return character.getScriptStates();
+            if (character != null) return character.getStates();
         }
-        else if (entity instanceof EntityNpc) return ((EntityNpc) entity).getSStates();
-        return null;
-    }
-
-    public static FactionStates getFStates(Entity entity) {
-        if (entity instanceof EntityPlayer) {
-            ICharacter character = Character.get((EntityPlayer) entity);
-            if (character != null) return character.getFactionStates();
-        }
-        else if (entity instanceof EntityNpc) return ((EntityNpc) entity).getFStates();
+        else if (entity instanceof EntityNpc) return ((EntityNpc) entity).getStates();
         return null;
     }
 

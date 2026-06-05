@@ -12,6 +12,7 @@ import mchorse.mappet.api.scripts.code.entities.ai.repeatingCommand.EntityAIRepe
 import mchorse.mappet.api.scripts.code.entities.ai.repeatingCommand.RepeatingCommandDataStorage;
 import mchorse.mappet.api.scripts.code.entities.ai.rotations.EntityAIRotations;
 import mchorse.mappet.api.scripts.code.entities.ai.rotations.RotationDataStorage;
+import mchorse.mappet.api.states.States;
 import mchorse.mappet.api.utils.IExecutable;
 import mchorse.mappet.blocks.BlockRegion;
 import mchorse.mappet.blocks.BlockTrigger;
@@ -441,10 +442,19 @@ public class EventHandler {
 
     @SubscribeEvent
     public void onStateChange(StateChangedEvent event) {
+        if (event.type != States.Type.QUEST) return;
+
+        boolean isGlobal = Mappet.states.owns(event.states);
+
         for (EntityPlayer player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
             ICharacter character = Character.get(player);
 
-            if (character != null && (event.isGlobal() || character.getStates() == event.states)) {
+            if (character != null && (isGlobal || character.getStates().owns(event.states))) {
+                boolean f = false;
+                for (Quest quest : character.getQuests().quests.values()) f |= quest.stateWasUpdated(player);
+                if (f) playersToCheck.add(player);
+
+                /*
                 int i = 0;
 
                 for (Quest quest : character.getQuests().quests.values()) {
@@ -454,11 +464,6 @@ public class EventHandler {
                 if (i > 0) {
                     playersToCheck.add(player);
                 }
-
-                /*
-                bool i = false;
-                i ||= stateWasUpdated;
-                if(i) doTo;
 
                 McHorse, what are you on?
                  */

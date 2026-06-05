@@ -32,6 +32,7 @@ public class Character implements ICharacter {
         if (characterCapability instanceof Character) {
             Character character = (Character) characterCapability;
             character.player = player;
+            character.getStates().bind(player);
             return character;
         }
         return null;
@@ -59,26 +60,6 @@ public class Character implements ICharacter {
     private Map<String, List<HUDScene>> displayedHUDs = new HashMap<>();
 
     private UUID cameraUuid;
-
-    @Override
-    public ScriptStates getScriptStates() {
-        return scriptStates;
-    }
-
-    @Override
-    public DialogueStates getDialogueStates() {
-        return dialogueStates;
-    }
-
-    @Override
-    public FactionStates getFactionStates() {
-        return factionStates;
-    }
-
-    @Override
-    public QuestStates getQuestStates() {
-        return questStates;
-    }
 
     @Override
     public StatesProvider getStates() {
@@ -131,10 +112,7 @@ public class Character implements ICharacter {
     @Override
     public void copy(ICharacter character, EntityPlayer player) {
         quests.copy(character.getQuests());
-        scriptStates.from(character.getScriptStates());
-        factionStates.from(character.getFactionStates());
-        dialogueStates.from(character.getDialogueStates());
-        questStates.from(character.getQuestStates());
+        statesProvider.from(character.getStates());
         lastClear = character.getLastClear();
         displayedHUDs = character.getDisplayedHUDs();
         cameraUuid = character.getCamera();

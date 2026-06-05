@@ -3,9 +3,7 @@ package mchorse.mappet.api.scripts.code;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.ScriptExecutionFork;
-import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
-import mchorse.mappet.api.scripts.code.world.ScriptWorld;
-import mchorse.mappet.api.scripts.code.ScriptServer;
+import mchorse.mappet.api.scripts.code.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.ScriptNpc;
 import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
@@ -24,8 +22,8 @@ public class ScriptEvent {
     private final String script;
     private final String function;
 
-    private ScriptEntity subject;
-    private ScriptEntity object;
+    private IScriptEntity subject;
+    private IScriptEntity object;
     private ScriptWorld world;
     private ScriptServer server;
 
@@ -43,31 +41,31 @@ public class ScriptEvent {
         return function == null ? "" : function;
     }
 
-    public ScriptEntity getSubject() {
+    public IScriptEntity getSubject() {
         if (subject == null && context.subject != null) subject = ScriptEntity.create(context.subject);
         return subject;
     }
 
-    public ScriptEntity getObject() {
+    public IScriptEntity getObject() {
         if (object == null && context.object != null) object = ScriptEntity.create(context.object);
         return object;
     }
 
     public ScriptPlayer getPlayer() {
-        ScriptEntity subject = getSubject();
+        IScriptEntity subject = getSubject();
         if (subject instanceof ScriptPlayer) return (ScriptPlayer) subject;
 
-        ScriptEntity object = getObject();
+        IScriptEntity object = getObject();
         if (object instanceof ScriptPlayer) return (ScriptPlayer) object;
 
         return null;
     }
 
     public ScriptNpc getNPC() {
-        ScriptEntity subject = getSubject();
+        IScriptEntity subject = getSubject();
         if (subject instanceof ScriptNpc) return (ScriptNpc) subject;
 
-        ScriptEntity object = getObject();
+        IScriptEntity object = getObject();
         if (object instanceof ScriptNpc) return (ScriptNpc) object;
 
         return null;

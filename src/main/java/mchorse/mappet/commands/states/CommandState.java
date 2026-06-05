@@ -14,7 +14,7 @@ public class CommandState extends MappetSubCommandBase
     {
         if (target.equals("~"))
         {
-            return Mappet.states;
+            return Mappet.states.scripts;
         }
 
         return CommandFaction.getStates(server, sender, target);

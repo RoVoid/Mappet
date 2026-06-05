@@ -22,7 +22,7 @@ public class Data extends AbstractData {
 
         if (character == null) return;
 
-        global.from(Mappet.states.provider);
+        global.from(Mappet.states);
         this.player.from(character.getStates());
 
         for (int i = 0, c = player.inventory.getSizeInventory(); i < c; i++)
@@ -34,7 +34,7 @@ public class Data extends AbstractData {
 
         if (character == null) return;
 
-        if (global) Mappet.states.provider.from(this.global);
+        if (global) Mappet.states.from(this.global);
         character.getStates().from(this.player);
 
         player.inventory.clear();

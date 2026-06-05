@@ -5,7 +5,6 @@ import mchorse.mappet.api.scripts.code.entities.ScriptEntityItem;
 import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
 import mchorse.mappet.api.scripts.code.items.ScriptInventory;
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
-import mchorse.mappet.api.states.States;
 import mchorse.mappet.api.triggers.Trigger;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.capabilities.character.Character;
@@ -33,7 +32,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
@@ -58,9 +56,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -372,28 +368,21 @@ public class TriggerEventHandler {
 
     @SubscribeEvent
     public void onStateChange(StateChangedEvent event) {
-        if (event.type != States.TYPES.SCRIPT || shouldSkipTrigger(Mappet.settings.stateChanged)) return;
+        if (shouldSkipTrigger(Mappet.settings.stateChanged)) return;
 
         MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
         if (server == null) return;
 
         DataContext context = null;
 
-        if (Mappet.states.isGlobal(event.states)) context = new DataContext(server);
+        if (Mappet.states.owns(event.states)) context = new DataContext(server);
         else {
-            for (EntityPlayer player : server.getPlayerList().getPlayers()) {
-                ICharacter character = Character.get(player);
-                if (character == null || character.getScriptStates() != event.states) continue;
-                context = new DataContext(player);
-                break;
+            Object owner = event.states.owner;
+            if (owner instanceof EntityPlayer) {
+                ICharacter character = Character.get((EntityPlayer) owner);
+                if (character != null) context = new DataContext((EntityPlayer) owner);
             }
-            if (context == null) {
-                for (EntityNpc npc : getAllNpcs(server)) {
-                    if (npc == null || npc.getSStates() != event.states) continue;
-                    context = new DataContext(npc);
-                    break;
-                }
-            }
+            else if (owner instanceof EntityNpc) context = new DataContext((EntityNpc) owner);
         }
 
         if (context == null) return;
@@ -401,21 +390,6 @@ public class TriggerEventHandler {
 
         trigger(event, Mappet.settings.stateChanged, context);
     }
-
-    private List<EntityNpc> getAllNpcs(MinecraftServer server) {
-        List<EntityNpc> npcs = new ArrayList<>();
-        try {
-            for (World world : server.worlds) {
-                for (Entity entity : world.loadedEntityList) {
-                    if (entity instanceof EntityNpc) npcs.add((EntityNpc) entity);
-                }
-            }
-        } catch (Exception e) {
-            Mappet.logger.error("Failed to collect NPCs: " + e.getMessage());
-        }
-        return npcs;
-    }
-
 
     @SubscribeEvent
     public void onLivingKnockBack(LivingKnockBackEvent event) {

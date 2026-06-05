@@ -4,7 +4,6 @@ import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.network.common.PacketModifyActor;
-import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.ScriptRayTrace;
 import mchorse.mappet.api.scripts.code.entities.ai.EntitiesAIPatrol;
@@ -19,7 +18,8 @@ import mchorse.mappet.api.scripts.code.math.ScriptBox;
 import mchorse.mappet.api.scripts.code.math.ScriptVector;
 import mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound;
 import mchorse.mappet.api.scripts.code.world.ScriptWorld;
-import mchorse.mappet.api.states.States;
+import mchorse.mappet.api.states.ScriptStates;
+import mchorse.mappet.api.states.StatesProvider;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.client.morphs.WorldMorph;
 import mchorse.mappet.entities.EntityNpc;
@@ -27,6 +27,7 @@ import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.PacketPlayAnimation;
 import mchorse.mappet.network.packets.scripts.PacketEntityRotations;
 import mchorse.mappet.network.packets.scripts.PacketWorldMorph;
+import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.utils.EntityUtils;
 import mchorse.mappet.utils.RunnableExecutionFork;
 import mchorse.mclib.utils.Interpolation;
@@ -71,15 +72,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ScriptEntity<T extends Entity> implements IScriptEntity{
+public class ScriptEntity<T extends Entity> implements IScriptEntity {
     protected T entity;
 
-    protected States states;
+    protected ScriptStates states = new ScriptStates();
 
-//    protected ScriptVector moveTarget = ScriptVector.EMPTY;
-//    protected int movingTick = 0;
+    //    protected ScriptVector moveTarget = ScriptVector.EMPTY;
+    //    protected int movingTick = 0;
 
-    public static ScriptEntity create(Entity entity) {
+    public static IScriptEntity create(Entity entity) {
         if (entity instanceof EntityPlayerMP) return new ScriptPlayer((EntityPlayerMP) entity);
         if (entity instanceof EntityNpc) return new ScriptNpc((EntityNpc) entity);
         if (entity instanceof EntityItem) return new ScriptEntityItem((EntityItem) entity);
@@ -89,6 +90,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity{
 
     protected ScriptEntity(T entity) {
         this.entity = entity;
+        states.owner = this;
     }
 
     @Override
@@ -134,8 +136,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity{
         // Check if the entity is already in the target dimension.
         if (entity.dimension == dimension) return;
 
-        if (dimension < -1 || dimension > 1)
-            throw new IllegalArgumentException("Dimension must be -1 (Nether), 0 (Overworld), or 1 (End).");
+        if (dimension < -1 || dimension > 1) throw new IllegalArgumentException("Dimension must be -1 (Nether), 0 (Overworld), or 1 (End).");
 
         MinecraftServer minecraftServer = entity.getServer();
         if (minecraftServer == null) return;
@@ -264,8 +265,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity{
 
     @Override
     public void setMaxHp(float hp) {
-        if (isLivingBase() && hp > 0.0F)
-            ((EntityLivingBase) entity).getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(hp);
+        if (isLivingBase() && hp > 0.0F) ((EntityLivingBase) entity).getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(hp);
     }
 
     @Override
@@ -363,14 +363,9 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity{
             boolean flag = player.inventory.addItemStackToInventory(itemStack);
 
             if (flag) {
-                if (playSound) player.world.playSound(null,
-                        player.posX,
-                        player.posY,
-                        player.posZ,
-                        SoundEvents.ENTITY_ITEM_PICKUP,
-                        SoundCategory.PLAYERS,
-                        0.2F,
-                        ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                if (playSound)
+                    player.world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS,
+                            0.2F, ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F);
 
                 player.inventoryContainer.detectAndSendChanges();
             }
@@ -466,31 +461,27 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity{
 
     @Override
     public ScriptItemStack getHelmet() {
-        if (isLivingBase())
-            return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.HEAD).copy());
+        if (isLivingBase()) return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.HEAD).copy());
 
         return null;
     }
 
     @Override
     public ScriptItemStack getChestplate() {
-        if (isLivingBase())
-            return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.CHEST).copy());
+        if (isLivingBase()) return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.CHEST).copy());
 
         return null;
     }
 
     @Override
     public ScriptItemStack getLeggings() {
-        if (isLivingBase())
-            return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.LEGS).copy());
+        if (isLivingBase()) return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.LEGS).copy());
         return null;
     }
 
     @Override
     public ScriptItemStack getBoots() {
-        if (isLivingBase())
-            return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.FEET).copy());
+        if (isLivingBase()) return ScriptItemStack.create(((EntityLivingBase) entity).getItemStackFromSlot(EntityEquipmentSlot.FEET).copy());
         return null;
     }
 
@@ -663,12 +654,6 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity{
     }
 
     @Override
-    @Deprecated
-    public boolean isNpc() {
-        return isNPC();
-    }
-
-    @Override
     public boolean isNPC() {
         return entity instanceof EntityNpc;
     }
@@ -751,7 +736,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity{
         EntityItem entityItem = new EntityItem(entity.world, getPosition().x, getPosition().y + getEyeHeight(), getPosition().z, itemStack);
 
         entityItem.setPickupDelay(40);
-        if (isNpc()) entityItem.setThrower(((EntityNpc) entity).getId());
+        if (isNPC()) entityItem.setThrower(((EntityNpc) entity).getId());
         else entityItem.setThrower(entity.getName());
 
 
@@ -823,8 +808,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity{
         for (Entity entity : world.loadedEntityList)
             if (entity instanceof EntityLiving) {
                 EntityLiving entityLiving = (EntityLiving) entity;
-                if (entityLiving.getLeashed() && entityLiving.getLeashHolder() == this.entity)
-                    entities.add(ScriptEntity.create(entityLiving));
+                if (entityLiving.getLeashed() && entityLiving.getLeashHolder() == this.entity) entities.add(ScriptEntity.create(entityLiving));
             }
 
         return entities;
@@ -843,7 +827,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity{
     }
 
     @Override
-    public ScriptEntity getLeashHolder() {
+    public IScriptEntity getLeashHolder() {
         if (!(entity instanceof EntityLiving)) return null;
 
         EntityLiving leashedEntity = (EntityLiving) entity;
@@ -963,12 +947,11 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity{
     /* Mappet stuff */
 
     @Override
-    public States getStates() {
+    public ScriptStates getStates() {
         if (states == null) {
-            States entityStates = EntityUtils.getSStates(entity);
-            if (entityStates != null) states = entityStates;
+            StatesProvider provider = EntityUtils.getStates(entity);
+            if (provider != null) states = provider.scripts;
         }
-
         return states;
     }
 
@@ -1058,8 +1041,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity{
 
     @Override
     public void executeCommand(String command) {
-        if (entity.world.getMinecraftServer() != null)
-            entity.world.getMinecraftServer().getCommandManager().executeCommand(entity, command);
+        if (entity.world.getMinecraftServer() != null) entity.world.getMinecraftServer().getCommandManager().executeCommand(entity, command);
     }
 
     @Override
@@ -1074,7 +1056,8 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity{
             Mappet.scripts.execute(scriptName, function, context);
         } catch (ScriptException e) {
             String fileName = e.getFileName() == null ? scriptName : e.getFileName();
-            Mappet.logger.error("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
+            Mappet.logger.error(
+                    "Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
             //throw new RuntimeException("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage(), e);
         } catch (Exception e) {
             Mappet.logger.error("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage());
@@ -1090,7 +1073,8 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity{
             Mappet.scripts.execute(scriptName, function, context, args);
         } catch (ScriptException e) {
             String fileName = e.getFileName() == null ? scriptName : e.getFileName();
-            Mappet.logger.error("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
+            Mappet.logger.error(
+                    "Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage());
             //throw new RuntimeException("Script Error: " + fileName + " - Line: " + e.getLineNumber() + " - Column: " + e.getColumnNumber() + " - Message: " + e.getMessage(), e);
         } catch (Exception e) {
             Mappet.logger.error("Script Empty: " + scriptName + " - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage());
@@ -1160,14 +1144,14 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity{
         }
     }
 
-//    public void breakMove(String interpolation, int durationTicks, double x, double y, double z, boolean disableAI) {
-//        if (disableAI) {
-//            setAIEnabled(false);
-//            moveTo(interpolation, durationTicks, x, y, z);
-//            CommonProxy.eventHandler.addExecutable(new RunnableExecutionFork(durationTicks, () -> setAIEnabled(true)));
-//        }
-//        else moveTo(interpolation, durationTicks, x, y, z);
-//    }
+    //    public void breakMove(String interpolation, int durationTicks, double x, double y, double z, boolean disableAI) {
+    //        if (disableAI) {
+    //            setAIEnabled(false);
+    //            moveTo(interpolation, durationTicks, x, y, z);
+    //            CommonProxy.eventHandler.addExecutable(new RunnableExecutionFork(durationTicks, () -> setAIEnabled(true)));
+    //        }
+    //        else moveTo(interpolation, durationTicks, x, y, z);
+    //    }
 
     /* Entity AI */
 
@@ -1239,11 +1223,8 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity{
 
                 patrolTask.addPatrolPoint(new BlockPos(x, y, z), shouldCirculate, executeCommandOnArrival);
             }
-            else patrolTask = new EntitiesAIPatrol((EntityLiving) entity,
-                    speed,
-                    new BlockPos[]{new BlockPos(x, y, z)},
-                    new boolean[]{shouldCirculate},
-                    new String[]{executeCommandOnArrival});
+            else patrolTask = new EntitiesAIPatrol((EntityLiving) entity, speed, new BlockPos[]{new BlockPos(x, y, z)},
+                    new boolean[]{shouldCirculate}, new String[]{executeCommandOnArrival});
 
             entityLiving.tasks.addTask(1, patrolTask);
         }

@@ -121,7 +121,7 @@ public class Quest extends AbstractData implements INBTPartialSerializable {
         ICharacter character = Character.get(player);
 
         if (character != null) {
-            character.getQuestStates().complete(this.getId());
+            character.getStates().quests.complete(this.getId());
         }
 
         Mappet.states.quests.complete(this.getId());

@@ -20,12 +20,6 @@ import java.util.UUID;
 public interface ICharacter extends INBTSerializable<NBTTagCompound> {
     UUID getCamera();
 
-    ScriptStates getScriptStates();
-
-    FactionStates getFactionStates();
-
-    QuestStates getQuestStates();
-
     StatesProvider getStates();
 
     Quests getQuests();
@@ -37,8 +31,6 @@ public interface ICharacter extends INBTSerializable<NBTTagCompound> {
     Dialogue getDialogue();
 
     DialogueContext getDialogueContext();
-
-    DialogueStates getDialogueStates();
 
     /* Last clear */
 

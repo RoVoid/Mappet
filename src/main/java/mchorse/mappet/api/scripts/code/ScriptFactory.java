@@ -5,6 +5,7 @@ import mchorse.mappet.Mappet;
 import mchorse.mappet.MappetIcons;
 import mchorse.mappet.MappetLogger;
 import mchorse.mappet.api.scripts.code.blocks.ScriptBlockState;
+import mchorse.mappet.api.scripts.code.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
@@ -261,7 +262,7 @@ public class ScriptFactory {
         return Mappet.logger;
     }
 
-    public ScriptEntity<?> getMappetEntity(Entity minecraftEntity) {
+    public IScriptEntity getMappetEntity(Entity minecraftEntity) {
         return ScriptEntity.create(minecraftEntity);
     }
 

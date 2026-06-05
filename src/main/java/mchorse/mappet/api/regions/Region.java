@@ -1,6 +1,5 @@
 package mchorse.mappet.api.regions;
 
-import mchorse.mappet.Mappet;
 import mchorse.mappet.api.conditions.Condition;
 import mchorse.mappet.api.regions.shapes.AbstractShape;
 import mchorse.mappet.api.regions.shapes.BoxShape;
@@ -8,10 +7,11 @@ import mchorse.mappet.api.states.ScriptStates;
 import mchorse.mappet.api.states.States;
 import mchorse.mappet.api.triggers.Trigger;
 import mchorse.mappet.api.utils.DataContext;
+import mchorse.mappet.api.utils.Target;
 import mchorse.mappet.api.utils.TargetMode;
-import mchorse.mappet.utils.EntityUtils;
 import mchorse.mappet.utils.EnumUtils;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
@@ -46,32 +46,32 @@ public class Region implements INBTSerializable<NBTTagCompound> {
     public boolean additive = true;
     public boolean once;
 
+    // убрать дубликаты getStates, объединить additive & once
+
     public boolean isEnabled(Entity entity) {
         if (once) {
-            States states = getStates(entity);
+            ScriptStates states = Target.getStates(entity, target).scripts;
             if (states != null && states.has(state)) return false;
         }
 
         return enabled.execute(new DataContext(entity));
     }
 
-    public boolean isPlayerInside(Entity entity, BlockPos pos) {
-        for (AbstractShape shape : shapes)
-            if (shape.isEntityInside(entity, pos)) return true;
-
+    public boolean isEntityInside(Entity entity, BlockPos pos) {
+        if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isSpectator()) return false;
+        for (AbstractShape shape : shapes) if (shape.isEntityInside(entity, pos)) return true;
         return false;
     }
 
-    public boolean isPlayerOutside(double x, double y, double z, BlockPos pos) {
-        for (AbstractShape shape : shapes)
-            if (shape.isEntityInside(x, y, z, pos)) return false;
+    public boolean isEntityOutside(double x, double y, double z, BlockPos pos) {
+//        if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isSpectator()) return false;
+        for (AbstractShape shape : shapes) if (shape.isEntityInside(x, y, z, pos)) return false;
         return true;
     }
 
     public void triggerEnter(Entity entity, BlockPos pos) {
         if (writeState && !state.isEmpty()) {
-            States states = getStates(entity);
-
+            States states = Target.getStates(entity, target).scripts;
             if (additive) states.add(state, 1);
             else states.setNumber(state, 1);
         }
@@ -80,10 +80,9 @@ public class Region implements INBTSerializable<NBTTagCompound> {
     }
 
     public void triggerExit(Entity entity, BlockPos pos) {
-        if (writeState && !state.isEmpty()) {
-            ScriptStates states = getStates(entity);
-
-            if (!additive) states.reset(state);
+        if (writeState && !additive && !once && !state.isEmpty()) {
+            ScriptStates states = Target.getStates(entity, target).scripts;
+            states.reset(state);
         }
 
         onExit.trigger(new DataContext(entity).set("x", pos.getX()).set("y", pos.getY()).set("z", pos.getZ()));
@@ -91,10 +90,6 @@ public class Region implements INBTSerializable<NBTTagCompound> {
 
     public void triggerTick(Entity entity, BlockPos pos) {
         onTick.trigger(new DataContext(entity).set("x", pos.getX()).set("y", pos.getY()).set("z", pos.getZ()));
-    }
-
-    private ScriptStates getStates(Entity entity) {
-        return target == TargetMode.GLOBAL ? Mappet.states.scripts : (ScriptStates) EntityUtils.getSStates(entity);
     }
 
     @Override
@@ -120,11 +115,11 @@ public class Region implements INBTSerializable<NBTTagCompound> {
         }
 
         tag.setTag("Shapes", shapes);
-        tag.setBoolean("WriteState", writeState);
-        tag.setString("State", state.trim());
+        if (writeState) tag.setBoolean("WriteState", true);
+        if (!state.trim().isEmpty()) tag.setString("State", state.trim());
         tag.setInteger("Target", target.ordinal());
-        tag.setBoolean("Additive", additive);
-        tag.setBoolean("Once", once);
+        if (additive) tag.setBoolean("Additive", true);
+        if (once) tag.setBoolean("Once", true);
         tag.setTag("States", states.serializeNBT());
 
         return tag;
@@ -132,30 +127,22 @@ public class Region implements INBTSerializable<NBTTagCompound> {
 
     @Override
     public void deserializeNBT(NBTTagCompound tag) {
+        if (tag == null) return;
+
         if (tag.hasKey("Passable")) passable = tag.getBoolean("Passable");
-
         if (tag.hasKey("Enabled", Constants.NBT.TAG_COMPOUND)) enabled.deserializeNBT(tag.getCompoundTag("Enabled"));
-
         if (tag.hasKey("Delay", Constants.NBT.TAG_ANY_NUMERIC)) delay = tag.getInteger("Delay");
-
         if (tag.hasKey("Update", Constants.NBT.TAG_ANY_NUMERIC)) update = tag.getInteger("Update");
-
         if (tag.hasKey("CheckEntities")) checkEntities = tag.getBoolean("CheckEntities");
-
         if (tag.hasKey("OnEnter", Constants.NBT.TAG_COMPOUND)) onEnter.deserializeNBT(tag.getCompoundTag("OnEnter"));
-
         if (tag.hasKey("OnExit", Constants.NBT.TAG_COMPOUND)) onExit.deserializeNBT(tag.getCompoundTag("OnExit"));
-
         if (tag.hasKey("OnTick", Constants.NBT.TAG_COMPOUND)) onTick.deserializeNBT(tag.getCompoundTag("OnTick"));
-
         if (tag.hasKey("States")) states.deserializeNBT(tag.getCompoundTag("States"));
-
 
         shapes.clear();
 
         if (tag.hasKey("Shape", Constants.NBT.TAG_COMPOUND)) {
             AbstractShape shape = readShape(tag.getCompoundTag("Shape"));
-
             if (shape != null) shapes.add(shape);
         }
         else if (tag.hasKey("Shapes", Constants.NBT.TAG_LIST)) {
@@ -163,7 +150,6 @@ public class Region implements INBTSerializable<NBTTagCompound> {
 
             for (int i = 0; i < list.tagCount(); i++) {
                 AbstractShape shape = readShape(list.getCompoundTagAt(i));
-
                 if (shape != null) shapes.add(shape);
             }
         }
@@ -183,7 +169,6 @@ public class Region implements INBTSerializable<NBTTagCompound> {
 
             if (shape != null) {
                 shape.deserializeNBT(shapeTag);
-
                 return shape;
             }
         }

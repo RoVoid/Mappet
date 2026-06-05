@@ -1,9 +1,8 @@
 package mchorse.mappet.api.utils;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.api.states.FactionStates;
 import mchorse.mappet.api.states.QuestStates;
-import mchorse.mappet.api.states.ScriptStates;
+import mchorse.mappet.api.states.StatesProvider;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
 import mchorse.mappet.utils.EntityUtils;
@@ -55,21 +54,12 @@ public class Target implements INBTSerializable<NBTTagCompound> {
         return Character.get(getPlayer(context));
     }
 
-    public ScriptStates getSStates(DataContext context) {
-        return mode == TargetMode.GLOBAL ? Mappet.states.scripts : EntityUtils.getSStates(getEntity(context));
+    public StatesProvider getStates(DataContext context) {
+        return mode == TargetMode.GLOBAL ? Mappet.states : EntityUtils.getStates(getEntity(context));
     }
 
-    public FactionStates getFStates(DataContext context) {
-        return mode == TargetMode.GLOBAL ? Mappet.states.factions : EntityUtils.getFStates(getEntity(context));
-    }
-
-    public QuestStates getQStates(DataContext context) {
-        if (mode == TargetMode.GLOBAL) return Mappet.states.quests;
-        if (getEntity(context) instanceof EntityPlayer) {
-            ICharacter character = Character.get((EntityPlayer) getEntity(context));
-            if (character != null) return character.getQuestStates();
-        }
-        return null;
+    public static StatesProvider getStates(Entity entity, TargetMode mode) {
+        return mode == TargetMode.GLOBAL ? Mappet.states : EntityUtils.getStates(entity);
     }
 
     @Override

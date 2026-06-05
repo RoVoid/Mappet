@@ -81,6 +81,9 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import org.apache.tools.ant.filters.ReplaceTokens
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 tasks.register('processSource', Sync) {
     from sourceSets.main.java
     into layout.buildDirectory.dir("generated-src")
@@ -261,8 +264,6 @@ tasks.register('scriptingJavadocsJson', Exec) {
 }
 
 
-
-
 def iconsDir = file("src/main/resources/assets/mappet/textures/gui/icons")
 def iconsJson = file("src/main/resources/assets/mappet/icons.json")
 
@@ -314,8 +315,8 @@ tasks.register('generateIconsJson') {
 
 def iconSiblingJsonExcludes = fileTree(iconsDir) {
     include "**/*.json"
-}.filter { java.io.File file -> new java.io.File(file.parentFile, file.name.replace(".json", ".png")).exists()
-}.collect { java.io.File file -> "assets/mappet/textures/gui/icons/" + iconsDir.toPath().relativize(file.toPath()).toString().replace('\\', '/')
+}.filter { File file -> new File(file.parentFile, file.name.replace(".json", ".png")).exists()
+}.collect { File file -> "assets/mappet/textures/gui/icons/" + iconsDir.toPath().relativize(file.toPath()).toString().replace('\\', '/')
 }
 
 tasks.named('processResources').configure {
@@ -326,4 +327,10 @@ tasks.named('processResources').configure {
 tasks.withType(Jar).configureEach {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     exclude iconSiblingJsonExcludes
+}
+
+tasks.register('archiveSources', Exec) {
+    def date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+    commandLine("7z", "a", "-t7z", "-mx9", file("exports/mappet-${date}.7z").absolutePath, "mchorse")
+    workingDir file("src/main/java")
 }

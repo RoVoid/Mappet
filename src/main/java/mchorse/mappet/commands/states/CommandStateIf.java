@@ -44,9 +44,9 @@ public class CommandStateIf extends CommandStateBase {
         if (previous instanceof Number) context.set("value", ((Number) previous).doubleValue());
         else if (previous instanceof String) context.set("value", (String) previous);
 
-        IValue result = Mappet.expressions.set(context).parse(expression);
+//        IValue result = Mappet.expressions.set(context).parse(expression);
 
-        if (!result.booleanValue()) throw new CommandException("states.false", id);
+     //   if (!result.booleanValue()) throw new CommandException("states.false", id);
 
         getL10n().info(sender, "states.true", id);
     }
