@@ -1,0 +1,46 @@
+{
+  "docs": "",
+  "methods": {
+    "getMinecraftTileEntity": [
+      {
+        "return": "net.minecraft.tileentity.TileEntity",
+        "deprecated": true
+      }
+    ],
+    "asMinecraft": [
+      {
+        "return": "net.minecraft.tileentity.TileEntity"
+      }
+    ],
+    "getId": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "isInvalid": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "getData": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+      }
+    ],
+    "setData": [
+      {
+        "parameters": [
+          {
+            "name": "compound",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+          }
+        ]
+      }
+    ],
+    "getTileData": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+      }
+    ]
+  }
+}

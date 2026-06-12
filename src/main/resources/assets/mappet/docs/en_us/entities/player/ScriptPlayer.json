@@ -1,0 +1,900 @@
+{
+  "docs": "",
+  "methods": {
+    "getMinecraftPlayer": [
+      {
+        "return": "net.minecraft.entity.player.EntityPlayerMP",
+        "deprecated": true
+      }
+    ],
+    "asMinecraft": [
+      {
+        "return": "net.minecraft.entity.player.EntityPlayerMP"
+      }
+    ],
+    "setMotion": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ]
+      }
+    ],
+    "setRotations": [
+      {
+        "parameters": [
+          {
+            "name": "pitch",
+            "type": "float"
+          },
+          {
+            "name": "yaw",
+            "type": "float"
+          },
+          {
+            "name": "yawHead",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "swingArm": [
+      {
+        "parameters": [
+          {
+            "name": "arm",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "isOperator": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "getGameMode": [
+      {
+        "return": "int"
+      }
+    ],
+    "setGameMode": [
+      {
+        "parameters": [
+          {
+            "name": "gameMode",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "getInventory": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.items.ScriptInventory"
+      }
+    ],
+    "getEnderChest": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.items.ScriptInventory"
+      }
+    ],
+    "executeCommand": [
+      {
+        "parameters": [
+          {
+            "name": "command",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "setSpawnPoint": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ]
+      }
+    ],
+    "getSpawnPoint": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      }
+    ],
+    "isFlying": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "setFlyingEnabled": [
+      {
+        "parameters": [
+          {
+            "name": "enabled",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "getFlySpeed": [
+      {
+        "return": "float"
+      }
+    ],
+    "setFlySpeed": [
+      {
+        "parameters": [
+          {
+            "name": "speed",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "resetFlySpeed": [
+      {}
+    ],
+    "getWalkSpeed": [
+      {
+        "return": "float"
+      }
+    ],
+    "setWalkSpeed": [
+      {
+        "parameters": [
+          {
+            "name": "speed",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "resetWalkSpeed": [
+      {}
+    ],
+    "getCooldown": [
+      {
+        "parameters": [
+          {
+            "name": "item",
+            "type": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+          }
+        ],
+        "return": "float"
+      },
+      {
+        "parameters": [
+          {
+            "name": "inventorySlot",
+            "type": "int"
+          }
+        ],
+        "return": "float"
+      }
+    ],
+    "setCooldown": [
+      {
+        "parameters": [
+          {
+            "name": "item",
+            "type": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+          },
+          {
+            "name": "ticks",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "inventorySlot",
+            "type": "int"
+          },
+          {
+            "name": "ticks",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "resetCooldown": [
+      {
+        "parameters": [
+          {
+            "name": "item",
+            "type": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "inventorySlot",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "getHotbarIndex": [
+      {
+        "return": "int"
+      }
+    ],
+    "setHotbarIndex": [
+      {
+        "parameters": [
+          {
+            "name": "slot",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "send": [
+      {
+        "parameters": [
+          {
+            "name": "message",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "sendRaw": [
+      {
+        "parameters": [
+          {
+            "name": "message",
+            "type": "java.lang.Object"
+          }
+        ]
+      }
+    ],
+    "getSkin": [
+      {
+        "return": "java.lang.String"
+      },
+      {
+        "parameters": [
+          {
+            "name": "source",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.String"
+      }
+    ],
+    "getSkinObject": [
+      {
+        "return": "java.lang.Object"
+      },
+      {
+        "parameters": [
+          {
+            "name": "source",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.Object"
+      }
+    ],
+    "sendTitleDurations": [
+      {
+        "parameters": [
+          {
+            "name": "fadeIn",
+            "type": "int"
+          },
+          {
+            "name": "idle",
+            "type": "int"
+          },
+          {
+            "name": "fadeOut",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "sendTitle": [
+      {
+        "parameters": [
+          {
+            "name": "title",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "sendSubtitle": [
+      {
+        "parameters": [
+          {
+            "name": "title",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "sendActionBar": [
+      {
+        "parameters": [
+          {
+            "name": "title",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "setClipboard": [
+      {
+        "parameters": [
+          {
+            "name": "text",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "openLink": [
+      {
+        "parameters": [
+          {
+            "name": "url",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "setXp": [
+      {
+        "parameters": [
+          {
+            "name": "level",
+            "type": "int"
+          },
+          {
+            "name": "points",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "addXp": [
+      {
+        "parameters": [
+          {
+            "name": "points",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "getXpLevel": [
+      {
+        "return": "int"
+      }
+    ],
+    "getXpPoints": [
+      {
+        "return": "int"
+      }
+    ],
+    "setHunger": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "getHunger": [
+      {
+        "return": "int"
+      }
+    ],
+    "setSaturation": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "getSaturation": [
+      {
+        "return": "float"
+      }
+    ],
+    "getScoreboard": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.score.ScriptScoreboard"
+      }
+    ],
+    "join": [
+      {
+        "parameters": [
+          {
+            "name": "team",
+            "type": "mchorse.mappet.api.scripts.code.score.ScriptTeam"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "leave": [
+      {}
+    ],
+    "setScore": [
+      {
+        "parameters": [
+          {
+            "name": "objective",
+            "type": "mchorse.mappet.api.scripts.code.score.ScriptScoreObjective"
+          },
+          {
+            "name": "value",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "addScore": [
+      {
+        "parameters": [
+          {
+            "name": "objective",
+            "type": "mchorse.mappet.api.scripts.code.score.ScriptScoreObjective"
+          },
+          {
+            "name": "value",
+            "type": "int"
+          }
+        ],
+        "return": "int"
+      },
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "int"
+          }
+        ],
+        "return": "int"
+      }
+    ],
+    "getScore": [
+      {
+        "parameters": [
+          {
+            "name": "objective",
+            "type": "mchorse.mappet.api.scripts.code.score.ScriptScoreObjective"
+          }
+        ],
+        "return": "int"
+      },
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "int"
+      }
+    ],
+    "resetScore": [
+      {
+        "parameters": [
+          {
+            "name": "objective",
+            "type": "mchorse.mappet.api.scripts.code.score.ScriptScoreObjective"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "updateServerPack": [
+      {
+        "parameters": [
+          {
+            "name": "resourcePack",
+            "type": "mchorse.mappet.api.scripts.code.ScriptResourcePack"
+          }
+        ]
+      }
+    ],
+    "clearServerPack": [
+      {}
+    ],
+    "enableBlackAndWhiteShader": [
+      {
+        "parameters": [
+          {
+            "name": "enable",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "setPerspective": [
+      {
+        "parameters": [
+          {
+            "name": "perspective",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "lockPerspective": [
+      {
+        "parameters": [
+          {
+            "name": "perspective",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "unlockPerspective": [
+      {}
+    ],
+    "getModsList": [
+      {
+        "return": "java.util.ArrayList"
+      }
+    ],
+    "getPing": [
+      {
+        "return": "int"
+      }
+    ],
+    "getSettings": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      }
+    ],
+    "playSound": [
+      {
+        "parameters": [
+          {
+            "name": "event",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "volume",
+            "type": "float"
+          },
+          {
+            "name": "pitch",
+            "type": "float"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "event",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "soundCategory",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "volume",
+            "type": "float"
+          },
+          {
+            "name": "pitch",
+            "type": "float"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "event",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "soundCategory",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ]
+      }
+    ],
+    "stopSound": [
+      {
+        "parameters": [
+          {
+            "name": "event",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "category",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "playStaticSound": [
+      {
+        "parameters": [
+          {
+            "name": "event",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "volume",
+            "type": "float"
+          },
+          {
+            "name": "pitch",
+            "type": "float"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "event",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "soundCategory",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "volume",
+            "type": "float"
+          },
+          {
+            "name": "pitch",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "getQuests": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.mappet.MappetQuests"
+      }
+    ],
+    "getMorph": [
+      {
+        "return": "mchorse.metamorph.api.morphs.AbstractMorph"
+      }
+    ],
+    "setMorph": [
+      {
+        "parameters": [
+          {
+            "name": "morph",
+            "type": "mchorse.metamorph.api.morphs.AbstractMorph"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "openUI": [
+      {
+        "parameters": [
+          {
+            "name": "in",
+            "type": "mchorse.mappet.api.scripts.code.ui.MappetUIBuilder"
+          },
+          {
+            "name": "defaultData",
+            "type": "boolean"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "closeUI": [
+      {}
+    ],
+    "getUIContext": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.MappetUIContext"
+      }
+    ],
+    "getCamera": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ScriptCamera"
+      }
+    ],
+    "getFactions": [
+      {
+        "return": "java.util.Set"
+      }
+    ],
+    "getLanguage": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "setupHUD": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "changeHUDMorph": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "index",
+            "type": "int"
+          },
+          {
+            "name": "morph",
+            "type": "mchorse.metamorph.api.morphs.AbstractMorph"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "index",
+            "type": "int"
+          },
+          {
+            "name": "morph",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+          }
+        ]
+      }
+    ],
+    "closeHUD": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "closeAllHUDs": [
+      {},
+      {
+        "parameters": [
+          {
+            "name": "ignores",
+            "type": "java.util.List"
+          }
+        ]
+      }
+    ],
+    "getDisplayedHUDs": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+      }
+    ],
+    "getGlobalDisplayedHUDs": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+      }
+    ],
+    "playScene": [
+      {
+        "parameters": [
+          {
+            "name": "sceneName",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "stopScene": [
+      {}
+    ]
+  }
+}

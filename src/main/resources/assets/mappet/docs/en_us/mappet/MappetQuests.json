@@ -1,0 +1,65 @@
+{
+  "docs": "",
+  "methods": {
+    "has": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "add": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "isComplete": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "complete": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "decline": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "getIds": [
+      {
+        "return": "java.util.Set"
+      }
+    ]
+  }
+}

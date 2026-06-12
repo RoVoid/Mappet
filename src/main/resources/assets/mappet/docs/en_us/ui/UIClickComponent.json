@@ -1,0 +1,30 @@
+{
+  "docs": "Click area component.\n\n \u003cp\u003eThis component doesn\u0027t display anything but rather acts as a special\n user input field. When an ID is assigned and users clicks on the component\u0027s\n bounds, this component will be sending a NBT list containing 5 floats:\u003c/p\u003e\n\n \u003cul\u003e\n     \u003cli\u003eIndex \u003ccode\u003e0\u003c/code\u003e \u003d X coordinate relative to click area\u0027s frame.\u003c/li\u003e\n     \u003cli\u003eIndex \u003ccode\u003e1\u003c/code\u003e \u003d Y coordinate relative to click area\u0027s frame.\u003c/li\u003e\n     \u003cli\u003eIndex \u003ccode\u003e2\u003c/code\u003e \u003d X factor (0..1) how far into the click area\u0027s width (\u003ccode\u003e0\u003c/code\u003e being left edge, \u003ccode\u003e1\u003c/code\u003e being the right edge).\u003c/li\u003e\n     \u003cli\u003eIndex \u003ccode\u003e3\u003c/code\u003e \u003d Y factor (0..1) how far into the click area\u0027s height (\u003ccode\u003e0\u003c/code\u003e being top edge, \u003ccode\u003e1\u003c/code\u003e being the bottom edge).\u003c/li\u003e\n     \u003cli\u003eIndex \u003ccode\u003e4\u003c/code\u003e \u003d Mouse button (\u003ccode\u003e0\u003c/code\u003e is left button, \u003ccode\u003e1\u003c/code\u003e is right button, \u003ccode\u003e2\u003c/code\u003e is middle button, etc.).\u003c/li\u003e\n \u003c/ul\u003e\n\n \u003cp\u003eThis component can be created using {@link MappetUIBuilder#click()} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var click \u003d ui.click().id(\"click\");\n        var backdrop \u003d ui.graphics().id(\"backdrop\");\n\n        backdrop.rxy(0.5, 0.5).wh(300, 150).anchor(0.5);\n        backdrop.rect(0, 0, 300, 150, 0x88000000);\n        click.rxy(0.5, 0.5).wh(300, 150).anchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var data \u003d uiContext.getData();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"click\")\n        {\n            // Math.floor just in case there are precision issues\n            var list \u003d data.getList(\"click\");\n            var x \u003d Math.floor(list.getFloat(0));\n            var y \u003d Math.floor(list.getFloat(1));\n            var fx \u003d list.getFloat(2);\n            var fy \u003d list.getFloat(3);\n            var button \u003d Math.floor(list.getFloat(4));\n\n            // Draw random rectangle on the back drop\n            if (button \u003d\u003d\u003d 0)\n            {\n                var backdrop \u003d uiContext.get(\"backdrop\");\n\n                backdrop.rect(x - 10, y - 10, 20, 20, 0xff000000 + Math.floor(Math.random() * 0xffffff));\n            }\n        }\n    }\n }\u003c/pre\u003e",
+  "methods": {
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "mc",
+            "type": "net.minecraft.client.Minecraft"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "populateData": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ]
+  }
+}

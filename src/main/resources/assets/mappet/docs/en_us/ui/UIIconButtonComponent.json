@@ -1,0 +1,124 @@
+{
+  "docs": "Clickable icon button component.\n\n \u003cp\u003eThis component displays an icon, which allows users to trigger the handler\n script. The value that gets written to UI context\u0027s data (if ID is present)\n is how many times the icon button was pressed.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link MappetUIBuilder#icon(String)} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var button \u003d ui.icon(\"more\").id(\"icon\");\n\n        button.rxy(0.5, 0.5).wh(20, 20).anchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"icon\")\n        {\n            // Get a set of all icons\n            var icons \u003d Java.type(\"mchorse.mclib.client.gui.utils.IconRegistry\").icons.keySet();\n\n            // Set a random icon\n            var index \u003d Math.floor(Math.random() * icons.size());\n            var i \u003d 0;\n\n            for each (var icon in icons)\n            {\n                if (i \u003d\u003d index)\n                {\n                    uiContext.get(\"icon\").icon(icon);\n\n                    break;\n                }\n\n                i +\u003d 1;\n            }\n        }\n    }\n }\u003c/pre\u003e",
+  "methods": {
+    "icon": [
+      {
+        "parameters": [
+          {
+            "name": "icon",
+            "type": "java.lang.String",
+            "docs": "The icon\u0027s ID."
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIIconButtonComponent",
+        "docs": "Change icon component\u0027s icon.\n\n \u003cp\u003eSo using that piece of code, you can get create a GUI that shows\n every icon with a tooltip:\u003c/p\u003e\n\n \u003cpre\u003e{@code\n function main(c) {\n     var ui \u003d mappet.createUI(c, \"handler\").background();\n\n     var grid \u003d ui.grid(10);\n     grid.getCurrent().width(20).rxy(0.5, 0.5).w(845).anchor(0.5);\n\n     var icons \u003d mappet.getAllIcons()\n     icons.sort(function(a, b) {\n         return a \u003e b ? 1 : -1\n     })\n     for each(var icon in icons) {\n         grid.icon(icon).wh(20, 20).tooltip(icon).id(icon);\n     }\n\n     var textbox \u003d ui.textbox().id(\"textbox\")\n     var invert \u003d ui.toggle(\u0027\u0027, true).id(\"toggle\")\n\n     textbox.rxy(0.875, 0.925).wh(160, 20).anchor(0.5).updateDelay(500);\n     invert.rxy(0.775, 0.925).wh(20, 20).anchor(0.5)\n\n     c.getSubject().openUI(ui);\n }\n\n function handler(c) {\n     var ui \u003d c.getSubject().getUIContext();\n     if (ui.getLast() \u003d\u003d\u003d \"textbox\" || ui.getLast() \u003d\u003d\u003d \"toggle\") {\n         var data \u003d ui.getData();\n         var request \u003d data.getString(\"textbox\")\n         var state \u003d data.getBoolean(\"toggle\")\n         for each(var icon in mappet.getAllIcons()) {\n             ui.get(icon).visible((request.length \u003c\u003d 0 || icon.indexOf(request) \u003e -1) \u003d\u003d\u003d state)\n         }\n     } else if (ui.getLast().length \u003e 0) {\n         c.getSubject().setClipboard(ui.getLast())\n     }\n }\n }\u003c/pre\u003e\n\n \u003cp\u003eA basic example:\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n    uiContext.get(\"icon\").icon(\"gear\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "color": [
+      {
+        "parameters": [
+          {
+            "name": "color",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIIconButtonComponent"
+      }
+    ],
+    "rotate": [
+      {
+        "parameters": [
+          {
+            "name": "angle",
+            "type": "float",
+            "docs": "between 0 and 360"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIIconButtonComponent"
+      }
+    ],
+    "isDataReserved": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "apply": [
+      {
+        "parameters": [
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "applyProperty": [
+      {
+        "parameters": [
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          },
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          }
+        ]
+      }
+    ],
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "mc",
+            "type": "net.minecraft.client.Minecraft"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "populateData": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "serializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "deserializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ]
+  }
+}

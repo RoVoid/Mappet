@@ -1,0 +1,205 @@
+{
+  "docs": "Trackpad UI component.\n\n \u003cp\u003eThis component allows users to input numerical values (integer and double),\n with optionally a limit range between min and max. Users can also use\n arrow buttons on the side to increment and decrement the value, and\n type in value manually.\u003c/p\u003e\n\n \u003cp\u003eThe value that gets written to UI context\u0027s data (if ID is present) is\n the number displayed in the field, if integer option is enabled, then an\n integer will be written, or double if it\u0027s disabled.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link MappetUIBuilder#trackpad()} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var trackpad \u003d ui.trackpad(5).id(\"number\").limit(0, 25, true);\n\n        trackpad.rxy(0.5, 0.5).wh(160, 20).anchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var data \u003d uiContext.getData();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"number\")\n        {\n            // If integer wasn\u0027t enabled, you would use:\n            // data.getDouble(\"number\")\n            if (data.getInt(\"number\") \u003d\u003d\u003d 19)\n            {\n                c.getSubject().send(\"21\");\n            }\n        }\n    }\n }\u003c/pre\u003e",
+  "methods": {
+    "value": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent",
+        "docs": "Set the value that of trackpad component."
+      }
+    ],
+    "min": [
+      {
+        "parameters": [
+          {
+            "name": "min",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent",
+        "docs": "Set the minimum that this trackpad component can let the user pick."
+      }
+    ],
+    "max": [
+      {
+        "parameters": [
+          {
+            "name": "max",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent",
+        "docs": "Set the maximum that this trackpad component can let the user pick."
+      }
+    ],
+    "integer": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent",
+        "docs": "Set this trackpad component to accept only whole numbers."
+      },
+      {
+        "parameters": [
+          {
+            "name": "integer",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent",
+        "docs": "Toggle integer option, when passed \u003ccode\u003etrue\u003c/code\u003e then this trackpad\n component will accept only whole numbers, and when passed \u003ccode\u003efalse\u003c/code\u003e,\n then both whole and floating point numbers can be accepted by this trackpad."
+      }
+    ],
+    "limit": [
+      {
+        "parameters": [
+          {
+            "name": "min",
+            "type": "double"
+          },
+          {
+            "name": "max",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent",
+        "docs": "Convenience method that allows to set minimum and maximum, i.e. value range,\n that this trackpad field can accept."
+      },
+      {
+        "parameters": [
+          {
+            "name": "min",
+            "type": "double"
+          },
+          {
+            "name": "max",
+            "type": "double"
+          },
+          {
+            "name": "integer",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent",
+        "docs": "Convenience method that allows to set minimum, maximum, and integer options\n that this trackpad field can accept."
+      }
+    ],
+    "amplitudes": [
+      {
+        "parameters": [
+          {
+            "name": "normal",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent",
+        "docs": "Changes the amplitudes of this trackpad fields, i.e. how much value changes when\n moving the cursor horizontally. Weak (\u003ccode\u003eAlt\u003c/code\u003e amplitude gets set 5 times\n weaker than input value, and strong (\u003ccode\u003eShift\u003c/code\u003e) amplitude gets set 5 times\n stronger than input value."
+      },
+      {
+        "parameters": [
+          {
+            "name": "normal",
+            "type": "double",
+            "docs": "Value change per pixel when no modifiers is held."
+          },
+          {
+            "name": "weak",
+            "type": "double",
+            "docs": "Value change per pixel when alt is held."
+          },
+          {
+            "name": "strong",
+            "type": "double",
+            "docs": "Value change per pixel when shift is held."
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent",
+        "docs": "Changes the amplitudes of this trackpad fields, i.e. how much value changes when\n moving the cursor horizontally."
+      }
+    ],
+    "increment": [
+      {
+        "parameters": [
+          {
+            "name": "increment",
+            "type": "double",
+            "docs": "Value change per click on increment buttons."
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent",
+        "docs": "Changes the incremental value of this trackpad fields, i.e. how much being added\n or subtracted when user presses \u0026lt; and \u0026gt; buttons on the sides of the\n trackpad value."
+      }
+    ],
+    "getDefaultUpdateDelay": [
+      {
+        "return": "int"
+      }
+    ],
+    "applyProperty": [
+      {
+        "parameters": [
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          },
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          }
+        ]
+      }
+    ],
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "mc",
+            "type": "net.minecraft.client.Minecraft"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "populateData": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "serializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "deserializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ]
+  }
+}

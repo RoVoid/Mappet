@@ -1,0 +1,234 @@
+{
+  "docs": "",
+  "methods": {
+    "random": [
+      {
+        "return": "double"
+      },
+      {
+        "parameters": [
+          {
+            "name": "max",
+            "type": "double"
+          }
+        ],
+        "return": "double"
+      },
+      {
+        "parameters": [
+          {
+            "name": "min",
+            "type": "double"
+          },
+          {
+            "name": "max",
+            "type": "double"
+          }
+        ],
+        "return": "double"
+      }
+    ],
+    "seed": [
+      {
+        "parameters": [
+          {
+            "name": "newSeed",
+            "type": "long"
+          }
+        ],
+        "deprecated": true
+      }
+    ],
+    "setSeed": [
+      {
+        "parameters": [
+          {
+            "name": "newSeed",
+            "type": "long"
+          }
+        ]
+      }
+    ],
+    "getSeed": [
+      {
+        "return": "long"
+      }
+    ],
+    "floor": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "double"
+          }
+        ],
+        "return": "double"
+      },
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "double"
+          },
+          {
+            "name": "precision",
+            "type": "int"
+          }
+        ],
+        "return": "double"
+      }
+    ],
+    "toDegrees": [
+      {
+        "parameters": [
+          {
+            "name": "radians",
+            "type": "double"
+          }
+        ],
+        "return": "double"
+      }
+    ],
+    "toRadians": [
+      {
+        "parameters": [
+          {
+            "name": "degrees",
+            "type": "double"
+          }
+        ],
+        "return": "double"
+      }
+    ],
+    "sign": [
+      {
+        "parameters": [
+          {
+            "name": "number",
+            "type": "double"
+          }
+        ],
+        "return": "double"
+      }
+    ],
+    "factorial": [
+      {
+        "parameters": [
+          {
+            "name": "number",
+            "type": "double"
+          }
+        ],
+        "return": "double"
+      }
+    ],
+    "gcd": [
+      {
+        "parameters": [
+          {
+            "name": "a",
+            "type": "double"
+          },
+          {
+            "name": "b",
+            "type": "double"
+          }
+        ],
+        "return": "double"
+      }
+    ],
+    "lcm": [
+      {
+        "parameters": [
+          {
+            "name": "a",
+            "type": "double"
+          },
+          {
+            "name": "b",
+            "type": "double"
+          }
+        ],
+        "return": "double"
+      }
+    ],
+    "vector": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      },
+      {
+        "parameters": [
+          {
+            "name": "pos",
+            "type": "net.minecraft.util.math.BlockPos"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      }
+    ],
+    "box": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+      },
+      {
+        "parameters": [
+          {
+            "name": "minX",
+            "type": "double"
+          },
+          {
+            "name": "minY",
+            "type": "double"
+          },
+          {
+            "name": "minZ",
+            "type": "double"
+          },
+          {
+            "name": "maxX",
+            "type": "double"
+          },
+          {
+            "name": "maxY",
+            "type": "double"
+          },
+          {
+            "name": "maxZ",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+      },
+      {
+        "parameters": [
+          {
+            "name": "vec1",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "vec2",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+      }
+    ]
+  }
+}

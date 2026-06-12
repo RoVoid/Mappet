@@ -1,0 +1,40 @@
+{
+  "docs": "",
+  "methods": {
+    "getMinecraftRayTraceResult": [
+      {
+        "return": "net.minecraft.util.math.RayTraceResult"
+      }
+    ],
+    "isMissed": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "isBlock": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "isEntity": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "getEntity": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.IScriptEntity"
+      }
+    ],
+    "getBlock": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      }
+    ],
+    "getHitPosition": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+      }
+    ]
+  }
+}

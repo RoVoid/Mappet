@@ -1,0 +1,80 @@
+{
+  "docs": "",
+  "methods": {
+    "getRotationDataStorage": [
+      {
+        "parameters": [
+          {
+            "name": "world",
+            "type": "net.minecraft.world.World"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.ai.rotations.RotationDataStorage"
+      }
+    ],
+    "readFromNBT": [
+      {
+        "parameters": [
+          {
+            "name": "nbt",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "writeToNBT": [
+      {
+        "parameters": [
+          {
+            "name": "nbt",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ],
+        "return": "net.minecraft.nbt.NBTTagCompound"
+      }
+    ],
+    "addRotationData": [
+      {
+        "parameters": [
+          {
+            "name": "entityId",
+            "type": "java.util.UUID"
+          },
+          {
+            "name": "yaw",
+            "type": "float"
+          },
+          {
+            "name": "pitch",
+            "type": "float"
+          },
+          {
+            "name": "yawHead",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "removeRotationData": [
+      {
+        "parameters": [
+          {
+            "name": "entityId",
+            "type": "java.util.UUID"
+          }
+        ]
+      }
+    ],
+    "getRotationData": [
+      {
+        "parameters": [
+          {
+            "name": "entityId",
+            "type": "java.util.UUID"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.ai.rotations.RotationDataStorage.RotationData"
+      }
+    ]
+  }
+}

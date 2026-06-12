@@ -1,0 +1,106 @@
+{
+  "docs": "",
+  "methods": {
+    "background": [
+      {
+        "parameters": [
+          {
+            "name": "background",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIKeybindComponent"
+      }
+    ],
+    "waitBackground": [
+      {
+        "parameters": [
+          {
+            "name": "waitBackground",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIKeybindComponent"
+      }
+    ],
+    "color": [
+      {
+        "parameters": [
+          {
+            "name": "color",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIKeybindComponent"
+      }
+    ],
+    "isDataReserved": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "applyProperty": [
+      {
+        "parameters": [
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          },
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          }
+        ]
+      }
+    ],
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "mc",
+            "type": "net.minecraft.client.Minecraft"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "populateData": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "serializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "deserializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ]
+  }
+}

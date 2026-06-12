@@ -1,0 +1,196 @@
+{
+  "docs": "",
+  "methods": {
+    "chatVisibility": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      },
+      {
+        "parameters": [
+          {
+            "name": "mode",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      }
+    ],
+    "fov": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      },
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      }
+    ],
+    "gamma": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      },
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      }
+    ],
+    "invertMouse": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      }
+    ],
+    "keybind": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "code",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      }
+    ],
+    "keybinds": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      }
+    ],
+    "mappetKeybind": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "code",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      }
+    ],
+    "language": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      }
+    ],
+    "mainHand": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      }
+    ],
+    "mouseSensitivity": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      }
+    ],
+    "renderDistance": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      },
+      {
+        "parameters": [
+          {
+            "name": "chunks",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      }
+    ],
+    "screenSize": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      }
+    ],
+    "showSubtitles": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      },
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      }
+    ],
+    "vsync": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ClientSettings"
+      }
+    ],
+    "sendTo": [
+      {
+        "parameters": [
+          {
+            "name": "players",
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "script",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "players",
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "script",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "function",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "players",
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
+          }
+        ]
+      }
+    ]
+  }
+}

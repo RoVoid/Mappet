@@ -1,0 +1,49 @@
+{
+  "docs": "",
+  "methods": {
+    "getData": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+      }
+    ],
+    "isClosed": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "getLast": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "getHotkey": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "getContext": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "getMouse": [
+      {
+        "return": "net.minecraft.nbt.NBTTagCompound"
+      }
+    ],
+    "get": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent"
+      }
+    ],
+    "sendToPlayer": [
+      {}
+    ]
+  }
+}

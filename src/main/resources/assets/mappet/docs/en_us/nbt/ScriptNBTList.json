@@ -1,0 +1,449 @@
+{
+  "docs": "",
+  "methods": {
+    "getNBTTagList": [
+      {
+        "return": "net.minecraft.nbt.NBTTagList",
+        "deprecated": true
+      }
+    ],
+    "asMinecraft": [
+      {
+        "return": "net.minecraft.nbt.NBTTagList"
+      }
+    ],
+    "isCompound": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "isList": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "stringify": [
+      {
+        "return": "java.lang.String",
+        "deprecated": true
+      }
+    ],
+    "toString": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "isEmpty": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "size": [
+      {
+        "return": "int"
+      }
+    ],
+    "copy": [
+      {
+        "return": "java.lang.Object"
+      }
+    ],
+    "combine": [
+      {
+        "parameters": [
+          {
+            "name": "nbt",
+            "type": "java.lang.Object"
+          }
+        ]
+      }
+    ],
+    "isSame": [
+      {
+        "parameters": [
+          {
+            "name": "nbt",
+            "type": "java.lang.Object"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "has": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "remove": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "getByte": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ],
+        "return": "byte"
+      }
+    ],
+    "setByte": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          },
+          {
+            "name": "value",
+            "type": "byte"
+          }
+        ]
+      }
+    ],
+    "addByte": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "byte"
+          }
+        ]
+      }
+    ],
+    "getShort": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ],
+        "return": "short"
+      }
+    ],
+    "setShort": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          },
+          {
+            "name": "value",
+            "type": "short"
+          }
+        ]
+      }
+    ],
+    "addShort": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "short"
+          }
+        ]
+      }
+    ],
+    "getInt": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ],
+        "return": "int"
+      }
+    ],
+    "setInt": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          },
+          {
+            "name": "value",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "addInt": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "getLong": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ],
+        "return": "long"
+      }
+    ],
+    "setLong": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          },
+          {
+            "name": "value",
+            "type": "long"
+          }
+        ]
+      }
+    ],
+    "addLong": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "long"
+          }
+        ]
+      }
+    ],
+    "getFloat": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ],
+        "return": "float"
+      }
+    ],
+    "setFloat": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          },
+          {
+            "name": "value",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "addFloat": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "getDouble": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ],
+        "return": "double"
+      }
+    ],
+    "setDouble": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          },
+          {
+            "name": "value",
+            "type": "double"
+          }
+        ]
+      }
+    ],
+    "addDouble": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "double"
+          }
+        ]
+      }
+    ],
+    "getString": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ],
+        "return": "java.lang.String"
+      }
+    ],
+    "setString": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          },
+          {
+            "name": "value",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "addString": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "getBoolean": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "setBoolean": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          },
+          {
+            "name": "value",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "addBoolean": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "getCompound": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+      }
+    ],
+    "setCompound": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          },
+          {
+            "name": "value",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+          }
+        ]
+      }
+    ],
+    "addCompound": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+          }
+        ]
+      }
+    ],
+    "getList": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTList"
+      }
+    ],
+    "setList": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          },
+          {
+            "name": "value",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTList"
+          }
+        ]
+      }
+    ],
+    "addList": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTList"
+          }
+        ]
+      }
+    ],
+    "toArray": [
+      {
+        "return": "java.lang.Object"
+      }
+    ]
+  }
+}

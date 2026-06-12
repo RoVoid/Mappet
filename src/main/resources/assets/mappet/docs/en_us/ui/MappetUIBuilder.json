@@ -1,0 +1,334 @@
+{
+  "docs": "",
+  "methods": {
+    "get": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent"
+      }
+    ],
+    "getCurrent": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent"
+      }
+    ],
+    "getUI": [
+      {
+        "return": "mchorse.mappet.api.ui.UI"
+      }
+    ],
+    "getScript": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "getFunction": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "background": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.MappetUIBuilder"
+      }
+    ],
+    "closable": [
+      {
+        "parameters": [
+          {
+            "name": "closable",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.MappetUIBuilder"
+      }
+    ],
+    "paused": [
+      {
+        "parameters": [
+          {
+            "name": "paused",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.MappetUIBuilder"
+      }
+    ],
+    "mouse": [
+      {
+        "parameters": [
+          {
+            "name": "flags",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.MappetUIBuilder"
+      },
+      {
+        "parameters": [
+          {
+            "name": "flags",
+            "type": "int"
+          },
+          {
+            "name": "delay",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.MappetUIBuilder"
+      }
+    ],
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent"
+      }
+    ],
+    "graphics": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.UIGraphicsComponent"
+      }
+    ],
+    "button": [
+      {
+        "parameters": [
+          {
+            "name": "label",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIButtonComponent"
+      }
+    ],
+    "icon": [
+      {
+        "parameters": [
+          {
+            "name": "icon",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIIconButtonComponent"
+      }
+    ],
+    "keybind": [
+      {
+        "parameters": [
+          {
+            "name": "keycode",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIKeybindComponent"
+      }
+    ],
+    "label": [
+      {
+        "parameters": [
+          {
+            "name": "label",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UILabelComponent"
+      }
+    ],
+    "text": [
+      {
+        "parameters": [
+          {
+            "name": "text",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UITextComponent"
+      }
+    ],
+    "textbox": [
+      {
+        "parameters": [
+          {
+            "name": "text",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "maxLength",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UITextboxComponent"
+      }
+    ],
+    "textarea": [
+      {
+        "parameters": [
+          {
+            "name": "text",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UITextareaComponent"
+      }
+    ],
+    "toggle": [
+      {
+        "parameters": [
+          {
+            "name": "label",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "state",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIToggleComponent"
+      }
+    ],
+    "trackpad": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UITrackpadComponent"
+      }
+    ],
+    "stringList": [
+      {
+        "parameters": [
+          {
+            "name": "values",
+            "type": "java.util.List"
+          },
+          {
+            "name": "selected",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIStringListComponent"
+      }
+    ],
+    "dropdown": [
+      {
+        "parameters": [
+          {
+            "name": "values",
+            "type": "java.util.List"
+          },
+          {
+            "name": "selected",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIDropdownComponent"
+      }
+    ],
+    "item": [
+      {
+        "parameters": [
+          {
+            "name": "stack",
+            "type": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
+      }
+    ],
+    "morph": [
+      {
+        "parameters": [
+          {
+            "name": "morph",
+            "type": "mchorse.metamorph.api.morphs.AbstractMorph"
+          },
+          {
+            "name": "editing",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent"
+      }
+    ],
+    "click": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.UIClickComponent"
+      }
+    ],
+    "layout": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.MappetUIBuilder"
+      },
+      {
+        "parameters": [
+          {
+            "name": "margin",
+            "type": "int"
+          },
+          {
+            "name": "padding",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UILayoutComponent"
+      }
+    ],
+    "column": [
+      {
+        "parameters": [
+          {
+            "name": "margin",
+            "type": "int"
+          },
+          {
+            "name": "padding",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.MappetUIBuilder"
+      }
+    ],
+    "row": [
+      {
+        "parameters": [
+          {
+            "name": "margin",
+            "type": "int"
+          },
+          {
+            "name": "padding",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.MappetUIBuilder"
+      }
+    ],
+    "grid": [
+      {
+        "parameters": [
+          {
+            "name": "margin",
+            "type": "int"
+          },
+          {
+            "name": "padding",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.MappetUIBuilder"
+      }
+    ]
+  }
+}

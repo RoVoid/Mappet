@@ -1,0 +1,96 @@
+{
+  "docs": "Label UI component.\n\n \u003cp\u003eThis component allows you to input one line of text. You can use Minecraft\u0027s\n formatting using \"[\" symbol instead of section field.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link MappetUIBuilder#label(String)} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI().background();\n        var label \u003d ui.label(\"Welcome, [l\" + c.getSubject().getName() + \"[r!\");\n\n        label.rxy(0.5, 0.5).wh(100, 20).anchor(0.5);\n        label.color(0x00ee22).background(0x88000000).labelAnchor(0.5);\n\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e",
+  "methods": {
+    "background": [
+      {
+        "parameters": [
+          {
+            "name": "background",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UILabelComponent",
+        "docs": "Change background color of this label component by providing hex ARGB.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n\n    // Add a half transparent black background\n    uiContext.get(\"label\").background(0x88000000);\n }\u003c/pre\u003e"
+      }
+    ],
+    "labelAnchor": [
+      {
+        "parameters": [
+          {
+            "name": "anchor",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UILabelComponent",
+        "docs": "Change text\u0027s anchor point which determines where text will be rendered\n relative to component\u0027s frame both vertically and horizontally.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n\n    // Position the label\u0027s text in the middle of its frame\n    uiContext.get(\"label\").labelAnchor(0.5);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "anchorX",
+            "type": "float"
+          },
+          {
+            "name": "anchorY",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UILabelComponent",
+        "docs": "Change text\u0027s anchor point which determines where text will be rendered\n relative to component\u0027s frame, with separate vertical and horizontal\n anchors.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n\n    // Position the label\u0027s text in the middle only vertically\n    uiContext.get(\"label\").labelAnchor(0, 0.5);\n }\u003c/pre\u003e"
+      }
+    ],
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "mc",
+            "type": "net.minecraft.client.Minecraft"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "applyProperty": [
+      {
+        "parameters": [
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          },
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          }
+        ]
+      }
+    ],
+    "serializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "deserializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ]
+  }
+}

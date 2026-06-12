@@ -1,0 +1,30 @@
+{
+  "docs": "",
+  "methods": {
+    "getChildComponents": [
+      {
+        "return": "java.util.List"
+      }
+    ],
+    "serializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "deserializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ]
+  }
+}

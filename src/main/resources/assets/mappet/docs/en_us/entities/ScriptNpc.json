@@ -1,0 +1,494 @@
+{
+  "docs": "",
+  "methods": {
+    "asMinecraft": [
+      {
+        "return": "mchorse.mappet.entities.EntityNpc"
+      }
+    ],
+    "getMappetNpc": [
+      {
+        "return": "mchorse.mappet.entities.EntityNpc"
+      }
+    ],
+    "getId": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "getNpcId": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "setMorph": [
+      {
+        "parameters": [
+          {
+            "name": "morph",
+            "type": "mchorse.metamorph.api.morphs.AbstractMorph"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "getNpcState": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "setNpcState": [
+      {
+        "parameters": [
+          {
+            "name": "stateId",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "canPickUpLoot": [
+      {
+        "parameters": [
+          {
+            "name": "canPickUpLoot",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "follow": [
+      {
+        "parameters": [
+          {
+            "name": "target",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "getFaction": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "setCanBeSteered": [
+      {
+        "parameters": [
+          {
+            "name": "enabled",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "canBeSteered": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "setSteeringOffset": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          },
+          {
+            "name": "x",
+            "type": "float"
+          },
+          {
+            "name": "y",
+            "type": "float"
+          },
+          {
+            "name": "z",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "addSteeringOffset": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "float"
+          },
+          {
+            "name": "y",
+            "type": "float"
+          },
+          {
+            "name": "z",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "getSteeringOffsets": [
+      {
+        "return": "java.util.List"
+      }
+    ],
+    "setNpcSpeed": [
+      {
+        "parameters": [
+          {
+            "name": "speed",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "getNpcSpeed": [
+      {
+        "return": "float"
+      }
+    ],
+    "setJumpPower": [
+      {
+        "parameters": [
+          {
+            "name": "jumpHeight",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "getJumpPower": [
+      {
+        "return": "float"
+      }
+    ],
+    "setInvincible": [
+      {
+        "parameters": [
+          {
+            "name": "invincible",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "isInvincible": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "setCanSwim": [
+      {
+        "parameters": [
+          {
+            "name": "canSwim",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "canSwim": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "setImmovable": [
+      {
+        "parameters": [
+          {
+            "name": "immovable",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "isImmovable": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "setCollision": [
+      {
+        "parameters": [
+          {
+            "name": "enabled",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "hasCollision": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "setShadowSize": [
+      {
+        "parameters": [
+          {
+            "name": "size",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "getShadowSize": [
+      {
+        "return": "float"
+      }
+    ],
+    "setXpValue": [
+      {
+        "parameters": [
+          {
+            "name": "xp",
+            "type": "int"
+          }
+        ],
+        "return": "float"
+      }
+    ],
+    "getXpValue": [
+      {
+        "return": "int"
+      }
+    ],
+    "getPathDistance": [
+      {
+        "return": "float"
+      }
+    ],
+    "setPathDistance": [
+      {
+        "parameters": [
+          {
+            "name": "sightRadius",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "setAttackRange": [
+      {
+        "parameters": [
+          {
+            "name": "sightDistance",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "getAttackRange": [
+      {
+        "return": "float"
+      }
+    ],
+    "setKillable": [
+      {
+        "parameters": [
+          {
+            "name": "killable",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "isKillable": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "canGetBurned": [
+      {
+        "return": "boolean"
+      },
+      {
+        "parameters": [
+          {
+            "name": "canGetBurned",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "canFallDamage": [
+      {
+        "return": "boolean"
+      },
+      {
+        "parameters": [
+          {
+            "name": "canFallDamage",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "getDamage": [
+      {
+        "return": "float"
+      }
+    ],
+    "setDamage": [
+      {
+        "parameters": [
+          {
+            "name": "damage",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "getDamageDelay": [
+      {
+        "return": "int"
+      }
+    ],
+    "setDamageDelay": [
+      {
+        "parameters": [
+          {
+            "name": "damageDelay",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "doesWander": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "setWander": [
+      {
+        "parameters": [
+          {
+            "name": "wander",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "doesLookAround": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "setLookAround": [
+      {
+        "parameters": [
+          {
+            "name": "lookAround",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "doesLookAtPlayer": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "setLookAtPlayer": [
+      {
+        "parameters": [
+          {
+            "name": "lookAtPlayer",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "clearPatrolPoints": [
+      {}
+    ],
+    "addPatrolPoints": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "float"
+          },
+          {
+            "name": "y",
+            "type": "float"
+          },
+          {
+            "name": "z",
+            "type": "float"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "float"
+          },
+          {
+            "name": "y",
+            "type": "float"
+          },
+          {
+            "name": "z",
+            "type": "float"
+          },
+          {
+            "name": "script",
+            "type": "java.lang.String"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "float"
+          },
+          {
+            "name": "y",
+            "type": "float"
+          },
+          {
+            "name": "z",
+            "type": "float"
+          },
+          {
+            "name": "script",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "function",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "removePatrolPoint": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ]
+      }
+    ]
+  }
+}

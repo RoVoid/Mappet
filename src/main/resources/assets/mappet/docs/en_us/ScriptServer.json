@@ -1,0 +1,124 @@
+{
+  "docs": "",
+  "methods": {
+    "getMinecraftServer": [
+      {
+        "return": "net.minecraft.server.MinecraftServer",
+        "deprecated": true
+      }
+    ],
+    "getWorld": [
+      {
+        "parameters": [
+          {
+            "name": "dimension",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.world.ScriptWorld"
+      }
+    ],
+    "getEntities": [
+      {
+        "parameters": [
+          {
+            "name": "targetSelector",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.util.List"
+      }
+    ],
+    "getEntity": [
+      {
+        "parameters": [
+          {
+            "name": "uuid",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.IScriptEntity"
+      }
+    ],
+    "getAllPlayers": [
+      {
+        "return": "java.util.List"
+      }
+    ],
+    "getPlayer": [
+      {
+        "parameters": [
+          {
+            "name": "username",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
+      }
+    ],
+    "getStates": [
+      {
+        "return": "mchorse.mappet.api.states.ScriptStates"
+      }
+    ],
+    "entityExists": [
+      {
+        "parameters": [
+          {
+            "name": "uuid",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "executeScript": [
+      {
+        "parameters": [
+          {
+            "name": "scriptName",
+            "type": "java.lang.String"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "scriptName",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "function",
+            "type": "java.lang.String"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "scriptName",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "function",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "args",
+            "type": "java.lang.Object"
+          }
+        ]
+      }
+    ],
+    "getOppedPlayerNames": [
+      {
+        "return": "java.util.List"
+      }
+    ],
+    "getScoreboard": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.score.ScriptScoreboard"
+      }
+    ]
+  }
+}

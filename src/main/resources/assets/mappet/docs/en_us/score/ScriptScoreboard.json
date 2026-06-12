@@ -1,0 +1,90 @@
+{
+  "docs": "",
+  "methods": {
+    "getObjective": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.score.ScriptScoreObjective"
+      },
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "createNew",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.score.ScriptScoreObjective"
+      }
+    ],
+    "addObjective": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.score.ScriptScoreObjective"
+      }
+    ],
+    "removeObjective": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "objective",
+            "type": "mchorse.mappet.api.scripts.code.score.ScriptScoreObjective"
+          }
+        ]
+      }
+    ],
+    "getTeam": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.score.ScriptTeam"
+      }
+    ],
+    "createTeam": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.score.ScriptTeam"
+      }
+    ],
+    "removeTeam": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ]
+  }
+}

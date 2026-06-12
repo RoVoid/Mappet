@@ -1,0 +1,146 @@
+{
+  "docs": "",
+  "methods": {
+    "stack": [
+      {
+        "parameters": [
+          {
+            "name": "stack",
+            "type": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
+      },
+      {
+        "parameters": [
+          {
+            "name": "stack",
+            "type": "net.minecraft.item.ItemStack"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
+      }
+    ],
+    "getStack": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+      }
+    ],
+    "lock": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
+      }
+    ],
+    "setLocked": [
+      {
+        "parameters": [
+          {
+            "name": "locked",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
+      }
+    ],
+    "withoutFrame": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
+      }
+    ],
+    "frameVisible": [
+      {
+        "parameters": [
+          {
+            "name": "visible",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
+      }
+    ],
+    "hideItemTooltip": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
+      }
+    ],
+    "itemTooltipVisible": [
+      {
+        "parameters": [
+          {
+            "name": "visible",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIStackComponent"
+      }
+    ],
+    "getDefaultUpdateDelay": [
+      {
+        "return": "int"
+      }
+    ],
+    "applyProperty": [
+      {
+        "parameters": [
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          },
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          }
+        ]
+      }
+    ],
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "mc",
+            "type": "net.minecraft.client.Minecraft"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "populateData": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "serializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "deserializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ]
+  }
+}

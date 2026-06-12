@@ -1,0 +1,109 @@
+{
+  "docs": "",
+  "methods": {
+    "getAge": [
+      {
+        "return": "int"
+      }
+    ],
+    "setAge": [
+      {
+        "parameters": [
+          {
+            "name": "age",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "getPickupDelay": [
+      {
+        "return": "int"
+      }
+    ],
+    "setPickupDelay": [
+      {
+        "parameters": [
+          {
+            "name": "delay",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "getLifespan": [
+      {
+        "return": "int"
+      }
+    ],
+    "setLifespan": [
+      {
+        "parameters": [
+          {
+            "name": "lifespan",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "getItemOwner": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "setItemOwner": [
+      {
+        "parameters": [
+          {
+            "name": "owner",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "getThrower": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "setThrower": [
+      {
+        "parameters": [
+          {
+            "name": "thrower",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "getItem": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+      }
+    ],
+    "setItem": [
+      {
+        "parameters": [
+          {
+            "name": "itemStack",
+            "type": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+          }
+        ]
+      }
+    ],
+    "setInfinitePickupDelay": [
+      {}
+    ],
+    "setDefaultPickupDelay": [
+      {}
+    ],
+    "setNoDespawn": [
+      {}
+    ],
+    "canPickup": [
+      {
+        "return": "boolean"
+      }
+    ]
+  }
+}

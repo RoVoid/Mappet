@@ -1,0 +1,10 @@
+{
+  "docs": "",
+  "methods": {
+    "getMinecraftMorph": [
+      {
+        "return": "mchorse.metamorph.api.morphs.AbstractMorph"
+      }
+    ]
+  }
+}

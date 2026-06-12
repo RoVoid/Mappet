@@ -1,0 +1,179 @@
+{
+  "docs": "",
+  "methods": {
+    "getScript": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "getFunction": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "getSubject": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.IScriptEntity"
+      }
+    ],
+    "getObject": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.IScriptEntity"
+      }
+    ],
+    "getPlayer": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
+      }
+    ],
+    "getNPC": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.entities.ScriptNpc"
+      }
+    ],
+    "getWorld": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.world.ScriptWorld"
+      }
+    ],
+    "getServer": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ScriptServer"
+      }
+    ],
+    "getValues": [
+      {
+        "return": "java.util.Map"
+      }
+    ],
+    "getValue": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.Object"
+      }
+    ],
+    "setValue": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "java.lang.Object"
+          }
+        ]
+      }
+    ],
+    "cancel": [
+      {}
+    ],
+    "scheduleScript": [
+      {
+        "parameters": [
+          {
+            "name": "script",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "function",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "delay",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "delay",
+            "type": "int"
+          },
+          {
+            "name": "function",
+            "type": "jdk.nashorn.api.scripting.ScriptObjectMirror"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "delay",
+            "type": "int"
+          },
+          {
+            "name": "consumer",
+            "type": "java.util.function.Consumer"
+          }
+        ]
+      }
+    ],
+    "executeCommand": [
+      {
+        "parameters": [
+          {
+            "name": "command",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "int"
+      }
+    ],
+    "executeScript": [
+      {
+        "parameters": [
+          {
+            "name": "scriptName",
+            "type": "java.lang.String"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "scriptName",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "function",
+            "type": "java.lang.String"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "scriptName",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "function",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "args",
+            "type": "java.lang.Object"
+          }
+        ]
+      }
+    ],
+    "send": [
+      {
+        "parameters": [
+          {
+            "name": "message",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ]
+  }
+}

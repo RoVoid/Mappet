@@ -1,0 +1,18 @@
+{
+  "docs": "",
+  "methods": {
+    "shouldExecute": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "shouldContinueExecuting": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "startExecuting": [
+      {}
+    ]
+  }
+}

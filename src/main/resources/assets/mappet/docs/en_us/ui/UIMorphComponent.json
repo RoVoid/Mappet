@@ -1,0 +1,193 @@
+{
+  "docs": "Morph UI component.\n\n \u003cp\u003eThis component allows to display a morph. Users can inspect it, but it can also be\n edited, if configured. If you want disable users to turn around the morph by disabling\n user input using {@link UIComponent#enabled(boolean)}.\u003c/p\u003e\n\n \u003cp\u003eIf this component is editable, then the value that gets written to UI context\u0027s data\n (if ID is present) is an NBT compound tag that represents a morph.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link MappetUIBuilder#morph(AbstractMorph)} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI().background();\n        var layout \u003d ui.layout();\n\n        layout.getCurrent().rx(0.5).ry(1).wh(300, 100).anchor(0.5, 1);\n\n        var steve \u003d mappet.createMorph(\"{CustomPose:{Size:[0.6f,1.8f,0.6f],Poses:{right_arm:{P:[-6.0f,-2.0f,0.0f],R:[-83.0f,41.0f,0.0f]},left_leg:{P:[2.0f,-12.0f,0.0f]},right_armwear:{P:[0.0f,-4.0f,0.0f]},outer:{P:[0.0f,4.0f,0.0f]},left_legwear:{P:[0.0f,-6.0f,0.0f]},body:{P:[0.0f,8.0f,0.0f]},bodywear:{P:[0.0f,-6.0f,0.0f]},head:{P:[0.0f,8.0f,0.0f],R:[18.0f,0.0f,9.0f]},left_arm:{P:[6.0f,-2.0f,0.0f]},right_leg:{P:[-2.0f,-12.0f,0.0f]},right_legwear:{P:[0.0f,-6.0f,0.0f]},anchor:{P:[0.0f,16.0f,0.0f]},left_armwear:{P:[0.0f,-4.0f,0.0f]}}},Settings:{Hands:1b},Name:\\\"blockbuster.fred\\\"}\");\n        var morph \u003d layout.morph(steve);\n\n        morph.position(-0.019, 1.5, 0).rotation(-11, 24).distance(1.6).fov(40);\n        morph.enabled(false).wh(100, 100);\n\n        var label \u003d layout.label(\"Steve\").background(0xaa000000);\n\n        label.xy(0, 80).wh(100, 20).labelAnchor(0.5, 0.5);\n\n        var graphics \u003d layout.graphics();\n        var h \u003d 54;\n        var y \u003d 30;\n\n        // Draw the background bubble\n        graphics.xy(100, y).wh(200, 100);\n        graphics.rect(4, 5, 192, h - 12, 0xff000000);\n        graphics.rect(5, 4, 190, h - 10, 0xff000000);\n        graphics.rect(5, 5, 190, h - 12, 0xffffffff);\n        graphics.rect(4, 11, 1, 4, 0xffffffff);\n        graphics.rect(3, 10, 1, 5, 0xff000000);\n        graphics.rect(3, 11, 1, 3, 0xffffffff);\n        graphics.rect(2, 10, 1, 4, 0xff000000);\n        graphics.rect(2, 11, 1, 2, 0xffffffff);\n        graphics.rect(1, 10, 1, 3, 0xff000000);\n        graphics.rect(1, 11, 1, 1, 0xffffffff);\n        graphics.rect(0, 10, 1, 2, 0xff000000);\n        graphics.rect(-1, 10, 1, 1, 0xff000000);\n\n        var text \u003d layout.text(\"Well, hello there! I expected you...\\n\\nMy name is Steve, and yours?\");\n\n        text.color(0x000000, false).xy(110, y + 10).wh(180, 80);\n\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e",
+  "methods": {
+    "morph": [
+      {
+        "parameters": [
+          {
+            "name": "morph",
+            "type": "mchorse.metamorph.api.morphs.AbstractMorph"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent",
+        "docs": "Set display morph.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n\n    // Set Alex morph\n    uiContext.get(\"morph\").morph(mappet.createMorph(\u0027{Name:\"blockbuster.alex\"}\u0027));\n }\u003c/pre\u003e"
+      }
+    ],
+    "editing": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent",
+        "docs": "Enable an ability for players to pick or edit the morph.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n\n    // Enable morph editing\n    uiContext.get(\"morph\").editing();\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "editing",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent",
+        "docs": "Toggle an ability for players to pick or edit the morph.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n\n    // Disable morph editing\n    uiContext.get(\"morph\").editing(false);\n }\u003c/pre\u003e"
+      }
+    ],
+    "position": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "float"
+          },
+          {
+            "name": "y",
+            "type": "float"
+          },
+          {
+            "name": "z",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent",
+        "docs": "Change camera\u0027s orbit position in the morph component. The default camera position (\u003ccode\u003e0\u003c/code\u003e,\n \u003ccode\u003e1\u003c/code\u003e, \u003ccode\u003e0\u003c/code\u003e).\n\n \u003cp\u003eProTip: you can enable UI debug option in Ctrl + 0 \u0026gt; Mappet, you can position the morph\n after running the script, right click somewhere within its frame, and click Copy camera\n information... context menu item. It will copy the configuration of camera, which you can\n paste into the code.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n\n    // Set camera position\n    uiContext.get(\"morph\").position(0, 1, 0.5);\n }\u003c/pre\u003e"
+      }
+    ],
+    "rotation": [
+      {
+        "parameters": [
+          {
+            "name": "pitch",
+            "type": "float"
+          },
+          {
+            "name": "yaw",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent",
+        "docs": "Change camera orbit rotation in the morph component. The default camera rotation (\u003ccode\u003e0\u003c/code\u003e, \u003ccode\u003e0\u003c/code\u003e).\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n\n    // Set camera rotation\n    uiContext.get(\"morph\").rotation(15, 0);\n }\u003c/pre\u003e"
+      }
+    ],
+    "distance": [
+      {
+        "parameters": [
+          {
+            "name": "distance",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent",
+        "docs": "Change camera distance from camera orbit position in the morph component. The default\n camera distance is \u003ccode\u003e2\u003c/code\u003e.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n\n    // Set camera distance\n    uiContext.get(\"morph\").distance(4);\n }\u003c/pre\u003e"
+      }
+    ],
+    "fov": [
+      {
+        "parameters": [
+          {
+            "name": "fov",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIMorphComponent",
+        "docs": "Change camera Field of View in the morph component. The default FOV is \u003ccode\u003e70\u003c/code\u003e.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n\n    // Set camera FOV\n    uiContext.get(\"morph\").fov(50);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getDefaultUpdateDelay": [
+      {
+        "return": "int"
+      }
+    ],
+    "applyProperty": [
+      {
+        "parameters": [
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          },
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          }
+        ]
+      }
+    ],
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "mc",
+            "type": "net.minecraft.client.Minecraft"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "resetContext": [
+      {
+        "parameters": [
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ]
+      }
+    ],
+    "createContext": [
+      {
+        "parameters": [
+          {
+            "name": "menu",
+            "type": "mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ]
+      }
+    ],
+    "populateData": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "serializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "deserializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ]
+  }
+}

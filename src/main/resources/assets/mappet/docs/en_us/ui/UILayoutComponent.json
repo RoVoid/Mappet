@@ -1,0 +1,106 @@
+{
+  "docs": "Layout UI component.\n\n \u003cp\u003eThis UI component does nothing, beside managing placement of other\n components. Layout UI component have three different modes upon which\n child components can be placed: column, row, and grid.\u003c/p\u003e\n\n \u003cp\u003eAdditionally, column mode supports scrolling when there are too many\n components within its frame.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link MappetUIBuilder#layout()},\n {@link MappetUIBuilder#column(int)}, {@link MappetUIBuilder#row(int)}, and\n {@link MappetUIBuilder#grid(int)} methods.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI().background();\n        var column \u003d ui.column(4, 10);\n\n        column.getCurrent().scroll().rxy(0.5, 0.5).w(240).rh(0.8).anchor(0.5);\n\n        var row \u003d column.row(5);\n        var name \u003d row.column(4);\n\n        name.label(\"Name\").h(8);\n        name.textbox().id(\"name\").h(20);\n\n        var lastname \u003d row.column(4);\n\n        lastname.label(\"Last name\").h(8);\n        lastname.textbox().id(\"lastname\").h(20);\n\n        column.toggle(\"I agree to ToS\").id(\"toggle\").h(14);\n        column.text(\"The terms of service are following: you agree that your data will be used by an AI to generate funny cat and dog videos based entirely on your name and lastname.\\n\\nYou also agree to give us your time to view those videos, because we said so.\").color(0xaaaaaa, false).marginTop(8);\n        column.button(\"Oh... a button?\").h(20).marginTop(12);\n\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e",
+  "methods": {
+    "scroll": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.UILayoutComponent",
+        "docs": "Enables scrolling. This option works only with {@link MappetUIBuilder#column(int)}\n layout component.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI().background();\n        var column \u003d ui.column(4, 10);\n\n        column.getCurrent().scroll().rxy(0.5, 0.5).wh(200, 200).anchor(0.5);\n\n        column.label(\"Name\").h(8);\n        column.textbox().id(\"name\").h(20);\n        column.label(\"Last name\").h(8);\n        column.textbox().id(\"lastname\").h(20);\n\n        column.toggle(\"I agree to ToS\").id(\"toggle\").h(14);\n        column.text(\"The terms of service are following: you agree that your data will be used by an AI to generate funny cat and dog videos based entirely on your name and lastname.\\n\\nYou also agree to give us your time to view those videos, because we said so.\").color(0xaaaaaa, false).marginTop(8);\n\n        for (var i \u003d 0; i \u003c 10; i++)\n        {\n            column.button(\"Button \" + (i + 1)).h(20);\n        }\n\n        column.text(\"These 10 buttons above demonstrate the ability of this layout element to scroll down.\").marginTop(12);\n\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "scrollSize": [
+      {
+        "parameters": [
+          {
+            "name": "scrollSize",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UILayoutComponent",
+        "docs": "Set manually scroll size of the layout element. This works only with\n basic {@link MappetUIBuilder#layout()} component.\n\n \u003cp\u003eIf {@link UILayoutComponent#horizontal()} was enabled earlier,\n then this value will change the max scrollable to width, rather than\n height.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var size \u003d 400;\n\n        var ui \u003d mappet.createUI().background();\n\n        // Demonstration of manual vertical scroll area\n        var vertical \u003d ui.layout();\n\n        vertical.getCurrent().scroll().scrollSize(size).rxy(0.25, 0.5).wh(150, 200).anchor(0.5);\n        vertical.button(\"Top left\").xy(10, 10).wh(100, 20);\n        vertical.button(\"Middle\").rx(0.5, -50).y(size / 2 - 10).wh(100, 20);\n        vertical.button(\"Bottom right\").rx(1, -110).y(size - 30).wh(100, 20);\n\n        ui.label(\"Vertical scroll\").background(0x88000000).rx(0.25).ry(0.5, -120).wh(100, 20).anchorX(0.5).labelAnchor(0.5, 0);\n\n        // Demonstration of manual horizontal scroll area\n        var horizontal \u003d ui.layout();\n\n        horizontal.getCurrent().scroll().horizontal().scrollSize(size).rxy(0.75, 0.5).wh(150, 200).anchor(0.5);\n        horizontal.button(\"Top left\").xy(10, 10).wh(100, 20);\n        horizontal.button(\"Middle\").x(size / 2 - 50).ry(0.5, -10).wh(100, 20);\n        horizontal.button(\"Bottom right\").x(size - 110).ry(1, -30).wh(100, 20);\n\n        ui.label(\"Horizontal scroll\").background(0x88000000).rx(0.75).ry(0.5, -120).wh(100, 20).anchorX(0.5).labelAnchor(0.5, 0);\n\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "horizontal": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.UILayoutComponent",
+        "docs": "Enables horizontal mode. This usable when {@link UILayoutComponent#scroll()}\n is enabled."
+      }
+    ],
+    "width": [
+      {
+        "parameters": [
+          {
+            "name": "width",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UILayoutComponent",
+        "docs": "Per component width (in pixels) that should be sustained within\n {@link MappetUIBuilder#grid(int)} layout type. This doesn\u0027t work with any other\n component than grid."
+      }
+    ],
+    "items": [
+      {
+        "parameters": [
+          {
+            "name": "items",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UILayoutComponent",
+        "docs": "How many components per row that should be placed within\n {@link MappetUIBuilder#grid(int)} layout type. This option doesn\u0027t work with\n any other component than grid."
+      }
+    ],
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "mc",
+            "type": "net.minecraft.client.Minecraft"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "applyProperty": [
+      {
+        "parameters": [
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          },
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          }
+        ]
+      }
+    ],
+    "serializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "deserializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,280 @@
+{
+  "docs": "",
+  "methods": {
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "stack",
+            "type": "net.minecraft.item.ItemStack"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+      }
+    ],
+    "getMinecraftItemStack": [
+      {
+        "return": "net.minecraft.item.ItemStack",
+        "deprecated": true
+      }
+    ],
+    "asMinecraft": [
+      {
+        "return": "net.minecraft.item.ItemStack"
+      }
+    ],
+    "isEmpty": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "copy": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+      }
+    ],
+    "getItem": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.items.ScriptItem"
+      }
+    ],
+    "getMaxCount": [
+      {
+        "return": "int"
+      }
+    ],
+    "getCount": [
+      {
+        "return": "int"
+      }
+    ],
+    "setCount": [
+      {
+        "parameters": [
+          {
+            "name": "count",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "getMeta": [
+      {
+        "return": "int"
+      }
+    ],
+    "setMeta": [
+      {
+        "parameters": [
+          {
+            "name": "meta",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "hasData": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "getData": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+      }
+    ],
+    "setData": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+          }
+        ]
+      }
+    ],
+    "serialize": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+      }
+    ],
+    "getDisplayName": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "setDisplayName": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "getLore": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ],
+        "return": "java.lang.String"
+      }
+    ],
+    "getLoreList": [
+      {
+        "return": "java.util.List"
+      }
+    ],
+    "setLore": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          },
+          {
+            "name": "string",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "addLore": [
+      {
+        "parameters": [
+          {
+            "name": "string",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "clearAllLores": [
+      {}
+    ],
+    "clearLore": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "clearAllEnchantments": [
+      {}
+    ],
+    "getCanDestroyBlocks": [
+      {
+        "return": "java.util.List"
+      }
+    ],
+    "addCanDestroyBlock": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "clearAllCanDestroyBlocks": [
+      {}
+    ],
+    "clearCanDestroyBlock": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "getCanPlaceOnBlocks": [
+      {
+        "return": "java.util.List"
+      }
+    ],
+    "addCanPlaceOnBlock": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "clearAllCanPlaceOnBlocks": [
+      {}
+    ],
+    "clearCanPlaceOnBlock": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "getRepairCost": [
+      {
+        "return": "int"
+      }
+    ],
+    "setRepairCost": [
+      {
+        "parameters": [
+          {
+            "name": "cost",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "isUnbreakable": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "setUnbreakable": [
+      {
+        "parameters": [
+          {
+            "name": "unbreakable",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "add": [
+      {
+        "parameters": [
+          {
+            "name": "amount",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "equals": [
+      {
+        "parameters": [
+          {
+            "name": "other",
+            "type": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+          }
+        ],
+        "return": "boolean"
+      }
+    ]
+  }
+}

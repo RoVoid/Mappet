@@ -1,0 +1,101 @@
+{
+  "docs": "",
+  "methods": {
+    "color": [
+      {
+        "parameters": [
+          {
+            "name": "color",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UILabelBaseComponent",
+        "docs": "Change text color of this component by providing hex RGB.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n\n    // Set label\u0027s text color to toxic green\n    uiContext.get(\"component\").color(0x00ff00);\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "color",
+            "type": "int"
+          },
+          {
+            "name": "shadow",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UILabelBaseComponent",
+        "docs": "Change text color of this component by providing hex RGB.\n Optionally enable text shadow.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n\n    // Set label\u0027s text color to black (and without text shadow)\n    uiContext.get(\"component\").color(0x000000, false);\n }\u003c/pre\u003e"
+      }
+    ],
+    "label": [
+      {
+        "parameters": [
+          {
+            "name": "label",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UILabelBaseComponent",
+        "docs": "Set label for label, toggle and text UI components, or change\n the input value for textbox and textarea components.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n\n    // Assuming that title is a label UI component\n    uiContext.get(\"title\").label(\"Application form\");\n\n    // Assuming that prerequisites is a text UI component\n    uiContext.get(\"prerequisites\").label(\"This is an application form for enrolling into H.P. Lovecraft\u0027s book club.\\n\\n* - are required fields\");\n\n    // Assuming that fullname is a textbox UI component\n    uiContext.get(\"fullname\").label(\"John Smith\");\n\n    // Assuming that description is a textarea UI component\n    uiContext.get(\"description\").label(\"I\u0027m John Smith, I\u0027m from Alaska, and I like fishing.\");\n\n    // Assuming that adult is a toggle UI component\n    uiContext.get(\"adult\").label(\"Adult\");\n }\u003c/pre\u003e"
+      }
+    ],
+    "getLabel": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "apply": [
+      {
+        "parameters": [
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "applyProperty": [
+      {
+        "parameters": [
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          },
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          }
+        ]
+      }
+    ],
+    "serializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "deserializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ]
+  }
+}

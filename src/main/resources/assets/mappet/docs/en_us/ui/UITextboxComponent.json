@@ -1,0 +1,91 @@
+{
+  "docs": "Textbox UI component.\n\n \u003cp\u003eThis component allows users to input a text line (for multi-line input\n use {@link UITextareaComponent} component). This could be used to request\n the player to input names.\u003c/p\u003e\n\n \u003cp\u003eThe value that gets written to UI context\u0027s data (if ID is present) is\n the string that user typed into the component.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link MappetUIBuilder#textbox()} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var textbox \u003d ui.textbox().id(\"textbox\").tooltip(\"Enter your name:\");\n\n        textbox.rxy(0.5, 0.5).wh(160, 20).anchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var data \u003d uiContext.getData();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"textbox\")\n        {\n            c.getSubject().send(\"Your name is: \" + data.getString(\"textbox\"));\n        }\n    }\n }\u003c/pre\u003e",
+  "methods": {
+    "maxLength": [
+      {
+        "parameters": [
+          {
+            "name": "maxLength",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UITextboxComponent",
+        "docs": "Change component\u0027s max length (how many character max can be inputted).\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n    uiContext.get(\"textbox\").maxLength(68);\n }\u003c/pre\u003e"
+      }
+    ],
+    "noBackground": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.UITextboxComponent",
+        "docs": "Disable textbox\u0027s background.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n    uiContext.get(\"textbox\").noBackground();\n }\u003c/pre\u003e"
+      }
+    ],
+    "getDefaultUpdateDelay": [
+      {
+        "return": "int"
+      }
+    ],
+    "applyProperty": [
+      {
+        "parameters": [
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          },
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          }
+        ]
+      }
+    ],
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "mc",
+            "type": "net.minecraft.client.Minecraft"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "populateData": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "serializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "deserializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ]
+  }
+}

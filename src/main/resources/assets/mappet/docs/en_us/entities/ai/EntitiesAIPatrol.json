@@ -1,0 +1,57 @@
+{
+  "docs": "",
+  "methods": {
+    "shouldExecute": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "shouldContinueExecuting": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "startExecuting": [
+      {}
+    ],
+    "resetTask": [
+      {}
+    ],
+    "updateTask": [
+      {}
+    ],
+    "getPatrolPoints": [
+      {
+        "return": "net.minecraft.util.math.BlockPos"
+      }
+    ],
+    "getShouldCirculate": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "getExecuteCommandOnArrival": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "addPatrolPoint": [
+      {
+        "parameters": [
+          {
+            "name": "point",
+            "type": "net.minecraft.util.math.BlockPos"
+          },
+          {
+            "name": "shouldCirculate",
+            "type": "boolean"
+          },
+          {
+            "name": "executeCommandOnArrival",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ]
+  }
+}

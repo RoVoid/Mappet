@@ -1,0 +1,59 @@
+{
+  "docs": "Text area UI component.\n\n \u003cp\u003eThis component allows users to input multiple lines of text (for single-line\n input use {@link UITextboxComponent} component). This could be used to let players\n input a multi-line description about themselves.\u003c/p\u003e\n\n \u003cp\u003eThe value that gets written to UI context\u0027s data (if ID is present) is\n the multi-line string that user typed into the component.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link MappetUIBuilder#textarea(String)} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var s \u003d c.getSubject();\n        var story \u003d s.getStates().getString(\"story\");\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var textarea \u003d ui.textarea(story).id(\"textarea\").tooltip(\"Tell us your story...\");\n\n        // Don\u0027t send updates too often, only half a second after the player\n        // stopped typing into a text area\n        textarea.updateDelay(500);\n        textarea.rxy(0.5, 0.5).wh(300, 200).anchor(0.5);\n        s.openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var data \u003d uiContext.getData();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"textarea\")\n        {\n            // Write down the input\n            c.getSubject().getStates().setString(\"story\", data.getString(\"textarea\"));\n        }\n    }\n }\u003c/pre\u003e",
+  "methods": {
+    "noBackground": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.UITextareaComponent",
+        "docs": "Disable textarea\u0027s background.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n    uiContext.get(\"textarea\").noBackground();\n }\u003c/pre\u003e"
+      }
+    ],
+    "getDefaultUpdateDelay": [
+      {
+        "return": "int"
+      }
+    ],
+    "applyProperty": [
+      {
+        "parameters": [
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          },
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          }
+        ]
+      }
+    ],
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "mc",
+            "type": "net.minecraft.client.Minecraft"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "populateData": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,1596 @@
+{
+  "docs": "",
+  "methods": {
+    "getMinecraftWorld": [
+      {
+        "return": "net.minecraft.world.World",
+        "deprecated": true
+      }
+    ],
+    "asMinecraft": [
+      {
+        "return": "net.minecraft.world.World"
+      }
+    ],
+    "setGameRule": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "java.lang.Object"
+          }
+        ]
+      }
+    ],
+    "getGameRule": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.Object"
+      }
+    ],
+    "isBlockLoaded": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "boolean"
+      },
+      {
+        "parameters": [
+          {
+            "name": "newPos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "setBlock": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ]
+      }
+    ],
+    "removeBlock": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ]
+      }
+    ],
+    "getBlock": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+      },
+      {
+        "parameters": [
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+      }
+    ],
+    "hasTileEntity": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "boolean"
+      },
+      {
+        "parameters": [
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "setTileEntity": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          },
+          {
+            "name": "tileData",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "tileData",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+          }
+        ]
+      }
+    ],
+    "getTileEntity": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.blocks.ScriptTileEntity"
+      },
+      {
+        "parameters": [
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.blocks.ScriptTileEntity"
+      }
+    ],
+    "replaceBlocks": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "newBlock",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "minX",
+            "type": "int"
+          },
+          {
+            "name": "minY",
+            "type": "int"
+          },
+          {
+            "name": "minZ",
+            "type": "int"
+          },
+          {
+            "name": "maxX",
+            "type": "int"
+          },
+          {
+            "name": "maxY",
+            "type": "int"
+          },
+          {
+            "name": "maxZ",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "newBlock",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "start",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "end",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "newBlock",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "box",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "newBlock",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "tileData",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+          },
+          {
+            "name": "minX",
+            "type": "int"
+          },
+          {
+            "name": "minY",
+            "type": "int"
+          },
+          {
+            "name": "minZ",
+            "type": "int"
+          },
+          {
+            "name": "maxX",
+            "type": "int"
+          },
+          {
+            "name": "maxY",
+            "type": "int"
+          },
+          {
+            "name": "maxZ",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "newBlock",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "tileData",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+          },
+          {
+            "name": "start",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "end",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "newBlock",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "tileData",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+          },
+          {
+            "name": "box",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+          }
+        ]
+      }
+    ],
+    "hasInventory": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "boolean"
+      },
+      {
+        "parameters": [
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "getInventory": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.items.ScriptInventory"
+      }
+    ],
+    "isRaining": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "setRaining": [
+      {
+        "parameters": [
+          {
+            "name": "raining",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "getTime": [
+      {
+        "return": "long"
+      }
+    ],
+    "setTime": [
+      {
+        "parameters": [
+          {
+            "name": "time",
+            "type": "long"
+          }
+        ]
+      }
+    ],
+    "getTotalTime": [
+      {
+        "return": "long"
+      }
+    ],
+    "getDimensionId": [
+      {
+        "return": "int"
+      }
+    ],
+    "spawnParticles": [
+      {
+        "parameters": [
+          {
+            "name": "type",
+            "type": "net.minecraft.util.EnumParticleTypes"
+          },
+          {
+            "name": "longDistance",
+            "type": "boolean"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "number",
+            "type": "int"
+          },
+          {
+            "name": "dx",
+            "type": "double"
+          },
+          {
+            "name": "dy",
+            "type": "double"
+          },
+          {
+            "name": "dz",
+            "type": "double"
+          },
+          {
+            "name": "speed",
+            "type": "double"
+          },
+          {
+            "name": "args",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "type",
+            "type": "net.minecraft.util.EnumParticleTypes"
+          },
+          {
+            "name": "longDistance",
+            "type": "boolean"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "number",
+            "type": "int"
+          },
+          {
+            "name": "offset",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "speed",
+            "type": "double"
+          },
+          {
+            "name": "args",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "entity",
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
+          },
+          {
+            "name": "type",
+            "type": "net.minecraft.util.EnumParticleTypes"
+          },
+          {
+            "name": "longDistance",
+            "type": "boolean"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "number",
+            "type": "int"
+          },
+          {
+            "name": "dx",
+            "type": "double"
+          },
+          {
+            "name": "dy",
+            "type": "double"
+          },
+          {
+            "name": "dz",
+            "type": "double"
+          },
+          {
+            "name": "speed",
+            "type": "double"
+          },
+          {
+            "name": "args",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "entity",
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
+          },
+          {
+            "name": "type",
+            "type": "net.minecraft.util.EnumParticleTypes"
+          },
+          {
+            "name": "longDistance",
+            "type": "boolean"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "number",
+            "type": "int"
+          },
+          {
+            "name": "offset",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "speed",
+            "type": "double"
+          },
+          {
+            "name": "args",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "spawnEntity": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "compound",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.IScriptEntity"
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "compound",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.IScriptEntity"
+      }
+    ],
+    "spawnNpc": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "state",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.ScriptNpc"
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "state",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "yaw",
+            "type": "float"
+          },
+          {
+            "name": "pitch",
+            "type": "float"
+          },
+          {
+            "name": "headYaw",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.ScriptNpc"
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "state",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.ScriptNpc"
+      },
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "state",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "rot",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.ScriptNpc"
+      }
+    ],
+    "getEntities": [
+      {
+        "parameters": [
+          {
+            "name": "x1",
+            "type": "double"
+          },
+          {
+            "name": "y1",
+            "type": "double"
+          },
+          {
+            "name": "z1",
+            "type": "double"
+          },
+          {
+            "name": "x2",
+            "type": "double"
+          },
+          {
+            "name": "y2",
+            "type": "double"
+          },
+          {
+            "name": "z2",
+            "type": "double"
+          }
+        ],
+        "return": "java.util.List"
+      },
+      {
+        "parameters": [
+          {
+            "name": "box",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+          }
+        ],
+        "return": "java.util.List"
+      },
+      {
+        "parameters": [
+          {
+            "name": "x1",
+            "type": "double"
+          },
+          {
+            "name": "y1",
+            "type": "double"
+          },
+          {
+            "name": "z1",
+            "type": "double"
+          },
+          {
+            "name": "x2",
+            "type": "double"
+          },
+          {
+            "name": "y2",
+            "type": "double"
+          },
+          {
+            "name": "z2",
+            "type": "double"
+          },
+          {
+            "name": "ignoreVolumeLimit",
+            "type": "boolean"
+          }
+        ],
+        "return": "java.util.List"
+      },
+      {
+        "parameters": [
+          {
+            "name": "box",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+          },
+          {
+            "name": "ignoreVolumeLimit",
+            "type": "boolean"
+          }
+        ],
+        "return": "java.util.List"
+      }
+    ],
+    "playSound": [
+      {
+        "parameters": [
+          {
+            "name": "event",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "volume",
+            "type": "float"
+          },
+          {
+            "name": "pitch",
+            "type": "float"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "event",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "volume",
+            "type": "float"
+          },
+          {
+            "name": "pitch",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "stopSound": [
+      {
+        "parameters": [
+          {
+            "name": "event",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "category",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "dropItemStack": [
+      {
+        "parameters": [
+          {
+            "name": "stack",
+            "type": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "mx",
+            "type": "double"
+          },
+          {
+            "name": "my",
+            "type": "double"
+          },
+          {
+            "name": "mz",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.ScriptEntityItem"
+      }
+    ],
+    "explode": [
+      {
+        "parameters": [
+          {
+            "name": "exploder",
+            "type": "mchorse.mappet.api.scripts.code.entities.IScriptEntity"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "distance",
+            "type": "float"
+          },
+          {
+            "name": "blazeGround",
+            "type": "boolean"
+          },
+          {
+            "name": "destroyTerrain",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "exploder",
+            "type": "mchorse.mappet.api.scripts.code.entities.IScriptEntity"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "distance",
+            "type": "float"
+          },
+          {
+            "name": "blazeGround",
+            "type": "boolean"
+          },
+          {
+            "name": "destroyTerrain",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "rayTrace": [
+      {
+        "parameters": [
+          {
+            "name": "x1",
+            "type": "double"
+          },
+          {
+            "name": "y1",
+            "type": "double"
+          },
+          {
+            "name": "z1",
+            "type": "double"
+          },
+          {
+            "name": "x2",
+            "type": "double"
+          },
+          {
+            "name": "y2",
+            "type": "double"
+          },
+          {
+            "name": "z2",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ScriptRayTrace"
+      }
+    ],
+    "rayTraceBlock": [
+      {
+        "parameters": [
+          {
+            "name": "x1",
+            "type": "double"
+          },
+          {
+            "name": "y1",
+            "type": "double"
+          },
+          {
+            "name": "z1",
+            "type": "double"
+          },
+          {
+            "name": "x2",
+            "type": "double"
+          },
+          {
+            "name": "y2",
+            "type": "double"
+          },
+          {
+            "name": "z2",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ScriptRayTrace"
+      }
+    ],
+    "isActive": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "boolean"
+      },
+      {
+        "parameters": [
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "testForBlock": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "boolean"
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "fill": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "x1",
+            "type": "int"
+          },
+          {
+            "name": "y1",
+            "type": "int"
+          },
+          {
+            "name": "z1",
+            "type": "int"
+          },
+          {
+            "name": "x2",
+            "type": "int"
+          },
+          {
+            "name": "y2",
+            "type": "int"
+          },
+          {
+            "name": "z2",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "start",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          },
+          {
+            "name": "end",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "box",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+          }
+        ]
+      }
+    ],
+    "spawnFallingBlock": [
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.IScriptEntity"
+      },
+      {
+        "parameters": [
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.IScriptEntity"
+      }
+    ],
+    "setFallingBlock": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.IScriptEntity",
+        "deprecated": true
+      }
+    ],
+    "makeBlockFall": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.IScriptEntity"
+      },
+      {
+        "parameters": [
+          {
+            "name": "pos",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.IScriptEntity"
+      }
+    ],
+    "fillTileEntities": [
+      {
+        "parameters": [
+          {
+            "name": "x1",
+            "type": "int"
+          },
+          {
+            "name": "y1",
+            "type": "int"
+          },
+          {
+            "name": "z1",
+            "type": "int"
+          },
+          {
+            "name": "x2",
+            "type": "int"
+          },
+          {
+            "name": "y2",
+            "type": "int"
+          },
+          {
+            "name": "z2",
+            "type": "int"
+          },
+          {
+            "name": "block",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          },
+          {
+            "name": "tileData",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+          }
+        ],
+        "deprecated": true
+      }
+    ],
+    "clone": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          },
+          {
+            "name": "xNew",
+            "type": "int"
+          },
+          {
+            "name": "yNew",
+            "type": "int"
+          },
+          {
+            "name": "zNew",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "x1",
+            "type": "int"
+          },
+          {
+            "name": "y1",
+            "type": "int"
+          },
+          {
+            "name": "z1",
+            "type": "int"
+          },
+          {
+            "name": "x2",
+            "type": "int"
+          },
+          {
+            "name": "y2",
+            "type": "int"
+          },
+          {
+            "name": "z2",
+            "type": "int"
+          },
+          {
+            "name": "xNew",
+            "type": "int"
+          },
+          {
+            "name": "yNew",
+            "type": "int"
+          },
+          {
+            "name": "zNew",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "box",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+          },
+          {
+            "name": "xNew",
+            "type": "int"
+          },
+          {
+            "name": "yNew",
+            "type": "int"
+          },
+          {
+            "name": "zNew",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "getBlockItem": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+      }
+    ],
+    "getBorder": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.world.ScriptWorldBorder"
+      }
+    ],
+    "getLight": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "int"
+      }
+    ],
+    "displayMorph": [
+      {
+        "parameters": [
+          {
+            "name": "morph",
+            "type": "mchorse.metamorph.api.morphs.AbstractMorph"
+          },
+          {
+            "name": "expiration",
+            "type": "int"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "yaw",
+            "type": "float"
+          },
+          {
+            "name": "pitch",
+            "type": "float"
+          },
+          {
+            "name": "range",
+            "type": "int"
+          },
+          {
+            "name": "player",
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
+          }
+        ]
+      }
+    ],
+    "createSchematic": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.mappet.MappetSchematic"
+      }
+    ],
+    "loadStructure": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.world.ScriptStructure"
+      }
+    ],
+    "shootBBGunProjectile": [
+      {
+        "parameters": [
+          {
+            "name": "shooter",
+            "type": "mchorse.mappet.api.scripts.code.entities.IScriptEntity"
+          },
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          },
+          {
+            "name": "yaw",
+            "type": "double"
+          },
+          {
+            "name": "pitch",
+            "type": "double"
+          },
+          {
+            "name": "gunPropsNbtString",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.IScriptEntity"
+      }
+    ]
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "docs": "",
+  "methods": {
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "world",
+            "type": "mchorse.mappet.api.scripts.code.world.ScriptWorld"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.mappet.MappetSchematic"
+      }
+    ],
+    "loadFromWorld": [
+      {
+        "parameters": [
+          {
+            "name": "x1",
+            "type": "int"
+          },
+          {
+            "name": "y1",
+            "type": "int"
+          },
+          {
+            "name": "z1",
+            "type": "int"
+          },
+          {
+            "name": "x2",
+            "type": "int"
+          },
+          {
+            "name": "y2",
+            "type": "int"
+          },
+          {
+            "name": "z2",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.mappet.MappetSchematic"
+      }
+    ],
+    "place": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          },
+          {
+            "name": "replaceBlocks",
+            "type": "boolean"
+          },
+          {
+            "name": "placeAir",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.mappet.MappetSchematic"
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          },
+          {
+            "name": "replaceBlocks",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.mappet.MappetSchematic"
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.mappet.MappetSchematic"
+      }
+    ],
+    "saveToFile": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.mappet.MappetSchematic"
+      }
+    ],
+    "loadFromFile": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.mappet.MappetSchematic"
+      }
+    ]
+  }
+}

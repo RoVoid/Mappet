@@ -1,0 +1,743 @@
+{
+  "docs": "Base UI component.\n\n \u003cp\u003eEvery UI component in UI API is based off this base component, and therefore\n they have all of the methods available for changing ID, margins, frame (x, y,\n width, and height), tooltip, visibility, enabled, keybinds and update delay.\u003c/p\u003e",
+  "methods": {
+    "id": [
+      {
+        "parameters": [
+          {
+            "name": "id",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set the ID of the component.\n\n \u003cp\u003eWithout ID, the data that can be inputted by players won\u0027t be sent\n into the script handler, so it is \u003cb\u003erequired\u003c/b\u003e to set component\u0027s\n ID if you want to receive the data from the component.\u003c/p\u003e\n\n \u003cp\u003e\u003cb\u003eBEWARE\u003c/b\u003e: multiple components must not share same ID, if they will\n it will certainly cause bugs in the data that you\u0027ll be receiving from the\n client and the way you retrieve components using {@link MappetUIContext#get(String)}.\u003c/p\u003e"
+      }
+    ],
+    "tooltip": [
+      {
+        "parameters": [
+          {
+            "name": "tooltip",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set a tooltip that will be displayed at the bottom of component\u0027s frame."
+      },
+      {
+        "parameters": [
+          {
+            "name": "tooltip",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "direction",
+            "type": "int",
+            "docs": "\u003ccode\u003e0\u003c/code\u003e is bottom.\n \u003ccode\u003e1\u003c/code\u003e is top.\n \u003ccode\u003e2\u003c/code\u003e is right.\n \u003ccode\u003e3\u003c/code\u003e is left."
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set a tooltip that will be displayed at specified side of component\u0027s frame.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n    uiContext.get(\"component\").tooltip(\"Enter your full name\", 1);\n }\u003c/pre\u003e\n\n \u003ccode\u003e1\u003c/code\u003e is top.\n \u003ccode\u003e2\u003c/code\u003e is right.\n \u003ccode\u003e3\u003c/code\u003e is left."
+      }
+    ],
+    "visible": [
+      {
+        "parameters": [
+          {
+            "name": "visible",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set component\u0027s visibility. Hiding components also disables any user input,\n i.e. despite button being invisible, it can\u0027t be clicked.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n    uiContext.get(\"button\").visible(false);\n }\u003c/pre\u003e"
+      }
+    ],
+    "enabled": [
+      {
+        "parameters": [
+          {
+            "name": "enabled",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Toggle component\u0027s user input. When the component is disabled, it can\u0027t\n receive any user input: no inputting text into or focusing textbox and\n textareas, no clicking on click area, icon button, or button, etc.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n    uiContext.get(\"button\").enabled(false);\n }\u003c/pre\u003e"
+      }
+    ],
+    "margin": [
+      {
+        "parameters": [
+          {
+            "name": "margin",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set margin to all sides.\n\n \u003cp\u003e\u003cb\u003eIMPORTANT\u003c/b\u003e: margins affect positioning only within layout component.\n They do absolutely nothing outside of column, row and grid layout components.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n    uiContext.get(\"button\").margin(10);\n }\u003c/pre\u003e"
+      }
+    ],
+    "marginTop": [
+      {
+        "parameters": [
+          {
+            "name": "margin",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set top margin. See {@link #margin(int)} method for more information about\n restrictions."
+      }
+    ],
+    "marginBottom": [
+      {
+        "parameters": [
+          {
+            "name": "margin",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set bottom margin. See {@link #margin(int)} method for more information\n about restrictions."
+      }
+    ],
+    "marginLeft": [
+      {
+        "parameters": [
+          {
+            "name": "margin",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set left margin. See {@link #margin(int)} method for more information about\n restrictions."
+      }
+    ],
+    "marginRight": [
+      {
+        "parameters": [
+          {
+            "name": "margin",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set right margin. See {@link #margin(int)} method for more information about\n restrictions."
+      }
+    ],
+    "keybind": [
+      {
+        "parameters": [
+          {
+            "name": "keyCode",
+            "type": "int"
+          },
+          {
+            "name": "action",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "label",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Add a keybind with no modifiers. See {@link #keybind(int, String, String, boolean, boolean)} for proper example."
+      },
+      {
+        "parameters": [
+          {
+            "name": "keyCode",
+            "type": "int"
+          },
+          {
+            "name": "action",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "label",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "ctrl",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Add a keybind with optional Control modifier.\n See {@link #keybind(int, String, String, boolean, boolean)} for proper example."
+      },
+      {
+        "parameters": [
+          {
+            "name": "keyCode",
+            "type": "int"
+          },
+          {
+            "name": "action",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "label",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "ctrl",
+            "type": "boolean"
+          },
+          {
+            "name": "shift",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Add a keybind with optional Control and/or Shift modifier(s)."
+      },
+      {
+        "parameters": [
+          {
+            "name": "keyCode",
+            "type": "int"
+          },
+          {
+            "name": "action",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "label",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "ctrl",
+            "type": "boolean"
+          },
+          {
+            "name": "shift",
+            "type": "boolean"
+          },
+          {
+            "name": "alt",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Add a keybind optionally with Control, Shift, and Alt key modifiers (i.e. while holding).\n\n \u003cpre\u003e{@code\n    // For more reference, check this page to find the list of all key codes:\n    // https://minecraft.fandom.com/wiki/Key_codes/Keyboard1\n    //\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var button \u003d ui.icon(\"upload\").id(\"icon\");\n\n        // 203 \u003d Arrow left\n        ui.getCurrent().keybind(203, \"left\", \"Change icon to left\");\n        // 205 \u003d Arrow right\n        ui.getCurrent().keybind(205, \"right\", \"Change icon to right\");\n        button.rxy(0.5, 0.5).wh(20, 20).anchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var key \u003d uiContext.getHotkey();\n\n        if (key \u003d\u003d\u003d \"left\")\n        {\n            uiContext.get(\"icon\").icon(\"leftload\");\n        }\n        else if (key \u003d\u003d\u003d \"right\")\n        {\n            uiContext.get(\"icon\").icon(\"rightload\");\n        }\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "context": [
+      {
+        "parameters": [
+          {
+            "name": "icon",
+            "type": "java.lang.String",
+            "docs": "Icon ID (see {@link UIIconButtonComponent})."
+          },
+          {
+            "name": "action",
+            "type": "java.lang.String",
+            "docs": "Action ID that will be used for handling with {@link MappetUIContext#getContext()}."
+          },
+          {
+            "name": "label",
+            "type": "java.lang.String",
+            "docs": "Label that will be displayed in the context menu item."
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Add a context menu item."
+      },
+      {
+        "parameters": [
+          {
+            "name": "icon",
+            "type": "java.lang.String",
+            "docs": "Icon ID (see {@link UIIconButtonComponent})."
+          },
+          {
+            "name": "action",
+            "type": "java.lang.String",
+            "docs": "Action ID that will be used for handling with {@link MappetUIContext#getContext()}."
+          },
+          {
+            "name": "label",
+            "type": "java.lang.String",
+            "docs": "Label that will be displayed in the context menu item."
+          },
+          {
+            "name": "color",
+            "type": "int",
+            "docs": "Background color highlight (in RGB hex format)."
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Add a context menu item.\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var label \u003d ui.label(\"Hello!\").id(\"label\").tooltip(\"Right click me...\");\n\n        label.rxy(0.5, 0.5).wh(160, 20).anchor(0.5).labelAnchor(0.5);\n        label.context(\"bubble\", \"a\", \"How are you?\");\n        label.context(\"remove\", \"b\", \"...\", 0xff0033);\n\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var data \u003d uiContext.getData();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"textbox\")\n        {\n            c.getSubject().send(\"Your name is: \" + data.getString(\"textbox\"));\n        }\n\n        var item \u003d uiContext.getContext();\n\n        if (item \u003d\u003d\u003d \"a\")\n        {\n            uiContext.get(\"label\").label(\"I\u0027m fine, and you?\");\n        }\n        else if (item \u003d\u003d\u003d \"b\")\n        {\n            uiContext.get(\"label\").label(\"\");\n        }\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "x": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set X in pixels relative to parent component."
+      }
+    ],
+    "rx": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set X relative in percents to parent component. Passed value should be\n \u003ccode\u003e0..1\u003c/code\u003e, where \u003ccode\u003e0\u003c/code\u003e is fully left, and \u003ccode\u003e1\u003c/code\u003e is fully right."
+      },
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "float",
+            "docs": "Percentage how far into X."
+          },
+          {
+            "name": "offset",
+            "type": "int",
+            "docs": "Offset in pixels (can be negative)."
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set X relative in percents to parent component with offset. Passed value should be\n \u003ccode\u003e0..1\u003c/code\u003e, where \u003ccode\u003e0\u003c/code\u003e is fully left, and \u003ccode\u003e1\u003c/code\u003e is fully right."
+      }
+    ],
+    "y": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set Y in pixels relative to parent component."
+      }
+    ],
+    "ry": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set Y relative in percents to parent component. Passed value should be\n \u003ccode\u003e0..1\u003c/code\u003e, where \u003ccode\u003e0\u003c/code\u003e is fully top, and \u003ccode\u003e1\u003c/code\u003e is fully bottom."
+      },
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "float",
+            "docs": "Percentage how far into Y."
+          },
+          {
+            "name": "offset",
+            "type": "int",
+            "docs": "Offset in pixels (can be negative)."
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set Y relative in percents to parent component with offset. Passed value should be\n \u003ccode\u003e0..1\u003c/code\u003e, where \u003ccode\u003e0\u003c/code\u003e is fully top, and \u003ccode\u003e1\u003c/code\u003e is fully bottom."
+      }
+    ],
+    "w": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set width in pixels."
+      }
+    ],
+    "rw": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set width relative in percents to parent component. Passed value should be\n \u003ccode\u003e0..1\u003c/code\u003e, where \u003ccode\u003e0\u003c/code\u003e is element will be \u003ccode\u003e0%\u003c/code\u003e of\n parent component\u0027s width, and \u003ccode\u003e1\u003c/code\u003e is \u003ccode\u003e100%\u003c/code\u003e of parent\u0027s\n component width."
+      },
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "float",
+            "docs": "Percentage of how wide relative to parent component."
+          },
+          {
+            "name": "offset",
+            "type": "int",
+            "docs": "Offset in pixels (can be negative)."
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set width relative in percents to parent component with offset. Passed value should be\n \u003ccode\u003e0..1\u003c/code\u003e, where \u003ccode\u003e0\u003c/code\u003e is element will be \u003ccode\u003e0%\u003c/code\u003e of\n parent component\u0027s width, and \u003ccode\u003e1\u003c/code\u003e is \u003ccode\u003e100%\u003c/code\u003e of parent\u0027s\n component width."
+      }
+    ],
+    "h": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set height in pixels."
+      }
+    ],
+    "rh": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set height relative in percents to parent component. Passed value should be\n \u003ccode\u003e0..1\u003c/code\u003e, where \u003ccode\u003e0\u003c/code\u003e is element will be \u003ccode\u003e0%\u003c/code\u003e of\n parent component\u0027s height, and \u003ccode\u003e1\u003c/code\u003e is \u003ccode\u003e100%\u003c/code\u003e of parent\u0027s\n component height."
+      },
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "float",
+            "docs": "Percentage of how tall relative to parent component."
+          },
+          {
+            "name": "offset",
+            "type": "int",
+            "docs": "Offset in pixels (can be negative)."
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set height relative in percents to parent component with offset. Passed value should be\n \u003ccode\u003e0..1\u003c/code\u003e, where \u003ccode\u003e0\u003c/code\u003e is element will be \u003ccode\u003e0%\u003c/code\u003e of\n parent component\u0027s height, and \u003ccode\u003e1\u003c/code\u003e is \u003ccode\u003e100%\u003c/code\u003e of parent\u0027s\n component height."
+      }
+    ],
+    "xy": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set X and Y in pixels relative to parent component."
+      }
+    ],
+    "rxy": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "float"
+          },
+          {
+            "name": "y",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set X and Y in pixels in percentage relative to parent component."
+      }
+    ],
+    "wh": [
+      {
+        "parameters": [
+          {
+            "name": "w",
+            "type": "int"
+          },
+          {
+            "name": "h",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set width and height in pixels."
+      }
+    ],
+    "rwh": [
+      {
+        "parameters": [
+          {
+            "name": "w",
+            "type": "float"
+          },
+          {
+            "name": "h",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set relative width and height in percentage relative to parent component."
+      }
+    ],
+    "anchor": [
+      {
+        "parameters": [
+          {
+            "name": "anchor",
+            "type": "float",
+            "docs": "Horizontal and vertical anchor."
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set horizontal and vertical alignment anchor."
+      },
+      {
+        "parameters": [
+          {
+            "name": "anchorX",
+            "type": "float",
+            "docs": "Horizontal anchor."
+          },
+          {
+            "name": "anchorY",
+            "type": "float",
+            "docs": "Vertical anchor."
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set horizontal and vertical alignment anchor."
+      }
+    ],
+    "anchorX": [
+      {
+        "parameters": [
+          {
+            "name": "anchor",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set horizontal alignment anchor."
+      }
+    ],
+    "anchorY": [
+      {
+        "parameters": [
+          {
+            "name": "anchor",
+            "type": "float"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set vertical alignment anchor."
+      }
+    ],
+    "updateDelay": [
+      {
+        "parameters": [
+          {
+            "name": "updateDelay",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIComponent",
+        "docs": "Set update delay in milliseconds (\u003ccode\u003e1000\u003c/code\u003e \u003d \u003ccode\u003e1\u003c/code\u003e second).\n\n \u003cp\u003eUpdate delay allows to limit how frequently data gets sent from the client\n to the hanlder script.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    // Assuming that ui is a MappetUIBuilder\n\n    // Change text box\u0027s update delay to 1 second meaning\n    // that a second after user didn\u0027t type anything into\n    // the text box it will send all the data to the handler script\n    ui.textbox().id(\"name\").updateDelay(1000);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getDefaultUpdateDelay": [
+      {
+        "return": "int"
+      }
+    ],
+    "apply": [
+      {
+        "parameters": [
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "applyKeybinds": [
+      {
+        "parameters": [
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "isDataReserved": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "resetContext": [
+      {
+        "parameters": [
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ]
+      }
+    ],
+    "createContext": [
+      {
+        "parameters": [
+          {
+            "name": "menu",
+            "type": "mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ]
+      }
+    ],
+    "change": [
+      {
+        "parameters": [
+          {
+            "name": "properties",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "clearChanges": [
+      {}
+    ],
+    "getChanges": [
+      {
+        "return": "java.util.Set"
+      }
+    ],
+    "handleChanges": [
+      {
+        "parameters": [
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          },
+          {
+            "name": "changes",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          }
+        ]
+      }
+    ],
+    "applyProperty": [
+      {
+        "parameters": [
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          },
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          }
+        ]
+      }
+    ],
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "mc",
+            "type": "net.minecraft.client.Minecraft"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "populateData": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "getChildComponents": [
+      {
+        "return": "java.util.List"
+      }
+    ],
+    "serializeNBT": [
+      {
+        "return": "net.minecraft.nbt.NBTTagCompound"
+      },
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "deserializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,426 @@
+{
+  "docs": "",
+  "methods": {
+    "createBlockState": [
+      {
+        "parameters": [
+          {
+            "name": "blockId",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "meta",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState",
+        "deprecated": true
+      },
+      {
+        "parameters": [
+          {
+            "name": "blockId",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState",
+        "deprecated": true
+      }
+    ],
+    "createBlock": [
+      {
+        "parameters": [
+          {
+            "name": "blockId",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "meta",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+      },
+      {
+        "parameters": [
+          {
+            "name": "blockId",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+      }
+    ],
+    "createBlockItem": [
+      {
+        "parameters": [
+          {
+            "name": "blockId",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "count",
+            "type": "int"
+          },
+          {
+            "name": "meta",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+      }
+    ],
+    "createCompound": [
+      {
+        "parameters": [
+          {
+            "name": "nbt",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+      },
+      {
+        "parameters": [
+          {
+            "name": "jsObject",
+            "type": "java.lang.Object"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+      }
+    ],
+    "createCompoundFromJS": [
+      {
+        "parameters": [
+          {
+            "name": "jsObject",
+            "type": "java.lang.Object"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+      }
+    ],
+    "createItem": [
+      {
+        "parameters": [
+          {
+            "name": "compound",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+      },
+      {
+        "parameters": [
+          {
+            "name": "itemId",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "count",
+            "type": "int"
+          },
+          {
+            "name": "meta",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+      }
+    ],
+    "createList": [
+      {
+        "parameters": [
+          {
+            "name": "nbt",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTList"
+      }
+    ],
+    "createListFromJS": [
+      {
+        "parameters": [
+          {
+            "name": "jsObject",
+            "type": "java.lang.Object"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTList"
+      }
+    ],
+    "createMorph": [
+      {
+        "parameters": [
+          {
+            "name": "compound",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+          }
+        ],
+        "return": "mchorse.metamorph.api.morphs.AbstractMorph"
+      }
+    ],
+    "createUI": [
+      {
+        "parameters": [
+          {
+            "name": "script",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "function",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.MappetUIBuilder"
+      }
+    ],
+    "encrypt": [
+      {
+        "parameters": [
+          {
+            "name": "text",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "secretKey",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.String"
+      }
+    ],
+    "decrypt": [
+      {
+        "parameters": [
+          {
+            "name": "encryptedText",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "secretKey",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.String"
+      }
+    ],
+    "dump": [
+      {
+        "parameters": [
+          {
+            "name": "object",
+            "type": "java.lang.Object"
+          },
+          {
+            "name": "simple",
+            "type": "boolean"
+          }
+        ],
+        "return": "java.lang.String"
+      }
+    ],
+    "format": [
+      {
+        "parameters": [
+          {
+            "name": "format",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "args",
+            "type": "java.lang.Object"
+          }
+        ],
+        "return": "java.lang.String"
+      }
+    ],
+    "get": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.Object"
+      }
+    ],
+    "getLogger": [
+      {
+        "return": "mchorse.mappet.MappetLogger"
+      }
+    ],
+    "getMappetEntity": [
+      {
+        "parameters": [
+          {
+            "name": "minecraftEntity",
+            "type": "net.minecraft.entity.Entity"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.IScriptEntity"
+      }
+    ],
+    "getParticleType": [
+      {
+        "parameters": [
+          {
+            "name": "type",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "net.minecraft.util.EnumParticleTypes"
+      }
+    ],
+    "getPotion": [
+      {
+        "parameters": [
+          {
+            "name": "type",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "net.minecraft.potion.Potion"
+      }
+    ],
+    "pack": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ScriptResourcePack"
+      }
+    ],
+    "set": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "object",
+            "type": "java.lang.Object"
+          }
+        ]
+      }
+    ],
+    "style": [
+      {
+        "parameters": [
+          {
+            "name": "styles",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.String"
+      }
+    ],
+    "toNBT": [
+      {
+        "parameters": [
+          {
+            "name": "object",
+            "type": "java.lang.Object"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+      }
+    ],
+    "getSkin": [
+      {
+        "parameters": [
+          {
+            "name": "nickname",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.String"
+      },
+      {
+        "parameters": [
+          {
+            "name": "nickname",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "source",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.String"
+      }
+    ],
+    "getSkinObject": [
+      {
+        "parameters": [
+          {
+            "name": "nickname",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.Object"
+      },
+      {
+        "parameters": [
+          {
+            "name": "nickname",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "source",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.Object"
+      }
+    ],
+    "getAllIcons": [
+      {
+        "return": "java.util.List"
+      }
+    ],
+    "translate": [
+      {
+        "parameters": [
+          {
+            "name": "locale",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "args",
+            "type": "java.lang.Object"
+          }
+        ],
+        "return": "java.lang.String"
+      },
+      {
+        "parameters": [
+          {
+            "name": "player",
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
+          },
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "args",
+            "type": "java.lang.Object"
+          }
+        ],
+        "return": "java.lang.String"
+      }
+    ]
+  }
+}

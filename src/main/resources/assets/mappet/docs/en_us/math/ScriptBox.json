@@ -1,0 +1,92 @@
+{
+  "docs": "",
+  "methods": {
+    "intersection": [
+      {
+        "parameters": [
+          {
+            "name": "box",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptBox"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "grow": [
+      {
+        "parameters": [
+          {
+            "name": "value",
+            "type": "double"
+          }
+        ]
+      }
+    ],
+    "offset": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ]
+      }
+    ],
+    "contains": [
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "double"
+          },
+          {
+            "name": "y",
+            "type": "double"
+          },
+          {
+            "name": "z",
+            "type": "double"
+          }
+        ],
+        "return": "boolean"
+      },
+      {
+        "parameters": [
+          {
+            "name": "vector",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "getBlocksPositions": [
+      {
+        "parameters": [
+          {
+            "name": "world",
+            "type": "mchorse.mappet.api.scripts.code.world.ScriptWorld"
+          },
+          {
+            "name": "state",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          }
+        ],
+        "return": "java.util.List"
+      }
+    ],
+    "toString": [
+      {
+        "return": "java.lang.String"
+      }
+    ]
+  }
+}

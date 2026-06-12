@@ -1,0 +1,18 @@
+{
+  "docs": "",
+  "methods": {
+    "shouldExecute": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "updateTask": [
+      {}
+    ],
+    "getCommand": [
+      {
+        "return": "java.lang.String"
+      }
+    ]
+  }
+}

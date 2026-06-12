@@ -1,0 +1,147 @@
+{
+  "docs": "String list UI component.\n\n \u003cp\u003eThis component allows users to pick a string out of a list of strings\n that you provided.\u003c/p\u003e\n\n \u003cp\u003eThe value that gets written to UI context\u0027s data (if ID is present) is\n the selected string that picked in the list.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link MappetUIBuilder#stringList(List)} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var s \u003d c.getSubject();\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var strings \u003d ui.stringList([\"Apple\", \"Orange\", \"Pineapple\", \"Avocado\"]).id(\"strings\").tooltip(\"Pick a fruit...\");\n        var label \u003d ui.label(\"...\").id(\"fruit\").visible(false);\n\n        strings.background(0x88000000).rxy(0.5, 0.5).wh(100, 240).anchor(0.5);\n        label.rx(0.5).ry(0.5, -160).anchor(0.5, 0.5);\n        label.background(0x88000000).labelAnchor(0.5, 0.5);\n        s.openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var data \u003d uiContext.getData();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"strings\")\n        {\n            uiContext.get(\"fruit\").label(data.getString(\"strings\")).visible(true);\n        }\n    }\n }\u003c/pre\u003e",
+  "methods": {
+    "values": [
+      {
+        "parameters": [
+          {
+            "name": "values",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIDropdownComponent",
+        "docs": "Replace values within this string list.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n\n    // Replace values in strings\n    uiContext.get(\"strings\").values(\"Tomato\", \"Cucumber\", \"Pepper\", \"Cabbage\");\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "values",
+            "type": "java.util.List"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIDropdownComponent",
+        "docs": "Replace values within this string list.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n    var vegetables \u003d [\"Tomato\", \"Cucumber\", \"Pepper\", \"Cabbage\"];\n\n    // Replace values in strings\n    uiContext.get(\"strings\").values(vegetables);\n }\u003c/pre\u003e"
+      }
+    ],
+    "setValues": [
+      {
+        "parameters": [
+          {
+            "name": "values",
+            "type": "java.util.List"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIDropdownComponent",
+        "docs": "Replace values within this string list.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n    var vegetables \u003d [\"Tomato\", \"Cucumber\", \"Pepper\", \"Cabbage\"];\n\n    // Replace values in strings\n    uiContext.get(\"strings\").setValues(vegetables);\n }\u003c/pre\u003e"
+      }
+    ],
+    "getValues": [
+      {
+        "return": "java.util.List",
+        "docs": "Returns values of this string list.\n\n \u003cpre\u003e{@code\n    var values \u003d uiContext.get(\"strings\").getValues();\n\n    for (var i in values)\n    {\n        c.send(values[i]);\n    }\n }\u003c/pre\u003e"
+      }
+    ],
+    "selected": [
+      {
+        "parameters": [
+          {
+            "name": "selected",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIDropdownComponent",
+        "docs": "Set the currently selected element.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n\n    // Set first string in the list to be selected\n    uiContext.get(\"strings\").selected(0);\n }\u003c/pre\u003e"
+      }
+    ],
+    "background": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.UIDropdownComponent",
+        "docs": "Set component\u0027s solid color background.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n\n    // Set half transparent black background\n    uiContext.get(\"strings\").background();\n }\u003c/pre\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "background",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIDropdownComponent",
+        "docs": "Set component\u0027s solid color background.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n\n    // Set half transparent toxic green background\n    uiContext.get(\"strings\").background(0x8800ff00);\n }\u003c/pre\u003e"
+      }
+    ],
+    "listHeight": [
+      {
+        "parameters": [
+          {
+            "name": "listHeight",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIDropdownComponent"
+      }
+    ],
+    "applyProperty": [
+      {
+        "parameters": [
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          },
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          }
+        ]
+      }
+    ],
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "mc",
+            "type": "net.minecraft.client.Minecraft"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "populateData": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "serializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "deserializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ]
+  }
+}

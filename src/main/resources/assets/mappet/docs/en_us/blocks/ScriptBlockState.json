@@ -1,0 +1,111 @@
+{
+  "docs": "",
+  "methods": {
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "state",
+            "type": "net.minecraft.block.state.IBlockState"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+      }
+    ],
+    "getMinecraftBlockState": [
+      {
+        "return": "net.minecraft.block.state.IBlockState",
+        "deprecated": true
+      }
+    ],
+    "asMinecraft": [
+      {
+        "return": "net.minecraft.block.state.IBlockState"
+      }
+    ],
+    "getBlockId": [
+      {
+        "return": "java.lang.String",
+        "deprecated": true
+      }
+    ],
+    "getId": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "getMeta": [
+      {
+        "return": "int"
+      }
+    ],
+    "isSame": [
+      {
+        "parameters": [
+          {
+            "name": "otherState",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "isSameBlock": [
+      {
+        "parameters": [
+          {
+            "name": "otherState",
+            "type": "mchorse.mappet.api.scripts.code.blocks.ScriptBlockState"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "isOpaque": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "hasCollision": [
+      {
+        "parameters": [
+          {
+            "name": "world",
+            "type": "mchorse.mappet.api.scripts.code.world.ScriptWorld"
+          },
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "z",
+            "type": "int"
+          }
+        ],
+        "return": "boolean"
+      },
+      {
+        "parameters": [
+          {
+            "name": "world",
+            "type": "mchorse.mappet.api.scripts.code.world.ScriptWorld"
+          },
+          {
+            "name": "vector",
+            "type": "mchorse.mappet.api.scripts.code.math.ScriptVector"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "isAir": [
+      {
+        "return": "boolean"
+      }
+    ]
+  }
+}

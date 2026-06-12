@@ -1,0 +1,15 @@
+{
+  "docs": "",
+  "methods": {
+    "getName": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "getPack": [
+      {
+        "return": "byte"
+      }
+    ]
+  }
+}

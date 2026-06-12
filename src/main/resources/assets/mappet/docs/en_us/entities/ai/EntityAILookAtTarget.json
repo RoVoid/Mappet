@@ -1,0 +1,29 @@
+{
+  "docs": "",
+  "methods": {
+    "shouldExecute": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "shouldContinueExecuting": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "startExecuting": [
+      {}
+    ],
+    "resetTask": [
+      {}
+    ],
+    "updateTask": [
+      {}
+    ],
+    "getTarget": [
+      {
+        "return": "net.minecraft.entity.Entity"
+      }
+    ]
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "docs": "",
+  "methods": {
+    "getMinecraftInventory": [
+      {
+        "return": "net.minecraft.inventory.IInventory",
+        "deprecated": true
+      }
+    ],
+    "asMinecraft": [
+      {
+        "return": "net.minecraft.inventory.IInventory"
+      }
+    ],
+    "isEmpty": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "size": [
+      {
+        "return": "int"
+      }
+    ],
+    "getStack": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+      }
+    ],
+    "removeStack": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+      }
+    ],
+    "setStack": [
+      {
+        "parameters": [
+          {
+            "name": "index",
+            "type": "int"
+          },
+          {
+            "name": "stack",
+            "type": "mchorse.mappet.api.scripts.code.items.ScriptItemStack"
+          }
+        ]
+      }
+    ],
+    "clear": [
+      {}
+    ],
+    "getName": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "hasCustomName": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "setName": [
+      {
+        "parameters": [
+          {
+            "name": "name",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ]
+  }
+}

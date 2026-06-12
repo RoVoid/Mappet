@@ -1,0 +1,91 @@
+{
+  "docs": "Clickable button component.\n\n \u003cp\u003eThis component displays a flat colored box with a label on top, which\n allows users to trigger the handler script. The value that gets written\n to UI context\u0027s data (if ID is present) is how many times the button\n was pressed.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link MappetUIBuilder#button(String)} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var button \u003d ui.button(\"Start...\").id(\"button\");\n\n        button.rxy(0.5, 0.5).wh(160, 20).anchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"button\")\n        {\n            var data \u003d uiContext.getData();\n            var pressed \u003d data.getInt(\"button\");\n\n            if (pressed \u003e\u003d 100)\n            {\n                c.send(\"We have a winner!\");\n            }\n\n            uiContext.get(\"button\").label(\"You pressed: \" + pressed);\n        }\n    }\n }\u003c/pre\u003e",
+  "methods": {
+    "background": [
+      {
+        "parameters": [
+          {
+            "name": "background",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIButtonComponent",
+        "docs": "Change button\u0027s background color by providing hex RGB.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n    uiContext.get(\"button\").background(0x00ff00);\n }\u003c/pre\u003e"
+      }
+    ],
+    "noBackground": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.UIButtonComponent",
+        "docs": "Disable button\u0027s background.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n    uiContext.get(\"button\").noBackground();\n }\u003c/pre\u003e"
+      }
+    ],
+    "isDataReserved": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "applyProperty": [
+      {
+        "parameters": [
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          },
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          }
+        ]
+      }
+    ],
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "mc",
+            "type": "net.minecraft.client.Minecraft"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "populateData": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "serializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "deserializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ]
+  }
+}

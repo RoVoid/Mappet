@@ -1,0 +1,173 @@
+{
+  "docs": "",
+  "methods": {
+    "getName": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "getColor": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "getPrefix": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "getSuffix": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "getNameTagVisibility": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "getDeathMessageVisibility": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "getCollisionRule": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "isAllowFriendlyFire": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "isSeeFriendlyInvisibles": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "setColor": [
+      {
+        "parameters": [
+          {
+            "name": "color",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "setPrefix": [
+      {
+        "parameters": [
+          {
+            "name": "prefix",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "setSuffix": [
+      {
+        "parameters": [
+          {
+            "name": "suffix",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "setNameTagVisibility": [
+      {
+        "parameters": [
+          {
+            "name": "tagVisibility",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "setDeathMessageVisibility": [
+      {
+        "parameters": [
+          {
+            "name": "deathMessageVisibility",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "setCollisionRule": [
+      {
+        "parameters": [
+          {
+            "name": "collisionRule",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "setAllowFriendlyFire": [
+      {
+        "parameters": [
+          {
+            "name": "enabled",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "setSeeFriendlyInvisibles": [
+      {
+        "parameters": [
+          {
+            "name": "enabled",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "getMinecraftTeam": [
+      {
+        "return": "net.minecraft.scoreboard.ScorePlayerTeam"
+      }
+    ],
+    "join": [
+      {
+        "parameters": [
+          {
+            "name": "players",
+            "type": "java.util.List"
+          }
+        ]
+      },
+      {
+        "parameters": [
+          {
+            "name": "player",
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
+          }
+        ]
+      }
+    ],
+    "kick": [
+      {
+        "parameters": [
+          {
+            "name": "players",
+            "type": "java.util.List"
+          }
+        ]
+      }
+    ],
+    "leave": [
+      {
+        "parameters": [
+          {
+            "name": "player",
+            "type": "mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer"
+          }
+        ]
+      }
+    ]
+  }
+}

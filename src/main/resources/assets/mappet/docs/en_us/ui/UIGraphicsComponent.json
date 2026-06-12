@@ -1,0 +1,576 @@
+{
+  "docs": "Graphics UI component.\n\n \u003cp\u003eThis component allows drawing solid colored rectangles, gradient rectangles,\n images loaded through Minecraft\u0027s texture manager, text and McLib icons. Think\n of it as a very primitive canvas implementation.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link MappetUIBuilder#graphics()} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n\n        // Background rendering\n        var back \u003d ui.graphics().rx(0.5, -150).ry(1, -250).wh(300, 250);\n        var icons \u003d Java.type(\"mchorse.mclib.client.gui.utils.IconRegistry\").icons.keySet();\n\n        back.shadow(80, 80, 300 - 160, 250 - 160, 0x88ff1493, 0x00ff1493, 80);\n        back.shadow(80, 80, 300 - 160, 250 - 160, 0x880088ff, 0x000088ff, 40);\n\n        for each (var icon in icons)\n        {\n            var x \u003d Math.random() * 280 + 10;\n            var y \u003d Math.random() * 230 + 10;\n\n            back.icon(icon, x - 1, y - 1, 0xff000000 + Math.random() * 0xffffff);\n        }\n\n        // Draw my favorite \"me\"\n        var m \u003d mappet.createMorph(\"{Skin:\\\"blockbuster:textures/entity/mchorse/skin.png\\\",CustomPose:{Size:[0.6f,1.8f,0.6f],Poses:{right_arm:{P:[-6.0f,-2.0f,0.0f],R:[-90.0f,-31.0f,0.0f]},left_leg:{P:[2.0f,-12.0f,0.0f]},right_armwear:{P:[0.0f,-4.0f,0.0f]},outer:{P:[0.0f,4.0f,0.0f]},left_legwear:{P:[0.0f,-6.0f,0.0f]},body:{P:[0.0f,8.0f,0.0f],R:[0.0f,-29.0f,0.0f]},bodywear:{P:[0.0f,-6.0f,0.0f]},head:{P:[0.0f,8.0f,0.0f],R:[7.0f,-51.0f,0.0f]},left_arm:{P:[6.0f,-2.0f,0.0f]},right_leg:{P:[-2.0f,-12.0f,0.0f]},right_legwear:{P:[0.0f,-6.0f,0.0f]},anchor:{P:[0.0f,16.0f,0.0f]},left_armwear:{P:[0.0f,-4.0f,0.0f]}}},BodyParts:[{Limb:\\\"head\\\",Morph:{Settings:{Hands:1b},Name:\\\"blockbuster.mchorse/head\\\"}}],Settings:{Hands:1b},Name:\\\"blockbuster.fred_3d\\\"}\");\n        var morph \u003d ui.morph(m).id(\"icon\");\n\n        morph.rx(0.5, -150).ry(1, -250).wh(300, 250).position(-0.017, 1.367, 0).rotation(0, 0).distance(2.2).fov(40).enabled(false);\n\n        // Draw foreground\n        var graphics \u003d ui.graphics().rx(0.5, -150).ry(1, -250).wh(300, 250);\n\n        // Draw small rectangles\n        for (var i \u003d 0; i \u003c 100; i++)\n        {\n            var x \u003d Math.random() * 280 + 10;\n            var y \u003d Math.random() * 230 + 10;\n\n            graphics.rect(x - 1, y - 1, 2, 2, 0x88000000 + Math.random() * 0xffffff);\n        }\n\n        graphics.gradient(0, 210, 300, 40, 0x00ff0000, 0xffff0000);\n        // This is Thanos\u0027 infinity gauntlet. just sayin in case it gets removed xd\n        graphics.image(\"https://i.pinimg.com/originals/6d/5a/99/6d5a99fa0f01dff1dd5de5e3b8244f8d.png\", 0, 75, 55, 100);\n        graphics.text(\"McThanos\", 120, 230, 0xffffff);\n\n        ui.label(\"Graphic Design is my passion\").color(0x00ff00).background(0x88000000).rxy(0.5, 0.25).wh(100, 20).anchor(0.5).labelAnchor(0.5);\n\n        c.getSubject().openUI(ui);\n    }\n }\u003c/pre\u003e",
+  "methods": {
+    "removeAll": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.ui.UIGraphicsComponent"
+      }
+    ],
+    "rect": [
+      {
+        "parameters": [
+          {
+            "name": "color",
+            "type": "int",
+            "docs": "ARGB color that fills the rectangle."
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw a solid colored rectangle."
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "w",
+            "type": "int",
+            "docs": "Width of the rectangle."
+          },
+          {
+            "name": "h",
+            "type": "int",
+            "docs": "Height of the rectangle."
+          },
+          {
+            "name": "color",
+            "type": "int",
+            "docs": "ARGB color that fills the rectangle."
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw a solid colored rectangle relative to graphics component\u0027s frame."
+      }
+    ],
+    "gradient": [
+      {
+        "parameters": [
+          {
+            "name": "primary",
+            "type": "int",
+            "docs": "ARGB color that fills top part of the gradient."
+          },
+          {
+            "name": "secondary",
+            "type": "int",
+            "docs": "ARGB color that fills bottom part of the gradient."
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw a vertical gradient rectangle."
+      },
+      {
+        "parameters": [
+          {
+            "name": "primary",
+            "type": "int",
+            "docs": "ARGB color that fills top part of the gradient."
+          },
+          {
+            "name": "secondary",
+            "type": "int",
+            "docs": "ARGB color that fills bottom part of the gradient."
+          },
+          {
+            "name": "horizontal",
+            "type": "boolean",
+            "docs": "Whether gradient is horizontal (\u003ccode\u003etrue\u003c/code\u003e) or vertical (\u003ccode\u003efalse\u003c/code\u003e)."
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw a vertical/horizontal gradient rectangle."
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "w",
+            "type": "int",
+            "docs": "Width of the rectangle."
+          },
+          {
+            "name": "h",
+            "type": "int",
+            "docs": "Height of the rectangle."
+          },
+          {
+            "name": "primary",
+            "type": "int",
+            "docs": "ARGB color that fills top part of the gradient."
+          },
+          {
+            "name": "secondary",
+            "type": "int",
+            "docs": "ARGB color that fills bottom part of the gradient."
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw a vertical gradient rectangle relative to graphics component\u0027s frame."
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "w",
+            "type": "int",
+            "docs": "Width of the rectangle."
+          },
+          {
+            "name": "h",
+            "type": "int",
+            "docs": "Height of the rectangle."
+          },
+          {
+            "name": "primary",
+            "type": "int",
+            "docs": "ARGB color that fills top or left part of the gradient."
+          },
+          {
+            "name": "secondary",
+            "type": "int",
+            "docs": "ARGB color that fills bottom or right part of the gradient."
+          },
+          {
+            "name": "horizontal",
+            "type": "boolean",
+            "docs": "Whether gradient is horizontal (\u003ccode\u003etrue\u003c/code\u003e) or vertical (\u003ccode\u003efalse\u003c/code\u003e)."
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw a gradient rectangle relative to graphics component\u0027s frame."
+      }
+    ],
+    "image": [
+      {
+        "parameters": [
+          {
+            "name": "image",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "textureWidth",
+            "type": "int"
+          },
+          {
+            "name": "textureHeight",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw an image."
+      },
+      {
+        "parameters": [
+          {
+            "name": "image",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "textureWidth",
+            "type": "int"
+          },
+          {
+            "name": "textureHeight",
+            "type": "int"
+          },
+          {
+            "name": "primary",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw an image."
+      },
+      {
+        "parameters": [
+          {
+            "name": "image",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "w",
+            "type": "int"
+          },
+          {
+            "name": "h",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw an image relative to graphics component\u0027s frame.\n\n \u003cp\u003eImage argument is a so called \"resource location.\" For example, if you want\n to draw pig\u0027s skin on the screen you can input \"minecraft:textures/entity/pig/pig.png\"\n and it will draw it on the screen.\u003c/p\u003e\n\n \u003cp\u003eIf you have Blockbuster enabled, it can also display images from internet\n by inputting image\u0027s URL. Although, sometimes it won\u0027t work due to incorrect headers\n that doesn\u0027t identify a web-browser.\u003c/p\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "image",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "w",
+            "type": "int"
+          },
+          {
+            "name": "h",
+            "type": "int"
+          },
+          {
+            "name": "textureWidth",
+            "type": "int"
+          },
+          {
+            "name": "textureHeight",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw an image relative to graphics component\u0027s frame with known texture size."
+      },
+      {
+        "parameters": [
+          {
+            "name": "image",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "w",
+            "type": "int"
+          },
+          {
+            "name": "h",
+            "type": "int"
+          },
+          {
+            "name": "textureWidth",
+            "type": "int"
+          },
+          {
+            "name": "textureHeight",
+            "type": "int"
+          },
+          {
+            "name": "primary",
+            "type": "int"
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw an image relative to graphics component\u0027s frame with known texture size and color."
+      }
+    ],
+    "text": [
+      {
+        "parameters": [
+          {
+            "name": "text",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "color",
+            "type": "int",
+            "docs": "ARGB text\u0027s font color."
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw a text label relative to graphics component\u0027s frame."
+      },
+      {
+        "parameters": [
+          {
+            "name": "text",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "color",
+            "type": "int",
+            "docs": "ARGB text\u0027s font color."
+          },
+          {
+            "name": "anchorX",
+            "type": "float",
+            "docs": "Horizontal anchor (\u003ccode\u003e0..1\u003c/code\u003e)."
+          },
+          {
+            "name": "anchorY",
+            "type": "float",
+            "docs": "Vertical anchor (\u003ccode\u003e0..1\u003c/code\u003e)."
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw a text label with an anchor relative to graphics component\u0027s frame."
+      },
+      {
+        "parameters": [
+          {
+            "name": "text",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "w",
+            "type": "int"
+          },
+          {
+            "name": "h",
+            "type": "int"
+          },
+          {
+            "name": "color",
+            "type": "int",
+            "docs": "ARGB text\u0027s font color."
+          },
+          {
+            "name": "anchorX",
+            "type": "float",
+            "docs": "Horizontal anchor (\u003ccode\u003e0..1\u003c/code\u003e)."
+          },
+          {
+            "name": "anchorY",
+            "type": "float",
+            "docs": "Vertical anchor (\u003ccode\u003e0..1\u003c/code\u003e)."
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw a text label with an anchor relative to graphics component\u0027s frame."
+      }
+    ],
+    "icon": [
+      {
+        "parameters": [
+          {
+            "name": "icon",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "color",
+            "type": "int",
+            "docs": "ARGB color that used to render an icon."
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw a McLib icon relative to graphics component\u0027s frame.\n\n \u003cp\u003eMost of the icons are \u003ccode\u003e16x16\u003c/code\u003e so keep that in mind.\u003c/p\u003e"
+      },
+      {
+        "parameters": [
+          {
+            "name": "icon",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "color",
+            "type": "int",
+            "docs": "ARGB color that used to render an icon."
+          },
+          {
+            "name": "anchorX",
+            "type": "float",
+            "docs": "Horizontal anchor (\u003ccode\u003e0..1\u003c/code\u003e)."
+          },
+          {
+            "name": "anchorY",
+            "type": "float",
+            "docs": "Vertical anchor (\u003ccode\u003e0..1\u003c/code\u003e)."
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw a McLib icon with an anchor relative to graphics component\u0027s frame."
+      }
+    ],
+    "shadow": [
+      {
+        "parameters": [
+          {
+            "name": "primary",
+            "type": "int",
+            "docs": "ARGB color that fills inside."
+          },
+          {
+            "name": "secondary",
+            "type": "int",
+            "docs": "ARGB color that fills outside."
+          },
+          {
+            "name": "offset",
+            "type": "int",
+            "docs": "Fading shadow\u0027s distance from the given box using \u003ccode\u003ex\u003c/code\u003e,\n \u003ccode\u003ey\u003c/code\u003e, \u003ccode\u003ew\u003c/code\u003e, and \u003ccode\u003eh\u003c/code\u003e arguments."
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw a drop shadow.\n\n \u003ccode\u003ey\u003c/code\u003e, \u003ccode\u003ew\u003c/code\u003e, and \u003ccode\u003eh\u003c/code\u003e arguments."
+      },
+      {
+        "parameters": [
+          {
+            "name": "x",
+            "type": "int"
+          },
+          {
+            "name": "y",
+            "type": "int"
+          },
+          {
+            "name": "w",
+            "type": "int",
+            "docs": "Width of the rectangle."
+          },
+          {
+            "name": "h",
+            "type": "int",
+            "docs": "Height of the rectangle."
+          },
+          {
+            "name": "primary",
+            "type": "int",
+            "docs": "ARGB color that fills inside."
+          },
+          {
+            "name": "secondary",
+            "type": "int",
+            "docs": "ARGB color that fills outside."
+          },
+          {
+            "name": "offset",
+            "type": "int",
+            "docs": "Fading shadow\u0027s distance from the given box using \u003ccode\u003ex\u003c/code\u003e,\n \u003ccode\u003ey\u003c/code\u003e, \u003ccode\u003ew\u003c/code\u003e, and \u003ccode\u003eh\u003c/code\u003e arguments."
+          }
+        ],
+        "return": "mchorse.mappet.client.gui.utils.graphics.Graphic",
+        "docs": "Draw a drop shadow.\n\n \u003ccode\u003ey\u003c/code\u003e, \u003ccode\u003ew\u003c/code\u003e, and \u003ccode\u003eh\u003c/code\u003e arguments."
+      }
+    ],
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "mc",
+            "type": "net.minecraft.client.Minecraft"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "applyProperty": [
+      {
+        "parameters": [
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          },
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          }
+        ]
+      }
+    ],
+    "serializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "deserializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,401 @@
+{
+  "docs": "",
+  "methods": {
+    "getNBTTagCompound": [
+      {
+        "return": "net.minecraft.nbt.NBTTagCompound",
+        "deprecated": true
+      }
+    ],
+    "asMinecraft": [
+      {
+        "return": "net.minecraft.nbt.NBTTagCompound"
+      }
+    ],
+    "isCompound": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "isList": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "stringify": [
+      {
+        "return": "java.lang.String",
+        "deprecated": true
+      }
+    ],
+    "toString": [
+      {
+        "return": "java.lang.String"
+      }
+    ],
+    "isEmpty": [
+      {
+        "return": "boolean"
+      }
+    ],
+    "size": [
+      {
+        "return": "int"
+      }
+    ],
+    "combine": [
+      {
+        "parameters": [
+          {
+            "name": "nbt",
+            "type": "java.lang.Object"
+          }
+        ]
+      }
+    ],
+    "isSame": [
+      {
+        "parameters": [
+          {
+            "name": "nbt",
+            "type": "java.lang.Object"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "has": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "remove": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "keys": [
+      {
+        "return": "java.util.Set"
+      }
+    ],
+    "copy": [
+      {
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+      }
+    ],
+    "getByte": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "byte"
+      }
+    ],
+    "setByte": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "byte"
+          }
+        ]
+      }
+    ],
+    "getShort": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "short"
+      }
+    ],
+    "setShort": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "short"
+          }
+        ]
+      }
+    ],
+    "getInt": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "int"
+      }
+    ],
+    "setInt": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "getLong": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "long"
+      }
+    ],
+    "setLong": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "long"
+          }
+        ]
+      }
+    ],
+    "getFloat": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "float"
+      }
+    ],
+    "setFloat": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "float"
+          }
+        ]
+      }
+    ],
+    "getDouble": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "double"
+      }
+    ],
+    "setDouble": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "double"
+          }
+        ]
+      }
+    ],
+    "getString": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.String"
+      }
+    ],
+    "setString": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "getBoolean": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "setBoolean": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "boolean"
+          }
+        ]
+      }
+    ],
+    "getCompound": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+      }
+    ],
+    "setCompound": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+          }
+        ]
+      }
+    ],
+    "getList": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTList"
+      }
+    ],
+    "setList": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "value",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTList"
+          }
+        ]
+      }
+    ],
+    "setNBT": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "nbt",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "get": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ],
+        "return": "java.lang.Object"
+      }
+    ],
+    "equals": [
+      {
+        "parameters": [
+          {
+            "name": "compound",
+            "type": "mchorse.mappet.api.scripts.code.nbt.ScriptNBTCompound"
+          }
+        ],
+        "return": "boolean"
+      }
+    ],
+    "addCompound": [
+      {
+        "parameters": [
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ],
+    "dumpJSON": [
+      {
+        "return": "java.lang.String"
+      }
+    ]
+  }
+}

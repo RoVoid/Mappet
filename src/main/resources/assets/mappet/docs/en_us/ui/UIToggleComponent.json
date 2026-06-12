@@ -1,0 +1,80 @@
+{
+  "docs": "Toggle UI component.\n\n \u003cp\u003eThis component allows users to input boolean value (yes/no, true/false,\n \u003ccode\u003e1\u003c/code\u003e/\u003ccode\u003e0\u003c/code\u003e). The value that gets written to UI context\u0027s data\n (if ID is present) is boolean.\u003c/p\u003e\n\n \u003cp\u003eThis component can be created using {@link MappetUIBuilder#toggle(String)} method.\u003c/p\u003e\n\n \u003cpre\u003e{@code\n    function main(c)\n    {\n        var ui \u003d mappet.createUI(c, \"handler\").background();\n        var trackpad \u003d ui.toggle(\"Show\", false).id(\"toggle\");\n        var label \u003d ui.label(\"You can see this label\").id(\"label\");\n\n        trackpad.rxy(0.5, 0.5).wh(160, 20).anchor(0.5);\n        label.rx(0.5).ry(0.5, 25).wh(160, 20).anchor(0.5).labelAnchor(0.5);\n        c.getSubject().openUI(ui);\n    }\n\n    function handler(c)\n    {\n        var uiContext \u003d c.getSubject().getUIContext();\n        var data \u003d uiContext.getData();\n\n        if (uiContext.getLast() \u003d\u003d\u003d \"toggle\")\n        {\n            uiContext.get(\"label\").visible(uiContext.getData().getBoolean(\"toggle\"));\n        }\n    }\n }\u003c/pre\u003e",
+  "methods": {
+    "state": [
+      {
+        "parameters": [
+          {
+            "name": "state",
+            "type": "boolean"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.ui.UIToggleComponent",
+        "docs": "Change component\u0027s toggled state.\n\n \u003cpre\u003e{@code\n    // Assuming that uiContext is a MappetUIContext\n    uiContext.get(\"toggle\").state(true);\n }\u003c/pre\u003e"
+      }
+    ],
+    "applyProperty": [
+      {
+        "parameters": [
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          },
+          {
+            "name": "key",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "element",
+            "type": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+          }
+        ]
+      }
+    ],
+    "create": [
+      {
+        "parameters": [
+          {
+            "name": "mc",
+            "type": "net.minecraft.client.Minecraft"
+          },
+          {
+            "name": "context",
+            "type": "mchorse.mappet.api.ui.UIContext"
+          }
+        ],
+        "return": "mchorse.mclib.client.gui.framework.elements.GuiElement"
+      }
+    ],
+    "populateData": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "serializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "deserializeNBT": [
+      {
+        "parameters": [
+          {
+            "name": "tag",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ]
+  }
+}

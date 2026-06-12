@@ -1,0 +1,90 @@
+{
+  "docs": "",
+  "methods": {
+    "getRepeatingCommandDataStorage": [
+      {
+        "parameters": [
+          {
+            "name": "world",
+            "type": "net.minecraft.world.World"
+          }
+        ],
+        "return": "mchorse.mappet.api.scripts.code.entities.ai.repeatingCommand.RepeatingCommandDataStorage"
+      }
+    ],
+    "readFromNBT": [
+      {
+        "parameters": [
+          {
+            "name": "nbt",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ]
+      }
+    ],
+    "writeToNBT": [
+      {
+        "parameters": [
+          {
+            "name": "nbt",
+            "type": "net.minecraft.nbt.NBTTagCompound"
+          }
+        ],
+        "return": "net.minecraft.nbt.NBTTagCompound"
+      }
+    ],
+    "addRepeatingCommandData": [
+      {
+        "parameters": [
+          {
+            "name": "entityId",
+            "type": "java.util.UUID"
+          },
+          {
+            "name": "command",
+            "type": "java.lang.String"
+          },
+          {
+            "name": "frequency",
+            "type": "int"
+          }
+        ]
+      }
+    ],
+    "removeRepeatingCommandData": [
+      {
+        "parameters": [
+          {
+            "name": "entityId",
+            "type": "java.util.UUID"
+          }
+        ]
+      }
+    ],
+    "getRepeatingCommandData": [
+      {
+        "parameters": [
+          {
+            "name": "entityId",
+            "type": "java.util.UUID"
+          }
+        ],
+        "return": "java.util.List"
+      }
+    ],
+    "removeSpecificRepeatingCommandData": [
+      {
+        "parameters": [
+          {
+            "name": "entityId",
+            "type": "java.util.UUID"
+          },
+          {
+            "name": "command",
+            "type": "java.lang.String"
+          }
+        ]
+      }
+    ]
+  }
+}
