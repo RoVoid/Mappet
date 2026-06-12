@@ -24,7 +24,7 @@ public class ClientHandlerContentNames extends ClientMessageHandler<PacketConten
         }
 
         GuiMappetDashboard dashboard = GuiMappetDashboard.get(Minecraft.getMinecraft());
-        GuiMappetDashboardPanel panel = message.type.panel(dashboard);
+        GuiMappetDashboardPanel<?> panel = message.type.panel(dashboard);
 
         if (panel != null)
         {

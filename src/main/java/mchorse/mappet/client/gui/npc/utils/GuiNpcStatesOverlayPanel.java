@@ -4,7 +4,7 @@ import mchorse.mappet.api.npcs.Npc;
 import mchorse.mappet.api.npcs.NpcState;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
 import mchorse.mappet.client.gui.utils.overlays.GuiStringOverlayPanel;
-import mchorse.mappet.client.Colors;
+import mchorse.mappet.utils.Colors;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiConfirmModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;

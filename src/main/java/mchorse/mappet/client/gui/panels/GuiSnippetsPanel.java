@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
-import mchorse.mappet.client.gui.utils.SafeWebLinkOpener;
+import mchorse.mappet.client.gui.url.SafeWebLinkOpener;
 import mchorse.mappet.client.gui.utils.snippet.Snippet;
 import mchorse.mappet.utils.JsonFetcher;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;

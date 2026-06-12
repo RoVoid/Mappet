@@ -10,6 +10,6 @@ public class ReflectionUtils
 {
     public static Set<TileEntity> getGlobalTiles(RenderGlobal global)
     {
-        return ObfuscationReflectionHelper.<Set<TileEntity>, RenderGlobal>getPrivateValue(RenderGlobal.class, global, "setTileEntities", "field_181024_n");
+        return ObfuscationReflectionHelper.getPrivateValue(RenderGlobal.class, global, "setTileEntities", "field_181024_n");
     }
 }

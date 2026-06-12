@@ -1,69 +1,63 @@
 package mchorse.mappet.api.regions.shapes;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.AxisAlignedBB;
 
 import javax.vecmath.Vector3d;
 
-public class BoxShape extends AbstractShape
-{
+public class BoxShape extends AbstractShape {
     public Vector3d size = new Vector3d(1, 1, 1);
 
     @Override
-    public void copyFrom(AbstractShape shape)
-    {
-        super.copyFrom(shape);
+    public void from(AbstractShape shape) {
+        super.from(shape);
 
-        if (shape instanceof BoxShape)
-        {
-            this.size.set(((BoxShape) shape).size);
-        }
-        else if (shape instanceof SphereShape)
-        {
+        if (shape instanceof BoxShape) size.set(((BoxShape) shape).size);
+        else if (shape instanceof SphereShape) {
             double h = ((SphereShape) shape).horizontal;
             double v = ((SphereShape) shape).vertical;
-
-            this.size.set(h, v, h);
+            size.set(h, v, h);
         }
     }
 
     @Override
-    public boolean isInside(double x, double y, double z)
-    {
-        double dx = x - this.pos.x;
-        double dy = y - this.pos.y;
-        double dz = z - this.pos.z;
-
-        return Math.abs(dx) < this.size.x && Math.abs(dy) < this.size.y && Math.abs(dz) < this.size.z;
+    public AxisAlignedBB getSearchBox() {
+        return new AxisAlignedBB(-size.x + offset.x, -size.y + offset.y, -size.z + offset.z, size.x + offset.x, size.y + offset.y, size.z + offset.z);
     }
 
     @Override
-    public String getType()
-    {
+    public boolean isInside(double x, double y, double z) {
+        double dx = x - offset.x;
+        double dy = y - offset.y;
+        double dz = z - offset.z;
+
+        return Math.abs(dx) < size.x && Math.abs(dy) < size.y && Math.abs(dz) < size.z;
+    }
+
+    @Override
+    public String getType() {
         return "box";
     }
 
     @Override
-    public NBTTagCompound serializeNBT()
-    {
+    public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = super.serializeNBT();
 
-        tag.setDouble("SizeX", this.size.x);
-        tag.setDouble("SizeY", this.size.y);
-        tag.setDouble("SizeZ", this.size.z);
+        tag.setDouble("SizeX", size.x);
+        tag.setDouble("SizeY", size.y);
+        tag.setDouble("SizeZ", size.z);
 
         return tag;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
-    {
+    public void deserializeNBT(NBTTagCompound tag) {
         super.deserializeNBT(tag);
 
-        if (tag.hasKey("SizeX") && tag.hasKey("SizeY") && tag.hasKey("SizeZ"))
-        {
-            this.size.x = tag.getDouble("SizeX");
-            this.size.y = tag.getDouble("SizeY");
-            this.size.z = tag.getDouble("SizeZ");
+        if (tag.hasKey("SizeX") && tag.hasKey("SizeY") && tag.hasKey("SizeZ")) {
+            size.x = tag.getDouble("SizeX");
+            size.y = tag.getDouble("SizeY");
+            size.z = tag.getDouble("SizeZ");
         }
     }
 }

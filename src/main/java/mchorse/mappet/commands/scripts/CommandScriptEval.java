@@ -49,11 +49,11 @@ public class CommandScriptEval extends CommandScriptBase
         }
         catch (ScriptException e)
         {
-            throw new CommandException("script.error", args[1], e.getColumnNumber(), e.getLineNumber(), e.getMessage());
+            throw new CommandException("mappet.error.script.error", args[1], e.getColumnNumber(), e.getLineNumber(), e.getMessage());
         }
         catch (Exception e)
         {
-            throw new CommandException("script.empty", args[1], e.getClass().getSimpleName() + ": " + e.getMessage());
+            throw new CommandException("mappet.error.script.empty", args[1], e.getClass().getSimpleName() + ": " + e.getMessage());
         }
     }
 }

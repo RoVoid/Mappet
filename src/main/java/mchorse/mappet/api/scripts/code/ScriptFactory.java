@@ -133,11 +133,6 @@ public class ScriptFactory {
         return base instanceof NBTTagCompound ? new ScriptNBTCompound((NBTTagCompound) base) : null;
     }
 
-    public ScriptNBTCompound createCompoundFromJS(Object jsObject) {
-        NBTBase base = convertToNBT(jsObject);
-        return base instanceof NBTTagCompound ? new ScriptNBTCompound((NBTTagCompound) base) : null;
-    }
-
     public ScriptItemStack createItem(ScriptNBTCompound compound) {
         if (compound == null) return ScriptItemStack.EMPTY;
         return ScriptItemStack.create(new ItemStack(compound.asMinecraft()));

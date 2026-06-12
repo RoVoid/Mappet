@@ -1,6 +1,6 @@
 package mchorse.mappet.commands.scripts;
 
-import mchorse.mappet.utils.ScriptUtils;
+import mchorse.mappet.api.scripts.engine.ScriptEngineRegistry;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -10,41 +10,34 @@ import javax.script.ScriptEngineFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandScriptEngines extends CommandScriptBase
-{
+public class CommandScriptEngines extends CommandScriptBase {
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "engines";
     }
 
     @Override
-    public String getUsage(ICommandSender sender)
-    {
+    public String getUsage(ICommandSender sender) {
         return "mappet.commands.mp.script.engines";
     }
 
     @Override
-    public String getSyntax()
-    {
+    public String getSyntax() {
         return "{l}{6}/{r}mp {8}script engines";
     }
 
     @Override
-    public int getRequiredArgs()
-    {
+    public int getRequiredArgs() {
         return 0;
     }
 
     @Override
-    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        List<ScriptEngine> engines = ScriptUtils.getAllEngines();
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        List<ScriptEngine> engines = ScriptEngineRegistry.getAllEngines();
 
         List<String> strings = new ArrayList<>();
 
-        for (ScriptEngine engine : engines)
-        {
+        for (ScriptEngine engine : engines) {
             ScriptEngineFactory factory = engine.getFactory();
             strings.add(factory.getEngineName() + " (" + factory.getLanguageName() + ")");
         }

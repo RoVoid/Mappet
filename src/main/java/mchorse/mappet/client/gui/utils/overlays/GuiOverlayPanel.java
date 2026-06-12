@@ -25,41 +25,36 @@ public class GuiOverlayPanel extends GuiElement
         super(mc);
 
         this.title = Elements.label(title);
-        this.close = new GuiIconElement(mc, Icons.CLOSE, (b) -> this.close());
-        this.content = new GuiElement(mc);
-        this.icons = new GuiElement(mc);
+        close = new GuiIconElement(mc, Icons.CLOSE, (b) -> close());
+        content = new GuiElement(mc);
+        icons = new GuiElement(mc);
 
         this.title.flex().relative(this).xy(10, 10).w(0.5F);
-        this.close.flex().wh(16, 16);
-        this.icons.flex().relative(this).x(1F, -7).y(6).anchorX(1F).row(0).reverse().resize().width(16).height(16);
-        this.content.flex().relative(this).xy(10, 28).w(1F, -20).h(1F, -28);
+        close.flex().wh(16, 16);
+        icons.flex().relative(this).x(1F, -7).y(6).anchorX(1F).row(0).reverse().resize().width(16).height(16);
+        content.flex().relative(this).xy(10, 28).w(1F, -20).h(1F, -28);
 
-        this.icons.add(this.close);
+        icons.add(close);
 
-        this.add(this.title, this.icons, this.content);
+        add(this.title, icons, content);
     }
 
     public void close()
     {
-        GuiElement parent = this.getParent();
-
-        if (parent instanceof GuiOverlay)
-        {
-            ((GuiOverlay) parent).closeItself();
-        }
+        GuiElement parent = getParent();
+        if (parent instanceof GuiOverlay) ((GuiOverlay) parent).closeItself();
     }
 
     @Override
     public boolean mouseClicked(GuiContext context)
     {
-        return super.mouseClicked(context) || this.area.isInside(context);
+        return super.mouseClicked(context) || area.isInside(context);
     }
 
     @Override
     public void draw(GuiContext context)
     {
-        this.drawBackground(context);
-
+        drawBackground(context);
         super.draw(context);
     }
 
@@ -67,8 +62,8 @@ public class GuiOverlayPanel extends GuiElement
     {
         int color = McLib.primaryColor.get();
 
-        GuiDraw.drawDropShadow(this.area.x, this.area.y, this.area.ex(), this.area.ey(), 10, 0x44000000 + color, color);
-        this.area.draw(0xff000000);
+        GuiDraw.drawDropShadow(area.x, area.y, area.ex(), area.ey(), 10, 0x44000000 + color, color);
+        area.draw(0xff000000);
     }
 
     public void onClose()

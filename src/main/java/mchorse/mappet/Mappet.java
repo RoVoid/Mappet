@@ -11,6 +11,7 @@ import mchorse.mappet.api.quests.QuestManager;
 import mchorse.mappet.api.quests.chains.QuestChainManager;
 import mchorse.mappet.api.schematics.SchematicManager;
 import mchorse.mappet.api.scripts.ScriptManager;
+import mchorse.mappet.api.scripts.engine.ScriptEngineRegistry;
 import mchorse.mappet.api.states.StatesStorage;
 import mchorse.mappet.api.translations.TranslationManager;
 import mchorse.mappet.api.ui.UIManager;
@@ -21,7 +22,6 @@ import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.events.handlers.ModEventHandler;
 import mchorse.mappet.events.handlers.TriggerEventHandler;
 import mchorse.mappet.proxy.CommonProxy;
-import mchorse.mappet.utils.ScriptUtils;
 import mchorse.mclib.McLib;
 import mchorse.mclib.commands.utils.L10n;
 import mchorse.mclib.events.RegisterConfigEvent;
@@ -138,7 +138,7 @@ public final class Mappet {
         /* Initiate */
         if (!settings.serverLoad.isEmpty()) settings.serverLoad.trigger(new DataContext(event.getServer()));
 
-        ScriptUtils.initiateScriptEngines();
+        ScriptEngineRegistry.initiateScriptEngines();
         scripts.initiateAllScripts();
 
         TriggerEventHandler.getRegisteredEvents();

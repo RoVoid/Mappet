@@ -1,4 +1,6 @@
-package mchorse.mappet.client;
+package mchorse.mappet.utils;
+
+import java.awt.*;
 
 public class Colors
 {
@@ -26,4 +28,18 @@ public class Colors
     public static final int STATE = 0xff0033;
     public static final int TIME = 0x0088ff;
     public static final int MORPH = 0x4f00e0;
+
+    public static int shiftHue(int color, float hueDelta) {
+        int r = color >> 16 & 0xFF;
+        int g = color >> 8 & 0xFF;
+        int b = color & 0xFF;
+
+        float[] hsb = Color.RGBtoHSB(r, g, b, null);
+        hsb[0] = (hsb[0] + hueDelta) % 1.0F;
+        if (hsb[0] < 0) hsb[0] += 1.0F;
+
+        int shifted = Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]);
+        // Сохраняем alpha от оригинала
+        return color & 0xFF000000 | shifted & 0x00FFFFFF;
+    }
 }

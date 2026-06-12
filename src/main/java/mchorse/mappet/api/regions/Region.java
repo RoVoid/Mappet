@@ -14,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -22,9 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Region implements INBTSerializable<NBTTagCompound> {
-    public boolean passable = true;
     public boolean checkEntities = false;
     public Condition enabled = new Condition(true);
+
     public int delay;
     public int update = 3;
     public Trigger onEnter = new Trigger();
@@ -32,24 +33,34 @@ public class Region implements INBTSerializable<NBTTagCompound> {
     public Trigger onTick = new Trigger();
 
     public List<AbstractShape> shapes = new ArrayList<>();
+    private AxisAlignedBB searchBox;
 
-    public ScriptStates states = new ScriptStates();
-
-    public Region() {
-        shapes.add(new BoxShape());
-    }
-
-    /* Automatic state writing */
     public boolean writeState;
     public String state = "";
     public TargetMode target = TargetMode.GLOBAL;
-    public boolean additive = true;
-    public boolean once;
+    public StateMode stateMode = StateMode.ADDITIVE;
 
-    // убрать дубликаты getStates, объединить additive & once
+    public Region() {
+        shapes.add(new BoxShape());
+        updateSearchBox();
+    }
 
-    public boolean isEnabled(Entity entity) {
-        if (once) {
+    public void updateSearchBox() {
+        searchBox = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+        if (shapes.isEmpty()) return;
+        for (AbstractShape shape : shapes) {
+            AxisAlignedBB sb = shape.getSearchBox();
+            searchBox = searchBox.union(sb);
+        }
+        searchBox = searchBox.grow(4);
+    }
+
+    public AxisAlignedBB getSearchBox(BlockPos pos) {
+        return searchBox.offset(pos);
+    }
+
+    public boolean isEnabled(Entity entity, boolean was) {
+        if (stateMode == StateMode.ONCE && !was) {
             ScriptStates states = Target.getStates(entity, target).scripts;
             if (states != null && states.has(state)) return false;
         }
@@ -63,28 +74,23 @@ public class Region implements INBTSerializable<NBTTagCompound> {
         return false;
     }
 
-    public boolean isEntityOutside(double x, double y, double z, BlockPos pos) {
-//        if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isSpectator()) return false;
-        for (AbstractShape shape : shapes) if (shape.isEntityInside(x, y, z, pos)) return false;
+    public boolean isOutside(double x, double y, double z, BlockPos pos) {
+        for (AbstractShape shape : shapes) if (shape.isInside(x, y, z, pos)) return false;
         return true;
     }
 
     public void triggerEnter(Entity entity, BlockPos pos) {
         if (writeState && !state.isEmpty()) {
             States states = Target.getStates(entity, target).scripts;
-            if (additive) states.add(state, 1);
-            else states.setNumber(state, 1);
+            if (stateMode == StateMode.TOGGLE) states.setNumber(state, 1);
+            else states.add(state, 1);
         }
 
         onEnter.trigger(new DataContext(entity).set("x", pos.getX()).set("y", pos.getY()).set("z", pos.getZ()));
     }
 
     public void triggerExit(Entity entity, BlockPos pos) {
-        if (writeState && !additive && !once && !state.isEmpty()) {
-            ScriptStates states = Target.getStates(entity, target).scripts;
-            states.reset(state);
-        }
-
+        if (writeState && stateMode == StateMode.TOGGLE && !state.isEmpty()) Target.getStates(entity, target).scripts.reset(state);
         onExit.trigger(new DataContext(entity).set("x", pos.getX()).set("y", pos.getY()).set("z", pos.getZ()));
     }
 
@@ -96,31 +102,25 @@ public class Region implements INBTSerializable<NBTTagCompound> {
     public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
 
-        tag.setBoolean("Passable", passable);
         tag.setTag("Enabled", enabled.serializeNBT());
+        tag.setBoolean("CheckEntities", checkEntities);
+
         tag.setInteger("Delay", delay);
         tag.setInteger("Update", update);
-        tag.setBoolean("CheckEntities", checkEntities);
+
         tag.setTag("OnEnter", onEnter.serializeNBT());
         tag.setTag("OnExit", onExit.serializeNBT());
         tag.setTag("OnTick", onTick.serializeNBT());
 
         NBTTagList shapes = new NBTTagList();
-
-        for (AbstractShape shape : this.shapes) {
-            NBTTagCompound shapeTag = shape.serializeNBT();
-
-            shapeTag.setString("Type", shape.getType());
-            shapes.appendTag(shapeTag);
-        }
-
+        for (AbstractShape shape : this.shapes) shapes.appendTag(shape.serializeNBT());
         tag.setTag("Shapes", shapes);
+
+        tag.setInteger("Target", target.ordinal());
+
         if (writeState) tag.setBoolean("WriteState", true);
         if (!state.trim().isEmpty()) tag.setString("State", state.trim());
-        tag.setInteger("Target", target.ordinal());
-        if (additive) tag.setBoolean("Additive", true);
-        if (once) tag.setBoolean("Once", true);
-        tag.setTag("States", states.serializeNBT());
+        tag.setInteger("StateMode", stateMode.ordinal());
 
         return tag;
     }
@@ -129,7 +129,6 @@ public class Region implements INBTSerializable<NBTTagCompound> {
     public void deserializeNBT(NBTTagCompound tag) {
         if (tag == null) return;
 
-        if (tag.hasKey("Passable")) passable = tag.getBoolean("Passable");
         if (tag.hasKey("Enabled", Constants.NBT.TAG_COMPOUND)) enabled.deserializeNBT(tag.getCompoundTag("Enabled"));
         if (tag.hasKey("Delay", Constants.NBT.TAG_ANY_NUMERIC)) delay = tag.getInteger("Delay");
         if (tag.hasKey("Update", Constants.NBT.TAG_ANY_NUMERIC)) update = tag.getInteger("Update");
@@ -137,42 +136,31 @@ public class Region implements INBTSerializable<NBTTagCompound> {
         if (tag.hasKey("OnEnter", Constants.NBT.TAG_COMPOUND)) onEnter.deserializeNBT(tag.getCompoundTag("OnEnter"));
         if (tag.hasKey("OnExit", Constants.NBT.TAG_COMPOUND)) onExit.deserializeNBT(tag.getCompoundTag("OnExit"));
         if (tag.hasKey("OnTick", Constants.NBT.TAG_COMPOUND)) onTick.deserializeNBT(tag.getCompoundTag("OnTick"));
-        if (tag.hasKey("States")) states.deserializeNBT(tag.getCompoundTag("States"));
 
         shapes.clear();
-
-        if (tag.hasKey("Shape", Constants.NBT.TAG_COMPOUND)) {
-            AbstractShape shape = readShape(tag.getCompoundTag("Shape"));
-            if (shape != null) shapes.add(shape);
-        }
-        else if (tag.hasKey("Shapes", Constants.NBT.TAG_LIST)) {
+        if (tag.hasKey("Shapes", Constants.NBT.TAG_LIST)) {
             NBTTagList list = tag.getTagList("Shapes", Constants.NBT.TAG_COMPOUND);
-
             for (int i = 0; i < list.tagCount(); i++) {
-                AbstractShape shape = readShape(list.getCompoundTagAt(i));
-                if (shape != null) shapes.add(shape);
+                NBTTagCompound shapeTag = list.getCompoundTagAt(i);
+                if (!shapeTag.hasKey("Type")) continue;
+
+                AbstractShape shape = AbstractShape.create(shapeTag.getString("Type"));
+                if (shape == null) continue;
+
+                shapes.add(shape);
+                shape.deserializeNBT(shapeTag);
             }
         }
-
         if (shapes.isEmpty()) shapes.add(new BoxShape());
+        updateSearchBox();
 
         writeState = tag.getBoolean("WriteState");
         state = tag.getString("State");
         target = EnumUtils.getValue(tag.getInteger("Target"), TargetMode.values(), TargetMode.GLOBAL);
-        additive = tag.getBoolean("Additive");
-        once = tag.getBoolean("Once");
+        stateMode = EnumUtils.getValue(tag.getInteger("StateMode"), StateMode.values(), StateMode.ADDITIVE);
     }
 
-    private AbstractShape readShape(NBTTagCompound shapeTag) {
-        if (shapeTag.hasKey("Type")) {
-            AbstractShape shape = AbstractShape.fromString(shapeTag.getString("Type"));
-
-            if (shape != null) {
-                shape.deserializeNBT(shapeTag);
-                return shape;
-            }
-        }
-
-        return null;
+    public enum StateMode {
+        ADDITIVE, ONCE, TOGGLE
     }
 }

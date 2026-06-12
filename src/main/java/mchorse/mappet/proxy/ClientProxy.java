@@ -1,6 +1,9 @@
 package mchorse.mappet.proxy;
 
 import mchorse.mappet.api.utils.content.IContentTypeBase;
+import mchorse.mappet.blocks.tile.TileConditionModel;
+import mchorse.mappet.blocks.tile.TileRegion;
+import mchorse.mappet.blocks.tile.TileTrigger;
 import mchorse.mappet.client.KeyboardHandler;
 import mchorse.mappet.client.RenderingHandler;
 import mchorse.mappet.client.ResourceReloadHandler;
@@ -13,9 +16,6 @@ import mchorse.mappet.client.renders.tile.TileTriggerRenderer;
 import mchorse.mappet.entities.EntityNpc;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.content.PacketContentRequestNames;
-import mchorse.mappet.blocks.tile.TileConditionModel;
-import mchorse.mappet.blocks.tile.TileRegion;
-import mchorse.mappet.blocks.tile.TileTrigger;
 import mchorse.mclib.McLib;
 import mchorse.mclib.utils.ReflectionUtils;
 import net.minecraft.client.Minecraft;
@@ -29,14 +29,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
     private static int requestId = 0;
-    private static final Map<Integer, Consumer<List<String>>> consumers = new HashMap<>();
+    private static final Map<Integer, Consumer<Set<String>>> consumers = new HashMap<>();
 
     public static File sounds;
 
@@ -47,15 +47,15 @@ public class ClientProxy extends CommonProxy {
         Minecraft.getMinecraft().addScheduledTask(task);
     }
 
-    public static void requestNames(IContentTypeBase type, Consumer<List<String>> consumer) {
+    public static void requestNames(IContentTypeBase type, Consumer<Set<String>> consumer) {
         consumers.put(requestId, consumer);
         Dispatcher.sendToServer(new PacketContentRequestNames(type, requestId));
 
         requestId += 1;
     }
 
-    public static void process(List<String> names, int id) {
-        Consumer<List<String>> consumer = consumers.remove(id);
+    public static void process(Set<String> names, int id) {
+        Consumer<Set<String>> consumer = consumers.remove(id);
 
         if (consumer != null) {
             consumer.accept(names);

@@ -46,54 +46,48 @@ public class GuiRegionPanel extends GuiDashboardPanel<GuiMappetDashboard>
     {
         super(mc, dashboard);
 
-        this.sidebar = new GuiElement(mc);
-        this.sidebar.flex().relative(this).x(1F).w(200).h(1F).anchorX(1F);
+        sidebar = new GuiElement(mc);
+        sidebar.flex().relative(this).x(1F).w(200).h(1F).anchorX(1F);
 
-        this.toggleSidebar = new GuiIconElement(mc, Icons.RIGHTLOAD, (element) -> this.toggleSidebar());
-        this.toggleSidebar.flex().relative(this.sidebar).x(-20);
+        toggleSidebar = new GuiIconElement(mc, Icons.RIGHTLOAD, (element) -> toggleSidebar());
+        toggleSidebar.flex().relative(sidebar).x(-20);
 
-        GuiDrawable drawable = new GuiDrawable((context) -> this.font.drawStringWithShadow(I18n.format(this.getTitle()), this.tiles.area.x, this.area.y + 10, 0xffffff));
+        GuiDrawable drawable = new GuiDrawable((context) -> font.drawStringWithShadow(I18n.format(getTitle()), tiles.area.x, area.y + 10, 0xffffff));
 
-        this.tiles = new GuiTileRegionListElement(mc, (list) -> this.fill(list.get(0), false));
-        this.tiles.flex().relative(this.sidebar).xy(10, 25).w(1F, -20).h(1F, -35);
-        this.sidebar.add(drawable, this.tiles);
+        tiles = new GuiTileRegionListElement(mc, (list) -> fill(list.get(0), false));
+        tiles.flex().relative(sidebar).xy(10, 25).w(1F, -20).h(1F, -35);
+        sidebar.add(drawable, tiles);
 
-        this.editor = new GuiScrollElement(mc);
-        this.editor.markContainer();
-        this.editor.flex().relative(this).w(240).h(1F).column(5).vertical().stretch().scroll().padding(10);
+        editor = new GuiScrollElement(mc);
+        editor.markContainer();
+        editor.flex().relative(this).w(240).h(1F).column(5).vertical().stretch().scroll().padding(10);
 
-        this.region = new GuiRegionEditor(mc);
+        region = new GuiRegionEditor(mc);
 
-        this.editor.scroll.opposite = true;
-        this.editor.add(this.region);
+        editor.scroll.opposite = true;
+        editor.add(region);
 
-        this.add(this.sidebar, this.editor, this.toggleSidebar);
+        add(sidebar, editor, toggleSidebar);
 
-        this.keys().register(IKey.lang("mappet.gui.panels.keys.toggle_sidebar"), Keyboard.KEY_N, () -> this.toggleSidebar.clickItself(GuiBase.getCurrent())).category(GuiMappetDashboardPanel.KEYS_CATEGORY);
+        keys().register(IKey.lang("mappet.gui.panels.keys.toggle_sidebar"), Keyboard.KEY_N, () -> toggleSidebar.clickItself(GuiBase.getCurrent())).category(GuiMappetDashboardPanel.KEYS_CATEGORY);
 
-        this.fill(null, true);
+        fill(null, true);
     }
 
     private void toggleSidebar()
     {
-        this.sidebar.toggleVisible();
-        this.toggleSidebar.both(this.sidebar.isVisible() ? Icons.RIGHTLOAD : Icons.LEFTLOAD);
+        sidebar.toggleVisible();
+        toggleSidebar.both(sidebar.isVisible() ? Icons.RIGHTLOAD : Icons.LEFTLOAD);
 
-        if (this.sidebar.isVisible())
-        {
-            this.toggleSidebar.flex().relative(this.sidebar).x(-20);
-        }
-        else
-        {
-            this.toggleSidebar.flex().relative(this).x(1F, -20);
-        }
+        if (sidebar.isVisible()) toggleSidebar.flex().relative(sidebar).x(-20);
+        else toggleSidebar.flex().relative(this).x(1F, -20);
 
-        this.resize();
+        resize();
     }
 
     public TileRegion getTile()
     {
-        return this.tile;
+        return tile;
     }
 
     public String getTitle()
@@ -105,45 +99,28 @@ public class GuiRegionPanel extends GuiDashboardPanel<GuiMappetDashboard>
 
     public void fill(TileRegion tile, boolean ignoreSave)
     {
-        if (!ignoreSave)
-        {
-            this.save();
-        }
+        if (!ignoreSave) save();
 
-        if (tile != null && tile.isInvalid())
-        {
-            tile = null;
-        }
+        if (tile != null && tile.isInvalid()) tile = null;
 
         this.tile = tile;
 
-        this.editor.setVisible(tile != null);
-        this.tiles.setCurrentScroll(tile);
+        editor.setVisible(tile != null);
+        tiles.setCurrentScroll(tile);
 
-        if (tile != null)
-        {
-            this.region.set(tile.region);
-        }
+        if (tile != null) region.set(tile.region);
     }
 
     public void fillTiles(Collection<TileEntity> tiles)
     {
         this.tiles.clear();
 
-        if (tiles == null)
-        {
-            return;
-        }
+        if (tiles == null) return;
 
         for (TileEntity tile : tiles)
-        {
-            if (tile instanceof TileRegion)
-            {
-                this.tiles.add((TileRegion) tile);
-            }
-        }
+            if (tile instanceof TileRegion) this.tiles.add((TileRegion) tile);
 
-        this.tiles.setCurrentScroll(this.tile);
+        this.tiles.setCurrentScroll(tile);
     }
 
     @Override
@@ -156,62 +133,50 @@ public class GuiRegionPanel extends GuiDashboardPanel<GuiMappetDashboard>
     public void open()
     {
         super.open();
-
-        this.fillTiles(ReflectionUtils.getGlobalTiles(this.mc.renderGlobal));
+        fillTiles(ReflectionUtils.getGlobalTiles(mc.renderGlobal));
     }
 
     @Override
     public void appear()
     {
         super.appear();
-
-        if (this.tile != null && this.tile.isInvalid())
-        {
-            this.fill(null, true);
-        }
-
-        this.wasOpened = true;
+        if (tile != null && tile.isInvalid()) fill(null, true);
+        wasOpened = true;
     }
 
     @Override
     public void close()
     {
         super.close();
-
-        this.save();
-        this.wasOpened = false;
+        save();
+        wasOpened = false;
     }
 
     private void save()
     {
-        if (this.tile != null && !this.tile.isInvalid() && this.wasOpened)
-        {
-            Dispatcher.sendToServer(new PacketEditRegion(this.tile.getPos(), this.tile.region.serializeNBT()));
-        }
+        if (tile != null && !tile.isInvalid() && wasOpened)
+            Dispatcher.sendToServer(new PacketEditRegion(tile.getPos(), tile.region.serializeNBT()));
     }
 
     @Override
     public void draw(GuiContext context)
     {
-        if (this.editor.isVisible())
+        if (editor.isVisible())
         {
-            Gui.drawRect(this.editor.area.x, this.editor.area.y, this.editor.area.mx(), this.editor.area.ey(), 0xbb000000);
-            GuiDraw.drawHorizontalGradientRect(this.editor.area.mx(), this.editor.area.y, this.editor.area.x(1.25F), this.editor.area.ey(), 0xbb000000, 0);
+            Gui.drawRect(editor.area.x, editor.area.y, editor.area.mx(), editor.area.ey(), 0xbb000000);
+            GuiDraw.drawHorizontalGradientRect(editor.area.mx(), editor.area.y, editor.area.x(1.25F), editor.area.ey(), 0xbb000000, 0);
         }
 
-        if (this.sidebar.isVisible())
-        {
-            this.sidebar.area.draw(0xdd000000);
-        }
+        if (sidebar.isVisible()) sidebar.area.draw(0xdd000000);
 
         super.draw(context);
 
-        if (!this.editor.isVisible())
+        if (!editor.isVisible())
         {
-            int w = (this.sidebar.isVisible() ? this.sidebar.area.x - this.area.x : this.area.w) / 2;
-            int x = this.area.x + w / 2;
+            int w = (sidebar.isVisible() ? sidebar.area.x - area.x : area.w) / 2;
+            int x = area.x + w / 2;
 
-            GuiDraw.drawMultiText(this.font, EMPTY.get(), x, this.area.my(), 0xffffff, w, 12, 0.5F, 0.5F);
+            GuiDraw.drawMultiText(font, EMPTY.get(), x, area.my(), 0xffffff, w, 12, 0.5F, 0.5F);
         }
     }
 

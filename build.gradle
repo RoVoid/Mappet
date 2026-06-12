@@ -72,11 +72,6 @@ dependencies {
     implementation("net.minecraftforge:mergetool:0.2.3.3") { force = true }
 }
 
-tasks.named('compileJava', JavaCompile).configure {
-    options.encoding = 'UTF-8'
-}
-
-
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import org.apache.tools.ant.filters.ReplaceTokens
@@ -84,57 +79,62 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+// Token replacement
 tasks.register('processSource', Sync) {
+    outputs.upToDateWhen { false }
     from sourceSets.main.java
-    into layout.buildDirectory.dir("generated-src")
-
     filter(ReplaceTokens, tokens: [MAPPET     : version,
                                    MCLIB      : mclib,
                                    METAMORPH  : metamorph,
                                    BLOCKBUSTER: blockbuster,
                                    APERTURE   : aperture,
                                    CHAMELEON  : chameleon])
+    into layout.buildDirectory.dir("generated-src")
 }
 
-tasks.named('jar', Jar).configure {
-    finalizedBy('shadowJar')
-    finalizedBy('reobfJar')
-    finalizedBy('moveToExportFolder')
-}
-
-tasks.register('moveToExportFolder', Copy) {
-    dependsOn 'reobfJar'
-    from layout.buildDirectory.file("libs/Mappet-${project.version}.jar")
-    into project.file("exports")
+tasks.named('compileJava', JavaCompile).configure {
+    source = tasks.named('processSource').get().outputs
 }
 
 tasks.named('shadowJar').configure {
+    archiveClassifier.set("")
+
     dependencies {
         include(dependency("org.reflections:reflections:0.9.12"))
         include(dependency("org.slf4j:slf4j-api:1.7.32"))
         include(dependency("org.javassist:javassist:3.28.0-GA"))
     }
 
-    archiveClassifier.set("")
 
     relocate "org.reflections", "mchorse.mappet.libs.org.reflections"
     relocate "org.slf4j", "mchorse.mappet.libs.org.slf4j"
     relocate "javassist", "mchorse.mappet.libs.javassist"
+
+    if (providers.environmentVariable("export").isPresent()) {
+        finalizedBy('moveToExportFolder')
+    }
 }
 
-tasks.register('prepareAssets', Copy) {
-    def props = ['version'    : version.toString(),
-                 'mclib'      : mclib,
-                 'blockbuster': blockbuster,
-                 'metamorph'  : metamorph]
+tasks.register('moveToExportFolder', Copy) {
+    from layout.buildDirectory.file("libs/Mappet-${project.version}.jar")
+    into project.file("exports")
+    doLast {
+        layout.buildDirectory.file("libs/Mappet-${project.version}.jar").get().asFile.delete()
+    }
+}
 
-    inputs.properties(props)
+jar.finalizedBy('shadowJar')
+jar.finalizedBy('reobfJar')
+
+// Assets
+tasks.register('prepareAssets', Copy) {
+    group = 'build'
+    inputs.property 'version', version
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-        expand(props)
+        expand(project.properties)
     }
-
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
@@ -146,56 +146,41 @@ tasks.named('classes').configure {
     dependsOn('prepareAssets')
 }
 
-
+// Lang tools
 tasks.register('compareLangFiles') {
     doLast {
         def help = project.file("src/main/resources/assets/${base.archivesName.get().toLowerCase()}/lang/")
         def parse = { File file ->
             def map = new HashMap()
-            def splits = file.text.split("\n")
-
-            for (split in splits) {
+            file.text.split("\n").each { split ->
                 def index = split.indexOf("=")
-                if (index != -1) {
-                    map.put(split.substring(0, index), true)
-                }
+                if (index != -1) map.put(split.substring(0, index), true)
             }
             return map
         }
 
         if (!help.exists()) return
 
-        def en = project.file("${help.getAbsolutePath()}/en_US.lang")
+        def en = project.file("${help.absolutePath}/en_US.lang")
         def en_map = parse(en)
 
-        for (lang_file in help.listFiles()) {
-            if (!lang_file.name.endsWith(".lang") || lang_file.name.startsWith("en_US")) continue
+        help.listFiles().each { lang_file ->
+            if (!lang_file.name.endsWith(".lang") || lang_file.name.startsWith("en_US")) return
 
             def lang_map = parse(lang_file)
-            def missing = []
-            def extra = []
+            def missing = en_map.keySet().findAll { !lang_map.containsKey(it) }.sort()
+            def extra = lang_map.keySet().findAll { !en_map.containsKey(it) }.sort()
 
-            for (key in en_map.keySet()) {
-                if (!lang_map.containsKey(key)) missing.add(key)
-            }
-            for (key in lang_map.keySet()) {
-                if (!en_map.containsKey(key)) extra.add(key)
-            }
-
-            missing.sort()
-            extra.sort()
-
+            print("\n")
             if (!missing.isEmpty() || !extra.isEmpty()) {
                 if (!missing.isEmpty()) {
-                    print("Language file ${lang_file.getName()} misses following keys:\n")
-                    for (key in missing) print("- ${key}\n")
+                    print("${lang_file.name} misses:\n"); missing.each { print("- ${it}\n") }
                 }
                 if (!extra.isEmpty()) {
-                    print("Language file ${lang_file.getName()} has additional keys:\n")
-                    for (key in extra) print("- ${key}\n")
+                    print("${lang_file.name} has extra:\n"); extra.each { print("- ${it}\n") }
                 }
             } else {
-                print("Language file ${lang_file.getName()} fully matches ${en.getName()}!\n")
+                print("${lang_file.name} fully matches ${en.name}!\n")
             }
         }
     }
@@ -205,45 +190,40 @@ tasks.register('copyLangStrings') {
     doLast {
         def parse = { File file ->
             def map = new HashMap()
-            def splits = file.text.split("\n")
-
-            for (split in splits) {
+            file.text.split("\n").each { split ->
                 def index = split.indexOf("=")
-                if (index != -1) {
-                    map.put(split.substring(0, index), split.substring(index + 1))
-                }
+                if (index != -1) map.put(split.substring(0, index), split.substring(index + 1))
             }
             return map
         }
 
         def help = project.file("src/main/resources/assets/${base.archivesName.get().toLowerCase()}/lang/")
-        def en = project.file("${help.getAbsolutePath()}/en_US.lang")
+        def en = project.file("${help.absolutePath}/en_US.lang")
 
-        for (file in help.listFiles()) {
-            if (file.name.endsWith(".lang") && !file.name.startsWith("en_")) {
-                def strings = parse(file)
-                def splits = en.text.split("\n")
+        help.listFiles().each { file ->
+            if (!file.name.endsWith(".lang") || file.name.startsWith("en_")) return
 
-                for (def i = 0; i < splits.length; i++) {
-                    def str = splits[i]
-                    if (str.contains("=")) {
-                        def index = str.indexOf("=")
-                        def key = str.substring(0, index)
+            def strings = parse(file)
+            def splits = en.text.split("\n")
 
-                        if (strings.containsKey(key)) {
-                            splits[i] = key + "=" + strings.get(key)
-                        }
-                    }
+            splits.eachWithIndex { str, i ->
+                if (str.contains("=")) {
+                    def key = str.substring(0, str.indexOf("="))
+                    if (strings.containsKey(key)) splits[i] = key + "=" + strings.get(key)
                 }
-                file.write(splits.join("\n"))
             }
+
+            file.write(splits.join("\n"))
+            print("Wrote to ${file.name}...\n")
         }
+
+        print("Done!")
     }
 }
 
+// Javadocs
 tasks.register('scriptingJavadocsJson', Exec) {
     group = "build"
-
     ignoreExitValue = true
 
     def deps = configurations.runtimeClasspath.collect { it.absolutePath }.join(File.pathSeparator)
@@ -254,8 +234,8 @@ tasks.register('scriptingJavadocsJson', Exec) {
             "-sourcepath", "./src/main/java/",
             "-classpath", "./run/libs/*${File.pathSeparator}${deps}",
             "-encoding", "UTF-8",
-            "-subpackages", "mchorse.mappet.api.scripts.user",
-            "-root", "mchorse.mappet.api.scripts.user",
+            "-subpackages", "mchorse.mappet.api.scripts.code",
+            "-root", "mchorse.mappet.api.scripts.code",
             "-result", "./src/main/resources/assets/mappet/docs",
             "-version", "3"
 
@@ -263,13 +243,12 @@ tasks.register('scriptingJavadocsJson', Exec) {
     standardOutput = System.out
 }
 
-
+// Icons
 def iconsDir = file("src/main/resources/assets/mappet/textures/gui/icons")
 def iconsJson = file("src/main/resources/assets/mappet/icons.json")
 
 tasks.register('generateIconsJson') {
     group = "build"
-
     inputs.dir(iconsDir)
     outputs.file(iconsJson)
 
@@ -278,38 +257,27 @@ tasks.register('generateIconsJson') {
 
         if (iconsDir.exists()) {
             iconsDir.eachFileRecurse { file ->
-                if (file.isFile() && file.name.endsWith(".png")) {
-                    def relativePath = iconsDir.toPath().relativize(file.toPath()).toString().replace('\\', '/')
-                    if (relativePath[0] == '-') return
-                    def iconKey = relativePath.substring(0, relativePath.length() - 4)
+                if (!file.isFile() || !file.name.endsWith(".png")) return
+                def relativePath = iconsDir.toPath().relativize(file.toPath()).toString().replace('\\', '/')
+                if (relativePath[0] == '-') return
+                def iconKey = relativePath.substring(0, relativePath.length() - 4)
+                def jsonSibling = new File(file.parentFile, file.name.replace(".png", ".json"))
 
-                    def jsonSibling = new File(file.parentFile, file.name.replace(".png", ".json"))
-
-                    if (jsonSibling.exists()) {
-                        def parsed = new JsonSlurper().parse(jsonSibling)
-                        if (parsed instanceof Map) {
-                            parsed["path"] = iconKey
-                            iconsList << parsed
-                        } else {
-                            iconsList << iconKey
-                        }
-                    } else {
-                        iconsList << iconKey
-                    }
+                if (jsonSibling.exists()) {
+                    def parsed = new JsonSlurper().parse(jsonSibling)
+                    if (parsed instanceof Map) {
+                        parsed["path"] = iconKey; iconsList << parsed
+                    } else iconsList << iconKey
+                } else {
+                    iconsList << iconKey
                 }
             }
         }
 
-        iconsList.sort { a, b ->
-            def aKey = (a instanceof Map) ? a["path"] : a
-            def bKey = (b instanceof Map) ? b["path"] : b
-            aKey <=> bKey
-        }
-
-        def json = JsonOutput.prettyPrint(JsonOutput.toJson(iconsList))
+        iconsList.sort { a, b -> ((a instanceof Map ? a["path"] : a) as String) <=> ((b instanceof Map ? b["path"] : b) as String) }
 
         iconsJson.parentFile.mkdirs()
-        iconsJson.text = json
+        iconsJson.text = JsonOutput.prettyPrint(JsonOutput.toJson(iconsList))
     }
 }
 
@@ -319,16 +287,17 @@ def iconSiblingJsonExcludes = fileTree(iconsDir) {
 }.collect { File file -> "assets/mappet/textures/gui/icons/" + iconsDir.toPath().relativize(file.toPath()).toString().replace('\\', '/')
 }
 
-tasks.named('processResources').configure {
-    dependsOn('scriptingJavadocsJson')
-    dependsOn('generateIconsJson')
-}
+//tasks.named('processResources').configure {
+//    dependsOn('scriptingJavadocsJson')
+//    dependsOn('generateIconsJson')
+//}
 
 tasks.withType(Jar).configureEach {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     exclude iconSiblingJsonExcludes
 }
 
+// Sources archive
 tasks.register('archiveSources', Exec) {
     def date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
     commandLine("7z", "a", "-t7z", "-mx9", file("exports/mappet-${date}.7z").absolutePath, "mchorse")

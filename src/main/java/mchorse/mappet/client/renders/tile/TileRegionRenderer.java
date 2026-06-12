@@ -101,7 +101,7 @@ public class TileRegionRenderer extends TileBaseBlockRenderer<TileRegion>
 
     public void renderShape(AbstractShape shape, double x, double y, double z, Color color)
     {
-        Vector3d diff = new Vector3d(shape.pos.x + 0.5F, shape.pos.y + 0.5F, shape.pos.z + 0.5F);
+        Vector3d diff = new Vector3d(shape.offset.x + 0.5F, shape.offset.y + 0.5F, shape.offset.z + 0.5F);
 
         diff.x += x;
         diff.y += y;

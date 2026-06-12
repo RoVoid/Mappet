@@ -22,7 +22,7 @@ import mchorse.mappet.client.gui.triggers.panels.GuiSoundTriggerBlockPanel;
 import mchorse.mappet.client.gui.triggers.panels.GuiStateTriggerBlockPanel;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
 import mchorse.mappet.client.gui.utils.overlays.GuiEditorOverlayPanel;
-import mchorse.mappet.client.Colors;
+import mchorse.mappet.utils.Colors;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;

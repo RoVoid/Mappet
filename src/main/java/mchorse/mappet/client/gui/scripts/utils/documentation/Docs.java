@@ -2,8 +2,11 @@ package mchorse.mappet.client.gui.scripts.utils.documentation;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import mchorse.mappet.Mappet;
+import mchorse.mappet.utils.PlayerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
@@ -21,14 +24,30 @@ public class Docs {
 
     public Docs() {
         Minecraft mc = Minecraft.getMinecraft();
+        JsonParser parser = new JsonParser();
+
+//        JsonObject index;
+//        try {
+//            InputStream stream = mc.getResourceManager().getResource(new ResourceLocation(Mappet.MOD_ID, "docs/index.json")).getInputStream();
+//            String json = new Scanner(stream, "UTF-8").useDelimiter("\\A").next();
+//            index = parser.parse(json).getAsJsonObject();
+//        } catch (Exception e) {
+//            Mappet.logger.error("Failed to load docs/index.json: {}", e.getMessage());
+//            return;
+//        }
+//
+//        String root = index.has("root") ? index.get("root").getAsString() : "";
+//        String language = PlayerUtils.getLanguage();
+
+
+
+
         Gson gson = new GsonBuilder().create();
 
         InputStream stream = null;
         String language = mc.getLanguageManager().getCurrentLanguage().getLanguageCode().toLowerCase();
         try {
-            stream = mc.getResourceManager()
-                    .getResource(new ResourceLocation(Mappet.MOD_ID, "docs/" + language + ".json"))
-                    .getInputStream();
+            stream = mc.getResourceManager().getResource(new ResourceLocation(Mappet.MOD_ID, "docs/" + language + ".json")).getInputStream();
         } catch (Exception e) {
             Mappet.logger.error("Not found docs on your localization!");
             if (language.equalsIgnoreCase("en_us")) return;

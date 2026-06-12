@@ -5,11 +5,13 @@ import mchorse.mappet.api.utils.content.IContentTypeBase;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PacketContentNames extends PacketContentBase
 {
-    public List<String> names = new ArrayList<String>();
+    public Set<String> names = new HashSet<>();
 
     public PacketContentNames()
     {

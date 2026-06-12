@@ -1,39 +1,33 @@
 package mchorse.mappet.blocks.tile;
 
 import mchorse.mappet.api.regions.Region;
-import mchorse.mappet.capabilities.character.Character;
-import mchorse.mappet.capabilities.character.ICharacter;
-import mchorse.mappet.utils.PositionCache;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.*;
 
 public class TileRegion extends TileEntity implements ITickable {
     public Region region = new Region();
 
+    private Set<UUID> entities = new HashSet<>(10);
+    private Set<UUID> previous = new HashSet<>();
 
-    private final Set<UUID> entities = new HashSet<>(10);
-    private final Map<UUID, MutableInt> delays = new HashMap<>();
+    private final Map<UUID, Integer> delays = new HashMap<>();
     private int tick;
 
     public void set(NBTTagCompound tag) {
-//        if (tag == null || tag.hasNoTags()) region = new Region();
         region.deserializeNBT(tag);
         markDirty();
-
     }
 
     @Override
@@ -43,117 +37,54 @@ public class TileRegion extends TileEntity implements ITickable {
         if (!delays.isEmpty()) checkDelays();
 
         int frequency = Math.max(region.update, 1);
-        if (tick % frequency == 0) {
-            checkRegion();
-            tick = 0;
-        }
+        if (tick % frequency == 0) checkRegion();
         ++tick;
     }
 
     private void checkDelays() {
-        delays.entrySet().removeIf(entry -> {
-            int delay = entry.getValue().decrementAndGet();
-            if (delay > 0) {
-                entry.getValue().setValue(delay);
-                return false;
-            }
+        Iterator<Map.Entry<UUID, Integer>> it = delays.entrySet().iterator();
+
+        while (it.hasNext()) {
+            Map.Entry<UUID, Integer> entry = it.next();
+
+            if (tick < entry.getValue()) continue;
+
             EntityPlayer player = world.getPlayerEntityByUUID(entry.getKey());
             if (player != null) region.triggerEnter(player, getPos());
-            return true;
-        });
+            it.remove();
+        }
     }
 
     private void checkRegion() {
-        List<? extends Entity> list = region.checkEntities ? world.loadedEntityList : world.playerEntities;
+        List<? extends Entity> list = world.getEntitiesWithinAABB(region.checkEntities ? EntityLivingBase.class : EntityPlayer.class,
+                region.getSearchBox(getPos()));
+
+        Set<UUID> tmp = previous;
+        previous = entities;
+        entities = tmp;
+        entities.clear();
+
         for (Entity entity : list) {
             UUID id = entity.getUniqueID();
-            boolean wasInside = entities.contains(id);
+            if (!region.isEntityInside(entity, getPos()) || !region.isEnabled(entity, previous.contains(id))) continue;
 
-            if (region.isEntityInside(entity, getPos())) {
-                if (!region.isEnabled(entity)) {
-                    if (!region.passable && entity instanceof EntityPlayer) handlePassing((EntityPlayer) entity);
-                    continue;
-                }
+            region.triggerTick(entity, getPos());
+            entities.add(id);
 
-                region.triggerTick(entity, getPos());
+            if (previous.remove(id)) continue; // was in region
 
-                if (wasInside) continue;
-
-                if (region.delay > 0) delays.put(id, new MutableInt(region.delay));
-                else region.triggerEnter(entity, getPos());
-                entities.add(id);
-            }
-            else if (wasInside) {
-                if (delays.remove(id) == null) region.triggerExit(entity, getPos());
-                entities.remove(id);
-            }
-        }
-    }
-
-    private void handlePassing(EntityPlayer player) {
-        ICharacter character = Character.get(player);
-        if (character == null) return;
-
-        // out last
-        Vec3d last = player.getPositionVector();
-
-
-        PositionCache cache = character.getPositionCache();
-        Vec3d vec = cache.last10Position;
-        if (vec == null) return;
-
-        if (region.isEntityOutside(vec.x, vec.y + player.height / 2, vec.z, getPos())) {
-            teleportEntity(player, vec, last);
-
-            cache.resetLastPositionTimer();
-
-            return;
+            if (region.delay > 0) delays.put(id, tick + region.delay);
+            else region.triggerEnter(entity, getPos());
         }
 
-//        vec = cache.lastLastPosition;
-//        if (vec != null && region.isEntityOutside(vec.x, vec.y + player.height / 2, vec.z, getPos())) {
-//            teleportEntity(player, vec, last);
-//            cache.resetLastPositionTimer();
-//            return;
-//        }
-
-        vec = vec.subtract(player.posX, player.posY, player.posZ);
-
-        if (vec.lengthSquared() > 0) {
-            vec = vec.normalize().scale(-0.5D);
-
-            double x = player.posX;
-            double y = player.posY;
-            double z = player.posZ;
-
-            while (region.isEntityInside(player, getPos())) {
-                player.posX += vec.x;
-                player.posY += vec.y;
-                player.posZ += vec.z;
-            }
-
-            vec = new Vec3d(x, y, z);
-
-            player.posX = x;
-            player.posY = y;
-            player.posZ = z;
-
-            teleportEntity(player, vec, last);
+        // remove unchecked entities not in region
+        MinecraftServer server = world.getMinecraftServer();
+        if (server == null) return;
+        for (UUID id : previous) {
+            delays.remove(id);
+            Entity entity = server.getEntityFromUuid(id);
+            if (entity != null) region.triggerExit(entity, getPos());
         }
-
-        cache.resetLastPositionTimer();
-    }
-
-    private void teleportEntity(Entity entity, Vec3d vec, Vec3d last) {
-        entity.setPositionAndUpdate(vec.x, vec.y, vec.z);
-
-        Vec3d motion = last.subtract(entity.getPositionVector()).scale(-0.5);
-
-        if (motion.distanceTo(Vec3d.ZERO) < 0.5 * 0.5) motion = motion.normalize();
-
-        double y = Math.abs(motion.y) < 0.01 ? 0.2 : motion.y;
-
-        ((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity.getEntityId(), motion.x, y, motion.z));
     }
 
     /* Rendering related stuff */
@@ -164,12 +95,12 @@ public class TileRegion extends TileEntity implements ITickable {
         return TileEntity.INFINITE_EXTENT_AABB;
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public double getMaxRenderDistanceSquared() {
-        float range = 128;
-        return range * range;
-    }
+    //    @Override
+    //    @SideOnly(Side.CLIENT)
+    //    public double getMaxRenderDistanceSquared() {
+    //        float range = 128;
+    //        return range * range;
+    //    }
 
     /* NBT stuff */
 

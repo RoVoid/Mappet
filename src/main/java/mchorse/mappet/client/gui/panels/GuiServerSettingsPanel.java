@@ -88,13 +88,13 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
         triggers.background().flex().relative(this).x(0.5F, 10).y(35).w(0.5F, -20).h(246);
 
         trigger = new GuiTriggerElement(mc).onClose(this::updateCurrentTrigger);
-        trigger.flex().relative(this).x(1F, -10).y(1F, -10).wh(120, 20).anchor(1F, 1F);
+        trigger.flex().relative(this).x(1F, -10).y(1F, -10).wh(160, 20).anchor(1F, 1F);
         editor = new GuiScrollElement(mc);
         editor.flex().relative(this).x(0.5F).y(281).w(0.5F).h(1F, -311).column(5).scroll().stretch().padding(10);
 
         GuiLabel triggersLabel = Elements.label(IKey.lang("mappet.gui.settings.title")).anchor(0, 0.5F).background();
 
-        triggersLabel.flex().relative(this).x(0.5F, 10).y(10).wh(120, 20);
+        triggersLabel.flex().relative(this).x(0.5F, 10).y(10).wh(160, 20);
 
         forgeTriggersLayout = new GuiElement(mc);
         forgeTriggersLayout.flex().relative(this).wh(0.5F, 0.5F);

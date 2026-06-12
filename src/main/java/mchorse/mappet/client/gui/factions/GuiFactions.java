@@ -1,10 +1,10 @@
 package mchorse.mappet.client.gui.factions;
 
 import mchorse.mappet.api.factions.FactionAttitude;
+import mchorse.mappet.utils.Colors;
 import mchorse.mappet.client.gui.panels.GuiFactionPanel;
-import mchorse.mappet.client.Colors;
+import mchorse.mappet.client.gui.utils.GuiEnumElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
-import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
@@ -13,58 +13,41 @@ import net.minecraft.client.Minecraft;
 
 import java.util.Map;
 
-public class GuiFactions extends GuiElement
-{
+public class GuiFactions extends GuiElement {
     private Map<String, FactionAttitude> relations;
 
-    public GuiFactions(Minecraft mc)
-    {
+    public GuiFactions(Minecraft mc) {
         super(mc);
-
-        this.flex().column(5).stretch().vertical();
+        flex().column(5).stretch().vertical();
     }
 
     /**
      * Add a relation to the relation map
      */
-    public void addRelation(String faction, FactionAttitude attitude, boolean put)
-    {
-        GuiCirculateElement button = GuiFactionPanel.createButton(this.mc, (a) ->
-        {
-            this.relations.put(faction, a);
-        });
-        GuiElement row = Elements.row(this.mc, 5, Elements.label(IKey.str(faction), 20).anchor(0, 0.5F), button);
+    public void addRelation(String faction, FactionAttitude attitude, boolean put) {
+        GuiEnumElement<FactionAttitude> button = GuiFactionPanel.createButton(mc, (a) -> relations.put(faction, a));
+        GuiElement row = Elements.row(mc, 5, Elements.label(IKey.str(faction), 20).anchor(0, 0.5F), button);
 
-        GuiFactionPanel.setValue(button, attitude);
-        row.context(() -> new GuiSimpleContextMenu(this.mc).action(Icons.REMOVE, IKey.lang("mappet.gui.factions.relations.context.remove"), () ->
-        {
+        button.select(attitude);
+        row.context(() -> new GuiSimpleContextMenu(mc).action(Icons.REMOVE, IKey.lang("mappet.gui.factions.relations.context.remove"), () -> {
             row.removeFromParent();
-            this.relations.remove(faction);
-            this.getParentContainer().resize();
+            relations.remove(faction);
+            getParentContainer().resize();
         }, Colors.NEGATIVE));
 
-        this.add(row);
+        add(row);
 
-        if (put)
-        {
-            this.relations.put(faction, attitude);
-        }
+        if (put) relations.put(faction, attitude);
 
-        this.getParentContainer().resize();
+        getParentContainer().resize();
     }
 
     /**
      * Fill in faction's relation data
      */
-    public void set(Map<String, FactionAttitude> relations)
-    {
+    public void set(Map<String, FactionAttitude> relations) {
         this.relations = relations;
-
-        this.removeAll();
-
-        for (String key : relations.keySet())
-        {
-            this.addRelation(key, relations.get(key), false);
-        }
+        removeAll();
+        for (String key : relations.keySet()) addRelation(key, relations.get(key), false);
     }
 }

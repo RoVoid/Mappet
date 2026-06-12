@@ -2,7 +2,10 @@ package mchorse.mappet.api.scripts.code.entities.player;
 
 import io.netty.buffer.Unpooled;
 import mchorse.aperture.network.common.PacketCameraState;
+import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.mappet.api.scripts.code.ScriptResourcePack;
+import mchorse.mappet.api.scripts.code.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.items.ScriptInventory;
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
@@ -19,7 +22,7 @@ import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.utils.SkinUtils;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.ICharacter;
-import mchorse.mappet.client.gui.utils.SafeWebLinkOpener;
+import mchorse.mappet.client.gui.url.SafeWebLinkOpener;
 import mchorse.mappet.entities.utils.WalkSpeedManager;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.PacketBlackAndWhiteShader;
@@ -37,6 +40,7 @@ import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.capabilities.morphing.Morphing;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -430,19 +434,41 @@ public class ScriptPlayer extends ScriptEntity<EntityPlayerMP> {
         return quests;
     }
 
+    @Override
     public AbstractMorph getMorph() {
         IMorphing cap = Morphing.get(entity);
-
-        if (cap != null) return cap.getCurrentMorph();
-
-        return super.getMorph();
+        return cap == null ? super.getMorph() : cap.getCurrentMorph();
     }
 
+    @Override
     public boolean setMorph(AbstractMorph morph) {
         if (morph == null) MorphAPI.demorph(entity);
         else MorphAPI.morph(entity, morph, true);
-
         return true;
+    }
+
+//    public boolean setMorph(AbstractMorph morph, IScriptEntity otherEntity) {
+//        if (Loader.isModLoaded("blockbuster")) return setActorsMorph(morph,  otherEntity);
+//        return false;
+//    }
+//
+//    @Optional.Method(modid = "blockbuster")
+//    private boolean setActorsMorph(AbstractMorph morph, IScriptEntity otherEntity) {
+//        Entity entity = otherEntity.asMinecraft();
+//        if (entity instanceof EntityActor) {
+//            EntityActor actor = (EntityActor) entity;
+//
+//            PacketModifyActor message = new PacketModifyActor(actor);
+//            mchorse.blockbuster.network.Dispatcher.sendTo(message, asMinecraft());
+//
+//            return true;
+//        }
+//
+//        return false;
+//    }
+
+    public boolean openUI(MappetUIBuilder in) {
+        return openUI(in, false);
     }
 
     public boolean openUI(MappetUIBuilder in, boolean defaultData) {

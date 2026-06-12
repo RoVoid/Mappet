@@ -1,17 +1,17 @@
 package mchorse.mappet.client.gui.scripts.utils;
 
 public class TextSegment {
-    public TOKEN token;
+    public Token token;
     public String text;
     public int color;
     public int alpha;
     public int width;
 
-    public TextSegment(TOKEN token, String text, int color, int width) {
+    public TextSegment(Token token, String text, int color, int width) {
         this(token, text, color, 0, width);
     }
 
-    public TextSegment(TOKEN token, String text, int color, int alpha, int width) {
+    public TextSegment(Token token, String text, int color, int alpha, int width) {
         this.token = token;
         this.text = text;
         this.color = color;
@@ -19,11 +19,11 @@ public class TextSegment {
         this.width = width;
     }
 
-    public boolean is(TOKEN token) {
+    public boolean is(Token token) {
         return this.token == token;
     }
 
-    public enum TOKEN {
+    public enum Token {
         COMMENT,        // //
         MULTI_COMMENTS, // /* */
         STRING,         // '' "" ``

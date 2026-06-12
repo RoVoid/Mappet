@@ -72,8 +72,8 @@ public class SchematicManager extends BaseManager<Schematic> {
         return tag;
     }
 
-    @Override
-    protected String getExtension() {
-        return ".schematic";
-    }
+//    @Override
+//    protected String getExtension() {
+//        return ".schematic";
+//    }
 }

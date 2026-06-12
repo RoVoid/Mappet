@@ -1,12 +1,13 @@
 package mchorse.mappet.api.scripts;
 
+import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.scripts.code.ScriptEvent;
-import mchorse.mappet.api.scripts.code.ScriptFactory;
 import mchorse.mappet.api.scripts.code.math.ScriptMath;
+import mchorse.mappet.api.scripts.engine.ScriptEngineFactory;
+import mchorse.mappet.api.scripts.engine.ScriptEngineRegistry;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.api.utils.manager.BaseManager;
-import mchorse.mappet.utils.ScriptUtils;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,6 +16,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.commons.io.FileUtils;
 
+import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import java.io.File;
@@ -24,186 +26,222 @@ import java.util.*;
 public class ScriptManager extends BaseManager<Script> {
     public final Map<String, Object> objects = new HashMap<>();
 
-    private final Map<String, Script> uniqueScripts = new HashMap<>();
-    public Map<String, Script> globalLibraries = new HashMap<>();
-    private final Map<Object, ScriptEngine> repls = new HashMap<>();
+    private final Map<String, ScriptEngine> uniqueEngines = new HashMap<>();
+    private final Map<ScriptEngine, List<ScriptRange>> engineRanges = new IdentityHashMap<>();
+    public final Map<String, Script> globalLibraries = new HashMap<>();
+
+    private final Map<Object, ScriptEngine> replEngines = new HashMap<>();
     private String replOutput = "";
 
     public ScriptManager(File folder) {
         super(folder);
-        ScriptUtils.getAllEngines();
+        ScriptEngineRegistry.getAllEngines();
     }
 
-    /**
-     * Execute a REPL code that came from a player
-     */
-    public String executeRepl(Object key, String code) throws ScriptException {
-        ScriptEngine engine = repls.get(key);
+    /* Engine */
 
-        replOutput = "";
+    private ScriptEngine getEngine(Script script) throws ScriptException {
+        if (!script.unique) return initEngine(script);
 
-        if (engine == null) {
-            engine = ScriptUtils.sanitize(ScriptUtils.getEngineByExtension("js"));
+        ScriptEngine engine = uniqueEngines.get(script.getId());
+        if (engine != null) return engine;
 
-            engine.put("____manager____", this);
-            engine.put("mappet", new ScriptFactory());
-            engine.put("math", new ScriptMath());
-
-            ScriptEvent event = new ScriptEvent(prepareContext(key), "", "");
-            engine.put("c", event);
-            engine.put("s", event.getSubject());
-
-            engine.eval("var __p__ = print; print = function(message) { ____manager____.replPrint(message); __p__(message); };");
-
-            repls.put(key, engine);
-        }
-
-        Object object = engine.eval(code);
-
-        if (replOutput.isEmpty()) {
-            replPrint(object);
-        }
-
-        return replOutput;
+        engine = initEngine(script);
+        uniqueEngines.put(script.getId(), engine);
+        return engine;
     }
 
-    public Object eval(ScriptEngine engine, String code, DataContext context) throws ScriptException {
-        ScriptEvent event = new ScriptEvent(context, "", "");
-        engine.put("mappet", new ScriptFactory());
-        engine.put("math", new ScriptMath());
-        engine.put("c", event);
+    private ScriptEngine initEngine(Script script) throws ScriptException {
+        ScriptEngine engine = ScriptEngineFactory.create(script);
+        List<ScriptRange> ranges = new ArrayList<>();
+        StringBuilder code = new StringBuilder();
 
-        return engine.eval(code);
+        Set<String> allLibraries = new LinkedHashSet<>(globalLibraries.keySet());
+        allLibraries.addAll(script.libraries);
+        allLibraries.remove(script.getId());
+
+        int total = 0;
+        for (String library : allLibraries) total = loadLibrary(library, code, ranges, total);
+
+        ranges.add(new ScriptRange(total, script.getId()));
+        code.append(script.code);
+
+        try {
+            engine.eval(code.toString());
+        } catch (ScriptException e) {
+            throw processScriptException(e, ranges, script.getId());
+        }
+
+        engineRanges.put(engine, ranges);
+        return engine;
     }
 
-    public DataContext prepareContext(Object key) {
-        DataContext context;
+    private int loadLibrary(String id, StringBuilder finalCode, List<ScriptRange> ranges, int total) {
+        File file = getScriptFile(id);
 
-        if (key instanceof EntityPlayerMP) {
-            context = new DataContext((EntityPlayerMP) key);
-        }
-        else if (key instanceof MinecraftServer) {
-            context = new DataContext((MinecraftServer) key);
-        }
-        else if (key instanceof EntityLiving) {
-            context = new DataContext((EntityLiving) key);
-        }
-        else {
-            MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-            context = new DataContext(server);
+        if (file == null || !file.isFile()) {
+            Mappet.logger.error("Didn't find library: " + id + ".js");
+            return total;
         }
 
-        return context;
+        try {
+            String code = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+            ranges.add(new ScriptRange(total, id));
+            finalCode.append(code).append("\n");
+
+            int lines = 1;
+            for (int i = 0; i < code.length(); i++) if (code.charAt(i) == '\n') lines++;
+            total += lines;
+        } catch (Exception e) {
+            Mappet.logger.error("Failed to load library '" + id + "': " + e.getMessage());
+        }
+
+        return total;
     }
 
-    public void replPrint(Object object) {
-        if (object == null) {
-            object = TextFormatting.GRAY + "undefined";
-        }
+    /* Execute */
 
-        replOutput += object + "\n";
-    }
-
-    /**
-     * Execute given script
-     */
     public Object execute(String id, String function, DataContext context) throws ScriptException, NoSuchMethodException {
-        Script script = getScript(id);
-        if (script == null) {
-            Mappet.logger.error("Failed to execute script '" + id + "', maybe is not exists");
-            return null;
-        }
-        return script.execute(function, context);
+        return execute(id, function, context, new Object[0]);
     }
 
     public Object execute(String id, String function, DataContext context, Object... args) throws ScriptException, NoSuchMethodException {
         Script script = getScript(id);
-        if (script == null) throw new ScriptException("Failed to execute script '" + id + "', maybe is not exists");
-        return script.execute(function, context, args);
-    }
-
-    private Script getScript(String id) throws ScriptException {
-        Script script = uniqueScripts.get(id);
 
         if (script == null) {
-            script = load(id);
-
-            if(script == null) return null;
-
-            if (script != null && script.unique) {
-                uniqueScripts.put(id, script);
-            }
-
-            if (script != null && script.globalLibrary) {
-                globalLibraries.put(id, script);
-            }
-        }
-
-        if (script == null) {
+            Mappet.logger.error("Script '" + id + "' not found");
             return null;
         }
 
-        script.start(this);
+        if (function.isEmpty()) function = "main";
 
+        ScriptEngine engine = getEngine(script);
+        ScriptEvent event = new ScriptEvent(context, id, function);
+
+        try {
+            return ((Invocable) engine).invokeFunction(function,
+                    args.length == 0 ? new Object[]{event} : args);
+        } catch (ScriptException e) {
+            ScriptException processed = processScriptException(e, engineRanges.get(engine), id);
+            Mappet.logger.error(processed.getMessage());
+            throw processed;
+        }
+    }
+
+    private Script getScript(String id) {
+        Script script = load(id);
+        if (script != null && script.globalLibrary) globalLibraries.put(id, script);
         return script;
     }
 
-    @Override
-    public Set<String> getIDs() {
-        if (folder == null) {
-            return Collections.emptySet();
-        }
+    private ScriptException processScriptException(ScriptException e, List<ScriptRange> ranges, String scriptId) {
+        if (ranges == null) return e;
 
-        Set<String> set = new HashSet<>();
-
-        recursiveFind(set, folder, "");
-
-        if (folder.listFiles() == null) return set;
-
-        for (File file : Objects.requireNonNull(folder.listFiles())) {
-            String name = file.getName();
-
-            if (!name.endsWith(".json")) {
-                continue;
-            }
-
-            if (file.isFile() && isData(file)) {
-                set.add(name.replace(".json", ""));
+        ScriptRange range = null;
+        for (int i = ranges.size() - 1; i >= 0; i--) {
+            ScriptRange possibleRange = ranges.get(i);
+            if (possibleRange.lineOffset <= e.getLineNumber() - 1) {
+                range = possibleRange;
+                break;
             }
         }
+        if (range == null) return e;
 
-        return set;
+        int lineNumber = e.getLineNumber() - range.lineOffset;
+        String message = e.getMessage()
+                .replaceFirst(scriptId, range.script + " (in " + scriptId + ")")
+                .replaceFirst("at line number \\d+", "at line number " + lineNumber);
+
+        return new ScriptException(message, range.script, lineNumber, e.getColumnNumber());
     }
+
+    public void executeInline(Script script, DataContext context) throws ScriptException {
+        ScriptEngine engine = ScriptEngineFactory.create(script);
+
+        ScriptEvent event = new ScriptEvent(context, "__inline__", "");
+        engine.put("c", event);
+        engine.put("event", event);
+        engine.put("s", event.getSubject());
+        engine.put("subject", event.getSubject());
+
+        for (String library : globalLibraries.keySet()) {
+            File file = getScriptFile(library);
+            if (file == null || !file.isFile()) continue;
+            try {
+                engine.eval(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
+            } catch (Exception e) {
+                Mappet.logger.error("Failed to load library '" + library + "': " + e.getMessage());
+            }
+        }
+
+        engine.eval(script.code);
+    }
+
+    /* REPL */
+
+    public String executeRepl(Object key, String code) throws ScriptException {
+        ScriptEngine engine = replEngines.get(key);
+        replOutput = "";
+
+        if (engine == null) {
+            engine = new NashornScriptEngineFactory().getScriptEngine("--language=es6", "-scripting");
+            ScriptEngineFactory.sanitize(engine);
+
+            engine.put("____manager____", this);
+            engine.put("mappet", ScriptEngineFactory.FACTORY);
+            engine.put("math", new ScriptMath());
+
+            ScriptEvent event = new ScriptEvent(prepareContext(key), "", "");
+            engine.put("c", event);
+            engine.put("event", event);
+            engine.put("s", event.getSubject());
+            engine.put("subject", event.getSubject());
+
+            engine.eval("var __p__ = print; print = function(message) { ____manager____.replPrint(message); __p__(message); };");
+            replEngines.put(key, engine);
+        }
+
+        Object object = engine.eval(code);
+        if (replOutput.isEmpty()) replPrint(object);
+
+        return replOutput;
+    }
+
+    public void replPrint(Object object) {
+        replOutput += (object == null ? TextFormatting.GRAY + "undefined" : object) + "\n";
+    }
+
+    // TODO: Can moveTo DataContext ?
+    public DataContext prepareContext(Object key) {
+        if (key instanceof EntityPlayerMP) return new DataContext((EntityPlayerMP) key);
+        if (key instanceof MinecraftServer) return new DataContext((MinecraftServer) key);
+        if (key instanceof EntityLiving) return new DataContext((EntityLiving) key);
+        return new DataContext(FMLCommonHandler.instance().getMinecraftServerInstance());
+    }
+
+    /* IManager */
 
     @Override
     protected Script createData(String id, NBTTagCompound tag) {
         Script script = new Script();
-
-        if (tag != null) {
-            script.deserializeNBT(tag);
-        }
-
+        if (tag != null) script.deserializeNBT(tag);
         return script;
     }
-
-    /* Custom implementation of base manager to support .js files */
 
     @Override
     public Script load(String id) {
         Script script = super.load(id);
         File scriptFile = getScriptFile(id);
 
-        if (scriptFile != null && scriptFile.isFile()) {
-            try {
-                String code = FileUtils.readFileToString(scriptFile, StandardCharsets.UTF_8);
+        if (scriptFile == null || !scriptFile.isFile()) return script;
 
-                if (script == null) {
-                    script = new Script();
-                }
-
-                script.code = code.replaceAll("\t", "    ").replaceAll("\r", "");
-            } catch (Exception ignored) {
-            }
+        try {
+            String code = FileUtils.readFileToString(scriptFile, StandardCharsets.UTF_8);
+            if (script == null) script = new Script();
+            script.setId(id);
+            script.code = code.replace("\t", "    ").replace("\r", "");
+        } catch (Exception e) {
+            Mappet.logger.error("Failed to load script file '" + id + "': " + e.getMessage());
         }
 
         return script;
@@ -212,92 +250,73 @@ public class ScriptManager extends BaseManager<Script> {
     @Override
     public boolean save(String id, NBTTagCompound tag) {
         String code = new String(tag.getByteArray("Code"), StandardCharsets.UTF_8);
-
         tag.removeTag("Code");
 
-        boolean result = super.save(id, tag);
+        if (!super.save(id, tag)) return false;
 
-        if (!code.trim().isEmpty()) {
-            try {
-                FileUtils.writeStringToFile(getScriptFile(id), code, StandardCharsets.UTF_8);
-
-                result = true;
-            } catch (Exception ignored) {
-            }
+        try {
+            FileUtils.writeStringToFile(getScriptFile(id), code, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            Mappet.logger.error("Failed to save script file '" + id + "': " + e.getMessage());
+            return false;
         }
 
-        if (result) {
-            uniqueScripts.remove(id);
+        uniqueEngines.remove(id);
+        globalLibraries.remove(id);
 
-            Script script = load(id);
+        Script script = load(id);
+        if (script != null && script.globalLibrary) globalLibraries.put(id, script);
 
-            if (script != null && script.unique) {
-                uniqueScripts.put(id, script);
-            }
-
-            if (script != null && script.globalLibrary) {
-                globalLibraries.put(id, script);
-            }
-        }
-
-        return result;
+        return true;
     }
-
-    /* Custom implementation of folder manager to support .js files */
 
     @Override
     public boolean exists(String id) {
         File scriptFile = getScriptFile(id);
-
         return super.exists(id) || scriptFile != null && scriptFile.exists();
     }
 
     @Override
     public boolean rename(String id, String newId) {
+        if(!super.rename(id, newId)) return false;
+
         File scriptFile = getScriptFile(id);
-        boolean result = super.rename(id, newId);
+        if (scriptFile != null) scriptFile.renameTo(getScriptFile(newId));
 
-        if (scriptFile != null && scriptFile.exists()) {
-            return scriptFile.renameTo(getScriptFile(newId)) || result;
-        }
-
-        return result;
+        uniqueEngines.remove(id);
+        globalLibraries.remove(id);
+        return true; // dont check file rename
     }
 
     @Override
     public boolean delete(String id) {
-        boolean result = super.delete(id);
+        if(!super.delete(id)) return false;
+
         File scriptFile = getScriptFile(id);
+        if (scriptFile != null) scriptFile.delete();
 
-        return scriptFile != null && scriptFile.delete() || result;
-    }
-
-    @Override
-    protected boolean isData(File file) {
-        return super.isData(file) || !file.getName().endsWith(".json");
-    }
-
-    public File getScriptFile(String id) {
-        if (folder == null) return null;
-        return new File(folder, id.lastIndexOf(".") != -1 ? id : id + ".js");
+        uniqueEngines.remove(id);
+        globalLibraries.remove(id);
+        return true; // dont check file delete
     }
 
     public void initiateAllScripts() {
         for (String id : getIDs()) {
             try {
                 Script script = load(id);
+                if (script == null) continue;
 
-                if (script != null && script.unique) {
-                    uniqueScripts.put(id, script);
-                    script.start(this);
-                }
+                if (script.globalLibrary) globalLibraries.put(id, script);
 
-                if (script != null && script.globalLibrary) {
-                    globalLibraries.put(id, script);
-                }
+                if (script.unique) uniqueEngines.put(id, initEngine(script));
             } catch (Exception e) {
-                Mappet.logger.error(e.getMessage());
+                Mappet.logger.error("Failed to initiate script '" + id + "': " + e.getMessage());
             }
         }
+    }
+
+    public File getScriptFile(String id) {
+        if (root == null || id == null) return null;
+        return new File(root, id.lastIndexOf('.') != -1 ? id : id + ".js");
     }
 }

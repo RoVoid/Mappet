@@ -1,14 +1,14 @@
 package mchorse.mappet.client.gui.scripts;
 
-import mchorse.mappet.proxy.ClientProxy;
 import mchorse.mappet.api.scripts.Script;
 import mchorse.mappet.api.utils.content.ContentTypes;
 import mchorse.mappet.api.utils.content.IContentType;
+import mchorse.mappet.utils.Colors;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
 import mchorse.mappet.client.gui.utils.overlays.GuiContentNamesOverlayPanel;
 import mchorse.mappet.client.gui.utils.overlays.GuiOverlay;
 import mchorse.mappet.client.gui.utils.overlays.GuiStringOverlayPanel;
-import mchorse.mappet.client.Colors;
+import mchorse.mappet.proxy.ClientProxy;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
@@ -18,27 +18,24 @@ import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-public class GuiLibrariesOverlayPanel extends GuiStringOverlayPanel
-{
-    private List<String> libraries;
+public class GuiLibrariesOverlayPanel extends GuiStringOverlayPanel {
+    private Set<String> libraries;
     private String main;
 
-    public GuiLibrariesOverlayPanel(Minecraft mc, Script script)
-    {
+    public GuiLibrariesOverlayPanel(Minecraft mc, Script script) {
         super(mc, IKey.lang("mappet.gui.scripts.libraries.title"), false, script.libraries, null);
 
         this.libraries = script.libraries;
         this.main = script.getId();
 
-        this.strings.context(() ->
-        {
+        this.strings.context(() -> {
             GuiSimpleContextMenu menu = new GuiSimpleContextMenu(mc);
 
             menu.action(Icons.ADD, IKey.lang("mappet.gui.scripts.libraries.context.add"), this::addLibrary);
 
-            if (!this.strings.list.isDeselected())
-            {
+            if (!this.strings.list.isDeselected()) {
                 menu.action(Icons.REMOVE, IKey.lang("mappet.gui.scripts.libraries.context.remove"), this::removeLibrary, Colors.NEGATIVE);
             }
 
@@ -49,41 +46,33 @@ public class GuiLibrariesOverlayPanel extends GuiStringOverlayPanel
 
     /* Context menu callbacks */
 
-    private void addLibrary()
-    {
+    private void addLibrary() {
         IContentType<Script> type = ContentTypes.SCRIPT;
 
-        ClientProxy.requestNames(type, (names) ->
-        {
-            for (String string : this.strings.list.getList())
-            {
+        ClientProxy.requestNames(type, (names) -> {
+            for (String string : this.strings.list.getList()) {
                 names.remove(string);
             }
 
             List<String> tempNames = new ArrayList<>(names);
 
-            for (String string : tempNames)
-            {
+            for (String string : tempNames) {
                 /**
                  * Checks if library extension don't match script extension
                  */
-                if (!string.endsWith(this.main.substring(this.main.lastIndexOf("."))))
-                {
+                if (!string.endsWith(this.main.substring(this.main.lastIndexOf(".")))) {
                     names.remove(string);
                 }
             }
 
             names.remove(this.main);
 
-            GuiContentNamesOverlayPanel overlay = new GuiContentNamesOverlayPanel(Minecraft.getMinecraft(), type.label(), type, names, null)
-            {
+            GuiContentNamesOverlayPanel overlay = new GuiContentNamesOverlayPanel(Minecraft.getMinecraft(), type.label(), type, names, null) {
                 @Override
-                public void onClose()
-                {
+                public void onClose() {
                     String library = this.getValue();
 
-                    if (library != null && !library.isEmpty())
-                    {
+                    if (library != null && !library.isEmpty()) {
                         GuiLibrariesOverlayPanel.this.strings.list.add(library);
                         GuiLibrariesOverlayPanel.this.strings.list.setCurrentScroll(library);
                     }
@@ -96,8 +85,7 @@ public class GuiLibrariesOverlayPanel extends GuiStringOverlayPanel
         });
     }
 
-    private void removeLibrary()
-    {
+    private void removeLibrary() {
         int index = this.strings.list.getIndex();
         String key = this.strings.list.getCurrentFirst();
 
@@ -106,8 +94,7 @@ public class GuiLibrariesOverlayPanel extends GuiStringOverlayPanel
     }
 
     @Override
-    public void onClose()
-    {
+    public void onClose() {
         this.libraries.clear();
         this.libraries.addAll(this.strings.list.getList());
 
@@ -115,12 +102,10 @@ public class GuiLibrariesOverlayPanel extends GuiStringOverlayPanel
     }
 
     @Override
-    protected void drawBackground(GuiContext context)
-    {
+    protected void drawBackground(GuiContext context) {
         super.drawBackground(context);
 
-        if (this.strings.list.getList().size() <= 1)
-        {
+        if (this.strings.list.getList().size() <= 1) {
             GuiMappetUtils.drawRightClickHere(context, this.area);
         }
     }

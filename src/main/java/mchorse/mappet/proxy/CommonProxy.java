@@ -6,13 +6,13 @@ import mchorse.mappet.api.dialogues.nodes.*;
 import mchorse.mappet.api.events.nodes.*;
 import mchorse.mappet.api.quests.chains.QuestNode;
 import mchorse.mappet.api.scripts.code.ui.*;
+import mchorse.mappet.api.scripts.engine.ScriptEngineRegistry;
 import mchorse.mappet.api.triggers.blocks.*;
 import mchorse.mappet.api.utils.MapFactory;
 import mchorse.mappet.capabilities.character.Character;
 import mchorse.mappet.capabilities.character.CharacterStorage;
 import mchorse.mappet.capabilities.character.ICharacter;
-import mchorse.mappet.client.Colors;
-import mchorse.mappet.client.gui.utils.Beautifier;
+import mchorse.mappet.utils.Colors;
 import mchorse.mappet.events.*;
 import mchorse.mappet.events.handlers.EventHandler;
 import mchorse.mappet.events.handlers.ScriptedItemEventHandler;
@@ -20,7 +20,6 @@ import mchorse.mappet.events.handlers.TriggerEventHandler;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.utils.MappetNpcSelector;
 import mchorse.mappet.utils.MetamorphHandler;
-import mchorse.mappet.utils.ScriptUtils;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -33,7 +32,7 @@ import java.io.File;
 /**
  * Common proxy
  */
-public abstract class CommonProxy {
+public class CommonProxy {
     private static MapFactory<EventBaseNode> events;
     private static MapFactory<EventBaseNode> dialogues;
     private static MapFactory<QuestNode> chains;
@@ -75,7 +74,7 @@ public abstract class CommonProxy {
     public static EventHandler eventHandler;
     public static ScriptedItemEventHandler scriptedItemEventHandler;
 
-    public abstract void runClient(Runnable task);
+    public void runClient(Runnable task){};
 
     public void preInit(FMLPreInitializationEvent event) {
         /* Setup config folder path */
@@ -100,8 +99,7 @@ public abstract class CommonProxy {
         Mappet.EVENT_BUS.register(triggerEventHandler);
         Mappet.EVENT_BUS.register(eventHandler);
 
-        ScriptUtils.initiateScriptEngines();
-        Beautifier.init();
+        ScriptEngineRegistry.initiateScriptEngines();
     }
 
 

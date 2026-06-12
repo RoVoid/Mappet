@@ -209,6 +209,7 @@ mappet.gui.checker.edit=Редактировать условие...
 mappet.gui.checker.expression=Выражение
 mappet.gui.checker.toggle=Переключиться между редактором выражений и условий
 mappet.gui.context.copy_camera=Копировать информацию о камере...
+mappet.gui.yes=Да
 
 mappet.gui.panels.settings=Настройки сервера
 mappet.gui.panels.crafting=Таблицы рецептов
@@ -229,12 +230,12 @@ mappet.gui.panels.huds=HUD сцены
 mappet.gui.panels.logs=Логи
 mappet.gui.panels.snippets=Фрагменты
 mappet.gui.panels.modals.add=Впишите название:
-mappet.gui.panels.modals.dupe=Впишите новое название для дубликата:
-mappet.gui.panels.modals.rename=Впишите новое название:
-mappet.gui.panels.modals.remove=Вы уверены, что хотите это удалить?
+mappet.gui.panels.modals.dupe=Впишите новое название для дубликата
+mappet.gui.panels.modals.rename=Впишите новое название
+mappet.gui.panels.modals.remove=Хотите это удалить?
 mappet.gui.panels.modals.add_folder=Впишите название папки:
-mappet.gui.panels.modals.rename_folder=Впишите новое название папки:
-mappet.gui.panels.modals.remove_folder=Вы уверены, что хотите удалить эту папку?
+mappet.gui.panels.modals.rename_folder=Впишите новое название папки
+mappet.gui.panels.modals.remove_folder=Хотите удалить эту папку?
 mappet.gui.panels.context.copy=Скопировать
 mappet.gui.panels.context.paste=Вставить...
 mappet.gui.panels.context.open_folder=Открыть папку...
@@ -452,8 +453,8 @@ mappet.gui.nodes.info.empty_main=Вам необходимо обозначит�
 mappet.gui.nodes.info.empty_nodes=Чтобы начать работу с нодами, кликните сюда и добавьте нод!
 
 mappet.gui.hotkeys.title=Редактор горячей клавиши события
-mappet.gui.hotkeys.id=ID горячий клавиши
 mappet.gui.hotkeys.name=Выводимое имя клавиши
+mappet.gui.hotkeys.id=ID горячий клавиши
 mappet.gui.hotkeys.key=Клавиша
 mappet.gui.hotkeys.mode=Способ активации
 mappet.gui.hotkeys.mode.down_and_up=Нажать & Отпустить
@@ -633,7 +634,7 @@ mappet.gui.syntax_theme.shadow=Тень текста
 mappet.gui.syntax_theme.colors.title=Цвета синтаксиса
 mappet.gui.syntax_theme.colors.function=Для имён функций (например, customFunc())
 mappet.gui.syntax_theme.colors.method=Для вызовов методов (например, obj.method())
-mappet.gui.syntax_theme.colors.operator=Для операторов, таких как +, -, *, /, =, &&, || и т.д.
+mappet.gui.syntax_theme.colors.operator=Для операторов, таких как +, -, *, /, 
 mappet.gui.syntax_theme.colors.number=Для числовых литералов, например 42, 3.14 или 0xFF
 mappet.gui.syntax_theme.colors.constant=Для константных значений, таких как true, false, null и undefined
 mappet.gui.syntax_theme.colors.identifier=Для языковых ключевых слов, таких как const, var, let, function
@@ -715,6 +716,10 @@ mappet.gui.logs.toggle.ignore_case=Игнорировать регистр
 mappet.gui.logs.toggle.regex=Регулярное выражение
 mappet.gui.logs.toggle.onlyMessage=Только сообщение
 mappet.gui.logs.button.clearHistory=Очистить
+
+mappet.gui.link.title=Хотите перейти по ссылке?
+mappet.gui.link.accept=Перейти
+mappet.gui.link.trust_domain=Доверять ли §e§l%s§r?
 
 
 mappet.gui.shapes.box=Куб
@@ -855,4 +860,4 @@ mappet.gui.scripts.search.replace_all=Replace all
 mappet.gui.scripts.search.search=Search
 mappet.gui.scripts.search.replace=Replace
 mappet.gui.scripts.search.regex_error=Regex error
-mappet.gui.panels.ui_constructor=UI Constructor
+mappet.gui.panels.ui_constructor=UI Constructormappet.error.script.extension

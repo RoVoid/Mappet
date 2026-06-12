@@ -26,6 +26,7 @@ mappet.error.data.empty_charset=§fCharacter set %s§f cannot be found or used!
 
 mappet.error.script.empty=§fScript by ID §7%s§f is either missing or has no §7main§r function! Error message:\n\n%s§r
 mappet.error.script.error=§fScript by ID §7%s§f failed to execute. An error at %s§r:%s§r occurred!\n\n%s§r
+mappet.error.script.extension=Can't find script engine for "%s" extension
 
 mappet.error.hud.missing=§fHUD scene by ID §7%s§f is missing!
 
@@ -212,6 +213,7 @@ mappet.gui.checker.edit=Edit condition...
 mappet.gui.checker.expression=Expression
 mappet.gui.checker.toggle=Toggle between expression and condition editor
 mappet.gui.context.copy_camera=Copy camera information...
+mappet.gui.yes=Yes
 
 mappet.gui.panels.settings=Server settings
 mappet.gui.panels.crafting=Crafting tables
@@ -233,7 +235,7 @@ mappet.gui.panels.logs=Logs
 mappet.gui.panels.snippets=Snippets
 mappet.gui.panels.modals.add=Type in a name:
 mappet.gui.panels.modals.dupe=Type in a new name for a duplicate:
-mappet.gui.panels.modals.rename=Type in a new name:
+mappet.gui.panels.modals.rename=Type in a new name
 mappet.gui.panels.modals.remove=Are you sure you want to remove this?
 mappet.gui.panels.modals.add_folder=Type in a folder name:
 mappet.gui.panels.modals.rename_folder=Type in a new folder name:
@@ -718,6 +720,10 @@ mappet.gui.logs.toggle.ignore_case=Ignore case
 mappet.gui.logs.toggle.regex=Regex
 mappet.gui.logs.toggle.onlyMessage=Only message
 mappet.gui.logs.button.clearHistory=Clear
+
+mappet.gui.link.title=Do you want to follow this link?
+mappet.gui.link.accept=Open
+mappet.gui.link.trust_domain=Can §e§l%s§r be trusted?
 
 # GUI enums
 

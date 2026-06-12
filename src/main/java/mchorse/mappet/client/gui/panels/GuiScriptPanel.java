@@ -1,13 +1,13 @@
 package mchorse.mappet.client.gui.panels;
 
 import mchorse.mappet.Mappet;
-import mchorse.mappet.config.MappetConfig;
+import mchorse.mappet.MappetIcons;
 import mchorse.mappet.api.scripts.Script;
 import mchorse.mappet.api.utils.content.ContentTypes;
 import mchorse.mappet.api.utils.content.IContentType;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.scripts.*;
-import mchorse.mappet.client.gui.scripts.codeEditor.SearchPanel;
+import mchorse.mappet.client.gui.scripts.search.SearchPanel;
 import mchorse.mappet.client.gui.scripts.style.SyntaxStyle;
 import mchorse.mappet.client.gui.scripts.utils.GuiItemStackOverlayPanel;
 import mchorse.mappet.client.gui.scripts.utils.GuiMorphOverlayPanel;
@@ -18,7 +18,7 @@ import mchorse.mappet.client.gui.utils.overlays.GuiOverlay;
 import mchorse.mappet.client.gui.utils.overlays.GuiOverlayPanel;
 import mchorse.mappet.client.gui.utils.overlays.GuiSoundOverlayPanel;
 import mchorse.mappet.client.gui.utils.text.undo.TextEditUndo;
-import mchorse.mappet.MappetIcons;
+import mchorse.mappet.config.MappetConfig;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
@@ -132,8 +132,8 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
     }
 
     public static GuiContextMenu createScriptContextMenu(Minecraft mc, GuiCodeEditor editor) {
-        GuiSimpleContextMenu menu = new GuiSimpleContextMenu(mc).action(Icons.BLOCK,
-                        IKey.lang("mappet.gui.scripts.context.paste_block_pos"), () -> pasteBlockPosition(editor))
+        GuiSimpleContextMenu menu = new GuiSimpleContextMenu(mc).action(Icons.BLOCK, IKey.lang("mappet.gui.scripts.context.paste_block_pos"),
+                        () -> pasteBlockPosition(editor))
                 .action(Icons.POSE, IKey.lang("mappet.gui.scripts.context.paste_player_pos"), () -> pastePlayerPosition(editor))
                 .action(Icons.REVERSE, IKey.lang("mappet.gui.scripts.context.paste_player_rot"), () -> pastePlayerRotation(editor))
                 .action(Icons.WRENCH, IKey.lang("mappet.gui.scripts.context.paste_item"), () -> openItemPicker(editor))
@@ -196,8 +196,8 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         if (tag != null) stack = new ItemStack(tag);
 
         GuiOverlay.addOverlay(GuiBase.getCurrent(),
-                new GuiItemStackOverlayPanel(Minecraft.getMinecraft(), IKey.lang("mappet.gui.scripts.overlay.title_item"), editor, stack),
-                240, 54);
+                new GuiItemStackOverlayPanel(Minecraft.getMinecraft(), IKey.lang("mappet.gui.scripts.overlay.title_item"), editor, stack), 240,
+                54);
     }
 
     private static void openMorphPicker(GuiCodeEditor editor) {
@@ -207,8 +207,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         if (editor.isSelected()) morph = MorphManager.INSTANCE.morphFromNBT(tag);
 
         GuiOverlay.addOverlay(GuiBase.getCurrent(),
-                new GuiMorphOverlayPanel(Minecraft.getMinecraft(), IKey.lang("mappet.gui.scripts.overlay.title_morph"), editor, morph), 240,
-                54);
+                new GuiMorphOverlayPanel(Minecraft.getMinecraft(), IKey.lang("mappet.gui.scripts.overlay.title_morph"), editor, morph), 240, 54);
     }
 
     private static void openSoundPicker(GuiCodeEditor editor) {
@@ -305,14 +304,12 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
     @Override
     public boolean keyTyped(GuiContext context) {
-        if (searchPanel.isVisible() && (context.keyCode == Keyboard.KEY_RETURN || context.keyCode == Keyboard.KEY_NUMPADENTER))
-        {
+        if (searchPanel.isVisible() && (context.keyCode == Keyboard.KEY_RETURN || context.keyCode == Keyboard.KEY_NUMPADENTER)) {
             searchPanel.navigateByKeyboard(GuiScreen.isShiftKeyDown());
             return true;
         }
 
-        if (searchPanel.isVisible() && context.keyCode == Keyboard.KEY_ESCAPE)
-        {
+        if (searchPanel.isVisible() && context.keyCode == Keyboard.KEY_ESCAPE) {
             searchPanel.closeSearch();
             return true;
         }
@@ -335,13 +332,13 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
     private void selectTab(String path) {
         pickData(path);
-        folderList.setCurrentFile(path);
+        folderList.selectFile(path);
     }
 
     private void closeTab(String path, boolean wasSelected) {
         if (tabs.length() != 0) return;
         fill(null);
-        folderList.clearCurrentFile();
+        folderList.unselectFile();
     }
 
     private void updateButtons() {
@@ -414,14 +411,20 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
     }
 
     @Override
+    protected IKey hasDuplicate(String name) {
+        IKey result = super.hasDuplicate(name);
+        return result == null && folderList.inHierarchy(folderList.getPath(name + ".js")) ? IKey.lang("mappet.gui.panels.error.duplicate")
+                : result;
+    }
+
+    @Override
     public void open() {
         super.open();
         updateStyle();
         updateSearchPanelPosition();
     }
 
-    private void updateSearchPanelPosition()
-    {
+    private void updateSearchPanelPosition() {
         searchPanel.flex().relative(editor).x(0).y(1F, 0).w(1F).h(72).anchorY(1F);
     }
 

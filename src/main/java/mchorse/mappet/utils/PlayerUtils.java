@@ -16,4 +16,9 @@ public class PlayerUtils {
     public static boolean isOperator() {
         return Minecraft.getMinecraft().player.canUseCommand(2, "");
     }
+
+    @SideOnly(Side.CLIENT)
+    public static String getLanguage() {
+        return Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode().toLowerCase();
+    }
 }

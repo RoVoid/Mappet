@@ -1,17 +1,21 @@
 package mchorse.mappet.config;
 
+import mchorse.mclib.McLib;
 import mchorse.mclib.config.ConfigBuilder;
 import mchorse.mclib.config.values.ValueBoolean;
 import mchorse.mclib.config.values.ValueInt;
+import mchorse.mclib.config.values.ValueString;
 import mchorse.mclib.events.RegisterConfigEvent;
 
 import static mchorse.mappet.Mappet.MOD_ID;
+import static mchorse.mappet.utils.Colors.shiftHue;
 
 public final class MappetConfig {
     public static ValueBoolean generalDataCaching;
     public static ValueBoolean loadCustomSoundsOnLogin;
     public static ValueBoolean immediatelyOpenLink;
     public static ValueBoolean denyClientSettingChanges;
+    public static ValueString trustedDomains;
 
     public static ValueBoolean npcsPeacefulDamage;
     public static ValueRights npcToolRight;
@@ -23,6 +27,7 @@ public final class MappetConfig {
     public static ValueInt nodePulseBackgroundColor;
     public static ValueBoolean nodePulseBackgroundMcLibPrimary;
     public static ValueInt nodeThickness;
+    public static ValueInt enumColor;
 
     public static ValueBoolean questsPreviewRewards;
 
@@ -44,6 +49,7 @@ public final class MappetConfig {
         loadCustomSoundsOnLogin = builder.getBoolean("load_custom_sounds_on_login", false);
         immediatelyOpenLink = builder.getBoolean("immediately_open_link", false);
         denyClientSettingChanges = builder.getBoolean("deny_client_setting_changes", true);
+        trustedDomains = builder.getString("trusted_domains", "");
 
         builder.category("npc");
         npcsPeacefulDamage = builder.getBoolean("peaceful_damage", true);
@@ -56,6 +62,7 @@ public final class MappetConfig {
         nodePulseBackgroundColor = builder.getInt("pulse_background_color", 0x000000).color();
         nodePulseBackgroundMcLibPrimary = builder.getBoolean("pulse_background_mclib", false);
         nodeThickness = builder.getInt("node_thickness", 3, 0, 20);
+        enumColor = builder.getInt("enum_color", shiftHue(McLib.primaryColor.get(), 0.21f)).color();
         questsPreviewRewards = builder.getBoolean("quest_preview_rewards", true);
 
         builder.category("script_editor").getCategory().markClientSide();

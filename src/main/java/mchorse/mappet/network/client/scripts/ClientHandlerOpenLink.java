@@ -1,6 +1,6 @@
 package mchorse.mappet.network.client.scripts;
 
-import mchorse.mappet.client.gui.utils.SafeWebLinkOpener;
+import mchorse.mappet.client.gui.url.SafeWebLinkOpener;
 import mchorse.mappet.network.packets.scripts.PacketOpenLink;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;

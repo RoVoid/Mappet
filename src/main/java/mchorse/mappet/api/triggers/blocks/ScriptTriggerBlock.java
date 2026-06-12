@@ -1,115 +1,81 @@
 package mchorse.mappet.api.triggers.blocks;
 
 import mchorse.mappet.Mappet;
+import mchorse.mappet.api.scripts.Script;
 import mchorse.mappet.api.utils.DataContext;
-import mchorse.mappet.utils.ScriptUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 
-import javax.script.ScriptException;
-
-public class ScriptTriggerBlock extends DataTriggerBlock
-{
+public class ScriptTriggerBlock extends DataTriggerBlock {
     public String function = "";
 
     public boolean inline = false;
     public String code = "";
 
-    public ScriptTriggerBlock()
-    {
+    public ScriptTriggerBlock() {
         super();
     }
 
-    public ScriptTriggerBlock(String string, String function)
-    {
+    public ScriptTriggerBlock(String string, String function) {
         super(string);
-
         this.function = function;
     }
 
     @Override
-    public boolean isEmpty()
-    {
-        return this.inline ? this.code.isEmpty() : this.string.isEmpty();
+    public boolean isEmpty() {
+        return inline ? code.isEmpty() : string.isEmpty();
     }
 
     @Override
-    public String name()
-    {
-        if (!this.string.isEmpty() && !this.function.isEmpty())
-        {
-            return this.string + " (" + TextFormatting.GRAY + this.function + TextFormatting.RESET + ")";
-        }
-
-        return super.name();
+    public String name() {
+        return string.isEmpty() || function.isEmpty() ? super.name()
+                : string + " (" + TextFormatting.GRAY + function + TextFormatting.RESET + ")";
     }
 
     @Override
-    public void trigger(DataContext context)
-    {
-        if (this.inline)
-        {
-            try
-            {
-                Mappet.scripts.eval(ScriptUtils.sanitize(ScriptUtils.getEngineByExtension("js")), this.code, context);
-            }
-            catch (ScriptException scriptException)
-            {
-                Mappet.logger.error(scriptException.getMessage());
+    public void trigger(DataContext context) {
+        if (inline && !code.isEmpty()) {
+            try {
+                Script script = new Script();
+                script.setId("__inline__");
+                script.code = code;
+                script.unique = false;
+
+                Mappet.scripts.executeInline(script, context);
+            } catch (Exception e) {
+                Mappet.logger.error(e.getMessage());
             }
         }
 
-        if (!this.string.isEmpty())
-        {
-            try
-            {
-                DataContext data = this.apply(context);
-
-                Mappet.scripts.execute(this.string, this.function.trim(), data);
-
-                if (!context.isCanceled())
-                {
-                    context.cancel(data.isCanceled());
-                }
-            }
-            catch (Exception e)
-            {
-                Mappet.logger.error(this.string + " - " + e.getMessage());
+        if (!string.isEmpty()) {
+            try {
+                DataContext data = apply(context);
+                Mappet.scripts.execute(string, function.trim(), data);
+                if (!context.isCanceled()) context.cancel(data.isCanceled());
+            } catch (Exception e) {
+                Mappet.logger.error(string + " - " + e.getMessage());
             }
         }
     }
 
     @Override
-    protected String getKey()
-    {
+    protected String getKey() {
         return "Script";
     }
 
     @Override
-    protected void serializeNBT(NBTTagCompound tag)
-    {
+    protected void serializeNBT(NBTTagCompound tag) {
         super.serializeNBT(tag);
-
-        tag.setString("Function", this.function);
-        tag.setBoolean("Inline", this.inline);
-        tag.setString("Code", this.code);
+        tag.setString("Function", function);
+        tag.setBoolean("Inline", inline);
+        tag.setString("Code", code);
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
-    {
+    public void deserializeNBT(NBTTagCompound tag) {
         super.deserializeNBT(tag);
-
-        this.function = tag.getString("Function");
-
-        if (tag.hasKey("Inline"))
-        {
-            this.inline = tag.getBoolean("Inline");
-        }
-
-        if (tag.hasKey("Code"))
-        {
-            this.code = tag.getString("Code");
-        }
+        function = tag.getString("Function");
+        inline = tag.getBoolean("Inline");
+        code = tag.getString("Code");
     }
 }

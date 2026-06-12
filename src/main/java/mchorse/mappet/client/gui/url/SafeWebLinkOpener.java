@@ -1,4 +1,4 @@
-package mchorse.mappet.client.gui.utils;
+package mchorse.mappet.client.gui.url;
 
 import com.google.common.collect.Sets;
 import mchorse.mappet.Mappet;
@@ -6,8 +6,6 @@ import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.scripts.PacketOpenLink;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiConfirmOpenLink;
-import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -19,10 +17,12 @@ import java.net.URISyntaxException;
 import java.util.Locale;
 import java.util.Set;
 
-public class SafeWebLinkOpener implements GuiYesNoCallback {
+// Should change to static class?
+public class SafeWebLinkOpener {
     private static final Set<String> PROTOCOLS = Sets.newHashSet("http", "https");
 
-    private String pendingUrl = "";
+    @Nullable
+    private URI pendingUrl = null;
 
     @Nullable
     public static URI parseUrl(String url) {
@@ -53,38 +53,38 @@ public class SafeWebLinkOpener implements GuiYesNoCallback {
     }
 
     public static void requestToOpenWebLink(String url, EntityPlayerMP player) {
-        if (parseUrl(url) == null) return;
-        Dispatcher.sendTo(new PacketOpenLink(url), player);
+        if (parseUrl(url) != null) {Dispatcher.sendTo(new PacketOpenLink(url), player);}
     }
 
     @SideOnly(Side.CLIENT)
     public void requestToOpenWebLink(String url) {
-        URI uri;
-        if ((uri = parseUrl(url)) == null) return;
+        URI uri = parseUrl(url);
+        if (uri == null) return;
 
-        if (MappetConfig.immediatelyOpenLink.get()) {
-            pendingUrl = "";
+        String domain = uri.getHost();
+        if (MappetConfig.immediatelyOpenLink.get() || MappetConfig.trustedDomains.get().contains(domain)) {
             openWebLink(uri);
-        }
-        else {
-            pendingUrl = url;
-            Minecraft.getMinecraft().displayGuiScreen(new GuiConfirmOpenLink(this, url, 0, false));
+        } else {
+            pendingUrl = uri;
+            Minecraft.getMinecraft().displayGuiScreen(new GuiLinkOpenScreen(url, this::confirm));
         }
     }
 
-    @Override
-    public void confirmClicked(boolean result, int id) {
-        if (pendingUrl.isEmpty()) return;
+    public void confirm(boolean result, boolean trust) {
+        if (pendingUrl == null) return;
 
-        String url = pendingUrl;
-        pendingUrl = "";
-
-        Minecraft.getMinecraft().player.closeScreen();
+        URI uri = pendingUrl;
+        pendingUrl = null;
 
         if (!result) return;
 
-        URI uri = parseUrl(url);
-        if (uri != null) openWebLink(uri);
+        if (trust) {
+            String domain = uri.getHost();
+            String current = MappetConfig.trustedDomains.get();
+            if (!current.contains(domain)) MappetConfig.trustedDomains.setValue(domain + ' ' + current);
+        }
+
+        openWebLink(uri);
     }
 
 
@@ -94,5 +94,11 @@ public class SafeWebLinkOpener implements GuiYesNoCallback {
         } catch (Exception e) {
             Mappet.logger.error("Couldn't open link: {}", e.getMessage());
         }
+    }
+
+    @Nullable
+    public static String getLinkDomain(String link) {
+        URI uri = parseUrl(link);
+        return uri == null ? null : uri.getHost();
     }
 }

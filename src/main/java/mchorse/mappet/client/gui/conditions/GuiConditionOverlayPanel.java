@@ -2,7 +2,7 @@ package mchorse.mappet.client.gui.conditions;
 
 import mchorse.mappet.api.conditions.Condition;
 import mchorse.mappet.api.conditions.blocks.*;
-import mchorse.mappet.client.Colors;
+import mchorse.mappet.utils.Colors;
 import mchorse.mappet.client.gui.conditions.blocks.*;
 import mchorse.mappet.client.gui.utils.GuiMappetUtils;
 import mchorse.mappet.client.gui.utils.overlays.GuiEditorOverlayPanel;

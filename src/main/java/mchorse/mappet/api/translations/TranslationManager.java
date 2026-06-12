@@ -151,9 +151,9 @@ public class TranslationManager extends BaseManager<Translation> {
     @Override
     public Set<String> getIDs() {
         Set<String> set = new HashSet<>();
-        if (folder == null) return set;
+        if (root == null) return set;
 
-        File[] files = folder.listFiles();
+        File[] files = root.listFiles();
         if (files == null) return set;
         for (File file : files) {
             String name = file.getName();

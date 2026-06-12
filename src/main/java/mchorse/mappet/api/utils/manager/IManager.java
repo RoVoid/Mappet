@@ -13,6 +13,9 @@ public interface IManager<T extends INBTSerializable<NBTTagCompound>> {
 
     T create(String id, NBTTagCompound tag);
 
+    // don't forget '.' at beginning of extension
+    String getExtension();
+
     T load(String id);
 
     boolean exists(String id);

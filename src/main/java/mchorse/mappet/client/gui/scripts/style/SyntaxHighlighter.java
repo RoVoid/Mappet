@@ -2,7 +2,7 @@ package mchorse.mappet.client.gui.scripts.style;
 
 import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.client.gui.scripts.utils.TextSegment;
-import mchorse.mappet.client.gui.scripts.utils.TextSegment.TOKEN;
+import mchorse.mappet.client.gui.scripts.utils.TextSegment.Token;
 import net.minecraft.client.gui.FontRenderer;
 
 import java.util.ArrayList;
@@ -68,19 +68,19 @@ public class SyntaxHighlighter {
 
         if (lastSegment != null) {
             // Продолжение многострочного комментария
-            if (lastSegment.token == TOKEN.MULTI_COMMENTS && !lastSegment.text.trim().endsWith("*/")) {
+            if (lastSegment.token == Token.MULTI_COMMENTS && !lastSegment.text.trim().endsWith("*/")) {
                 inComment = true;
                 if (!line.contains("*/")) {
-                    list.add(new TextSegment(TOKEN.MULTI_COMMENTS, line, style.comments, font.getStringWidth(line)));
+                    list.add(new TextSegment(Token.MULTI_COMMENTS, line, style.comments, font.getStringWidth(line)));
                     return list;
                 }
             }
 
             // Продолжение многострочной строки
-            if (lastSegment.token == TOKEN.STRING && lastSegment.text.trim().endsWith("\\")) {
+            if (lastSegment.token == Token.STRING && lastSegment.text.trim().endsWith("\\")) {
                 inString = lastSegment.text.trim().charAt(0);
                 if (!line.contains("" + inString)) {
-                    list.add(new TextSegment(TOKEN.STRING, line, style.strings, font.getStringWidth(line)));
+                    list.add(new TextSegment(Token.STRING, line, style.strings, font.getStringWidth(line)));
                     return list;
                 }
             }
@@ -92,14 +92,14 @@ public class SyntaxHighlighter {
             int index = line.indexOf("*/");
             String str = line.substring(0, index + 2);
             line = line.substring(index + 2);
-            list.add(new TextSegment(TOKEN.MULTI_COMMENTS, str, style.comments, font.getStringWidth(str)));
+            list.add(new TextSegment(Token.MULTI_COMMENTS, str, style.comments, font.getStringWidth(str)));
         }
 
         if (inString != '\0') {
             int index = line.indexOf(inString);
             String str = line.substring(0, index + 1);
             line = line.substring(index + 1);
-            list.add(new TextSegment(TOKEN.STRING, str, style.strings, font.getStringWidth(str)));
+            list.add(new TextSegment(Token.STRING, str, style.strings, font.getStringWidth(str)));
         }
 
         Matcher matcher = pattern.matcher(line);
@@ -112,36 +112,36 @@ public class SyntaxHighlighter {
             if (start > lastEnd) {
                 String skipped = line.substring(lastEnd, start);
                 int width = font.getStringWidth(skipped);
-                list.add(new TextSegment(TOKEN.OTHER, skipped, style.other, width));
+                list.add(new TextSegment(Token.OTHER, skipped, style.other, width));
             }
 
             String match = matcher.group();
-            TOKEN token;
+            Token token;
             int color;
             int alpha = 0;
 
             if (matcher.group(1) != null) {
-                token = TOKEN.STRING;
+                token = Token.STRING;
                 color = style.strings;
             }
             else if (matcher.group(2) != null) {
-                token = TOKEN.STRING;
+                token = Token.STRING;
                 color = style.strings;
             }
             else if (matcher.group(3) != null) {
-                token = TOKEN.STRING;
+                token = Token.STRING;
                 color = style.strings;
             }
             else if (matcher.group(4) != null) {
-                token = TOKEN.COMMENT;
+                token = Token.COMMENT;
                 color = style.comments;
             }
             else if (matcher.group(5) != null) {
-                token = TOKEN.MULTI_COMMENTS;
+                token = Token.MULTI_COMMENTS;
                 color = style.comments;
             }
             else if (matcher.group(6) != null) {
-                token = TOKEN.NUMBER;
+                token = Token.NUMBER;
                 if (match.startsWith("0x")) {
                     try {
                         int value = Integer.parseUnsignedInt(match.substring(2), 16);
@@ -158,37 +158,37 @@ public class SyntaxHighlighter {
                 else color = style.numbers;
             }
             else if (matcher.group(7) != null) {
-                token = TOKEN.CONSTANT;
+                token = Token.CONSTANT;
                 color = style.constants;
             }
             else if (matcher.group(8) != null) {
-                token = TOKEN.KEYWORD;
+                token = Token.KEYWORD;
                 color = style.keywords;
             }
             else if (matcher.group(9) != null) {
-                token = TOKEN.IDENTIFIER;
+                token = Token.IDENTIFIER;
                 color = style.identifiers;
             }
             else if (matcher.group(10) != null) {
-                token = TOKEN.SPECIAL;
+                token = Token.SPECIAL;
                 color = style.special;
             }
             else if (matcher.group(11) != null) {
-                token = TOKEN.METHOD;
+                token = Token.METHOD;
                 color = style.methods;
                 list.add(new TextSegment(token, ".", style.other, font.getCharWidth('.')));
                 match = match.substring(1);
             }
             else if (matcher.group(12) != null) {
-                token = TOKEN.FUNCTION;
+                token = Token.FUNCTION;
                 color = style.functions;
             }
             else if (matcher.group(13) != null) {
-                token = TOKEN.OPERATOR;
+                token = Token.OPERATOR;
                 color = style.operators;
             }
             else {
-                token = TOKEN.OTHER;
+                token = Token.OTHER;
                 color = style.other;
             }
 
@@ -200,7 +200,7 @@ public class SyntaxHighlighter {
         if (lastEnd < line.length()) {
             String tail = line.substring(lastEnd);
             int width = font.getStringWidth(tail);
-            list.add(new TextSegment(TOKEN.OTHER, tail, style.other, width));
+            list.add(new TextSegment(Token.OTHER, tail, style.other, width));
         }
 
         return list;

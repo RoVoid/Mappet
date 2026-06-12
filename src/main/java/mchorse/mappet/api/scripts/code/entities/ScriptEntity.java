@@ -955,6 +955,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         return states;
     }
 
+    // TODO: add dependency checking everywhere
     @Override
     public AbstractMorph getMorph() {
         return entity instanceof IMorphProvider ? ((IMorphProvider) entity).getMorph() : null;
@@ -963,7 +964,6 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     @Override
     public boolean setMorph(AbstractMorph morph) {
         if (Loader.isModLoaded("blockbuster")) return setActorsMorph(morph);
-
         return false;
     }
 

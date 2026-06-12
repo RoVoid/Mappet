@@ -1,82 +1,68 @@
 package mchorse.mappet.api.regions.shapes;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.AxisAlignedBB;
 
-public class SphereShape extends AbstractShape
-{
+public class SphereShape extends AbstractShape {
     public double horizontal = 1;
     public double vertical = 1;
 
-    public SphereShape()
-    {}
+    public SphereShape() {}
 
-    public SphereShape(double horizontal, double vertical)
-    {
+    public SphereShape(double horizontal, double vertical) {
         this.horizontal = horizontal;
         this.vertical = vertical;
     }
 
     @Override
-    public void copyFrom(AbstractShape shape)
-    {
-        super.copyFrom(shape);
+    public void from(AbstractShape shape) {
+        super.from(shape);
 
-        if (shape instanceof BoxShape)
-        {
-            this.horizontal = ((BoxShape) shape).size.x;
-            this.vertical = ((BoxShape) shape).size.y;
+        if (shape instanceof BoxShape) {
+            horizontal = ((BoxShape) shape).size.x;
+            vertical = ((BoxShape) shape).size.y;
         }
-        else if (shape instanceof SphereShape)
-        {
-            this.horizontal = ((SphereShape) shape).horizontal;
-            this.vertical = ((SphereShape) shape).vertical;
+        else if (shape instanceof SphereShape) {
+            horizontal = ((SphereShape) shape).horizontal;
+            vertical = ((SphereShape) shape).vertical;
         }
     }
 
     @Override
-    public boolean isInside(double x, double y, double z)
-    {
-        double dx = x - this.pos.x;
-        double dy = y - this.pos.y;
-        double dz = z - this.pos.z;
-
-        double rx = dx / this.horizontal;
-        double ry = dy / this.vertical;
-        double rz = dz / this.horizontal;
-
-        return rx * rx + ry * ry + rz * rz <= 1;
+    public AxisAlignedBB getSearchBox() {
+        return new AxisAlignedBB(-horizontal + offset.x, -vertical + offset.y, -horizontal + offset.z, horizontal + offset.x,
+                vertical + offset.y, horizontal + offset.z);
     }
 
     @Override
-    public String getType()
-    {
+    public boolean isInside(double x, double y, double z) {
+        double dx = (x - offset.x) / horizontal;
+        double dy = (y - offset.y) / vertical;
+        double dz = (z - offset.z) / horizontal;
+
+        return dx * dx + dy * dy + dz * dz <= 1;
+    }
+
+    @Override
+    public String getType() {
         return "sphere";
     }
 
     @Override
-    public NBTTagCompound serializeNBT()
-    {
+    public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = super.serializeNBT();
 
-        tag.setDouble("Horizontal", this.horizontal);
-        tag.setDouble("Vertical", this.vertical);
+        tag.setDouble("Horizontal", horizontal);
+        tag.setDouble("Vertical", vertical);
 
         return tag;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
-    {
+    public void deserializeNBT(NBTTagCompound tag) {
         super.deserializeNBT(tag);
 
-        if (tag.hasKey("Horizontal"))
-        {
-            this.horizontal = tag.getDouble("Horizontal");
-        }
-
-        if (tag.hasKey("Vertical"))
-        {
-            this.vertical = tag.getDouble("Vertical");
-        }
+        if (tag.hasKey("Horizontal")) horizontal = tag.getDouble("Horizontal");
+        if (tag.hasKey("Vertical")) vertical = tag.getDouble("Vertical");
     }
 }

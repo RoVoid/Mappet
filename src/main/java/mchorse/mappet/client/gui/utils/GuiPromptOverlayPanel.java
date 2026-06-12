@@ -9,6 +9,7 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.metamorph.api.MorphAPI;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 
@@ -59,7 +60,9 @@ public class GuiPromptOverlayPanel extends GuiOverlayPanel {
 
         text.field.setText(value);
         text.field.setCursorPositionEnd();
-        text.field.lineScrollOffset = 0;
+//        text.field.lineScrollOffset = 0;
+        text.field.setCursorPositionEnd();
+        text.field.setSelectionPos(0);
 
         execValidator(text.field.getText());
         return this;
@@ -99,6 +102,6 @@ public class GuiPromptOverlayPanel extends GuiOverlayPanel {
     }
 
     public void open() {
-        GuiOverlay.addOverlay(GuiBase.getCurrent(), this, 200, 100);
+        GuiOverlay.addOverlay(GuiBase.getCurrent(), this, 300, 100);
     }
 }

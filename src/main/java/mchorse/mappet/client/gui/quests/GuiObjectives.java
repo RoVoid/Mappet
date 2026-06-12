@@ -9,7 +9,7 @@ import mchorse.mappet.client.gui.quests.objectives.GuiCollectObjective;
 import mchorse.mappet.client.gui.quests.objectives.GuiKillObjective;
 import mchorse.mappet.client.gui.quests.objectives.GuiObjective;
 import mchorse.mappet.client.gui.quests.objectives.GuiStateObjective;
-import mchorse.mappet.client.Colors;
+import mchorse.mappet.utils.Colors;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.utils.Icons;

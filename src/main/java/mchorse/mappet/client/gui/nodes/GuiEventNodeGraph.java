@@ -2,7 +2,7 @@ package mchorse.mappet.client.gui.nodes;
 
 import mchorse.mappet.api.events.nodes.EventBaseNode;
 import mchorse.mappet.api.utils.MapFactory;
-import mchorse.mappet.client.Colors;
+import mchorse.mappet.utils.Colors;
 import net.minecraft.client.Minecraft;
 
 import java.util.function.Consumer;
