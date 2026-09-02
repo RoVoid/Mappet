@@ -1,6 +1,7 @@
 package mchorse.mappet.api.quests.chains;
 
 import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetFactories;
 import mchorse.mappet.api.quests.Quest;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.api.utils.manager.BaseManager;
@@ -19,7 +20,7 @@ public class QuestChainManager extends BaseManager<QuestChain> {
 
     @Override
     protected QuestChain createData(String id, NBTTagCompound tag) {
-        QuestChain chain = new QuestChain(CommonProxy.getChains());
+        QuestChain chain = new QuestChain(MappetFactories.getChains());
 
         if (tag != null) {
             chain.deserializeNBT(tag);

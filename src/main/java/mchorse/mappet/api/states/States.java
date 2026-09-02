@@ -49,8 +49,7 @@ public abstract class States implements INBTSerializable<NBTTagCompound> {
     public boolean equals(String key, Object otherValue) {
         Object value = values.get(key);
         if (value == null || otherValue == null) return value == null && otherValue == null;
-        if (value instanceof Number && otherValue instanceof Number)
-            return ((Number) value).doubleValue() == ((Number) otherValue).doubleValue();
+        if (value instanceof Number && otherValue instanceof Number) return ((Number) value).doubleValue() == ((Number) otherValue).doubleValue();
         return value.equals(otherValue);
     }
 
@@ -107,8 +106,8 @@ public abstract class States implements INBTSerializable<NBTTagCompound> {
     // EVENT
 
     protected void post(String key, Object previous, Object current) {
-        if (key == null || !Objects.equals(previous, current))
-            Mappet.EVENT_BUS.post(new StateChangedEvent(this, type(), key, previous, current));
+        Mappet.logger.debug(key, previous, current, Objects.equals(previous, current));
+        if (key != null && !Objects.equals(previous, current)) Mappet.EVENT_BUS.post(new StateChangedEvent(this, type(), key, previous, current));
     }
 
     abstract protected Type type();

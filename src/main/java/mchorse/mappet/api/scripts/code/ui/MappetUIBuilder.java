@@ -1,5 +1,6 @@
 package mchorse.mappet.api.scripts.code.ui;
 
+import mchorse.mappet.MappetFactories;
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
 import mchorse.mappet.api.ui.UI;
 import mchorse.mappet.api.ui.utils.LayoutType;
@@ -65,7 +66,7 @@ public class MappetUIBuilder {
     }
 
     public UIComponent create(String id) {
-        UIComponent component = CommonProxy.getUiComponents().create(id);
+        UIComponent component = MappetFactories.getUiComponents().create(id);
         if (component == null) return null;
 
         current.getChildComponents().add(component);

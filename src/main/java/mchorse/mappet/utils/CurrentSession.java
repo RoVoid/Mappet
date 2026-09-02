@@ -2,41 +2,45 @@ package mchorse.mappet.utils;
 
 import mchorse.mappet.api.utils.content.IContentTypeBase;
 
-import java.util.Objects;
-
 public class CurrentSession
 {
-    public IContentTypeBase type;
-    public String id = "";
+    public IContentTypeBase editingType; // edit
+    public String editingId = "";
 
-    public IContentTypeBase activeType;
-    public String activeId = "";
+    public IContentTypeBase viewingType; // view
+    public String viewingId = "";
 
-    public void set(IContentTypeBase type, String id)
+    public void hold(IContentTypeBase type, String id)
     {
-        this.type = type;
-        this.id = id;
+        editingType = type;
+        editingId = id;
+        observe(type, id); // if he edits, then of course he watches
     }
 
-    public void setActive(IContentTypeBase type, String id)
+    public void observe(IContentTypeBase type, String id)
     {
-        this.activeType = type;
-        this.activeId = id;
+        viewingType = type;
+        viewingId = id;
     }
 
     public void reset()
     {
-        this.set(null, "");
-        this.setActive(null, "");
+        hold(null, "");
+        observe(null, "");
     }
 
     public boolean isEditing(IContentTypeBase type, String id)
     {
-        return this.type == type && Objects.equals(this.id, id);
+        return editingType == type && editingId.equals(id);
     }
 
     public boolean isActive(IContentTypeBase type, String id)
     {
-        return this.activeType == type && Objects.equals(this.activeId, id);
+        return viewingType == type && viewingId.equals(id);
+    }
+
+    public boolean isViewing(IContentTypeBase type, String id)
+    {
+        return viewingType == type && viewingId.equals(id);
     }
 }

@@ -8,7 +8,7 @@ import mchorse.mappet.api.utils.IExecutable;
  * This class is used to execute a runnable after a certain amount of ticks.
  *
  * <pre>{@code
- * CommonProxy.eventHandler.addExecutable(new RunnableExecutionFork(60, () ->
+ * CommonProxy.playerSessionHandler.getExecutableScheduler().addExecutable(new RunnableExecutionFork(60, () ->
  * {
  *     System.out.println("This was called 3 seconds ago!");
  * }));

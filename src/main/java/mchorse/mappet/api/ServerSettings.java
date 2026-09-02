@@ -51,6 +51,8 @@ public class ServerSettings implements INBTSerializable<NBTTagCompound> {
     public final Trigger playerItemToss = register("player_item_toss");
     public final Trigger playerItemInteract = register("player_item_interact");
     public final Trigger playerEntityInteract = register("player_entity_interact");
+    public final Trigger playerHitEntity = register("player_hit_entity");
+    public final Trigger playerHitPlayer = register("player_hit_player");
     public final Trigger playerCloseContainer = register("player_close_container");
     public final Trigger playerOpenContainer = register("player_open_container");
     public final Trigger livingKnockBack = register("living_knockback");

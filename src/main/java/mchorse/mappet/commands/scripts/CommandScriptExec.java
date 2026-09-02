@@ -2,7 +2,8 @@ package mchorse.mappet.commands.scripts;
 
 import mchorse.mappet.Mappet;
 import mchorse.mappet.api.utils.DataContext;
-import mchorse.mappet.commands.CommandMappet;
+import mchorse.mappet.commands.MappetCommands;
+import mchorse.mappet.utils.ServerUtils;
 import mchorse.mclib.commands.SubCommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -36,12 +37,10 @@ public class CommandScriptExec extends CommandScriptBase {
 
     @Override
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        DataContext context = CommandMappet.createContext(server, sender, args[0]);
+        DataContext context = MappetCommands.createContext(server, sender, args[0]);
         String function = args.length > 2 ? args[2] : "main";
 
-        if (args.length > 3) {
-            context.parse(String.join(" ", SubCommandBase.dropFirstArguments(args, 3)));
-        }
+        if (args.length > 3) context.parse(String.join(" ", SubCommandBase.dropFirstArguments(args, 3)));
 
         try {
             Mappet.scripts.execute(args[1], function, context);
@@ -57,10 +56,7 @@ public class CommandScriptExec extends CommandScriptBase {
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-        if (args.length == 1) {
-            return getListOfStringsMatchingLastWord(args, CommandMappet.listOfPlayersAndServer(server));
-        }
-
-        return super.getTabCompletions(server, sender, args, targetPos);
+        return args.length == 1 ? getListOfStringsMatchingLastWord(args, ServerUtils.playerNamesAndServer(server))
+                                : super.getTabCompletions(server, sender, args, targetPos);
     }
 }

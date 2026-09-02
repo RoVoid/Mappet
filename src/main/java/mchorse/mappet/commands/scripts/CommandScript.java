@@ -1,15 +1,17 @@
 package mchorse.mappet.commands.scripts;
 
 import mchorse.mappet.commands.MappetSubCommandBase;
+import mchorse.mappet.commands.scripts.states.CommandScriptState;
 import net.minecraft.command.ICommandSender;
 
 public class CommandScript extends MappetSubCommandBase
 {
     public CommandScript()
     {
-        this.add(new CommandScriptEval());
-        this.add(new CommandScriptExec());
-        this.add(new CommandScriptEngines());
+        add(new CommandScriptState());
+        add(new CommandScriptEval());
+        add(new CommandScriptExec());
+        add(new CommandScriptEngines());
     }
 
     @Override

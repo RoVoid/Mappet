@@ -135,9 +135,9 @@ public class GuiHUDScenePanel extends GuiMappetDashboardPanel<HUDScene>
     }
 
     @Override
-    public void fill(HUDScene data, boolean allowed)
+    public void fill(HUDScene data, String editorName)
     {
-        super.fill(data, allowed);
+        super.fill(data, editorName);
         this.editor.setVisible(data != null);
 
         if (data != null)

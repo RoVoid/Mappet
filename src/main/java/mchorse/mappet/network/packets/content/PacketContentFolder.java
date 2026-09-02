@@ -4,70 +4,49 @@ import io.netty.buffer.ByteBuf;
 import mchorse.mappet.api.utils.content.IContentTypeBase;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-public class PacketContentFolder extends PacketContentBase
-{
-    public String name = "";
-    public String path = "";
+public class PacketContentFolder extends PacketContentBase {
+    // default: create
     public String rename;
     public Boolean delete = false;
 
-    public PacketContentFolder()
-    {
+    public PacketContentFolder() {
         super();
     }
 
-    public PacketContentFolder(IContentTypeBase type, String name, String path)
-    {
-        super(type);
-        this.path = path;
-        this.name = name;
+    public PacketContentFolder(IContentTypeBase type, String path) {
+        super(type, path);
     }
 
-    public PacketContentFolder rename(String rename)
-    {
+    public PacketContentFolder rename(String rename) { // change to newPath
         this.rename = rename;
-
+        delete = false;
         return this;
     }
 
-    public PacketContentFolder delete()
-    {
-        this.delete = true;
-
+    public PacketContentFolder delete() {
+        rename = "";
+        delete = true;
         return this;
     }
 
     @Override
-    public void fromBytes(ByteBuf buf)
-    {
+    public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
 
-        this.name = ByteBufUtils.readUTF8String(buf);
-        this.path = ByteBufUtils.readUTF8String(buf);
+        delete = buf.readBoolean();
+        if (delete) return;
 
-        if (buf.readBoolean())
-        {
-            this.rename = ByteBufUtils.readUTF8String(buf);
-        }
-
-        this.delete = buf.readBoolean();
+        if (buf.readBoolean()) rename = ByteBufUtils.readUTF8String(buf);
     }
 
     @Override
-    public void toBytes(ByteBuf buf)
-    {
+    public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
 
-        ByteBufUtils.writeUTF8String(buf, this.name);
-        ByteBufUtils.writeUTF8String(buf, this.path);
+        buf.writeBoolean(delete);
+        if (delete) return;
 
-        buf.writeBoolean(this.rename != null);
-
-        if (this.rename != null)
-        {
-            ByteBufUtils.writeUTF8String(buf, this.rename);
-        }
-
-        buf.writeBoolean(this.delete);
+        buf.writeBoolean(rename != null);
+        if (rename != null) ByteBufUtils.writeUTF8String(buf, rename);
     }
 }

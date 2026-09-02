@@ -1,6 +1,6 @@
 package mchorse.mappet.client.gui.panels;
 
-import mchorse.mappet.proxy.CommonProxy;
+import mchorse.mappet.MappetFactories;
 import mchorse.mappet.api.dialogues.nodes.*;
 import mchorse.mappet.api.events.nodes.*;
 import mchorse.mappet.api.utils.content.ContentTypes;
@@ -24,12 +24,7 @@ import java.util.Map;
 public class GuiEventPanel extends GuiMappetRunPanel<NodeSystem<EventBaseNode>> {
     public static final IKey EMPTY_EVENT = IKey.lang("mappet.gui.nodes.info.empty_event");
 
-    public static final Map<
-            Class<? extends EventBaseNode>,
-            Class<? extends GuiEventBaseNodePanel<? extends EventBaseNode>>>
-            PANELS = new HashMap<
-            Class<? extends EventBaseNode>,
-            Class<? extends GuiEventBaseNodePanel<? extends EventBaseNode>>>();
+    public static final Map<Class<? extends EventBaseNode>, Class<? extends GuiEventBaseNodePanel<? extends EventBaseNode>>> PANELS = new HashMap<Class<? extends EventBaseNode>, Class<? extends GuiEventBaseNodePanel<? extends EventBaseNode>>>();
 
     static {
         PANELS.put(CommandNode.class, GuiCommandNodePanel.class);
@@ -53,7 +48,7 @@ public class GuiEventPanel extends GuiMappetRunPanel<NodeSystem<EventBaseNode>> 
 
         this.folderList.setFileIcon(Icons.FILE);
 
-        this.graph = new GuiEventNodeGraph(mc, CommonProxy.getEvents(), this::pickNode);
+        this.graph = new GuiEventNodeGraph(mc, MappetFactories.getEvents(), this::pickNode);
         this.graph.notifyAboutMain().flex().relative(this.editor).wh(1F, 1F);
 
         this.editor.add(this.graph);
@@ -71,9 +66,7 @@ public class GuiEventPanel extends GuiMappetRunPanel<NodeSystem<EventBaseNode>> 
             GuiEventBaseNodePanel panel = null;
 
             try {
-                panel = GuiEventPanel.PANELS.get(node.getClass())
-                        .getConstructor(Minecraft.class)
-                        .newInstance(this.mc);
+                panel = GuiEventPanel.PANELS.get(node.getClass()).getConstructor(Minecraft.class).newInstance(this.mc);
 
                 panel.set(node);
             } catch (Exception e) {
@@ -110,8 +103,8 @@ public class GuiEventPanel extends GuiMappetRunPanel<NodeSystem<EventBaseNode>> 
     }
 
     @Override
-    public void fill(NodeSystem<EventBaseNode> data, boolean allowed) {
-        super.fill(data, allowed);
+    public void fill(NodeSystem<EventBaseNode> data, String editorName) {
+        super.fill(data, editorName);
 
         this.graph.setVisible(data != null);
 

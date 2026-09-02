@@ -60,8 +60,8 @@ public class GuiNpcPanel extends GuiMappetDashboardPanel<Npc> {
     }
 
     @Override
-    public void fill(Npc data, boolean allowed) {
-        super.fill(data, allowed);
+    public void fill(Npc data, String editorName) {
+        super.fill(data, editorName);
 
         npcEditor.setVisible(data != null);
         states.setVisible(data != null);

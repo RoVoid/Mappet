@@ -2,76 +2,61 @@ package mchorse.mappet.network.server.content;
 
 import mchorse.mappet.api.utils.manager.IManager;
 import mchorse.mappet.capabilities.character.Character;
+import mchorse.mappet.capabilities.character.ICharacter;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.content.PacketContentData;
-import mchorse.mappet.network.packets.content.PacketContentNames;
+import mchorse.mappet.network.packets.content.PacketContentPaths;
 import mchorse.mappet.utils.CurrentSession;
+import mchorse.mappet.utils.PlayerUtils;
 import mchorse.mclib.network.ServerMessageHandler;
-import mchorse.mclib.utils.OpHelper;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ServerHandlerContentData extends ServerMessageHandler<PacketContentData>
-{
+public class ServerHandlerContentData extends ServerMessageHandler<PacketContentData> {
     @Override
-    public void run(EntityPlayerMP player, PacketContentData message)
-    {
-        boolean isEditing = !Character.get(player).getCurrentSession().isEditing(message.type, message.name);
-        boolean exists = message.type.manager().exists(message.name);
+    public void run(EntityPlayerMP player, PacketContentData message) {
+        if (!PlayerUtils.isOperator(player)) return;
 
-        if (!OpHelper.isPlayerOp(player) || (isEditing && exists))
-        {
-            return;
-        }
+        ICharacter character = Character.get(player);
+        if (character == null) return;
+
+        CurrentSession session = character.getCurrentSession();
+        boolean isEditing = session.isEditing(message.type, message.path);
 
         IManager<?> manager = message.type.manager();
+        boolean exists = manager.exists(message.path);
 
-        if (message.rename != null)
-        {
-            manager.rename(message.name, message.rename);
+        if (!isEditing && exists) return;
 
-            if (message.data != null)
-            {
-                manager.save(message.rename, message.data);
-            }
+        if (message.data == null) { // delete
+            manager.delete(message.path);
+            message.editorName = null;
+
+            session.reset();
         }
-        else if (message.data == null)
-        {
-            manager.delete(message.name);
-        }
-        else
-        {
-            manager.save(message.name, message.data);
-        }
+        else { // create & edit
+            manager.save(message.path, message.data);
+            message.editorName = player.getName();
 
-        if (!exists && manager.exists(message.name))
-        {
-            CurrentSession session = Character.get(player).getCurrentSession();
-
-            session.set(message.type, message.name);
-            session.setActive(message.type, message.name);
+            session.hold(message.type, message.path);
+            session.observe(message.type, message.path);
         }
 
-        /* Synchronize names to other players */
-        List<String> names = new ArrayList<>(message.type.manager().getIDs());
+        PacketContentPaths packet = null;
+        if (exists != manager.exists(message.path)) { // delete & create
+            packet = new PacketContentPaths(message.type, manager.getPaths(), message.requestId);
+            Dispatcher.sendTo(packet, player);
+        }
 
-        for (EntityPlayerMP otherPlayer : player.getServer().getPlayerList().getPlayers())
-        {
-            if (otherPlayer == player)
-            {
-                continue;
-            }
+        if (player.getServer() == null) return;
+        for (EntityPlayerMP otherPlayer : player.getServer().getPlayerList().getPlayers()) {
+            if (otherPlayer == player) continue;
 
-            CurrentSession session = Character.get(otherPlayer).getCurrentSession();
+            ICharacter otherCharacter = Character.get(otherPlayer);
+            if (otherCharacter == null) continue;
 
-            Dispatcher.sendTo(new PacketContentNames(message.type, names), otherPlayer);
-
-            if (session.isActive(message.type, message.name))
-            {
-                Dispatcher.sendTo(message.disallow(), otherPlayer);
-            }
+            CurrentSession otherSession = otherCharacter.getCurrentSession();
+            if (otherSession.viewingType == message.type && packet != null) Dispatcher.sendTo(packet, otherPlayer);
+            if (otherSession.isViewing(message.type, message.path)) Dispatcher.sendTo(message, otherPlayer);
         }
     }
 }

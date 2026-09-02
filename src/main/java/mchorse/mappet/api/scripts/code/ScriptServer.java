@@ -1,6 +1,7 @@
 package mchorse.mappet.api.scripts.code;
 
 import mchorse.mappet.Mappet;
+import mchorse.mappet.api.scripts.ScriptWrapper;
 import mchorse.mappet.api.scripts.code.entities.IScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntity;
 import mchorse.mappet.api.scripts.code.entities.player.ScriptPlayer;
@@ -19,29 +20,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class ScriptServer {
-    private final MinecraftServer server;
-
+public class ScriptServer extends ScriptWrapper<MinecraftServer> {
     private ScriptStates states;
 
-    public ScriptServer(MinecraftServer server) {
-        this.server = server;
-    }
-
-    @Deprecated
-    public MinecraftServer getMinecraftServer() {
-        return server;
+    protected ScriptServer(MinecraftServer server) {
+        super(server);
     }
 
     public ScriptWorld getWorld(int dimension) {
-        return new ScriptWorld(server.getWorld(dimension));
+        return new ScriptWorld(asMinecraft().getWorld(dimension));
     }
 
     public List<IScriptEntity> getEntities(String targetSelector) {
         List<IScriptEntity> entities = new ArrayList<>();
 
         try {
-            for (Entity entity : EntitySelector.matchEntities(server, targetSelector, Entity.class))
+            for (Entity entity : EntitySelector.matchEntities(asMinecraft(), targetSelector, Entity.class))
                 entities.add(ScriptEntity.create(entity));
         } catch (Exception ignored) {
         }
@@ -50,19 +44,19 @@ public class ScriptServer {
     }
 
     public IScriptEntity getEntity(String uuid) {
-        return ScriptEntity.create(server.getEntityFromUuid(UUID.fromString(uuid)));
+        return ScriptEntity.create(asMinecraft().getEntityFromUuid(UUID.fromString(uuid)));
     }
 
     public List<ScriptPlayer> getAllPlayers() {
         List<ScriptPlayer> entities = new ArrayList<>();
 
-        for (EntityPlayerMP player : server.getPlayerList().getPlayers()) entities.add(new ScriptPlayer(player));
+        for (EntityPlayerMP player : asMinecraft().getPlayerList().getPlayers()) entities.add(new ScriptPlayer(player));
 
         return entities;
     }
 
     public ScriptPlayer getPlayer(String username) {
-        EntityPlayerMP player = server.getPlayerList().getPlayerByUsername(username);
+        EntityPlayerMP player = asMinecraft().getPlayerList().getPlayerByUsername(username);
 
         if (player != null) return new ScriptPlayer(player);
 
@@ -76,7 +70,7 @@ public class ScriptServer {
 
     public boolean entityExists(String uuid) throws IllegalArgumentException {
         try {
-            return server.getEntityFromUuid(UUID.fromString(uuid)) != null;
+            return asMinecraft().getEntityFromUuid(UUID.fromString(uuid)) != null;
         } catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException("Invalid UUID string: " + uuid, ex);
         }
@@ -87,7 +81,7 @@ public class ScriptServer {
     }
 
     public void executeScript(String scriptName, String function) {
-        DataContext context = new DataContext(server);
+        DataContext context = new DataContext(asMinecraft());
         try {
             Mappet.scripts.execute(scriptName, function, context);
         } catch (ScriptException e) {
@@ -101,7 +95,7 @@ public class ScriptServer {
     }
 
     public void executeScript(String scriptName, String function, Object... args) {
-        DataContext context = new DataContext(server);
+        DataContext context = new DataContext(asMinecraft());
 
         try {
             Mappet.scripts.execute(scriptName, function, context, args);
@@ -116,10 +110,10 @@ public class ScriptServer {
     }
 
     public List<String> getOppedPlayerNames() {
-        return Arrays.asList(server.getPlayerList().getOppedPlayerNames());
+        return Arrays.asList(asMinecraft().getPlayerList().getOppedPlayerNames());
     }
 
     public ScriptScoreboard getScoreboard() {
-        return new ScriptScoreboard(server.getEntityWorld().getScoreboard());
+        return new ScriptScoreboard(asMinecraft().getEntityWorld().getScoreboard());
     }
 }

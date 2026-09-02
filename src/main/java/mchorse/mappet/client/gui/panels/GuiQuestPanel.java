@@ -107,9 +107,9 @@ public class GuiQuestPanel extends GuiMappetRunPanel<Quest>
     }
 
     @Override
-    public void fill(Quest data, boolean allowed)
+    public void fill(Quest data, String editorName)
     {
-        super.fill(data, allowed);
+        super.fill(data, editorName);
 
         this.editor.setVisible(data != null);
 

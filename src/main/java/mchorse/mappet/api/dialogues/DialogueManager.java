@@ -1,6 +1,7 @@
 package mchorse.mappet.api.dialogues;
 
 import mchorse.mappet.Mappet;
+import mchorse.mappet.MappetFactories;
 import mchorse.mappet.api.dialogues.nodes.ReactionNode;
 import mchorse.mappet.api.events.nodes.EventBaseNode;
 import mchorse.mappet.api.quests.Quest;
@@ -28,7 +29,7 @@ public class DialogueManager extends BaseManager<Dialogue> {
 
     @Override
     protected Dialogue createData(String id, NBTTagCompound tag) {
-        Dialogue dialogue = new Dialogue(CommonProxy.getDialogues());
+        Dialogue dialogue = new Dialogue(MappetFactories.getDialogues());
         if (tag != null) dialogue.deserializeNBT(tag);
         return dialogue;
     }

@@ -1,6 +1,5 @@
 package mchorse.mappet.events.handlers;
 
-import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.api.scripts.code.entities.ScriptEntityItem;
 import mchorse.mappet.api.scripts.code.items.ScriptItemStack;
 import mchorse.mappet.api.triggers.Trigger;
@@ -117,7 +116,7 @@ public class ScriptedItemEventHandler {
             if (props != null && props.interactWithEntity != null && !props.interactWithEntity.blocks.isEmpty()) {
                 DataContext context = new DataContext(event.getEntityPlayer(), event.getTarget());
                 context.set("hand", event.getHand() == EnumHand.MAIN_HAND ? "main" : "off");
-                CommonProxy.triggerEventHandler.trigger(event, props.interactWithEntity, context);
+                props.interactWithEntity.triggerFrom(event, context);
             }
         }
     }
@@ -132,7 +131,7 @@ public class ScriptedItemEventHandler {
             if (props != null && props.attackEntity != null && !props.attackEntity.blocks.isEmpty()) {
                 DamageSource source = event.getSource();
                 DataContext context = new DataContext(event.getEntityLiving(), source.getTrueSource()).set("damage", event.getAmount());
-                CommonProxy.triggerEventHandler.trigger(event, props.attackEntity, context);
+                props.attackEntity.triggerFrom(event, context);
             }
         }
     }
@@ -152,7 +151,7 @@ public class ScriptedItemEventHandler {
                         .set("y", event.getPos().getY())
                         .set("z", event.getPos().getZ())
                         .set("hand", event.getHand() == EnumHand.MAIN_HAND ? "main" : "off");
-                CommonProxy.triggerEventHandler.trigger(event, props.interactWithBlock, context);
+                props.interactWithBlock.triggerFrom(event, context);
             }
         }
     }
@@ -167,7 +166,7 @@ public class ScriptedItemEventHandler {
                 if (props != null && props.onHolderTick != null && !props.onHolderTick.blocks.isEmpty()) {
                     DataContext context = new DataContext(event.player);
                     context.set("hand", hand == EnumHand.MAIN_HAND ? "main" : "off"); // Add the hand used to the context
-                    CommonProxy.triggerEventHandler.trigger(event, props.onHolderTick, context);
+                    props.onHolderTick.triggerFrom(event, context);
                 }
             }
         }
@@ -185,7 +184,7 @@ public class ScriptedItemEventHandler {
                         .set("y", event.getPos().getY())
                         .set("z", event.getPos().getZ())
                         .set("hand", event.getHand() == EnumHand.MAIN_HAND ? "main" : "off");
-                CommonProxy.triggerEventHandler.trigger(event, props.hitBlock, context);
+                props.hitBlock.triggerFrom(event, context);
             }
         }
     }
@@ -214,7 +213,7 @@ public class ScriptedItemEventHandler {
                         .set("y", event.getPos().getY())
                         .set("z", event.getPos().getZ())
                         .set("hand", handIn == EnumHand.MAIN_HAND ? "main" : "off");
-                CommonProxy.triggerEventHandler.trigger(event, props.placeBlock, context);
+                props.placeBlock.triggerFrom(event, context);
             }
         }
     }
@@ -230,7 +229,7 @@ public class ScriptedItemEventHandler {
                 DataContext context = new DataContext(player);
                 context.getValues().put("item", ScriptItemStack.create(event.getItem().getItem()));
                 context.getValues().put("entityItem", ScriptEntityItem.create(event.getItem()));
-                CommonProxy.triggerEventHandler.trigger(event, props.pickup, context);
+                props.pickup.triggerFrom(event, context);
             }
         }
     }
@@ -246,7 +245,7 @@ public class ScriptedItemEventHandler {
                 DataContext context = new DataContext(player);
                 context.getValues().put("item", ScriptItemStack.create(event.getEntityItem().getItem()));
                 context.getValues().put("entityItem", ScriptEntityItem.create(event.getEntityItem()));
-                CommonProxy.triggerEventHandler.trigger(event, props.toss, context);
+                props.toss.triggerFrom(event, context);
             }
         }
     }
@@ -266,7 +265,7 @@ public class ScriptedItemEventHandler {
                         .set("x", event.getPos().getX())
                         .set("y", event.getPos().getY())
                         .set("z", event.getPos().getZ());
-                CommonProxy.triggerEventHandler.trigger(event, props.breakBlock, context);
+                props.breakBlock.triggerFrom(event, context);
             }
         }
     }
@@ -279,7 +278,7 @@ public class ScriptedItemEventHandler {
 
                 if (props != null && props.onHolderTick != null && !props.onHolderTick.blocks.isEmpty()) {
                     DataContext context = new DataContext(event.player);
-                    CommonProxy.triggerEventHandler.trigger(event, props.onHolderTick, context);
+                    props.onHolderTick.triggerFrom(event, context);
                 }
             }
         }
@@ -292,7 +291,7 @@ public class ScriptedItemEventHandler {
                     .set("y", event.getPos().getY())
                     .set("z", event.getPos().getZ())
                     .set("hand", event.getHand() == EnumHand.MAIN_HAND ? "main" : "off");
-            CommonProxy.triggerEventHandler.trigger(event, interactWithAirTrigger, context);
+            interactWithAirTrigger.triggerFrom(event, context);
         }
     }
 
@@ -336,7 +335,7 @@ public class ScriptedItemEventHandler {
                 DataContext context = new DataContext(player);
                 context.getValues().put("item", ScriptItemStack.create(itemStack));
                 context.getValues().put("entityItem", ScriptEntityItem.create(event.getItem()));
-                CommonProxy.triggerEventHandler.trigger(event, props.firstPickup, context);
+                props.firstPickup.triggerFrom(event, context);
             }
         }
     }
@@ -361,7 +360,7 @@ public class ScriptedItemEventHandler {
             if (props != null && props.startedHolding != null && !props.startedHolding.blocks.isEmpty()) {
                 DataContext context = new DataContext(event.getEntityLiving());
                 context.getValues().put("item", ScriptItemStack.create(newItem));
-                CommonProxy.triggerEventHandler.trigger(event, props.startedHolding, context);
+                props.startedHolding.triggerFrom(event, context);
             }
         }
         // Check if entity stopped holding an item
@@ -370,7 +369,7 @@ public class ScriptedItemEventHandler {
             if (props != null && props.stoppedHolding != null && !props.stoppedHolding.blocks.isEmpty()) {
                 DataContext context = new DataContext(event.getEntityLiving());
                 context.getValues().put("item", ScriptItemStack.create(previousItem));
-                CommonProxy.triggerEventHandler.trigger(event, props.stoppedHolding, context);
+                props.stoppedHolding.triggerFrom(event, context);
             }
         }
     }
@@ -386,7 +385,7 @@ public class ScriptedItemEventHandler {
                 DataContext context = new DataContext(player);
                 context.getValues().put("item", ScriptItemStack.create(item));
                 context.getValues().put("duration", event.getDuration());
-                CommonProxy.triggerEventHandler.trigger(event, props.useStart, context);
+                props.useStart.triggerFrom(event, context);
             }
         }
     }
@@ -402,7 +401,7 @@ public class ScriptedItemEventHandler {
                 DataContext context = new DataContext(player);
                 context.getValues().put("item", ScriptItemStack.create(item));
                 context.getValues().put("duration", event.getDuration());
-                CommonProxy.triggerEventHandler.trigger(event, props.useStop, context);
+                props.useStop.triggerFrom(event, context);
             }
         }
     }
@@ -418,7 +417,7 @@ public class ScriptedItemEventHandler {
                 DataContext context = new DataContext(player);
                 context.getValues().put("item", ScriptItemStack.create(item));
                 context.getValues().put("duration", event.getDuration());
-                CommonProxy.triggerEventHandler.trigger(event, props.onUseTick, context);
+                props.onUseTick.triggerFrom(event, context);
             }
         }
     }
@@ -435,7 +434,7 @@ public class ScriptedItemEventHandler {
                     DataContext context = new DataContext(player);
                     context.getValues().put("item", ScriptItemStack.create(item));
                     context.getValues().put("duration", event.getDuration());
-                    CommonProxy.triggerEventHandler.trigger(event, props.finishedUsing, context);
+                    props.finishedUsing.triggerFrom(event, context);
                 }
             }
         }

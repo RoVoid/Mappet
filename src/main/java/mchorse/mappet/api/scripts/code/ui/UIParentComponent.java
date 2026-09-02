@@ -1,5 +1,6 @@
 package mchorse.mappet.api.scripts.code.ui;
 
+import mchorse.mappet.MappetFactories;
 import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,7 +33,7 @@ public abstract class UIParentComponent extends UIComponent
         {
             NBTTagCompound componentTag = component.serializeNBT();
 
-            componentTag.setString("Type", CommonProxy.getUiComponents().type(component));
+            componentTag.setString("Type", MappetFactories.getUiComponents().type(component));
             list.appendTag(componentTag);
         }
 
@@ -50,7 +51,7 @@ public abstract class UIParentComponent extends UIComponent
         for (int i = 0, c = list.tagCount(); i < c; i++)
         {
             NBTTagCompound componentTag = list.getCompoundTagAt(i);
-            UIComponent component = CommonProxy.getUiComponents().create(componentTag.getString("Type"));
+            UIComponent component = MappetFactories.getUiComponents().create(componentTag.getString("Type"));
 
             if (component != null)
             {

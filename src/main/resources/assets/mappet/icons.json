@@ -216,6 +216,12 @@
     "sword/sword_1",
     "sword/sword_2",
     "sword/sword_3",
+    {
+        "th": 96,
+        "frames": 6,
+        "ticks": 2,
+        "path": "sync"
+    },
     "tea",
     "timer",
     "toolbox",

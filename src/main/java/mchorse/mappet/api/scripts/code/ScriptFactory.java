@@ -165,6 +165,10 @@ public class ScriptFactory {
         return compound == null ? null : MorphManager.INSTANCE.morphFromNBT(compound.asMinecraft());
     }
 
+    public MappetUIBuilder createUI(ScriptEvent event, String function) {
+        return createUI(event.getScript(), function);
+    }
+
     public MappetUIBuilder createUI(String script, String function) {
         return new MappetUIBuilder(new UI(), script == null ? "" : script, function == null ? "" : function);
     }

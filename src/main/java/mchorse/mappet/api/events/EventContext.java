@@ -47,7 +47,7 @@ public class EventContext
     {
         if (!this.executionForks.isEmpty())
         {
-            CommonProxy.eventHandler.addExecutables(this.executionForks);
+            CommonProxy.playerSessionHandler.getExecutableScheduler().addExecutables(this.executionForks);
 
             this.executionForks.clear();
         }

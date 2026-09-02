@@ -13,15 +13,9 @@ public class CommandFaction extends MappetSubCommandBase
 {
     public static FactionStates getStates(MinecraftServer server, ICommandSender sender, String target) throws CommandException
     {
-        Entity entity = getEntity(server, sender, target);
-
-        StatesProvider provider = EntityUtils.getStates(entity);
-        if (provider == null) return null;
-
-        FactionStates states = provider.factions;
-        if (states != null) return states;
-
-        throw new CommandException("states.invalid_target", target);
+        StatesProvider provider = EntityUtils.getStates(getEntity(server, sender, target));
+        if (provider == null) throw new CommandException("states.invalid_target", target);
+        return provider.factions;
     }
 
     public CommandFaction()

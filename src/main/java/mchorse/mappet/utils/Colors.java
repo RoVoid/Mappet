@@ -39,7 +39,6 @@ public class Colors
         if (hsb[0] < 0) hsb[0] += 1.0F;
 
         int shifted = Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]);
-        // Сохраняем alpha от оригинала
         return color & 0xFF000000 | shifted & 0x00FFFFFF;
     }
 }

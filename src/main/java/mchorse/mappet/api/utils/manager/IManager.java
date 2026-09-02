@@ -26,7 +26,15 @@ public interface IManager<T extends INBTSerializable<NBTTagCompound>> {
 
     boolean delete(String id);
 
+    Set<String> getIDs();
+
+    void addFolder(String path);
+
+    void renameFolder(String oldPath, String newPath);
+
+    void deleteFolder(String path);
+
     File getFolder();
 
-    Set<String> getIDs();
+    Set<String> getPaths();
 }

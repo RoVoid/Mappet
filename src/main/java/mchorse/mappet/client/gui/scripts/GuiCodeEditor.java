@@ -1,13 +1,17 @@
 package mchorse.mappet.client.gui.scripts;
 
+import mchorse.mappet.client.gui.scripts.completion.CompletionSuggestion;
+import mchorse.mappet.client.gui.scripts.completion.ICompletionContext;
+import mchorse.mappet.client.gui.scripts.completion.ICompletionProvider;
+import mchorse.mappet.client.gui.scripts.completion.JsCompletionProvider;
 import mchorse.mappet.client.gui.scripts.search.GuiTextEditorSearchable;
 import mchorse.mappet.client.gui.scripts.search.SearchPanel;
 import mchorse.mappet.client.gui.scripts.style.SyntaxHighlighter;
 import mchorse.mappet.client.gui.scripts.utils.HighlightedTextLine;
 import mchorse.mappet.client.gui.scripts.utils.TextLineNumber;
 import mchorse.mappet.client.gui.scripts.utils.TextSegment;
-import mchorse.mappet.client.gui.scripts.utils.documentation.DocMethod;
 import mchorse.mappet.client.gui.utils.text.GuiMultiTextElement;
+import mchorse.mappet.client.gui.utils.text.GuiMultiTextElement.TextHighlight;
 import mchorse.mappet.client.gui.utils.text.undo.TextEditUndo;
 import mchorse.mappet.client.gui.utils.text.utils.Cursor;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
@@ -20,13 +24,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> implements GuiTextEditorSearchable {
+public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> implements GuiTextEditorSearchable, ICompletionContext {
 
     private SyntaxHighlighter highlighter;
     private int placements;
@@ -45,7 +48,9 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> impl
 
     /* Hints / autocomplete */
     private boolean withHints;
-    private boolean ignoreTab;
+
+    /** Bumped on every text edit; lets completion providers cache their parse of the document. */
+    private int version;
 
     public GuiCodeEditor(Minecraft mc, Consumer<String> callback) {
         super(mc, callback);
@@ -74,6 +79,7 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> impl
     public void setText(String text) {
         super.setText(text);
         resetHighlight();
+        version++;
 
         if (searching) {
             if (searchPanel != null) searchPanel.onEditorChanged();
@@ -90,6 +96,7 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> impl
 
     @Override
     protected void changedLine(int i) {
+        version++;
         String line = text.get(i).text;
         if (line.contains("/*") || line.contains("*/")) changedLineAfter(i);
         else {
@@ -102,6 +109,7 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> impl
 
     @Override
     protected void changedLineAfter(int index) {
+        version++;
         super.changedLineAfter(index);
         while (index < text.size()) text.get(index++).resetSegments();
         notifySearch();
@@ -140,13 +148,37 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> impl
             return true;
         }
 
-        // Tab — handle ignoreTab from autocomplete
-        if (keyCode == org.lwjgl.input.Keyboard.KEY_TAB && ignoreTab) {
-            ignoreTab = false;
-            return false;
+        // Tab — accept the top autocomplete suggestion; falls through to normal indent behavior
+        // when there's nothing worth completing.
+        if (keyCode == org.lwjgl.input.Keyboard.KEY_TAB && !shift && acceptCompletion(undo)) {
+            return true;
         }
 
         return super.handleKeys(context, undo, ctrl, shift);
+    }
+
+    /** Applies the top autocomplete suggestion in place, as a single undo-able edit. Returns false (nothing applied) when there's no suggestion, or the top one already matches what's typed — callers should fall through to normal Tab/indent handling in that case. */
+    private boolean acceptCompletion(TextEditUndo undo) {
+        if (completionProvider == null || !completionProvider.isTriggered(this)) return false;
+
+        List<CompletionSuggestion> suggestions = completionProvider.getSuggestions(this);
+        if (suggestions.isEmpty()) return false;
+
+        String line = text.get(cursor.line).text;
+        String prefix = identifierPrefix(line, cursor.getOffset(line));
+
+        CompletionSuggestion top = suggestions.get(0);
+        if (top.name.equalsIgnoreCase(prefix)) return false;
+
+        int[] outOffset = new int[1];
+        String newLine = completionProvider.complete(this, top, outOffset);
+
+        text.get(cursor.line).text = newLine;
+        cursor.offset = outOffset[0];
+        changedLine(cursor.line);
+        undo.ready().post(newLine, cursor, selection);
+
+        return true;
     }
 
     private void keyToggleComment(TextEditUndo undo) {
@@ -311,6 +343,23 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> impl
         }
     }
 
+    /* ICompletionContext — lets completion providers see the whole document, not just one line */
+
+    @Override
+    public int getLineCount() {return text.size();}
+
+    @Override
+    public String getLine(int index) {return hasLine(index) ? text.get(index).text : "";}
+
+    @Override
+    public int getCursorLine() {return cursor.line;}
+
+    @Override
+    public int getCursorOffset() {return cursor.getOffset(text.get(cursor.line).text);}
+
+    @Override
+    public int getVersion() {return version;}
+
     public int getIndent(int i) {return hasLine(i) ? getIndent(text.get(i).text) : 0;}
 
     public int getIndent(String line) {
@@ -326,73 +375,137 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> impl
 
     /* Hints / autocomplete */
 
-    private List<String> findMatchingMethods(String methodName) {
-        List<DocMethod> methods = GuiDocumentationOverlayPanel.getDocs().methods;
-        List<String> result = new ArrayList<>();
+    /**
+     * Defaults to JS; swap via {@link #setCompletionProvider(ICompletionProvider)} for other languages.
+     * <p>
+     * To expose the mappet script API to autocomplete, populate this instance before use, e.g.:
+     * <pre>{@code
+     * JsCompletionProvider provider = (JsCompletionProvider) editor.getCompletionProvider();
+     * provider.getTypeRegistry().registerClass("Player", EntityPlayer.class);
+     * provider.addGlobal("player", EntityPlayer.class);
+     * provider.addGlobal("event", ScriptEvent.class);
+     * }</pre>
+     */
+    private ICompletionProvider completionProvider = new JsCompletionProvider();
 
-        for (DocMethod method : methods) {
-            if (method.name.toLowerCase().startsWith(methodName) && !result.contains(method.name)) {
-                result.add(method.name);
-                if (result.size() > 4) break;
-            }
-        }
+    public void setCompletionProvider(ICompletionProvider completionProvider) {this.completionProvider = completionProvider;}
 
-        Collections.sort(result);
-        return result;
-    }
+    public ICompletionProvider getCompletionProvider() {return completionProvider;}
 
-    private void drawMatchingMethodsOverlay(List<String> methods, int x, int y, int cursorW, int i) {
+    /** Light gray used for the type annotation drawn after each suggestion's label (e.g. "getHealth() : number"). */
+    private static final int SUGGESTION_TYPE_COLOR = 0xff888888;
+    private static final String SUGGESTION_TYPE_SEPARATOR = " : ";
+
+    private void drawMatchingMethodsOverlay(List<CompletionSuggestion> suggestions, int x, int y, int cursorW, int i) {
         int maxWidth = 0;
-        for (String method : methods) maxWidth = Math.max(maxWidth, font.getStringWidth(method + "()"));
+        for (CompletionSuggestion s : suggestions) maxWidth = Math.max(maxWidth, suggestionLineWidth(s));
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, 0, 0.1);
 
-        int rectOffset = (font.FONT_HEIGHT + 4) * methods.size();
+        int rectOffset = (font.FONT_HEIGHT + 4) * suggestions.size();
 
         if (i < 15) Gui.drawRect(x + cursorW + 5, y + font.FONT_HEIGHT + 5 + rectOffset, x + cursorW + 10 + maxWidth, y + font.FONT_HEIGHT + 5,
                 0xee000000);
         else Gui.drawRect(x + cursorW + 5, y - 5 - rectOffset, x + cursorW + 10 + maxWidth, y - 5, 0xee000000);
 
-        for (int ii = 1; ii <= methods.size(); ii++) {
+        for (int ii = 1; ii <= suggestions.size(); ii++) {
             int textOffset = (font.FONT_HEIGHT + 4) * ii + 3;
             textOffset = i < 15 ? textOffset + font.FONT_HEIGHT - 9 : -textOffset;
-            font.drawString(methods.get(ii - 1) + "()", x + cursorW + 7, y + textOffset, textColor, textShadow);
+
+            CompletionSuggestion suggestion = suggestions.get(ii - 1);
+            int labelX = x + cursorW + 7;
+            font.drawString(suggestion.label, labelX, y + textOffset, textColor, textShadow);
+
+            if (suggestion.typeLabel != null) {
+                int typeX = labelX + font.getStringWidth(suggestion.label + SUGGESTION_TYPE_SEPARATOR);
+                font.drawString(suggestion.typeLabel, typeX, y + textOffset, SUGGESTION_TYPE_COLOR, textShadow);
+            }
         }
 
         GlStateManager.popMatrix();
     }
 
-    private boolean shouldComplete(List<String> methods, String methodName) {
-        if (!org.lwjgl.input.Keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_TAB)) return false;
-        return !methods.isEmpty() && !methods.get(0).equalsIgnoreCase(methodName);
+    /** Full pixel width of a suggestion's row, i.e. its label plus the type annotation drawn after it. */
+    private int suggestionLineWidth(CompletionSuggestion s) {
+        int width = font.getStringWidth(s.label);
+        if (s.typeLabel != null) width += font.getStringWidth(SUGGESTION_TYPE_SEPARATOR + s.typeLabel);
+        return width;
     }
 
-    private String completeLine(String line, List<String> methods) {
-        int index = line.lastIndexOf('.', cursor.offset - 1) + 1;
-        String selectedMethod = methods.get(0);
-        if (selectedMethod == null) return line;
+    /** The partial identifier right before {@code offset}, e.g. "pla" in "player.getPla" -> "getPla". */
+    private String identifierPrefix(String line, int offset) {
+        int end = Math.max(0, Math.min(offset, line.length()));
+        int start = end;
 
-        String left = line.substring(0, index);
-        String right = "";
-        int index1 = -1;
+        while (start > 0) {
+            char c = line.charAt(start - 1);
+            if (Character.isLetterOrDigit(c) || c == '_' || c == '$') start--;
+            else break;
+        }
 
-        for (int i = cursor.offset; i < line.length(); i++) {
-            char ch = line.charAt(i);
-            if (".,;:!?(){}[]+-*/=%&|^<>".indexOf(ch) >= 0) {
-                index1 = i;
-                break;
+        return line.substring(start, end);
+    }
+
+    /** Bright color used to highlight whichever parameter the cursor is currently on within a call's "(...)". */
+    private static final int SIGNATURE_ACTIVE_PARAM_COLOR = 0xffFFD866;
+
+    /**
+     * Draws a small "methodName(param: Type, ...)" overlay above/below the cursor while it's inside
+     * a call's parentheses, with the parameter matching the cursor's position highlighted.
+     */
+    private void drawSignatureHintOverlay(JsCompletionProvider.SignatureHint hint, int x, int y, int cursorW, int i) {
+        List<String> params = splitSignatureParams(hint.signature);
+
+        String prefix = hint.methodName + "(";
+        String suffix = ") : " + hint.returnType;
+
+        int width = font.getStringWidth(prefix) + font.getStringWidth(suffix);
+        for (int p = 0; p < params.size(); p++) {
+            width += font.getStringWidth(params.get(p));
+            if (p < params.size() - 1) width += font.getStringWidth(", ");
+        }
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0, 0, 0.1);
+
+        int rowHeight = font.FONT_HEIGHT + 4;
+        int drawY = i < 15 ? y + font.FONT_HEIGHT + 5 + rowHeight : y - 5 - rowHeight;
+        int textY = drawY + 3;
+
+        Gui.drawRect(x + cursorW + 5, drawY, x + cursorW + 10 + width, drawY + rowHeight, 0xee000000);
+
+        int drawX = x + cursorW + 7;
+        font.drawString(prefix, drawX, textY, textColor, textShadow);
+        drawX += font.getStringWidth(prefix);
+
+        for (int p = 0; p < params.size(); p++) {
+            boolean active = p == hint.activeParameter;
+            int color = active ? SIGNATURE_ACTIVE_PARAM_COLOR : textColor;
+            font.drawString(params.get(p), drawX, textY, color, textShadow);
+            drawX += font.getStringWidth(params.get(p));
+
+            if (p < params.size() - 1) {
+                font.drawString(", ", drawX, textY, textColor, textShadow);
+                drawX += font.getStringWidth(", ");
             }
         }
 
-        if (index1 != -1) {
-            if (line.charAt(index1) != '(') selectedMethod += "()";
-            right = line.substring(index1);
-        }
-        else selectedMethod += "()";
+        font.drawString(suffix, drawX, textY, SUGGESTION_TYPE_COLOR, textShadow);
 
-        cursor.offset = left.length() + selectedMethod.length();
-        return left + selectedMethod + right;
+        GlStateManager.popMatrix();
+    }
+
+    /** Splits a "(a: Type, b: Type)" signature into its individual "a: Type" parts. Empty for "()". */
+    private List<String> splitSignatureParams(String signature) {
+        List<String> result = new ArrayList<>();
+        if (signature == null || signature.length() < 2) return result;
+
+        String inner = signature.substring(1, signature.length() - 1);
+        if (inner.isEmpty()) return result;
+
+        for (String part : inner.split(", ")) result.add(part);
+        return result;
     }
 
     /* Rendering */
@@ -409,24 +522,25 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> impl
         }
 
         // Hints overlay
-        if (withHints && cursor.line == i && j == 0) {
+        if (withHints && completionProvider != null && cursor.line == i && j == 0) {
             int cursorW = line.isEmpty() ? 0 : font.getStringWidth(cursor.start(line));
-            String substringBeforeCursor = line.substring(0, cursor.getOffset(line)).trim();
-            int lastDot = substringBeforeCursor.lastIndexOf('.');
 
-            if (lastDot != -1) {
-                String methodName = substringBeforeCursor.substring(lastDot + 1).toLowerCase();
-                List<String> matchingMethods = findMatchingMethods(methodName);
+            boolean drewSuggestions = false;
 
-                if (!matchingMethods.isEmpty()) {
-                    drawMatchingMethodsOverlay(matchingMethods, nx, ny, cursorW, i);
+            if (completionProvider.isTriggered(this)) {
+                List<CompletionSuggestion> suggestions = completionProvider.getSuggestions(this);
 
-                    if (shouldComplete(matchingMethods, methodName)) {
-                        text.get(i).text = completeLine(line, matchingMethods);
-                        changedLine(cursor.line);
-                        ignoreTab = true;
-                    }
+                if (!suggestions.isEmpty()) {
+                    drawMatchingMethodsOverlay(suggestions, nx, ny, cursorW, i);
+                    drewSuggestions = true;
                 }
+            }
+
+            // Parameter hints inside "methodName(...)" — only when there's no dot-chain suggestion
+            // list already occupying the overlay space above/below the cursor.
+            if (!drewSuggestions && completionProvider instanceof JsCompletionProvider) {
+                JsCompletionProvider.SignatureHint hint = ((JsCompletionProvider) completionProvider).getSignatureHint(this);
+                if (hint != null) drawSignatureHintOverlay(hint, nx, ny, cursorW, i);
             }
         }
 
@@ -484,6 +598,10 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> impl
 
     /* Search */
 
+    /** Match highlight (semi-transparent yellow). Current match gets {@link #CURRENT_MATCH_COLOR}. */
+    private static final int MATCH_COLOR = 0x66FFD866;
+    private static final int CURRENT_MATCH_COLOR = 0xAAFF9900;
+
     @Override
     public void setSearching(boolean searching) {
         this.searching = searching;
@@ -492,7 +610,7 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> impl
             pattern = null;
             searchMatches.clear();
             currentSearchMatch = -1;
-            deselect();
+            clearHighlights();
             return;
         }
 
@@ -534,6 +652,19 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> impl
         else currentSearchMatch = (currentSearchMatch + (backwards ? -1 : 1) + searchMatches.size()) % searchMatches.size();
         focusCurrentMatch();
         return true;
+    }
+
+    /** Rebuilds the drawn highlight ranges for every match, marking the current one differently. */
+    private void rebuildMatchHighlights() {
+        List<TextHighlight> newHighlights = new ArrayList<>();
+
+        for (int i = 0; i < searchMatches.size(); i++) {
+            SearchMatch match = searchMatches.get(i);
+            int color = i == currentSearchMatch ? CURRENT_MATCH_COLOR : MATCH_COLOR;
+            newHighlights.add(new TextHighlight(toCursor(match.start), toCursor(match.end), color));
+        }
+
+        setHighlights(newHighlights);
     }
 
     @Override
@@ -590,15 +721,11 @@ public class GuiCodeEditor extends GuiMultiTextElement<HighlightedTextLine> impl
     }
 
     private void focusCurrentMatch() {
+        rebuildMatchHighlights();
+
         if (currentSearchMatch < 0 || currentSearchMatch >= searchMatches.size()) return;
         SearchMatch match = searchMatches.get(currentSearchMatch);
-        selectRange(match.start, match.end);
-        moveViewportToCursor();
-    }
-
-    private void selectRange(int startIndex, int endIndex) {
-        selection.copy(toCursor(startIndex));
-        cursor.copy(toCursor(endIndex));
+        moveViewportTo(toCursor(match.end));
     }
 
     private Cursor toCursor(int index) {

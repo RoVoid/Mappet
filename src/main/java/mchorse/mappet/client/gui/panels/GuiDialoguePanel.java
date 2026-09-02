@@ -1,5 +1,6 @@
 package mchorse.mappet.client.gui.panels;
 
+import mchorse.mappet.MappetFactories;
 import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.api.dialogues.Dialogue;
 import mchorse.mappet.api.events.nodes.EventBaseNode;
@@ -36,7 +37,7 @@ public class GuiDialoguePanel extends GuiMappetRunPanel<Dialogue>
 
         this.folderList.setFileIcon(Icons.BUBBLE);
 
-        this.graph = new GuiEventNodeGraph(mc, CommonProxy.getDialogues(), this::pickNode);
+        this.graph = new GuiEventNodeGraph(mc, MappetFactories.getDialogues(), this::pickNode);
         this.graph.notifyAboutMain().flex().relative(this.editor).wh(1F, 1F);
 
         this.bottom = new GuiElement(mc);
@@ -113,9 +114,9 @@ public class GuiDialoguePanel extends GuiMappetRunPanel<Dialogue>
     }
 
     @Override
-    public void fill(Dialogue data, boolean allowed)
+    public void fill(Dialogue data, String editorName)
     {
-        super.fill(data, allowed);
+        super.fill(data, editorName);
 
         this.graph.setVisible(data != null);
         this.bottom.setVisible(data != null && allowed);

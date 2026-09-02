@@ -6,36 +6,38 @@ import mchorse.mappet.api.utils.content.IContentTypeBase;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public abstract class PacketContentBase implements IMessage
-{
+public abstract class PacketContentBase implements IMessage {
     public IContentTypeBase type;
-    public int requestId = -1;
+    public String path;
+    public int requestId = -1; // delete
 
-    public PacketContentBase()
-    {}
+    public PacketContentBase() {}
 
-    public PacketContentBase(IContentTypeBase type)
-    {
-        this.type = type;
+    public PacketContentBase(IContentTypeBase type) {
+        this(type, "");
     }
 
-    public PacketContentBase(IContentTypeBase type, int requestId)
-    {
+    public PacketContentBase(IContentTypeBase type, String path) {
         this.type = type;
+        this.path = path;
+    }
+
+    public PacketContentBase(IContentTypeBase type, int requestId) {
+        this(type, "");
         this.requestId = requestId;
     }
 
     @Override
-    public void fromBytes(ByteBuf buf)
-    {
-        this.type = ContentTypes.get(ByteBufUtils.readUTF8String(buf));
-        this.requestId = buf.readInt();
+    public void fromBytes(ByteBuf buf) {
+        type = ContentTypes.get(ByteBufUtils.readUTF8String(buf));
+        path = ByteBufUtils.readUTF8String(buf);
+        requestId = buf.readInt();
     }
 
     @Override
-    public void toBytes(ByteBuf buf)
-    {
-        ByteBufUtils.writeUTF8String(buf, this.type.name());
-        buf.writeInt(this.requestId);
+    public void toBytes(ByteBuf buf) {
+        ByteBufUtils.writeUTF8String(buf, type.name());
+        ByteBufUtils.writeUTF8String(buf, path);
+        buf.writeInt(requestId);
     }
 }

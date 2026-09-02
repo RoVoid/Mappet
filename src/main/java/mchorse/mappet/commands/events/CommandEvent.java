@@ -3,23 +3,19 @@ package mchorse.mappet.commands.events;
 import mchorse.mappet.commands.MappetSubCommandBase;
 import net.minecraft.command.ICommandSender;
 
-public class CommandEvent extends MappetSubCommandBase
-{
-    public CommandEvent()
-    {
-        this.add(new CommandEventStop());
-        this.add(new CommandEventTrigger());
+public class CommandEvent extends MappetSubCommandBase {
+    public CommandEvent() {
+        add(new CommandEventStop());
+        add(new CommandEventTrigger());
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "event";
     }
 
     @Override
-    public String getUsage(ICommandSender sender)
-    {
+    public String getUsage(ICommandSender sender) {
         return "mappet.commands.mp.event.help";
     }
 }

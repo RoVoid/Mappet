@@ -63,7 +63,7 @@ public class ItemNpcTool extends Item {
     }
 
     private boolean openNpcTool(EntityPlayer player, ItemStack stack) {
-        Collection<String> npcs = Mappet.npcs.getIDs();
+        Collection<String> npcs = Mappet.npcs.getPaths();
 
         if (!npcs.isEmpty() && player instanceof EntityPlayerMP) {
             List<String> states = new ArrayList<>();

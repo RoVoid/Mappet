@@ -1,6 +1,7 @@
 package mchorse.mappet.network.server.content;
 
 import mchorse.mappet.capabilities.character.Character;
+import mchorse.mappet.capabilities.character.ICharacter;
 import mchorse.mappet.network.Dispatcher;
 import mchorse.mappet.network.packets.content.PacketContentData;
 import mchorse.mappet.network.packets.content.PacketContentExit;
@@ -9,63 +10,47 @@ import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class ServerHandlerContentExit extends ServerMessageHandler<PacketContentExit>
-{
-    public static void syncData(EntityPlayerMP except)
-    {
+public class ServerHandlerContentExit extends ServerMessageHandler<PacketContentExit> {
+    public static void finishEditing(EntityPlayerMP prevEditor) {
         /* Before clearing current session, update the data for players that
          * are browsing this data */
-        CurrentSession session = Character.get(except).getCurrentSession();
-        NBTTagCompound data = null;
-        int i = 0;
+        ICharacter character = Character.get(prevEditor);
+        if (character == null) return;
 
-        if (session.type == null)
-        {
-            return;
-        }
+        CurrentSession session = character.getCurrentSession();
+        if (session.editingType == null) return;
 
-        for (EntityPlayerMP player : except.getServer().getPlayerList().getPlayers())
-        {
-            if (player == except)
-            {
-                continue;
-            }
+        boolean first = true;
 
-            CurrentSession otherSession = Character.get(player).getCurrentSession();
+        if (prevEditor.getServer() == null) return;
 
-            if (otherSession.isActive(session.type, session.id))
-            {
-                if (data == null)
-                {
-                    data = session.type.manager().load(session.id).serializeNBT();
-                }
+        NBTTagCompound data = session.editingType.manager().load(session.editingId).serializeNBT();
 
-                PacketContentData packet = new PacketContentData(session.type, session.id, data);
+        PacketContentData packet = new PacketContentData(session.editingType, session.editingId, data);
 
-                if (i > 0)
-                {
-                    packet.disallow();
+        for (EntityPlayerMP player : prevEditor.getServer().getPlayerList().getPlayers()) {
+            if (player == prevEditor) continue;
+
+            ICharacter otherCharacter = Character.get(player);
+            if (otherCharacter == null) continue;
+
+            CurrentSession otherSession = otherCharacter.getCurrentSession();
+            if (otherSession.isViewing(session.editingType, session.editingId)) {
+                if (first) {
+                    otherSession.hold(session.editingType, session.editingId);
+                    packet.editorName = player.getName();
                 }
 
                 Dispatcher.sendTo(packet, player);
-
-                /* The first dog, gets the data editing privilege */
-                if (i == 0)
-                {
-                    otherSession.set(session.type, session.id);
-                }
-
-                i += 1;
+                first = false;
             }
         }
+
+        session.reset();
     }
 
     @Override
-    public void run(EntityPlayerMP player, PacketContentExit message)
-    {
-        syncData(player);
-
-        /* Clear current session */
-        Character.get(player).getCurrentSession().reset();
+    public void run(EntityPlayerMP player, PacketContentExit message) {
+        finishEditing(player);
     }
 }

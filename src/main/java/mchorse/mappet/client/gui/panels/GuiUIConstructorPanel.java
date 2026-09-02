@@ -1,5 +1,6 @@
 package mchorse.mappet.client.gui.panels;
 
+import mchorse.mappet.MappetFactories;
 import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.scripts.code.ui.UIButtonComponent;
@@ -517,7 +518,7 @@ public class GuiUIConstructorPanel extends GuiMappetDashboardPanel<UI>
 
     private String typeName(UIComponent component)
     {
-        String type = CommonProxy.getUiComponents().type(component);
+        String type = MappetFactories.getUiComponents().type(component);
 
         return type == null || type.isEmpty() ? component.getClass().getSimpleName() : type;
     }
@@ -657,9 +658,9 @@ public class GuiUIConstructorPanel extends GuiMappetDashboardPanel<UI>
     }
 
     @Override
-    public void fill(UI data, boolean allowed)
+    public void fill(UI data, String editorName)
     {
-        super.fill(data, allowed);
+        super.fill(data, editorName);
 
         this.editor.setVisible(data != null);
 

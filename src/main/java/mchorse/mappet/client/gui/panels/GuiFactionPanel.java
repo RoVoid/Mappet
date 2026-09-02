@@ -135,8 +135,8 @@ public class GuiFactionPanel extends GuiMappetDashboardPanel<Faction> {
     }
 
     @Override
-    public void fill(Faction data, boolean allowed) {
-        super.fill(data, allowed);
+    public void fill(Faction data, String editorName) {
+        super.fill(data, editorName);
 
         editor.setVisible(data != null);
 

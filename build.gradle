@@ -28,6 +28,7 @@ java {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
 }
 
 minecraft {
@@ -93,7 +94,9 @@ tasks.register('processSource', Sync) {
 }
 
 tasks.named('compileJava', JavaCompile).configure {
-    source = tasks.named('processSource').get().outputs
+    if (!providers.environmentVariable("src").isPresent()) {
+        source = tasks.named('processSource').get().outputs
+    }
 }
 
 tasks.named('shadowJar').configure {
@@ -109,10 +112,6 @@ tasks.named('shadowJar').configure {
     relocate "org.reflections", "mchorse.mappet.libs.org.reflections"
     relocate "org.slf4j", "mchorse.mappet.libs.org.slf4j"
     relocate "javassist", "mchorse.mappet.libs.javassist"
-
-    if (providers.environmentVariable("export").isPresent()) {
-        finalizedBy('moveToExportFolder')
-    }
 }
 
 tasks.register('moveToExportFolder', Copy) {
@@ -123,8 +122,18 @@ tasks.register('moveToExportFolder', Copy) {
     }
 }
 
+reobf {
+    shadowJar {}
+}
+
 jar.finalizedBy('shadowJar')
-jar.finalizedBy('reobfJar')
+shadowJar.finalizedBy('reobfShadowJar')
+
+if (providers.environmentVariable("export").isPresent()) {
+    tasks.named('reobfShadowJar').configure {
+        finalizedBy('moveToExportFolder')
+    }
+}
 
 // Assets
 tasks.register('prepareAssets', Copy) {
@@ -298,8 +307,8 @@ tasks.withType(Jar).configureEach {
 }
 
 // Sources archive
-tasks.register('archiveSources', Exec) {
-    def date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-    commandLine("7z", "a", "-t7z", "-mx9", file("exports/mappet-${date}.7z").absolutePath, "mchorse")
-    workingDir file("src/main/java")
-}
+//tasks.register('archiveSources', Exec) {
+//    def date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+//    commandLine("7z", "a", "-tzip", "-mx1", file("exports/mappet-${date}.zip").absolutePath, "mchorse")
+//    workingDir file("src/main/java")
+//}

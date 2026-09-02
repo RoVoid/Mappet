@@ -5,9 +5,9 @@ import java.util.*;
 public class JsLexer {
 
     private static final Set<String> KEYWORDS = new HashSet<>(
-            Arrays.asList("break", "continue", "switch", "case", "default", "try", "catch", "delete", "do", "while", "finally", "if",
-                    "else", "for", "each", "in", "instanceof", "new", "throw", "typeof", "with", "yield", "return", "import", "var", "let",
-                    "const", "function"));
+            Arrays.asList("break", "continue", "switch", "case", "default", "try", "catch", "delete", "do", "while", "finally", "if", "else", "for",
+                          "each", "in", "instanceof", "new", "throw", "typeof", "with", "yield", "return", "import", "var", "let", "const",
+                          "function"));
 
     private static final Set<String> CONSTANTS = new HashSet<>(Arrays.asList("true", "false", "null", "undefined"));
 

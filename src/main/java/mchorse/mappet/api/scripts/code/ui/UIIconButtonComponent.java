@@ -1,12 +1,10 @@
 package mchorse.mappet.api.scripts.code.ui;
 
 import mchorse.mappet.MappetIcons;
-import mchorse.mappet.api.scripts.code.ui.MappetUIBuilder;
 import mchorse.mappet.api.ui.UIContext;
 import mchorse.mappet.api.ui.utils.DiscardMethod;
-import mchorse.mappet.client.gui.utils.GuiExtendedIconElement;
+import mchorse.mappet.client.gui.utils.GuiRotatableIconElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
-import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.utils.Icon;
 import mchorse.mclib.client.gui.utils.Icons;
 import net.minecraft.client.Minecraft;
@@ -124,13 +122,13 @@ public class UIIconButtonComponent extends UIComponent {
      * @param icon The icon's ID.
      */
     public UIIconButtonComponent icon(String icon) {
-        this.change("Icon");
+        change("Icon");
         this.icon = icon;
         return this;
     }
 
     public UIIconButtonComponent color(int color) {
-        this.change("Color");
+        change("Color");
         this.color = color;
         return this;
     }
@@ -139,8 +137,8 @@ public class UIIconButtonComponent extends UIComponent {
      * @param angle between 0 and 360
      */
     public UIIconButtonComponent rotate(float angle) {
-        this.change("Rotate");
-        this.rotate = angle;
+        change("Rotate");
+        rotate = angle;
         return this;
     }
 
@@ -153,8 +151,8 @@ public class UIIconButtonComponent extends UIComponent {
 
     @Override
     protected GuiElement apply(GuiElement element, UIContext context) {
-        if (element instanceof GuiExtendedIconElement) {
-            GuiExtendedIconElement button = ((GuiExtendedIconElement) element);
+        if (element instanceof GuiRotatableIconElement) {
+            GuiRotatableIconElement button = (GuiRotatableIconElement) element;
             button.iconColor(color);
             button.rotate(rotate);
         }
@@ -167,26 +165,25 @@ public class UIIconButtonComponent extends UIComponent {
     protected void applyProperty(UIContext context, String key, GuiElement element) {
         super.applyProperty(context, key, element);
 
-        GuiExtendedIconElement button = (GuiExtendedIconElement) element;
+        GuiRotatableIconElement button = (GuiRotatableIconElement) element;
 
-        if (key.equals("Icon")) button.both(this.getIcon());
-        if (key.equals("Color")) button.iconColor(this.getColor());
-        if (key.equals("Rotate")) button.rotate(this.getRotate());
+        if (key.equals("Icon")) button.both(getIcon());
+        if (key.equals("Color")) button.iconColor(getColor());
+        if (key.equals("Rotate")) button.rotate(getRotate());
     }
 
     @Override
     @DiscardMethod
     @SideOnly(Side.CLIENT)
     public GuiElement create(Minecraft mc, UIContext context) {
-        GuiIconElement button = new GuiExtendedIconElement(mc, getIcon(), getColor(), getRotate(), (b) ->
-        {
-            if (!this.id.isEmpty()) {
-                this.populateData(context.data);
-                context.dirty(this.id, this.updateDelay);
+        GuiRotatableIconElement button = new GuiRotatableIconElement(mc, getIcon(), (b) -> {
+            if (!id.isEmpty()) {
+                populateData(context.data);
+                context.dirty(id, updateDelay);
             }
-        });
+        }).iconColor(getColor()).rotate(getRotate());
 
-        return this.apply(button, context);
+        return apply(button, context);
     }
 
     @DiscardMethod
@@ -212,24 +209,24 @@ public class UIIconButtonComponent extends UIComponent {
     @DiscardMethod
     public void populateData(NBTTagCompound tag) {
         super.populateData(tag);
-        if (!this.id.isEmpty()) tag.setInteger(this.id, tag.getInteger(this.id) + 1);
+        if (!id.isEmpty()) tag.setInteger(id, tag.getInteger(id) + 1);
     }
 
     @Override
     @DiscardMethod
     public void serializeNBT(NBTTagCompound tag) {
         super.serializeNBT(tag);
-        tag.setString("Icon", this.icon);
-        tag.setInteger("Color", this.color);
-        tag.setFloat("Rotate", this.rotate);
+        tag.setString("Icon", icon);
+        tag.setInteger("Color", color);
+        tag.setFloat("Rotate", rotate);
     }
 
     @Override
     @DiscardMethod
     public void deserializeNBT(NBTTagCompound tag) {
         super.deserializeNBT(tag);
-        if (tag.hasKey("Icon")) this.icon = tag.getString("Icon");
-        if (tag.hasKey("Color")) this.color = tag.getInteger("Color");
-        if (tag.hasKey("Rotate")) this.rotate = tag.getFloat("Rotate");
+        if (tag.hasKey("Icon")) icon = tag.getString("Icon");
+        if (tag.hasKey("Color")) color = tag.getInteger("Color");
+        if (tag.hasKey("Rotate")) rotate = tag.getFloat("Rotate");
     }
 }

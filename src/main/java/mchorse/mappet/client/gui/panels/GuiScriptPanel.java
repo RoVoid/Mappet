@@ -99,11 +99,8 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         searchPanel.flex().relative(editor).x(0).y(1F, 0).w(1F).h(72).anchorY(1F);
         searchPanel.setVisible(false);
         code.setSearchPanel(searchPanel);
-        code.keys()
-                .ignoreFocus()
-                .register(IKey.lang("mappet.gui.scripts.keys.word_wrap"), Keyboard.KEY_P, this::toggleWordWrap)
-                .category(GuiMappetDashboardPanel.KEYS_CATEGORY)
-                .held(Keyboard.KEY_LCONTROL);
+        code.keys().ignoreFocus().register(IKey.lang("mappet.gui.scripts.keys.word_wrap"), Keyboard.KEY_P, this::toggleWordWrap).category(
+                GuiMappetDashboardPanel.KEYS_CATEGORY).held(Keyboard.KEY_LCONTROL);
 
         tabs = new GuiTabsLineElement(mc, this::selectTab, this::closeTab);
 
@@ -133,14 +130,19 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
     public static GuiContextMenu createScriptContextMenu(Minecraft mc, GuiCodeEditor editor) {
         GuiSimpleContextMenu menu = new GuiSimpleContextMenu(mc).action(Icons.BLOCK, IKey.lang("mappet.gui.scripts.context.paste_block_pos"),
-                        () -> pasteBlockPosition(editor))
-                .action(Icons.POSE, IKey.lang("mappet.gui.scripts.context.paste_player_pos"), () -> pastePlayerPosition(editor))
-                .action(Icons.REVERSE, IKey.lang("mappet.gui.scripts.context.paste_player_rot"), () -> pastePlayerRotation(editor))
-                .action(Icons.WRENCH, IKey.lang("mappet.gui.scripts.context.paste_item"), () -> openItemPicker(editor))
-                .action(Icons.SOUND, IKey.lang("mappet.gui.scripts.context.paste_sound"), () -> openSoundPicker(editor))
-                .action(Icons.VISIBLE, IKey.lang("mappet.gui.scripts.context.paste_morph"), () -> openMorphPicker(editor))
-                .action(Icons.STOP, IKey.lang("mappet.gui.scripts.context.paste_colorRGB"), () -> openColorPicker(editor, false))
-                .action(Icons.MATERIAL, IKey.lang("mappet.gui.scripts.context.paste_colorARGB"), () -> openColorPicker(editor, true));
+                                                                        () -> pasteBlockPosition(editor)).action(Icons.POSE, IKey.lang(
+                                                                        "mappet.gui.scripts.context.paste_player_pos"), () -> pastePlayerPosition(editor)).action(Icons.REVERSE, IKey.lang(
+                                                                        "mappet.gui.scripts.context.paste_player_rot"), () -> pastePlayerRotation(editor)).action(Icons.WRENCH, IKey.lang(
+                                                                        "mappet.gui.scripts.context.paste_item"), () -> openItemPicker(editor)).action(Icons.SOUND,
+                                                                                                                                                       IKey.lang("mappet.gui.scripts.context.paste_sound"),
+                                                                                                                                                       () -> openSoundPicker(editor)).action(Icons.VISIBLE,
+                                                                                                                                                                                             IKey.lang(
+                                                                                                                                                                                                     "mappet.gui.scripts.context.paste_morph"),
+                                                                                                                                                                                             () -> openMorphPicker(
+                                                                                                                                                                                                     editor))
+                                                                .action(Icons.STOP, IKey.lang("mappet.gui.scripts.context.paste_colorRGB"),
+                                                                        () -> openColorPicker(editor, false)).action(Icons.MATERIAL, IKey.lang(
+                        "mappet.gui.scripts.context.paste_colorARGB"), () -> openColorPicker(editor, true));
 
         if (editor.isSelected()) setupDocumentation(editor, menu);
 
@@ -155,7 +157,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
         for (DocMethod docMethod : searched) {
             menu.action(Icons.SEARCH, IKey.format("mappet.gui.scripts.context.docs", docMethod.parent.getName()),
-                    () -> searchDocumentation(docMethod));
+                        () -> searchDocumentation(docMethod));
         }
     }
 
@@ -175,8 +177,8 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         EntityPlayer player = Minecraft.getMinecraft().player;
         DecimalFormat format = GuiTrackpadElement.FORMAT;
 
-        editor.pasteText(format.format(player.rotationPitch) + ",  " + format.format(player.rotationYaw) + ", " + format.format(
-                player.getRotationYawHead()));
+        editor.pasteText(
+                format.format(player.rotationPitch) + ",  " + format.format(player.rotationYaw) + ", " + format.format(player.getRotationYawHead()));
     }
 
     private static void pasteBlockPosition(GuiCodeEditor editor) {
@@ -196,8 +198,8 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         if (tag != null) stack = new ItemStack(tag);
 
         GuiOverlay.addOverlay(GuiBase.getCurrent(),
-                new GuiItemStackOverlayPanel(Minecraft.getMinecraft(), IKey.lang("mappet.gui.scripts.overlay.title_item"), editor, stack), 240,
-                54);
+                              new GuiItemStackOverlayPanel(Minecraft.getMinecraft(), IKey.lang("mappet.gui.scripts.overlay.title_item"), editor,
+                                                           stack), 240, 54);
     }
 
     private static void openMorphPicker(GuiCodeEditor editor) {
@@ -207,7 +209,8 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         if (editor.isSelected()) morph = MorphManager.INSTANCE.morphFromNBT(tag);
 
         GuiOverlay.addOverlay(GuiBase.getCurrent(),
-                new GuiMorphOverlayPanel(Minecraft.getMinecraft(), IKey.lang("mappet.gui.scripts.overlay.title_morph"), editor, morph), 240, 54);
+                              new GuiMorphOverlayPanel(Minecraft.getMinecraft(), IKey.lang("mappet.gui.scripts.overlay.title_morph"), editor, morph),
+                              240, 54);
     }
 
     private static void openSoundPicker(GuiCodeEditor editor) {
@@ -219,7 +222,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         ValueInt valueInt = isArgb ? new ValueInt("color_picker", 0).colorAlpha() : new ValueInt("color_picker", 0).color();
 
         GuiOverlayPanel panel = new GuiOverlayPanel(Minecraft.getMinecraft(),
-                IKey.lang("mappet.gui.scripts.context.paste_color" + (isArgb ? "A" : "") + "RGB")) {
+                                                    IKey.lang("mappet.gui.scripts.context.paste_color" + (isArgb ? "A" : "") + "RGB")) {
             @Override
             public void onClose() {
                 super.onClose();
@@ -269,7 +272,6 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
         EntityPlayerSP player = mc.player;
 
         save();
-        save = false;
 
         player.sendChatMessage("/mp script exec " + player.getUniqueID() + " " + data.getId());
     }
@@ -337,6 +339,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
 
     private void closeTab(String path, boolean wasSelected) {
         if (tabs.length() != 0) return;
+        save();
         fill(null);
         folderList.unselectFile();
     }
@@ -348,8 +351,8 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
     }
 
     @Override
-    protected void addNewData(String name, Script data) {
-        super.addNewData(name.endsWith(".js") ? name : name + ".js", data);
+    protected void addData(String id, Script data) {
+        super.addData(id.endsWith(".js") ? id : id + ".js", data);
     }
 
     @Override
@@ -370,10 +373,10 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
     }
 
     @Override
-    public void fill(Script data, boolean allowed) {
+    public void fill(Script data, String editorName) {
         String last = this.data == null ? null : this.data.getId();
 
-        super.fill(data, allowed);
+        super.fill(data, editorName);
 
         editor.setVisible(data != null);
         unique.setVisible(data != null && allowed);
@@ -413,8 +416,7 @@ public class GuiScriptPanel extends GuiMappetDashboardPanel<Script> {
     @Override
     protected IKey hasDuplicate(String name) {
         IKey result = super.hasDuplicate(name);
-        return result == null && folderList.inHierarchy(folderList.getPath(name + ".js")) ? IKey.lang("mappet.gui.panels.error.duplicate")
-                : result;
+        return result == null && folderList.exists(folderList.getPath(name + ".js")) ? IKey.lang("mappet.gui.panels.error.duplicate") : result;
     }
 
     @Override

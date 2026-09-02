@@ -70,6 +70,9 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
     /* Group selection state */
     private StringGroup lastGroup;
 
+    /* Arbitrary highlighted ranges (e.g. search matches), independent from selection */
+    protected final List<TextHighlight> highlights = new ArrayList<>();
+
     public static List<String> splitNewlineString(String string) {
         List<String> splits = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
@@ -293,6 +296,31 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
                 selection.line += reverse ? -1 : 1;
                 selection.offset = reverse ? this.text.get(selection.line).text.length() : 0;
             }
+        }
+    }
+
+    /* Highlight API (search & replace, etc.) — visually independent from cursor selection */
+
+    public void clearHighlights() {highlights.clear();}
+
+    public void addHighlight(Cursor start, Cursor end, int color) {highlights.add(new TextHighlight(start, end, color));}
+
+    public void setHighlights(List<TextHighlight> newHighlights) {
+        highlights.clear();
+        if (newHighlights != null) highlights.addAll(newHighlights);
+    }
+
+    public List<TextHighlight> getHighlights() {return highlights;}
+
+    public static class TextHighlight {
+        public final Cursor start;
+        public final Cursor end;
+        public final int color;
+
+        public TextHighlight(Cursor start, Cursor end, int color) {
+            this.start = start;
+            this.end = end;
+            this.color = color;
         }
     }
 
@@ -563,9 +591,13 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
         }
     }
 
-    public void moveViewportToCursor() {
-        if (!hasLine(cursor.line)) return;
-        Vector2d pos = getCursorPosition(cursor);
+    public void moveViewportToCursor() {moveViewportTo(cursor);}
+
+    /** Same as {@link #moveViewportToCursor()}, but for an arbitrary cursor position
+     *  (e.g. a search match) without touching the actual edit/selection cursors. */
+    public void moveViewportTo(Cursor target) {
+        if (!hasLine(target.line)) return;
+        Vector2d pos = getCursorPosition(target);
         pos.x += horizontal.scroll;
         pos.y += vertical.scroll;
         horizontal.scrollIntoView((int) pos.x, 4 + padding * 2, getShiftX());
@@ -883,6 +915,7 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
         Cursor max = getMax();
 
         if (isSelected()) drawSelectionBar(x, y, min, max);
+        if (!highlights.isEmpty()) for (TextHighlight highlight : highlights) drawHighlightBar(x, y, highlight);
 
         for (int i = 0, ci = text.size(); i < ci; i++) {
             T textLine = text.get(i);
@@ -973,9 +1006,22 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
     }
 
     private void drawSelectionBar(int x, int y, Cursor min, Cursor max) {
+        int color = ColorUtils.HALF_BLACK + McLib.primaryColor.get();
+        drawRangeBar(x, y, min, max, color);
+    }
+
+    private void drawHighlightBar(int x, int y, TextHighlight highlight) {
+        Cursor a = highlight.start;
+        Cursor b = highlight.end;
+        Cursor min = a.isThisLessTo(b) ? a : b;
+        Cursor max = a.isThisLessTo(b) ? b : a;
+        drawRangeBar(x, y, min, max, highlight.color);
+    }
+
+    private void drawRangeBar(int x, int y, Cursor min, Cursor max, int color) {
         Vector2d minPos = getCursorPosition(min);
         Vector2d maxPos = getCursorPosition(max);
-        drawSelectionArea(x + (int) minPos.x, y + (int) minPos.y, x + (int) maxPos.x, y + (int) maxPos.y);
+        drawSelectionArea(x + (int) minPos.x, y + (int) minPos.y, x + (int) maxPos.x, y + (int) maxPos.y, color);
     }
 
     protected Vector2d getCursorPosition(Cursor cursor) {
@@ -1026,9 +1072,8 @@ public class GuiMultiTextElement<T extends TextLine> extends GuiElement implemen
         pos.y = lines * lineHeight;
     }
 
-    private void drawSelectionArea(int x1, int y1, int x2, int y2) {
+    private void drawSelectionArea(int x1, int y1, int x2, int y2, int color) {
         final int selectionPad = 2;
-        int color = ColorUtils.HALF_BLACK + McLib.primaryColor.get();
         boolean middle = y2 > y1 + lineHeight;
         boolean bottom = y2 > y1;
 

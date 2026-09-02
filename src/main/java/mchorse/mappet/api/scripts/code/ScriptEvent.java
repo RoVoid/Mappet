@@ -100,18 +100,18 @@ public class ScriptEvent {
     }
 
     public void scheduleScript(String script, String function, int delay) {
-        CommonProxy.eventHandler.addExecutable(new ScriptExecutionFork(context.copy(), script, function, delay));
+        CommonProxy.playerSessionHandler.getExecutableScheduler().addExecutable(new ScriptExecutionFork(context.copy(), script, function, delay));
     }
 
     public void scheduleScript(int delay, ScriptObjectMirror function) {
         if (function == null || !function.isFunction())
             throw new IllegalStateException("Given object is null in script " + script + " (" + function + " function)!");
-        CommonProxy.eventHandler.addExecutable(new ScriptExecutionFork(context.copy(), function, delay));
+        CommonProxy.playerSessionHandler.getExecutableScheduler().addExecutable(new ScriptExecutionFork(context.copy(), function, delay));
     }
 
     public void scheduleScript(int delay, Consumer<ScriptEvent> consumer) {
         if (consumer == null) throw new IllegalStateException("Given object is null in script " + script + " (" + function + " function)!");
-        CommonProxy.eventHandler.addExecutable(new ScriptExecutionFork(context.copy(), consumer, delay));
+        CommonProxy.playerSessionHandler.getExecutableScheduler().addExecutable(new ScriptExecutionFork(context.copy(), consumer, delay));
     }
 
     public int executeCommand(String command) {

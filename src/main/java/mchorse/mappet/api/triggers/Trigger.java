@@ -1,12 +1,7 @@
 package mchorse.mappet.api.triggers;
 
-import mchorse.mappet.proxy.CommonProxy;
-import mchorse.mappet.api.triggers.blocks.AbstractTriggerBlock;
-import mchorse.mappet.api.triggers.blocks.CommandTriggerBlock;
-import mchorse.mappet.api.triggers.blocks.DialogueTriggerBlock;
-import mchorse.mappet.api.triggers.blocks.EventTriggerBlock;
-import mchorse.mappet.api.triggers.blocks.ScriptTriggerBlock;
-import mchorse.mappet.api.triggers.blocks.SoundTriggerBlock;
+import mchorse.mappet.MappetFactories;
+import mchorse.mappet.api.triggers.blocks.*;
 import mchorse.mappet.api.utils.DataContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,89 +9,88 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Trigger implements INBTSerializable<NBTTagCompound>
-{
-    public Trigger(){
+public class Trigger implements INBTSerializable<NBTTagCompound> {
+    public Trigger() {
 
     }
 
-    public Trigger(List<AbstractTriggerBlock> blocks)
-    {
+    public Trigger(List<AbstractTriggerBlock> blocks) {
         this.blocks.addAll(blocks);
     }
 
-    public final List<AbstractTriggerBlock> blocks = new ArrayList<AbstractTriggerBlock>();
+    public final List<AbstractTriggerBlock> blocks = new ArrayList<>();
 
-    private boolean empty;
+    private boolean empty = true;
 
-    public void copy(Trigger trigger)
-    {
-        this.blocks.clear();
+    public void copy(Trigger trigger) {
+        blocks.clear();
 
-        for (AbstractTriggerBlock block : trigger.blocks)
-        {
-            String type = CommonProxy.getTriggerBlocks().type(block);
-            AbstractTriggerBlock newBlock = CommonProxy.getTriggerBlocks().create(type);
+        for (AbstractTriggerBlock block : trigger.blocks) {
+            String type = MappetFactories.getTriggerBlocks().type(block);
+            AbstractTriggerBlock newBlock = MappetFactories.getTriggerBlocks().create(type);
 
             newBlock.deserializeNBT(block.serializeNBT());
-
-            this.blocks.add(newBlock);
+            blocks.add(newBlock);
         }
 
-        this.recalculateEmpty();
+        recalculateEmpty();
     }
 
-    public void recalculateEmpty()
-    {
-        this.empty = true;
-
-        for (AbstractTriggerBlock block : this.blocks)
-        {
-            if (!block.isEmpty())
-            {
-                this.empty = false;
-            }
-        }
+    public void recalculateEmpty() {
+        empty = true;
+        for (AbstractTriggerBlock block : blocks)
+            if (!block.isEmpty()) empty = false;
     }
 
-    public void trigger(EntityLivingBase target)
-    {
-        this.trigger(new DataContext(target));
+    public void trigger(EntityLivingBase target) {
+        trigger(new DataContext(target));
     }
 
-    public void trigger(EntityLivingBase target, Entity entity)
-    {
-        this.trigger(new DataContext(target, entity));
+    public void trigger(EntityLivingBase target, Entity entity) {
+        trigger(new DataContext(target, entity));
     }
 
-    public void trigger(DataContext context)
-    {
-        for (AbstractTriggerBlock block : this.blocks)
-        {
-            if (context.isCanceled())
-            {
-                return;
-            }
-
+    public void trigger(DataContext context) {
+        for (AbstractTriggerBlock block : blocks) {
+            if (context.isCanceled()) return;
             block.triggerWithFrequency(context);
         }
     }
 
+    public void triggerFrom(Event event, DataContext context) {
+        context.set("event", event);
+        trigger(context);
+
+        if (event.isCancelable() && context.isCanceled()) {
+            if (event instanceof LivingEquipmentChangeEvent || event instanceof TickEvent) return;
+            event.setCanceled(true);
+        }
+    }
+
+    public boolean isEmpty() {
+        return empty;
+    }
+
+    public static boolean shouldSkip(Trigger trigger) {
+        return trigger == null || trigger.isEmpty();
+    }
+
     @Override
-    public NBTTagCompound serializeNBT()
-    {
+    public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         NBTTagList blocks = new NBTTagList();
 
-        for (AbstractTriggerBlock block : this.blocks)
-        {
+        for (AbstractTriggerBlock block : this.blocks) {
             NBTTagCompound blockTag = block.serializeNBT();
 
-            blockTag.setString("Type", CommonProxy.getTriggerBlocks().type(block));
+            blockTag.setString("Type", MappetFactories.getTriggerBlocks().type(block));
             blocks.appendTag(blockTag);
         }
 
@@ -106,54 +100,30 @@ public class Trigger implements INBTSerializable<NBTTagCompound>
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
-    {
-        this.blocks.clear();
+    public void deserializeNBT(NBTTagCompound tag) {
+        blocks.clear();
 
         /* Backward compatibility with alpha and beta builds */
-        if (tag.hasKey("Sound"))
-        {
-            this.blocks.add(new SoundTriggerBlock(tag.getString("Sound")));
-        }
-        if (tag.hasKey("Trigger"))
-        {
-            this.blocks.add(new EventTriggerBlock(tag.getString("Trigger")));
-        }
-        if (tag.hasKey("Command"))
-        {
-            this.blocks.add(new CommandTriggerBlock(tag.getString("Command")));
-        }
-        if (tag.hasKey("Dialogue"))
-        {
-            this.blocks.add(new DialogueTriggerBlock(tag.getString("Dialogue")));
-        }
-        if (tag.hasKey("Script"))
-        {
-            this.blocks.add(new ScriptTriggerBlock(tag.getString("Script"), tag.getString("ScriptFunction")));
-        }
+        if (tag.hasKey("Sound")) blocks.add(new SoundTriggerBlock(tag.getString("Sound")));
+        if (tag.hasKey("Trigger")) blocks.add(new EventTriggerBlock(tag.getString("Trigger")));
+        if (tag.hasKey("Command")) blocks.add(new CommandTriggerBlock(tag.getString("Command")));
+        if (tag.hasKey("Dialogue")) blocks.add(new DialogueTriggerBlock(tag.getString("Dialogue")));
+        if (tag.hasKey("Script")) blocks.add(new ScriptTriggerBlock(tag.getString("Script"), tag.getString("ScriptFunction")));
 
-        if (tag.hasKey("Blocks"))
-        {
+        if (tag.hasKey("Blocks")) {
             NBTTagList blocks = tag.getTagList("Blocks", Constants.NBT.TAG_COMPOUND);
 
-            for (int i = 0; i < blocks.tagCount(); i++)
-            {
+            for (int i = 0; i < blocks.tagCount(); i++) {
                 NBTTagCompound blockTag = blocks.getCompoundTagAt(i);
-                AbstractTriggerBlock block = CommonProxy.getTriggerBlocks().create(blockTag.getString("Type"));
+                AbstractTriggerBlock block = MappetFactories.getTriggerBlocks().create(blockTag.getString("Type"));
 
-                if (block != null)
-                {
+                if (block != null) {
                     block.deserializeNBT(blockTag);
                     this.blocks.add(block);
                 }
             }
         }
 
-        this.recalculateEmpty();
-    }
-
-    public boolean isEmpty()
-    {
-        return this.empty;
+        recalculateEmpty();
     }
 }

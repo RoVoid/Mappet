@@ -6,87 +6,48 @@ import mchorse.mclib.utils.NBTUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-public class PacketContentData extends PacketContentBase
-{
-    public String name = "";
-    public String rename;
+public class PacketContentData extends PacketContentBase {
     public NBTTagCompound data;
-    public boolean allowed = true;
+    public String editorName;
 
-    public PacketContentData()
-    {
+    public PacketContentData() {
         super();
     }
 
-    public PacketContentData(IContentTypeBase type, String name)
-    {
-        super(type);
-
-        this.name = name;
+    public PacketContentData(IContentTypeBase type, String path) {
+        super(type, path);
     }
 
-    public PacketContentData(IContentTypeBase type, String name, NBTTagCompound data)
-    {
-        this(type, name);
-
+    public PacketContentData(IContentTypeBase type, String path, NBTTagCompound data) {
+        super(type, path);
         this.data = data;
     }
 
-    public PacketContentData rename(String rename)
-    {
-        this.rename = rename;
-
-        return this;
-    }
-
-    public PacketContentData disallow()
-    {
-        this.allowed = false;
-
+    public PacketContentData create() {
+        data = new NBTTagCompound();
         return this;
     }
 
     @Override
-    public void fromBytes(ByteBuf buf)
-    {
+    public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
 
-        this.name = ByteBufUtils.readUTF8String(buf);
-
-        if (buf.readBoolean())
-        {
-            this.data = NBTUtils.readInfiniteTag(buf);
-        }
-
-        if (buf.readBoolean())
-        {
-            this.rename = ByteBufUtils.readUTF8String(buf);
-        }
-
-        this.allowed = buf.readBoolean();
+        if (buf.readBoolean()) editorName = ByteBufUtils.readUTF8String(buf);
+        if (buf.readBoolean()) data = NBTUtils.readInfiniteTag(buf);
     }
 
     @Override
-    public void toBytes(ByteBuf buf)
-    {
+    public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
 
-        ByteBufUtils.writeUTF8String(buf, this.name);
+        buf.writeBoolean(editorName != null);
+        if (editorName != null) ByteBufUtils.writeUTF8String(buf, this.editorName);
 
-        buf.writeBoolean(this.data != null);
+        buf.writeBoolean(data != null);
+        if (data != null) ByteBufUtils.writeTag(buf, data);
+    }
 
-        if (this.data != null)
-        {
-            ByteBufUtils.writeTag(buf, this.data);
-        }
-
-        buf.writeBoolean(this.rename != null);
-
-        if (this.rename != null)
-        {
-            ByteBufUtils.writeUTF8String(buf, this.rename);
-        }
-
-        buf.writeBoolean(this.allowed);
+    public void disallow(){ // for dev
+        editorName = ".";
     }
 }

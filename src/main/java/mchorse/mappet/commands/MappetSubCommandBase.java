@@ -6,6 +6,7 @@ import mchorse.mclib.commands.utils.L10n;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.ITextComponent;
 
 public abstract class MappetSubCommandBase extends SubCommandBase {
     @Override

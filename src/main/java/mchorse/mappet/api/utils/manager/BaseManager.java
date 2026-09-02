@@ -100,13 +100,6 @@ public abstract class BaseManager<T extends AbstractData> implements IManager<T>
         return true;
     }
 
-    @Override
-    public Set<String> getIDs() {
-        Set<String> set = new HashSet<>();
-        if (root != null) recursiveFind(set, root, "");
-        return set;
-    }
-
     public boolean save(String id, T data) {
         return save(id, data.serializeNBT());
     }
@@ -123,25 +116,72 @@ public abstract class BaseManager<T extends AbstractData> implements IManager<T>
         return false;
     }
 
+    @Override
+    public Set<String> getPaths() { // with folders
+        Set<String> set = new HashSet<>();
+        if (root != null) recursiveFind(set, root, "", true);
+        return set;
+    }
+
+    @Override
+    public Set<String> getIDs() { // without folders
+        Set<String> set = new HashSet<>();
+        if (root != null) recursiveFind(set, root, "", false);
+        return set;
+    }
+
     /* File helpers */
 
-    protected boolean recursiveFind(Set<String> set, File folder, String prefix) {
+    protected void recursiveFind(Set<String> set, File folder, String prefix, boolean withFolders) {
+        if (!prefix.isEmpty() && withFolders) set.add(prefix);
+
         File[] files = folder.listFiles();
-        if (files == null || files.length == 0) return true; // is empty
+        if (files == null) return;
 
         for (File file : files) {
             String name = file.getName();
             if (file.isFile() && name.endsWith(getExtension())) set.add(prefix + name.substring(0, name.length() - getExtension().length()));
-            else if (file.isDirectory()) {
-                if(recursiveFind(set, file, prefix + name + '/')) set.add(prefix + name + '/');
-            }
+            else if (file.isDirectory()) recursiveFind(set, file, prefix + name + '/', withFolders);
         }
-
-        return false;
     }
 
     public File getFile(String name) {
         return root == null || name == null || name.isEmpty() || name.charAt(0) == '.' ? null : new File(root, name + getExtension());
+    }
+
+    public static boolean isFolder(String path){
+        return path != null && path.endsWith("/"); // small util
+    }
+
+    @Override
+    public void addFolder(String path) {
+        if (root == null || path == null || path.isEmpty()) return;
+        new File(root, path).mkdirs();
+    }
+
+    @Override
+    public void renameFolder(String oldPath, String newPath) {
+        if (root == null || oldPath == null || newPath == null) return;
+        new File(root, oldPath).renameTo(new File(root, newPath));
+        String prefix = oldPath.endsWith("/") ? oldPath : oldPath + "/";
+        cache.keySet().removeIf(id -> id.startsWith(prefix));
+    }
+
+    @Override
+    public void deleteFolder(String path) {
+        if (root == null || path == null || path.isEmpty()) return;
+        String prefix = path.endsWith("/") ? path : path + "/";
+        cache.keySet().removeIf(id -> id.startsWith(prefix));
+        deleteRecursive(new File(root, path));
+    }
+
+    private void deleteRecursive(File file) {
+        if (file == null || !file.exists()) return;
+        if (file.isDirectory()) {
+            File[] children = file.listFiles();
+            if (children != null) for (File child : children) deleteRecursive(child);
+        }
+        file.delete();
     }
 
     @Override

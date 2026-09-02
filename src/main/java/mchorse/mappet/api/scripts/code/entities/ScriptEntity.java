@@ -5,6 +5,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.mappet.Mappet;
+import mchorse.mappet.api.scripts.ScriptWrapper;
 import mchorse.mappet.api.scripts.code.ScriptRayTrace;
 import mchorse.mappet.api.scripts.code.entities.ai.EntitiesAIPatrol;
 import mchorse.mappet.api.scripts.code.entities.ai.EntityAILookAtTarget;
@@ -75,7 +76,7 @@ import java.util.UUID;
 public class ScriptEntity<T extends Entity> implements IScriptEntity {
     protected T entity;
 
-    protected ScriptStates states = new ScriptStates();
+    protected ScriptStates states;
 
     //    protected ScriptVector moveTarget = ScriptVector.EMPTY;
     //    protected int movingTick = 0;
@@ -89,8 +90,8 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     }
 
     protected ScriptEntity(T entity) {
+//        super(entity);
         this.entity = entity;
-        states.owner = this;
     }
 
     @Override
@@ -98,6 +99,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     public Entity getMinecraftEntity() {
         return entity;
     }
+
 
     @Override
     public Entity asMinecraft() {
@@ -365,7 +367,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             if (flag) {
                 if (playSound)
                     player.world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS,
-                            0.2F, ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                                           0.2F, ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F);
 
                 player.inventoryContainer.detectAndSendChanges();
             }
@@ -574,7 +576,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         if (entity.isLivingBase()) {
             living.setAttackTarget((EntityLivingBase) entity.asMinecraft());
             System.out.println("getTarget: " + entity.asMinecraft() + " " + (living.getAttackTarget() == null ? "null"
-                    : living.getAttackTarget().getName()));
+                                                                                                              : living.getAttackTarget().getName()));
         }
     }
 
@@ -1123,7 +1125,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
         if (disableAI) {
             setAIEnabled(false);
             moveTo(interpolation, durationTicks, x, y, z);
-            CommonProxy.eventHandler.addExecutable(new RunnableExecutionFork(durationTicks, () -> setAIEnabled(true)));
+            CommonProxy.playerSessionHandler.getExecutableScheduler().addExecutable(new RunnableExecutionFork(durationTicks, () -> setAIEnabled(true)));
         }
         else moveTo(interpolation, durationTicks, x, y, z);
     }
@@ -1140,7 +1142,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             double interpY = interp.interpolate(startY, y, progress);
             double interpZ = interp.interpolate(startZ, z, progress);
 
-            CommonProxy.eventHandler.addExecutable(new RunnableExecutionFork(i, () -> setPosition(interpX, interpY, interpZ)));
+            CommonProxy.playerSessionHandler.getExecutableScheduler().addExecutable(new RunnableExecutionFork(i, () -> setPosition(interpX, interpY, interpZ)));
         }
     }
 
@@ -1148,7 +1150,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
     //        if (disableAI) {
     //            setAIEnabled(false);
     //            moveTo(interpolation, durationTicks, x, y, z);
-    //            CommonProxy.eventHandler.addExecutable(new RunnableExecutionFork(durationTicks, () -> setAIEnabled(true)));
+    //            CommonProxy.playerSessionHandler.getExecutableScheduler().addExecutable(new RunnableExecutionFork(durationTicks, () -> setAIEnabled(true)));
     //        }
     //        else moveTo(interpolation, durationTicks, x, y, z);
     //    }
@@ -1224,7 +1226,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
                 patrolTask.addPatrolPoint(new BlockPos(x, y, z), shouldCirculate, executeCommandOnArrival);
             }
             else patrolTask = new EntitiesAIPatrol((EntityLiving) entity, speed, new BlockPos[]{new BlockPos(x, y, z)},
-                    new boolean[]{shouldCirculate}, new String[]{executeCommandOnArrival});
+                                                   new boolean[]{shouldCirculate}, new String[]{executeCommandOnArrival});
 
             entityLiving.tasks.addTask(1, patrolTask);
         }
@@ -1288,7 +1290,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
             EntityLiving entityLiving = (EntityLiving) entity;
             entityLiving.tasks.addTask(10, new EntityAIRepeatingCommand(entityLiving, command, frequency));
             RepeatingCommandDataStorage.getRepeatingCommandDataStorage(entity.world)
-                    .addRepeatingCommandData(entityLiving.getUniqueID(), command, frequency);
+                                       .addRepeatingCommandData(entityLiving.getUniqueID(), command, frequency);
         }
     }
 
@@ -1309,7 +1311,7 @@ public class ScriptEntity<T extends Entity> implements IScriptEntity {
 
             removeSpecificRepeatingCommandTaskIfExists(entityLiving, command);
             RepeatingCommandDataStorage.getRepeatingCommandDataStorage(entity.world)
-                    .removeSpecificRepeatingCommandData(entityLiving.getUniqueID(), command);
+                                       .removeSpecificRepeatingCommandData(entityLiving.getUniqueID(), command);
         }
     }
 

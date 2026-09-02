@@ -1,17 +1,16 @@
 package mchorse.mappet.client.gui.panels;
 
+import mchorse.mappet.MappetIcons;
 import mchorse.mappet.api.utils.AbstractData;
-import mchorse.mappet.api.utils.content.IContentTypeBase;
+import mchorse.mappet.api.utils.content.IContentType;
+import mchorse.mappet.client.gui.GuiLabel;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.utils.GuiConfirmOverlayPanel;
 import mchorse.mappet.client.gui.utils.GuiPromptOverlayPanel;
 import mchorse.mappet.client.gui.utils.GuiStringFolderList;
 import mchorse.mappet.client.gui.utils.GuiStringFolderSearchListElement;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.packets.content.PacketContentData;
-import mchorse.mappet.network.packets.content.PacketContentFolder;
-import mchorse.mappet.network.packets.content.PacketContentRequestData;
-import mchorse.mappet.network.packets.content.PacketContentRequestNames;
+import mchorse.mappet.network.packets.content.*;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
@@ -52,7 +51,12 @@ public abstract class GuiMappetDashboardPanel<T extends AbstractData> extends Gu
 
     public GuiElement editor;
     protected boolean update;
+
     protected T data;
+
+    protected String waitingId = "";
+    protected GuiElement syncIndicator;
+
     protected boolean allowed;
     protected boolean save;
 
@@ -69,30 +73,10 @@ public abstract class GuiMappetDashboardPanel<T extends AbstractData> extends Gu
         toggleSidebar = new GuiIconElement(mc, Icons.LEFTLOAD, (element) -> toggleSidebar());
         iconBar.add(toggleSidebar);
 
-        add = new GuiIconElement(mc, Icons.ADD, this::addNewData);
-        add.context(() -> {
-            GuiSimpleContextMenu menu = new GuiSimpleContextMenu(mc);
-            menu.action(Icons.ADD, IKey.lang("mappet.gui.panels.context.add_folder"), this::addFolder);
-            return menu.shadow();
-        });
-
+        add = new GuiIconElement(mc, Icons.ADD, this::addData);
         dupe = new GuiIconElement(mc, Icons.DUPE, this::dupeData);
-
         rename = new GuiIconElement(mc, Icons.EDIT, this::renameData);
-        rename.context(() -> {
-            if (folderList.getFolderPath().isEmpty()) return null;
-            GuiSimpleContextMenu menu = new GuiSimpleContextMenu(mc);
-            menu.action(Icons.EDIT, IKey.lang("mappet.gui.panels.context.rename_folder"), this::renameFolder);
-            return menu.shadow();
-        });
-
         remove = new GuiIconElement(mc, Icons.REMOVE, this::removeData);
-        remove.context(() -> {
-            if (folderList.getFolderPath().isEmpty()) return null;
-            GuiSimpleContextMenu menu = new GuiSimpleContextMenu(mc);
-            menu.action(Icons.REMOVE, IKey.lang("mappet.gui.panels.context.remove_folder"), this::removeFolder);
-            return menu.shadow();
-        });
 
         GuiDrawable drawable = new GuiDrawable(
                 (context) -> font.drawStringWithShadow(I18n.format(getTitle()), folderSearch.area.x, area.y + 10, 0xffffff));
@@ -110,16 +94,21 @@ public abstract class GuiMappetDashboardPanel<T extends AbstractData> extends Gu
         buttons.flex().relative(folderSearch).x(1F).y(-20).anchorX(1F).row(0).resize();
         buttons.add(add, dupe, rename, remove);
 
+        IKey sik = IKey.lang("sync");
+        syncIndicator = new GuiLabel(mc, sik, MappetIcons.SYNC, null).background(0x66000000);
+        syncIndicator.flex().relative(this).x(1F, -20).anchorX(1).y(0F, 20).w(MappetIcons.SYNC.w + 5 + font.getStringWidth(sik.get())).h(16);
+
         markContainer();
-        add(sidebar, iconBar, editor);
+        add(sidebar, iconBar, editor, syncIndicator);
+
 
         keys().register(IKey.lang("mappet.gui.panels.keys.toggle_sidebar"), Keyboard.KEY_N,
-                () -> toggleSidebar.clickItself(GuiBase.getCurrent())).category(KEYS_CATEGORY);
+                        () -> toggleSidebar.clickItself(GuiBase.getCurrent())).category(KEYS_CATEGORY);
     }
 
     @Override
     public boolean mouseClicked(GuiContext context) {
-        if (sidebar.mouseClicked(context)) return true;
+        if (sidebar.mouseClicked(context) || iconBar.mouseClicked(context)) return true;
         return super.mouseClicked(context);
     }
 
@@ -135,9 +124,15 @@ public abstract class GuiMappetDashboardPanel<T extends AbstractData> extends Gu
         } catch (Exception ignored) {}
 
         if (mc.isSingleplayer()) menu.action(Icons.FOLDER, IKey.lang("mappet.gui.panels.context.open_folder"), () -> {
-            String path = getType().manager().getFolder().getAbsolutePath() + "/" + folderList.getFolderPath();
+            String path = getType().manager().getFolder().getAbsolutePath() + "/" + folderList.getFolder();
             GuiUtils.openFolder(path);
         });
+
+        menu.action(Icons.ADD, IKey.lang("mappet.gui.panels.context.add_folder"), this::addFolder);
+        if (!folderList.getFolder().isEmpty()) {
+            menu.action(Icons.EDIT, IKey.lang("mappet.gui.panels.context.rename_folder"), this::renameFolder);
+            menu.action(Icons.REMOVE, IKey.lang("mappet.gui.panels.context.remove_folder"), this::removeFolder);
+        }
 
         return menu.actions.getList().isEmpty() ? null : menu.shadow();
     }
@@ -149,9 +144,8 @@ public abstract class GuiMappetDashboardPanel<T extends AbstractData> extends Gu
     }
 
     private void paste(NBTTagCompound tag) {
-        // убираем _ContentType чтобы не попал в данные
         tag.removeTag("_ContentType");
-        addNewData(add, (T) getType().manager().create("", tag));
+        addData(add, getType().manager().create("", tag));
     }
 
     private void toggleSidebar() {
@@ -163,7 +157,7 @@ public abstract class GuiMappetDashboardPanel<T extends AbstractData> extends Gu
         resize();
     }
 
-    public abstract IContentTypeBase getType();
+    public abstract IContentType<T> getType();
 
     public abstract String getTitle();
 
@@ -172,66 +166,70 @@ public abstract class GuiMappetDashboardPanel<T extends AbstractData> extends Gu
         Dispatcher.sendToServer(new PacketContentRequestData(getType(), id));
     }
 
-    /* CRUD */
-
-    protected void addNewData(GuiIconElement element) {
-        addNewData(element, null);
+    protected void waitAny() {
+        wait("");
     }
 
-    protected void addNewData(GuiIconElement element, T data) {
-        new GuiPromptOverlayPanel(mc, IKey.lang("mappet.gui.panels.modals.add"), s -> addNewData(s, data), this::hasDuplicate).filename().open();
+    protected void wait(String path) {
+        waitingId = path;
+        syncIndicator.setVisible(path != null);
     }
 
-    protected void addNewData(String name, T newData) {
-        if (folderList.inHierarchy(name)) return;
+    protected void addData(GuiIconElement element) {
+        addData(element, null);
+    }
+
+    protected void addData(GuiIconElement element, T data) {
+        new GuiPromptOverlayPanel(mc, IKey.lang("mappet.gui.panels.modals.add"), name -> addData(folderList.getPath(name), data),
+                                  this::hasDuplicate).filename().open();
+    }
+
+    protected void addData(String id, T newData) {
+        if (folderList.exists(id)) return;
 
         save();
 
-        // если данные не переданы — создаём пустые с дефолтами
         if (newData == null) {
-            newData = (T) getType().manager().create(name);
+            newData = getType().manager().create(id);
             fillDefaultData(newData);
         }
         else {
-            newData.setId(name);
+            newData.setId(id);
         }
 
-        Dispatcher.sendToServer(new PacketContentData(getType(), name, newData.serializeNBT()));
-        folderList.addFile(name);
+        Dispatcher.sendToServer(new PacketContentData(getType(), id, newData.serializeNBT()));
+        folderList.addFile(id);
         fill(newData);
     }
 
     private void addFolder() {
         new GuiPromptOverlayPanel(mc, IKey.lang("mappet.gui.panels.modals.add_folder"), this::addFolder, this::hasDuplicateFolder).filename()
-                .open();
+                                                                                                                                  .open();
     }
 
     private void addFolder(String name) {
-        Dispatcher.sendToServer(new PacketContentFolder(getType(), name, folderList.getPath("")));
+        Dispatcher.sendToServer(new PacketContentFolder(getType(), folderList.getPath(name)));
     }
 
     private void renameFolder() {
-        if (folderList.getFolderPath().isEmpty()) return;
+        if (folderList.getFolder().isEmpty()) return;
         new GuiPromptOverlayPanel(mc, IKey.lang("mappet.gui.panels.modals.rename_folder"), this::renameFolder,
-                this::hasDuplicateFolder).filename().setValue(folderList.getFolderPath()).open();
+                                  this::hasDuplicateFolder).filename().setValue(folderList.getFolder()).open();
     }
 
     private void renameFolder(String name) {
-        String path = folderList.getPath("");
-        Dispatcher.sendToServer(new PacketContentFolder(getType(), "", path.substring(0, path.length() - 1)).rename(name));
+        Dispatcher.sendToServer(new PacketContentRename(getType(), folderList.getFolder(), folderList.getPath(name + '/')));
         fill(null);
     }
 
     private void removeFolder() {
-        if (folderList.getFolderPath().isEmpty()) return;
+        if (folderList.getFolder().isEmpty()) return;
         new GuiConfirmOverlayPanel(mc, IKey.lang("mappet.gui.panels.modals.remove_folder"),
-                IKey.str(TextFormatting.RED + folderList.getFolderPath()), this::removeFolder).open();
+                                   IKey.str(TextFormatting.RED + folderList.getFolder()), this::removeFolder).open();
     }
 
     private void removeFolder(Boolean isDelete) {
-        if (!isDelete) return;
-        String path = folderList.getPath("");
-        Dispatcher.sendToServer(new PacketContentFolder(getType(), "", path.substring(0, path.length() - 1)).delete());
+        if (isDelete) Dispatcher.sendToServer(new PacketContentFolder(getType(), folderList.getFolder()).delete());
     }
 
     protected void fillDefaultData(T data) {}
@@ -239,39 +237,40 @@ public abstract class GuiMappetDashboardPanel<T extends AbstractData> extends Gu
     protected void dupeData(GuiIconElement element) {
         if (data == null) return;
         new GuiPromptOverlayPanel(mc, IKey.lang("mappet.gui.panels.modals.dupe"), this::dupeData, this::hasDuplicate).filename()
-                .setValue(folderList.filename(data.getId()))
-                .open();
+                                                                                                                     .setValue(folderList.filename(data.getId()))
+                                                                                                                     .open();
     }
 
     protected void dupeData(String name) {
-        if (folderList.inHierarchy(name)) return;
+        String id = folderList.getPath(name);
+        if (folderList.exists(id)) return;
         save();
-        T duped = (T) getType().manager().create(name, data.serializeNBT());
-        Dispatcher.sendToServer(new PacketContentData(getType(), name, duped.serializeNBT()));
-        folderList.addFile(name);
+        T duped = getType().manager().create(id, data.serializeNBT());
+        Dispatcher.sendToServer(new PacketContentData(getType(), id, duped.serializeNBT()));
+        folderList.addFile(id);
         fill(duped);
     }
 
     protected void renameData(GuiIconElement element) {
         if (data == null) return;
         new GuiPromptOverlayPanel(mc, IKey.lang("mappet.gui.panels.modals.rename"), this::renameData, this::hasDuplicate).filename()
-                .setValue(folderList.filename(data.getId()))
-                .open();
+                                                                                                                         .setValue(folderList.filename(data.getId()))
+                                                                                                                         .open();
     }
 
     protected void renameData(String name) {
-        if (folderList.inHierarchy(name)) return;
-        String path = getDataPath();
-        String newId = path + name;
-        Dispatcher.sendToServer(new PacketContentData(getType(), data.getId(), data.serializeNBT()).rename(newId));
+        String id = folderList.getPath(name);
+        if (data == null || folderList.exists(id)) return;
+        Dispatcher.sendToServer(new PacketContentRename(getType(), data.getId(), id));
         folderList.removeFile(data.getId());
-        folderList.addFile(newId);
-        data.setId(newId);
+        folderList.addFile(id);
+        data.setId(id);
     }
 
+    // todo: minimize
     protected IKey hasDuplicate(String name) {
         if (name == null || name.isEmpty()) return IKey.lang("mappet.gui.panels.error.empty");
-        return folderList.inHierarchy(folderList.getPath(name)) ? IKey.lang("mappet.gui.panels.error.duplicate") : null;
+        return folderList.exists(folderList.getPath(name)) ? IKey.lang("mappet.gui.panels.error.duplicate") : null;
     }
 
     protected IKey hasDuplicateFolder(String name) {
@@ -279,15 +278,10 @@ public abstract class GuiMappetDashboardPanel<T extends AbstractData> extends Gu
         return folderList.folderExists(folderList.getPath(name)) ? IKey.lang("mappet.gui.panels.error.duplicate") : null;
     }
 
-    protected String getDataPath() {
-        int index = data.getId().lastIndexOf('/');
-        return index != -1 ? data.getId().substring(0, index + 1) : "";
-    }
-
     protected void removeData(GuiIconElement element) {
         if (data == null) return;
         new GuiConfirmOverlayPanel(mc, IKey.lang("mappet.gui.panels.modals.remove"), IKey.str(TextFormatting.RED + data.getId()),
-                this::removeData).open();
+                                   this::removeData).open();
     }
 
     protected void removeData(boolean confirm) {
@@ -300,25 +294,44 @@ public abstract class GuiMappetDashboardPanel<T extends AbstractData> extends Gu
     /* Data population */
 
     public final void fill(T data) {
-        fill(data, true);
+        fill(data, null);
     }
 
-    public void fill(T data, boolean allowed) {
+    public void fill(T data, String editorName) {
         this.data = data;
-        this.allowed = allowed;
+        this.allowed = editorName == null || editorName.equals(mc.player.getName());
 
         boolean hasData = data != null;
         editor.setEnabled(allowed);
         remove.setEnabled(allowed && hasData);
         rename.setEnabled(allowed && hasData);
         dupe.setEnabled(hasData);
+
+        wait(null);
     }
 
-    public void fillNames(Set<String> names) {
-        String value = data == null ? null : data.getId();
-        folderList.fill(names);
-        folderList.sort();
-        folderList.selectFile(value);
+    public void fillPaths(Set<String> names) {
+        fillPaths(names, null, null);
+    }
+
+    public void fillPaths(Set<String> paths, String renameOld, String renameNew) {
+        folderList.fill(paths);
+
+        if(data == null) {
+            if (renameOld != null && renameNew != null && renameOld.endsWith("/")) { // is folder rename
+                String currentFolder = folderList.getFolder();
+                if (!currentFolder.isEmpty() && currentFolder.startsWith(renameOld)) {
+                    String relocated = renameNew + currentFolder.substring(renameOld.length());
+                    folderList.goTo(relocated);
+                }
+            }
+        }
+        else {
+            if (renameNew != null && data.getId().equals(renameOld)) data.setId(renameNew);
+            folderList.selectFile(data.getId());
+        }
+
+        wait(null);
     }
 
     protected GuiScrollElement createScrollEditor() {
@@ -329,38 +342,33 @@ public abstract class GuiMappetDashboardPanel<T extends AbstractData> extends Gu
 
     @Override
     public void open() {
-        super.open();
         update = true;
         save = true;
     }
 
     @Override
     public void appear() {
+        waitAny();
         if (update) {
             update = false;
-            requestDataNames();
+            Dispatcher.sendToServer(new PacketContentRequestPaths(getType()));
         }
         if (data != null) Dispatcher.sendToServer(new PacketContentRequestData(getType(), data.getId()));
     }
 
-    public void requestDataNames() {
-        Dispatcher.sendToServer(new PacketContentRequestNames(getType()));
-    }
-
     @Override
     public void disappear() {
-        super.disappear();
         if (save) save();
     }
 
     @Override
     public void close() {
-        super.close();
         if (save) save();
     }
 
     public void save() {
         if (!save || update || data == null || !editor.isEnabled()) return;
+        waitAny();
         preSave();
         Dispatcher.sendToServer(new PacketContentData(getType(), data.getId(), data.serializeNBT()));
     }

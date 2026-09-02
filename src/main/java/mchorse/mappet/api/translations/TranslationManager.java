@@ -149,7 +149,7 @@ public class TranslationManager extends BaseManager<Translation> {
     }
 
     @Override
-    public Set<String> getIDs() {
+    public Set<String> getPaths() {
         Set<String> set = new HashSet<>();
         if (root == null) return set;
 

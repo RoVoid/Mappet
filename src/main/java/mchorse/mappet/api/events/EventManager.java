@@ -1,5 +1,6 @@
 package mchorse.mappet.api.events;
 
+import mchorse.mappet.MappetFactories;
 import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.config.MappetConfig;
 import mchorse.mappet.api.events.nodes.EventBaseNode;
@@ -17,7 +18,7 @@ public class EventManager extends BaseManager<NodeSystem<EventBaseNode>> {
 
     @Override
     protected NodeSystem<EventBaseNode> createData(String id, NBTTagCompound tag) {
-        NodeSystem<EventBaseNode> event = new NodeSystem<>(CommonProxy.getEvents());
+        NodeSystem<EventBaseNode> event = new NodeSystem<>(MappetFactories.getEvents());
 
         if (tag != null) {
             event.deserializeNBT(tag);

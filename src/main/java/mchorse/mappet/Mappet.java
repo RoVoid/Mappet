@@ -1,7 +1,6 @@
 package mchorse.mappet;
 
 import mchorse.mappet.api.ServerSettings;
-import mchorse.mappet.api.data.DataManager;
 import mchorse.mappet.api.dialogues.DialogueManager;
 import mchorse.mappet.api.events.EventManager;
 import mchorse.mappet.api.factions.FactionManager;
@@ -17,10 +16,10 @@ import mchorse.mappet.api.translations.TranslationManager;
 import mchorse.mappet.api.ui.UIManager;
 import mchorse.mappet.api.utils.DataContext;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
-import mchorse.mappet.commands.CommandMappet;
+import mchorse.mappet.commands.MappetCommands;
 import mchorse.mappet.config.MappetConfig;
-import mchorse.mappet.events.handlers.ModEventHandler;
-import mchorse.mappet.events.handlers.TriggerEventHandler;
+import mchorse.mappet.events.handlers.RegistrationEventHandler;
+import mchorse.mappet.events.handlers.WorldTriggerHandler;
 import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mclib.McLib;
 import mchorse.mclib.commands.utils.L10n;
@@ -67,7 +66,6 @@ public final class Mappet {
     public static DialogueManager dialogues;
     public static NpcManager npcs;
     public static FactionManager factions;
-    public static DataManager data;
     public static QuestChainManager chains;
     public static ScriptManager scripts;
     public static HUDManager huds;
@@ -77,7 +75,7 @@ public final class Mappet {
     public static StatesStorage states;
 
     public Mappet() {
-        MinecraftForge.EVENT_BUS.register(new ModEventHandler());
+        MinecraftForge.EVENT_BUS.register(new RegistrationEventHandler());
     }
 
     @SubscribeEvent
@@ -110,7 +108,7 @@ public final class Mappet {
 
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
-        event.registerServerCommand(new CommandMappet());
+        event.registerServerCommand(new MappetCommands());
 
         File mappetWorldFolder = new File(DimensionManager.getCurrentSaveRootDirectory(), MOD_ID);
         mappetWorldFolder.mkdirs();
@@ -128,7 +126,6 @@ public final class Mappet {
         dialogues = new DialogueManager(new File(mappetWorldFolder, "dialogues"));
         npcs = new NpcManager(new File(mappetWorldFolder, "npcs"));
         factions = new FactionManager(new File(mappetWorldFolder, "factions"));
-        data = new DataManager(new File(mappetWorldFolder, "data"));
         chains = new QuestChainManager(new File(mappetWorldFolder, "chains"));
         scripts = new ScriptManager(new File(mappetWorldFolder, "scripts"));
         huds = new HUDManager(new File(mappetWorldFolder, "huds"));
@@ -141,7 +138,7 @@ public final class Mappet {
         ScriptEngineRegistry.initiateScriptEngines();
         scripts.initiateAllScripts();
 
-        TriggerEventHandler.getRegisteredEvents();
+        WorldTriggerHandler.getRegisteredEvents();
 
         if (event.getServer().isDedicatedServer()) MappetIcons.initiate();
     }
@@ -159,7 +156,6 @@ public final class Mappet {
             dialogues = null;
             npcs = null;
             factions = null;
-            data = null;
             chains = null;
             scripts = null;
             huds = null;
@@ -168,6 +164,6 @@ public final class Mappet {
         }
 
         logger.closeWorldLogging();
-        CommonProxy.eventHandler.reset();
+        CommonProxy.playerSessionHandler.reset();
     }
 }

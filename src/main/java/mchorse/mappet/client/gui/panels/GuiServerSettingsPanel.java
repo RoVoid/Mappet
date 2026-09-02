@@ -3,7 +3,6 @@ package mchorse.mappet.client.gui.panels;
 import mchorse.mappet.MappetIcons;
 import mchorse.mappet.api.ServerSettings;
 import mchorse.mappet.api.states.ScriptStates;
-import mchorse.mappet.api.states.States;
 import mchorse.mappet.api.triggers.Trigger;
 import mchorse.mappet.client.gui.GuiMappetDashboard;
 import mchorse.mappet.client.gui.hotkey.GuiHotkeysOverlayPanel;
@@ -16,12 +15,12 @@ import mchorse.mappet.client.gui.utils.triggers.TriggerDoc;
 import mchorse.mappet.client.gui.utils.triggers.TriggerDocs;
 import mchorse.mappet.client.gui.utils.triggers.TriggerVariable;
 import mchorse.mappet.config.MappetConfig;
-import mchorse.mappet.events.handlers.TriggerEventHandler;
+import mchorse.mappet.events.handlers.WorldTriggerHandler;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.packets.content.PacketRequestServerSettings;
-import mchorse.mappet.network.packets.content.PacketRequestStates;
-import mchorse.mappet.network.packets.content.PacketServerSettings;
-import mchorse.mappet.network.packets.content.PacketStates;
+import mchorse.mappet.network.packets.settings.PacketRequestServerSettings;
+import mchorse.mappet.network.packets.settings.PacketServerSettings;
+import mchorse.mappet.network.packets.states.PacketRequestStates;
+import mchorse.mappet.network.packets.states.PacketStates;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
@@ -102,10 +101,11 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
 
         forgeTriggers = new GuiLabelListElement<>(mc, (l) -> fillForgeTrigger(l.get(0)));
         forgeTriggers.background().flex().relative(this).x(0.5F, 10).y(35).w(0.5F, -20).h(246);
-        forgeTriggers.context(
-                () -> new GuiSimpleContextMenu(mc).action(Icons.ADD, IKey.lang("mappet.gui.settings.forge.add"), this::addForgeTrigger)
-                        .action(Icons.ADD, IKey.lang("mappet.gui.settings.forge.add_from_list"), this::addForgeTriggerFromList)
-                        .action(Icons.REMOVE, IKey.lang("mappet.gui.settings.forge.remove"), this::removeCurrentForgeTrigger));
+        forgeTriggers.context(() -> new GuiSimpleContextMenu(mc).action(Icons.ADD, IKey.lang("mappet.gui.settings.forge.add"), this::addForgeTrigger)
+                                                                .action(Icons.ADD, IKey.lang("mappet.gui.settings.forge.add_from_list"),
+                                                                        this::addForgeTriggerFromList)
+                                                                .action(Icons.REMOVE, IKey.lang("mappet.gui.settings.forge.remove"),
+                                                                        this::removeCurrentForgeTrigger));
 
         forgeTrigger = new GuiTriggerElement(mc).onClose(this::updateCurrentForgeTrigger);
         forgeTrigger.flex().relative(this).x(1F, -10).y(1F, -10).wh(120, 20).anchor(1F, 1F);
@@ -164,12 +164,9 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
     }
 
     public void addForgeTriggerFromList() {
-        Set<String> events = TriggerEventHandler.getRegisteredEvents()
-                .stream()
-                .map(TriggerEventHandler::getEventClassName)
-                .collect(Collectors.toSet());
-        GuiStringOverlayPanel overlay = new GuiStringOverlayPanel(mc, IKey.lang("mappet.gui.forge.pick"), false, events,
-                this::addForgeTrigger);
+        Set<String> events = WorldTriggerHandler.getRegisteredEvents().stream().map(WorldTriggerHandler::getEventClassName).collect(
+                Collectors.toSet());
+        GuiStringOverlayPanel overlay = new GuiStringOverlayPanel(mc, IKey.lang("mappet.gui.forge.pick"), false, events, this::addForgeTrigger);
 
         GuiOverlay.addOverlay(GuiBase.getCurrent(), overlay.set(lastTarget), 0.5F, 0.6F);
     }
@@ -185,7 +182,9 @@ public class GuiServerSettingsPanel extends GuiDashboardPanel<GuiMappetDashboard
     }
 
     public IKey createTooltip(String key, Trigger trigger) {
-        IKey title = IKey.str(TriggerDocs.get(key).name);
+        TriggerDoc doc = TriggerDocs.get(key);
+        if (doc == null) return IKey.EMPTY;
+        IKey title = IKey.str(doc.name);
         if (trigger.blocks.isEmpty()) return title;
         IKey count = IKey.str(" §7(§6" + trigger.blocks.size() + "§7)§r");
         return IKey.comp(title, count);

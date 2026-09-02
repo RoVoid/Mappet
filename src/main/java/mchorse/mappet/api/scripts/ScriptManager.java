@@ -119,8 +119,7 @@ public class ScriptManager extends BaseManager<Script> {
         ScriptEvent event = new ScriptEvent(context, id, function);
 
         try {
-            return ((Invocable) engine).invokeFunction(function,
-                    args.length == 0 ? new Object[]{event} : args);
+            return ((Invocable) engine).invokeFunction(function, args.length == 0 ? new Object[]{event} : args);
         } catch (ScriptException e) {
             ScriptException processed = processScriptException(e, engineRanges.get(engine), id);
             Mappet.logger.error(processed.getMessage());
@@ -131,6 +130,11 @@ public class ScriptManager extends BaseManager<Script> {
     private Script getScript(String id) {
         Script script = load(id);
         if (script != null && script.globalLibrary) globalLibraries.put(id, script);
+//        if (script == null) {
+//            ScriptEngine removed = uniqueEngines.remove(id);
+//            if (removed != null) engineRanges.remove(removed);
+//            globalLibraries.remove(id);
+//        }
         return script;
     }
 
@@ -278,30 +282,78 @@ public class ScriptManager extends BaseManager<Script> {
 
     @Override
     public boolean rename(String id, String newId) {
-        if(!super.rename(id, newId)) return false;
+        if (!super.rename(id, newId)) return false;
 
         File scriptFile = getScriptFile(id);
         if (scriptFile != null) scriptFile.renameTo(getScriptFile(newId));
 
-        uniqueEngines.remove(id);
-        globalLibraries.remove(id);
-        return true; // dont check file rename
+        ScriptEngine engine = uniqueEngines.remove(id);
+        if (engine != null) uniqueEngines.put(newId, engine);
+
+        Script lib = globalLibraries.remove(id);
+        if (lib != null) {
+            Script reloaded = load(newId);
+            if (reloaded != null && reloaded.globalLibrary) globalLibraries.put(newId, reloaded);
+        }
+
+        return true; // don't check file rename
     }
 
     @Override
     public boolean delete(String id) {
-        if(!super.delete(id)) return false;
+        if (!super.delete(id)) return false;
 
         File scriptFile = getScriptFile(id);
         if (scriptFile != null) scriptFile.delete();
 
-        uniqueEngines.remove(id);
+        ScriptEngine removed = uniqueEngines.remove(id);
+        if (removed != null) engineRanges.remove(removed);
         globalLibraries.remove(id);
-        return true; // dont check file delete
+        return true; // don't check file delete
+    }
+
+    @Override
+    public void renameFolder(String oldPath, String newPath) {
+        String oldPrefix = oldPath.endsWith("/") ? oldPath : oldPath + "/";
+        String newPrefix = newPath.endsWith("/") ? newPath : newPath + "/";
+        evictByPrefix(oldPrefix);
+        super.renameFolder(oldPath, newPath);
+        reloadByPrefix(newPrefix);
+    }
+
+    @Override
+    public void deleteFolder(String path) {
+        String prefix = path.endsWith("/") ? path : path + "/";
+        evictByPrefix(prefix);
+        super.deleteFolder(path);
+    }
+
+    private void evictByPrefix(String prefix) {
+        uniqueEngines.entrySet().removeIf(entry -> {
+            if (!entry.getKey().startsWith(prefix)) return false;
+            engineRanges.remove(entry.getValue());
+            return true;
+        });
+        globalLibraries.keySet().removeIf(id -> id.startsWith(prefix));
+    }
+
+    private void reloadByPrefix(String prefix) {
+        for (String id : getPaths()) {
+            if (!id.startsWith(prefix)) continue;
+            try {
+                Script script = load(id);
+                if (script == null) continue;
+                if (script.globalLibrary) globalLibraries.put(id, script);
+                if (script.unique) uniqueEngines.put(id, initEngine(script));
+            } catch (Exception e) {
+                Mappet.logger.error("Failed to reload script '" + id + "' after folder rename: " + e.getMessage());
+            }
+        }
     }
 
     public void initiateAllScripts() {
-        for (String id : getIDs()) {
+        for (String id : getPaths()) {
+            if(BaseManager.isFolder(id)) continue;
             try {
                 Script script = load(id);
                 if (script == null) continue;
@@ -317,6 +369,6 @@ public class ScriptManager extends BaseManager<Script> {
 
     public File getScriptFile(String id) {
         if (root == null || id == null) return null;
-        return new File(root, id.lastIndexOf('.') != -1 ? id : id + ".js");
+        return new File(root, id.lastIndexOf('.') > id.lastIndexOf('/') ? id : id + ".js");
     }
 }

@@ -266,6 +266,8 @@ public class UIContext {
         hotkey = "";
         mouse = new NBTTagCompound();
 
+        Mappet.logger.debug(last + " " + hotkey + " " + context + " " + mouse);
+
         Dispatcher.sendToServer(new PacketUIData(tag));
     }
 
@@ -305,7 +307,7 @@ public class UIContext {
 
     private boolean handleScript(EntityPlayer player) {
         if (script.isEmpty() || function.isEmpty()) return false;
-
+Mappet.logger.debug("Script " + script);
         try {
             Mappet.scripts.execute(script, function, new DataContext(player));
             return true;

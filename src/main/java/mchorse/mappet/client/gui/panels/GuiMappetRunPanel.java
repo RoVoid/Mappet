@@ -25,9 +25,9 @@ public abstract class GuiMappetRunPanel <T extends AbstractData> extends GuiMapp
     protected abstract void run(EntityPlayerSP player);
 
     @Override
-    public void fill(T data, boolean allowed)
+    public void fill(T data, String editorName)
     {
-        super.fill(data, allowed);
+        super.fill(data, editorName);
 
         this.run.setVisible(data != null);
     }

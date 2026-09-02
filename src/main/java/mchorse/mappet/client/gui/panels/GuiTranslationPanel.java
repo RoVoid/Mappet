@@ -78,8 +78,8 @@ public class GuiTranslationPanel extends GuiMappetDashboardPanel<Translation> {
     }
 
     @Override
-    public void fill(Translation data, boolean allowed) {
-        super.fill(data, allowed);
+    public void fill(Translation data, String editorName) {
+        super.fill(data, editorName);
 
         editor.setVisible(data != null);
         inputs.removeAll();

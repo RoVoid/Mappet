@@ -10,6 +10,7 @@
 			},
 			{
 				"type": "object",
+				"required": ["path"],
 				"properties": {
 					"path": {
 						"type": "string",
@@ -21,17 +22,19 @@
 						"minLength": 1,
 						"pattern": "^[a-zA-Z0-9_]+(?:/[a-zA-Z0-9_]+)*$"
 					},
-					"width": {
-						"type": "integer",
-						"minimum": 1
-					},
-					"height": {
-						"type": "integer",
-						"minimum": 1
-					},
-					"force": {
-						"type": "boolean"
-					}
+					"x": { "type": "integer", "minimum": 0 },
+					"y": { "type": "integer", "minimum": 0 },
+					"w": { "type": "integer", "minimum": 1 },
+					"h": { "type": "integer", "minimum": 1 },
+					"tw": { "type": "integer", "minimum": 1 },
+					"th": { "type": "integer", "minimum": 1 },
+					"frames": { "type": "integer", "minimum": 1 },
+					"ticks": { "type": "integer", "minimum": 1 },
+					"force": { "type": "boolean" }
+				},
+				"dependentRequired": {
+					"frames": ["ticks"],
+					"ticks": ["frames"]
 				},
 				"additionalProperties": false
 			}

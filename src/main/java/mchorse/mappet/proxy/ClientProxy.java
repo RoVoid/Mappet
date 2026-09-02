@@ -15,7 +15,7 @@ import mchorse.mappet.client.renders.tile.TileRegionRenderer;
 import mchorse.mappet.client.renders.tile.TileTriggerRenderer;
 import mchorse.mappet.entities.EntityNpc;
 import mchorse.mappet.network.Dispatcher;
-import mchorse.mappet.network.packets.content.PacketContentRequestNames;
+import mchorse.mappet.network.packets.content.PacketContentRequestPaths;
 import mchorse.mclib.McLib;
 import mchorse.mclib.utils.ReflectionUtils;
 import net.minecraft.client.Minecraft;
@@ -49,7 +49,7 @@ public class ClientProxy extends CommonProxy {
 
     public static void requestNames(IContentTypeBase type, Consumer<Set<String>> consumer) {
         consumers.put(requestId, consumer);
-        Dispatcher.sendToServer(new PacketContentRequestNames(type, requestId));
+        Dispatcher.sendToServer(new PacketContentRequestPaths(type, requestId));
 
         requestId += 1;
     }

@@ -1,5 +1,6 @@
 package mchorse.mappet.client.gui.panels;
 
+import mchorse.mappet.MappetFactories;
 import mchorse.mappet.proxy.CommonProxy;
 import mchorse.mappet.api.quests.chains.QuestChain;
 import mchorse.mappet.api.quests.chains.QuestNode;
@@ -28,7 +29,7 @@ public class GuiQuestChainPanel extends GuiMappetDashboardPanel<QuestChain>
 
         this.folderList.setFileIcon(Icons.COPY);
 
-        this.graph = new GuiNodeGraph<QuestNode>(mc, CommonProxy.getChains(), this::pickNode);
+        this.graph = new GuiNodeGraph<QuestNode>(mc, MappetFactories.getChains(), this::pickNode);
         this.graph.flex().relative(this.editor).wh(1F, 1F);
 
         this.editor.add(this.graph);
@@ -79,9 +80,9 @@ public class GuiQuestChainPanel extends GuiMappetDashboardPanel<QuestChain>
     }
 
     @Override
-    public void fill(QuestChain data, boolean allowed)
+    public void fill(QuestChain data, String editorName)
     {
-        super.fill(data, allowed);
+        super.fill(data, editorName);
 
         this.graph.setVisible(data != null);
 

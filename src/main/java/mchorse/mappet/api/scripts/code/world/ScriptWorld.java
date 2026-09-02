@@ -163,6 +163,16 @@ public class ScriptWorld {
         return getTileEntity(pos.floorX(), pos.floorY(), pos.floorZ());
     }
 
+    public void updateBlock(int x, int y, int z) {
+        BlockPos pos = new BlockPos(x, y, z);
+        IBlockState state = world.getBlockState(pos);
+        world.notifyBlockUpdate(pos, state, state, 3);
+    }
+
+    public void updateBlock(ScriptVector pos) {
+        updateBlock(pos.floorX(), pos.floorY(), pos.floorZ());
+    }
+
     public void replaceBlocks(ScriptBlockState block, ScriptBlockState newBlock, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
         replaceBlocks(block, newBlock, new ScriptBox(minX, minY, minZ, maxX, maxY, maxZ));
     }
@@ -182,7 +192,8 @@ public class ScriptWorld {
         }
     }
 
-    public void replaceBlocks(ScriptBlockState block, ScriptBlockState newBlock, ScriptNBTCompound tileData, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+    public void replaceBlocks(ScriptBlockState block, ScriptBlockState newBlock, ScriptNBTCompound tileData, int minX, int minY, int minZ, int maxX,
+                              int maxY, int maxZ) {
         replaceBlocks(block, newBlock, tileData, new ScriptBox(minX, minY, minZ, maxX, maxY, maxZ));
     }
 
@@ -200,14 +211,17 @@ public class ScriptWorld {
         }
     }
 
+    @Deprecated
     public boolean hasInventory(int x, int y, int z) {
         return isBlockLoaded(x, y, z) && world.getTileEntity(pos) instanceof IInventory;
     }
 
+    @Deprecated
     public boolean hasInventory(ScriptVector pos) {
         return hasInventory(pos.floorX(), pos.floorY(), pos.floorZ());
     }
 
+    @Deprecated
     public ScriptInventory getInventory(int x, int y, int z) {
         if (isBlockLoaded(x, y, z)) {
             TileEntity tile = world.getTileEntity(pos);
@@ -242,23 +256,27 @@ public class ScriptWorld {
         return -1;
     }
 
-    public void spawnParticles(EnumParticleTypes type, boolean longDistance, double x, double y, double z, int number, double dx, double dy, double dz, double speed, int... args) {
+    public void spawnParticles(EnumParticleTypes type, boolean longDistance, double x, double y, double z, int number, double dx, double dy,
+                               double dz, double speed, int... args) {
         ((WorldServer) world).spawnParticle(type, longDistance, x, y, z, number, dx, dy, dz, speed, args);
     }
 
-    public void spawnParticles(EnumParticleTypes type, boolean longDistance, ScriptVector pos, int number, ScriptVector offset, double speed, int... args) {
+    public void spawnParticles(EnumParticleTypes type, boolean longDistance, ScriptVector pos, int number, ScriptVector offset, double speed,
+                               int... args) {
         ((WorldServer) world).spawnParticle(type, longDistance, pos.x, pos.y, pos.z, number, offset.x, offset.y, offset.z, speed, args);
     }
 
-    public void spawnParticles(ScriptPlayer entity, EnumParticleTypes type, boolean longDistance, double x, double y, double z, int number, double dx, double dy, double dz, double speed, int... args) {
+    public void spawnParticles(ScriptPlayer entity, EnumParticleTypes type, boolean longDistance, double x, double y, double z, int number, double dx,
+                               double dy, double dz, double speed, int... args) {
         if (entity == null) return;
         ((WorldServer) world).spawnParticle(entity.asMinecraft(), type, longDistance, x, y, z, number, dx, dy, dz, speed, args);
     }
 
-    public void spawnParticles(ScriptPlayer entity, EnumParticleTypes type, boolean longDistance, ScriptVector pos, int number, ScriptVector offset, double speed, int... args) {
+    public void spawnParticles(ScriptPlayer entity, EnumParticleTypes type, boolean longDistance, ScriptVector pos, int number, ScriptVector offset,
+                               double speed, int... args) {
         if (entity == null) return;
         ((WorldServer) world).spawnParticle(entity.asMinecraft(), type, longDistance, pos.x, pos.y, pos.z, number, offset.x, offset.y, offset.z,
-                speed, args);
+                                            speed, args);
     }
 
     public IScriptEntity spawnEntity(String id, double x, double y, double z, ScriptNBTCompound compound) {
@@ -338,8 +356,9 @@ public class ScriptWorld {
                 if (!world.isChunkGeneratedAt(chunkX, chunkZ)) continue;
                 Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
                 AxisAlignedBB chunkAABB = new AxisAlignedBB(Math.max(chunk.getPos().getXStart(), box.minX), box.minY,
-                        Math.max(chunk.getPos().getZStart(), box.minZ), Math.min(chunk.getPos().getXEnd(), box.maxX), box.maxY,
-                        Math.min(chunk.getPos().getZEnd(), box.maxZ));
+                                                            Math.max(chunk.getPos().getZStart(), box.minZ),
+                                                            Math.min(chunk.getPos().getXEnd(), box.maxX), box.maxY,
+                                                            Math.min(chunk.getPos().getZEnd(), box.maxZ));
 
                 List<Entity> chunkEntities = new ArrayList<>();
                 chunk.getEntitiesWithinAABBForEntity(null, chunkAABB, chunkEntities, Objects::nonNull);
@@ -591,7 +610,8 @@ public class ScriptWorld {
 
     /* Mappet stuff */
 
-    public void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, float yaw, float pitch, int range, ScriptPlayer player) {
+    public void displayMorph(AbstractMorph morph, int expiration, double x, double y, double z, float yaw, float pitch, int range,
+                             ScriptPlayer player) {
         if (morph == null) return;
 
         WorldMorph worldMorph = new WorldMorph();
@@ -606,7 +626,7 @@ public class ScriptWorld {
 
         if (player == null) {
             NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z,
-                    MathUtils.clamp(range, 1, 256));
+                                                                                MathUtils.clamp(range, 1, 256));
             Dispatcher.sendToAllAround(new PacketWorldMorph(worldMorph), point);
         }
         else Dispatcher.sendTo(new PacketWorldMorph(worldMorph), player.asMinecraft());
@@ -628,7 +648,8 @@ public class ScriptWorld {
 
     /* BlockBuster stuff */
 
-    public IScriptEntity shootBBGunProjectile(IScriptEntity shooter, double x, double y, double z, double yaw, double pitch, String gunPropsNbtString) {
+    public IScriptEntity shootBBGunProjectile(IScriptEntity shooter, double x, double y, double z, double yaw, double pitch,
+                                              String gunPropsNbtString) {
         if (shooter.asMinecraft() instanceof EntityLivingBase && Loader.isModLoaded("blockbuster")) {
             try {
                 return shootBBGunProjectileMethod(shooter, x, y, z, yaw, pitch, gunPropsNbtString);
@@ -640,7 +661,8 @@ public class ScriptWorld {
     }
 
     @Optional.Method(modid = "blockbuster")
-    private IScriptEntity shootBBGunProjectileMethod(IScriptEntity shooter, double x, double y, double z, double yaw, double pitch, String gunPropsNbtString) {
+    private IScriptEntity shootBBGunProjectileMethod(IScriptEntity shooter, double x, double y, double z, double yaw, double pitch,
+                                                     String gunPropsNbtString) {
         ScriptFactory factory = new ScriptFactory();
 
         EntityLivingBase entityLivingBase = (EntityLivingBase) shooter.asMinecraft();
